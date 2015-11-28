@@ -25,7 +25,7 @@ public class CmapSubtableFormat12 : GLib.Object {
 		Gee.ArrayList<UniRange> ranges;
 		FontData fd = new FontData ();
 		uint32 first_assigned;
-		uint32 indice;
+		uint32 index;
 		
 		first_assigned = 1;
 		
@@ -45,7 +45,7 @@ public class CmapSubtableFormat12 : GLib.Object {
 		fd.add_u32 (0); // Language
 		fd.add_u32 ((uint32) ranges.size); // Number of groupings
 		
-		indice = first_assigned;
+		index = first_assigned;
 		foreach (UniRange u in ranges) {
 			
 			if (u.start >= 0xFFFFFFFF || u.stop >= 0xFFFFFFFF) {
@@ -53,9 +53,9 @@ public class CmapSubtableFormat12 : GLib.Object {
 			} else {
 				fd.add_u32 (u.start);
 				fd.add_u32 (u.stop);
-				fd.add_u32 (indice);
+				fd.add_u32 (index);
 				
-				indice += u.length ();
+				index += u.length ();
 			}
 		}
 		

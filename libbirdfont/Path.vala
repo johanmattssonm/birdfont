@@ -2633,6 +2633,187 @@ public class Path : GLib.Object {
 			h.move_to_coordinate (nx, ny);
 		}
 	}
+	
+	public Path self_interpolate (double weight, bool counter) {
+		Path master;
+		Path p = new Path ();
+		
+		if (stroke > 0) {
+			p = copy ();
+			p.stroke += 5 * weight * 2;
+			
+			if (p.stroke < 0.002) {
+				p.stroke = 0.002;
+			}
+		} else {
+			remove_points_on_points ();
+			master = get_self_interpolated_master (counter, weight);
+			p = interpolate_estimated_path (master, weight);
+			recalculate_linear_handles ();
+		}
+		
+		return p;
+	}
+		
+	public Path interpolate_estimated_path (Path master, double weight) {
+		Path p = copy ();
+		EditPoint ep, master_point;
+		double x, y;
+		double direction = weight;
+	
+		weight = fabs(weight);
+		
+		if (p.points.size <= 1 || master.points.size <= 1) {
+			return p;
+		}
+
+		master_point = new EditPoint ();
+
+		for (int i = 0; i < p.points.size; i++) {
+			ep = p.points.get (i);
+			
+			double right_angle = ep.get_right_handle ().angle;
+			double left_angle = ep.get_left_handle ().angle;
+			double angle = EditPointHandle.average_angle (right_angle, left_angle);
+			angle += direction > 0 ? -PI : PI;
+			
+			if (angle < 0) {
+				angle += 2 * PI;
+			}
+			
+			angle %= 2 * PI;
+			
+			double close_x, close_y;
+			double min_distance = Glyph.CANVAS_MAX;
+			double distance;
+			double distance_to_edge = (5 / 2.0) * weight;
+			
+			close_x = Glyph.CANVAS_MAX;
+			close_y = Glyph.CANVAS_MAX;
+			
+			master_point = new EditPoint ();
+			while (Path.distance (close_x, master_point.x, close_y, master_point.y) > 0.1) {
+				x = ep.x + distance_to_edge * cos (angle);
+				y = ep.y + distance_to_edge * sin (angle);
+				
+				master_point = new EditPoint ();
+				master.get_closest_point_on_path (master_point, x, y);
+				master_point.color = Color.red ();
+				//master.insert_new_point_on_path (master_point);
+				master_point.convert_to_curve ();
+				master_point.get_right_handle().angle = angle;
+				
+				distance_to_edge += 0.1;
+				
+				distance = Path.distance (x, master_point.x, y, master_point.y);
+				if (distance < min_distance) {
+					min_distance = distance;
+					close_x = x;
+					close_y = y;
+				}
+				
+				if (distance_to_edge > 5) {
+					break;
+				}
+
+			}
+			master_point.color = Color.blue ();
+
+			x = close_x;
+			y = close_x;
+			
+			ep.x += (close_x - ep.x) * direction;
+			ep.y += (close_y - ep.y) * direction;
+		}
+		
+		p.adjust_interpolated_handles (master, fabs ((5 / 2.0) * weight));
+		
+		return p;
+	}
+
+	public Path get_self_interpolated_master (bool counter, double weight) {
+		return StrokeTool.change_weight (this, counter, weight);	
+	}
+	
+	void adjust_interpolated_handles (Path master, double edge) {
+		EditPoint ep, next;
+
+		for (int i = 0; i < points.size; i++) {
+			ep = points.get (i);
+			next = points.get (i % points.size);
+			adjust_interpolated_handle (master, ep, next, edge);
+		}
+	}
+
+	void adjust_interpolated_handle (Path master, 
+			EditPoint ep, EditPoint next,
+			double edge) {			
+		
+		double x, y;
+		double next_length_adjustment = 0;
+		double prev_length_adjustment_reverse = 0;
+		
+		double min_distortion = double.MAX;
+
+		EditPoint master_point = new EditPoint ();
+		
+		get_point_for_step (ep, next, 0.55, out x, out y);
+		master.get_closest_point_on_path (master_point, x, y);
+
+		double tolerance = 0.01;
+		double start_length = ep.get_right_handle ().length;
+		double stop_length = next.get_left_handle ().length;
+		
+		EditPoint ep1, ep2;
+		
+		ep1 = ep.copy ();
+		ep2 = next.copy ();
+		
+		double total_distance = Path.distance (ep1.x, ep2.x, ep1.y, ep2.y);
+		
+		for (double m = 50.0; m >= tolerance / 2.0; m /= 10.0) {
+			double step = m / 10.0;
+			min_distortion = double.MAX;
+			
+			double first = (m == 50.0) ? 0 : -m;
+			
+			for (double a = first; a < m; a += step) {
+				for (double b = first; b < m; b += step) {
+
+					if (start_length + a + stop_length + b > total_distance) {
+						break;
+					}
+					
+					ep1.get_right_handle ().length = start_length + a;
+					ep2.get_left_handle ().length = stop_length + b;
+
+					get_point_for_step (ep1, ep2, 0.55, out x, out y);
+					double error = distance (master_point.x, x, master_point.y, y);
+					error = fabs(error - edge);	
+	
+					if (error < min_distortion
+							&& start_length + a > 0
+							&& stop_length + b > 0) {
+						min_distortion = error;
+						prev_length_adjustment_reverse = a;
+						next_length_adjustment = b;
+					}
+				}
+			}
+				
+			start_length += prev_length_adjustment_reverse;
+			stop_length += next_length_adjustment;
+		}
+		
+		ep.get_right_handle ().length = start_length;
+		
+		if (ep.get_right_handle ().type != PointType.QUADRATIC) {
+			next.get_left_handle ().length = stop_length;
+		} else {
+			next.get_left_handle ().move_to_coordinate (
+				ep.get_right_handle ().x, ep.get_right_handle ().y);
+		}
+	}
 }
 
 }

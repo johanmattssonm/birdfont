@@ -37,14 +37,14 @@ public class CodePageBits : GLib.Object {
 	}
 	
 	public void get_pages (Font font, out uint32 p0, out uint32 p1) {
-		uint32 indice, a0, a1;
+		uint32 index, a0, a1;
 		GlyphCollection? gl;
 		GlyphCollection g;
 		
 		p0 = 0;
 		p1 = 0;
 		
-		for (indice = 0; (gl = font.get_glyph_collection_indice (indice)) != null; indice++) {		
+		for (index = 0; (gl = font.get_glyph_collection_index (index)) != null; index++) {		
 			g = (!) gl;
 			
 			if (!g.is_unassigned ()) {

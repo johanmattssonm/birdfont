@@ -211,7 +211,7 @@ public class OverViewItem : GLib.Object {
 		
 		if (gl != null) {
 			font = BirdFont.get_current_font ();
-			g = ((!) gl).get_current ();
+			g = ((!) gl).get_interpolated_fast (OverviewTools.current_master_size);
 
 			c.save ();
 			g.boundaries (out x1, out y1, out x2, out y2);

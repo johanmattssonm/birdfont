@@ -1307,7 +1307,7 @@ public class StrokeTool : GLib.Object {
 		return merged;
 	}
 
-	void move_segment (EditPoint stroke_start, EditPoint stroke_stop, double thickness) {
+	public static void move_segment (EditPoint stroke_start, EditPoint stroke_stop, double thickness) {
 		EditPointHandle r, l;
 		double m, n;
 		double qx, qy;
@@ -2797,8 +2797,7 @@ public class StrokeTool : GLib.Object {
 		return sum > 0;
 	}	
 
-	public PathList create_stroke (Path original_path, double thickness) {
-			
+	public PathList create_stroke (Path original_path, double thickness) {	
 		PathList pl;
 		EditPoint p1, p2, p3;
 		EditPoint previous, previous_inside, start, start_inside;
@@ -3113,6 +3112,49 @@ public class StrokeTool : GLib.Object {
 
 		return paths;
 	}
+	
+	public static Path change_weight_fast (Path path, double weight, bool counter) {
+		StrokeTool tool = new StrokeTool ();
+		PathList pl;
+		
+		pl = tool.get_stroke_fast (path, fabs(weight));
+		
+		return_val_if_fail (pl.paths.size == 2, new Path ());
+		
+		if (counter == !pl.paths.get (0).is_clockwise ()) {
+			return pl.paths.get (0);
+		}
+		
+		return pl.paths.get (1);
+	}
+	
+	public static Path change_weight (Path path, bool counter, double weight) {
+		StrokeTool tool = new StrokeTool ();
+		Path o = path.copy ();
+		Path interpolated = new Path();
+		o.force_direction (Direction.CLOCKWISE);
+		double default_weight = 5;
+		
+		PathList pl = tool.get_stroke (o, default_weight);
+		Gee.ArrayList<PointSelection> deleted;
+		
+		deleted = new Gee.ArrayList<PointSelection> (); 
+
+		return_val_if_fail (pl.paths.size > 0, new Path ());
+		
+		if (weight < 0) {
+			counter = !counter;
+		}
+		
+		foreach (Path sp in pl.paths) {
+			if (sp.points.size > interpolated.points.size
+				&& counter == !sp.is_clockwise ()) {
+				interpolated = sp;
+			}
+		}
+		
+		return interpolated;
+	} 
 }
 
 }

@@ -92,8 +92,8 @@ public class BirdFontPart : GLib.Object{
 			
 		try {
 			// remove deleted glyphs
-			foreach (Glyph g in font.deleted_glyphs) {
-				file_name = get_glyph_base_file_name (g) + ".bfp";
+			foreach (string deleted_glyph in font.deleted_glyphs) {
+				file_name = deleted_glyph;
 				glyph_dir_name = get_subdir_name (file_name);
 				glyph_file = get_destination_file (file_name, "glyphs", glyph_dir_name);
 				
@@ -156,21 +156,27 @@ public class BirdFontPart : GLib.Object{
 
 					selected_file_name = get_first_number_in_unicode (((!)gc).get_current ());
 					dir_name = get_subdir_name (selected_file_name);
-								
-					os = create_file (@"selected_$(selected_file_name).bfp", "glyphs", dir_name);
-					bf.write_root_tag (os);
-					bf.write_glyph_collection_start (gc, os);
-					bf.write_selected ((!) gc, os);
-					bf.write_glyph_collection_end (os);
-					bf.write_closing_root_tag (os);
-					os.close ();
-			
-					foreach (Glyph g in gc.glyphs) {
-						try {
-							write_glyph (bf, gc, g);
-							write_glyph_background_image (bf, gc, g);
-						} catch (GLib.Error e) {
-							warning (e.message);
+					
+					// selected glyph
+					foreach (GlyphMaster master in gc.glyph_masters) {
+						os = create_file (@"selected_$(selected_file_name)_$(master.get_id ()).bfp", "glyphs", dir_name);
+						bf.write_root_tag (os);
+						bf.write_glyph_collection_start (gc, master, os);
+						bf.write_selected ((!) master, os);
+						bf.write_glyph_collection_end (os);
+						bf.write_closing_root_tag (os);
+						os.close ();
+					}
+					
+					
+					foreach (GlyphMaster master in gc.glyph_masters) {
+						foreach (Glyph g in master.glyphs) {
+							try {
+								write_glyph (bf, gc, master, g);
+								write_glyph_background_image (bf, gc, g);
+							} catch (GLib.Error e) {
+								warning (e.message);
+							}
 						}
 					}
 				} catch (GLib.Error e) {
@@ -243,15 +249,15 @@ public class BirdFontPart : GLib.Object{
 		}
 	}
 
-	string get_first_number_in_unicode (Glyph g) throws GLib.Error {
+	static string get_first_number_in_unicode (Glyph g) {
 		string s = Font.to_hex (g.unichar_code);
 		s = s.replace ("U+", "");
 		return s;
 	}
 	
-	string get_glyph_base_file_name (Glyph g) throws GLib.Error {
+	public static string get_glyph_base_file_name (Glyph g, GlyphMaster master) {
 		string s = get_first_number_in_unicode (g);
-		s = @"U+$(s)_$(g.version_id)";
+		s = @"U+$(s)_$(g.version_id)_$(master.get_id ())";
 		return s;
 	}
 
@@ -265,17 +271,17 @@ public class BirdFontPart : GLib.Object{
 		return (!) d.get_char ().to_string ();
 	}
 
-	void write_glyph (BirdFontFile bf, GlyphCollection gc, Glyph g) throws GLib.Error {
+	void write_glyph (BirdFontFile bf, GlyphCollection gc, GlyphMaster master, Glyph g) throws GLib.Error {
 		string file_name;
 		string dir_name;
 		DataOutputStream os;
 	 
-		file_name = get_glyph_base_file_name (g);
+		file_name = get_glyph_base_file_name (g, master);
 		dir_name = get_subdir_name (file_name);
 					
 		os = create_file (@"$(file_name).bfp", "glyphs", dir_name);
 		bf.write_root_tag (os);
-		bf.write_glyph_collection_start (gc, os);
+		bf.write_glyph_collection_start (gc, master, os);
 		bf.write_glyph (g, os);
 		bf.write_glyph_collection_end (os);
 		bf.write_closing_root_tag (os);

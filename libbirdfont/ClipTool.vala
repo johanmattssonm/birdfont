@@ -361,7 +361,9 @@ public class ClipTool : Tool {
 				glyphs.add (glyph_collection);
 				
 				glyph = new Glyph ((!) c.to_string (), c);
-				glyph_collection.add_glyph (glyph);		
+				GlyphMaster master = new GlyphMaster ();
+				master.add_glyph (glyph);
+				glyph_collection.add_master (master);
 			}
 
 			if (p.has_prefix ("unassigned:")) {

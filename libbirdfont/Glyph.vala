@@ -64,7 +64,8 @@ public class Glyph : FontDisplay {
 
 	public WidgetAllocation allocation = new WidgetAllocation ();
 
-	public unichar unichar_code = 0; // FIXME: name and unichar should be moved to to glyph collection
+	// FIXME: name and unichar should be moved to to glyph collection
+	public unichar unichar_code = 0; 
 	public string name;
 
 	public double left_limit {
@@ -1960,6 +1961,9 @@ public class Glyph : FontDisplay {
 		current_layer = g.current_layer;
 		layers = g.layers.copy ();
 
+		left_limit = g.left_limit;
+		right_limit = g.right_limit;
+
 		remove_lines ();
 		foreach (Line line in g.get_all_help_lines ()) {
 			add_line (line.copy ());
@@ -2431,17 +2435,41 @@ public class Glyph : FontDisplay {
 		}
 	}
 
-  public override void magnify (double magnification) {
-	double x_center = path_coordinate_x (xc ());
-	double y_center = path_coordinate_y (yc ());
+	public override void magnify (double magnification) {
+		double x_center = path_coordinate_x (xc ());
+		double y_center = path_coordinate_y (yc ());
 
-	view_zoom *= 1 + magnification;
+		view_zoom *= 1 + magnification;
 
-	view_offset_x -= path_coordinate_x (xc ()) - x_center;
-	view_offset_y += path_coordinate_y (yc ()) - y_center;
+		view_offset_x -= path_coordinate_x (xc ()) - x_center;
+		view_offset_y += path_coordinate_y (yc ()) - y_center;
 
-	GlyphCanvas.redraw ();
-  }
+		GlyphCanvas.redraw ();
+	}
+	
+	public Glyph self_interpolate (double weight) {
+		Glyph g1 = copy ();
+		Glyph g2 = copy ();
+		
+		g1.fix_curve_orientation ();
+		g2.layers = new Layer (); // remove all paths
+		
+		foreach (Path p in g1.get_visible_paths ()) {
+			bool counter = !p.is_clockwise ();
+
+			g2.add_path (p.copy ());
+			
+			p.remove_points_on_points ();
+			Path master = p.get_self_interpolated_master (counter, weight);
+			p = p.interpolate_estimated_path (master, weight);
+			p.recalculate_linear_handles ();
+			
+			g2.add_path (p);
+			g2.add_path (master);
+		}
+		
+		return g2;
+	}
 }
 
 }

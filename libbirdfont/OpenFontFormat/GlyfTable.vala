@@ -139,7 +139,7 @@ public class GlyfTable : OtfTable {
 		GlyphCollection gc;
 		GlyphCollection? gcn;
 		Font font = OpenFontFormatWriter.get_current_font ();
-		uint32 indice;
+		uint32 index;
 		Gee.ArrayList<GlyphCollection> unassigned_glyphs;
 		bool unassigned;
 		
@@ -151,12 +151,12 @@ public class GlyfTable : OtfTable {
 		
 		unassigned_glyphs = new Gee.ArrayList<GlyphCollection> ();
 		
-		if (font.get_glyph_indice (0) == null) {
+		if (font.get_glyph_index (0) == null) {
 			warning ("No glyphs in font.");
 		}
 			
 		// add glyphs
-		for (indice = 0; (gcn = font.get_glyph_collection_indice (indice)) != null; indice++) {		
+		for (index = 0; (gcn = font.get_glyph_collection_index (index)) != null; index++) {		
 			gc = (!) gcn;
 			gc = gc.copy_deep ();
 			g = gc.get_current ();

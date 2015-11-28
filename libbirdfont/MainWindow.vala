@@ -185,8 +185,7 @@ public class MainWindow : GLib.Object {
 			GlyphCollection gc;
 			
 			warning ("No default glyph have been set yet.\n");
-			gc = new GlyphCollection ('\0', "");
-			gc.add_glyph (new Glyph ("", '\0'));
+			gc = new GlyphCollection.with_glyph ('\0', "");
 			
 			return gc;
 		}

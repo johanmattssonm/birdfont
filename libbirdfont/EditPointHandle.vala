@@ -219,7 +219,7 @@ public class EditPointHandle : GLib.Object {
 		
 		process_connected_handle ();
 	}
-		
+
 	public void move_to_coordinate_internal (double x, double y) {
 		double a, b, c;
 
@@ -308,6 +308,20 @@ public class EditPointHandle : GLib.Object {
 	public bool is_line () {
 		return PenTool.is_line (type);
 	}
+
+	public static double average_angle (double angle1, double angle2) {
+		EditPointHandle handle = new EditPointHandle (new EditPoint (0, 0, PointType.CUBIC), 0, 1);
+		double x = (cos (angle1) + cos (angle2)) / 2;
+		double y = (sin (angle1) + sin (angle2)) / 2;
+		handle.move_to_coordinate (x, y);
+		
+		if (fabs (x) < 0.001 && fabs (y) < 0.001) {
+			return (angle1 + PI / 2) % (2 * PI);
+		}
+		
+		return handle.angle;
+	}
+
 }
 
 }

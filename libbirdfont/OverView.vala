@@ -145,7 +145,7 @@ public class OverView : FontDisplay {
 		f = BirdFont.get_current_font ();
 		
 		for (int index = 0; index < f.length (); index++) {
-			glyphs = f.get_glyph_collection_indice ((uint32) index);
+			glyphs = f.get_glyph_collection_index ((uint32) index);
 			return_if_fail (glyphs != null);
 			
 			selected_items.add ((!) glyphs);
@@ -172,9 +172,10 @@ public class OverView : FontDisplay {
 		TabBar tabs = MainWindow.get_tab_bar ();
 		bool selected;
 		Glyph glyph;
-		GlyphCollection glyph_collection = MainWindow.get_current_glyph_collection ();
+		GlyphCollection glyph_collection;
 		GlyphCanvas canvas;
-			
+		
+		glyph_collection = MainWindow.get_current_glyph_collection ();
 		name.append_unichar (character);
 		selected = tabs.select_char (name.str);
 				
@@ -229,7 +230,8 @@ public class OverView : FontDisplay {
 			glyph_collection = new GlyphCollection (character, name.str);
 			
 			if (!empty) {
-				glyph = new Glyph (name.str, (!unassigned) ? character : '\0');
+				glyph = new Glyph (name.str, !unassigned ? character : '\0');
+				glyph_collection.add_master (new GlyphMaster ());
 				glyph_collection.insert_glyph (glyph, true);
 			}
 			
@@ -543,7 +545,7 @@ public class OverView : FontDisplay {
 					break;
 				}
 				
-				glyphs = f.get_glyph_collection_indice ((uint32) index);
+				glyphs = f.get_glyph_collection_index ((uint32) index);
 				return_if_fail (glyphs != null);
 				
 				glyph = ((!) glyphs).get_current ();
@@ -825,7 +827,7 @@ public class OverView : FontDisplay {
 		
 		if (all_available) {
 			f = BirdFont.get_current_font ();
-			g = f.get_glyph_indice (selected);
+			g = f.get_glyph_index (selected);
 			return_val_if_fail (g != null, "".dup ());
 			return ((!) g).get_name ();
 		}
@@ -1126,7 +1128,7 @@ public class OverView : FontDisplay {
 				// FIXME: too slow
 				for (r = 0; r < font.length (); r += items_per_row) {
 					for (i = 0; i < items_per_row; i++) {
-						glyphs = font.get_glyph_collection_indice ((uint32) r + i);
+						glyphs = font.get_glyph_collection_index ((uint32) r + i);
 						return_if_fail (glyphs != null);
 						glyph = ((!) glyphs).get_current ();
 						
@@ -1505,7 +1507,7 @@ public class OverView : FontDisplay {
 						copied_glyphs.get (i).is_unassigned (), 
 						copied_glyphs.get (i).get_name ());
 				} else {
-					c = f.get_glyph_collection_indice ((uint32) index);
+					c = f.get_glyph_collection_index ((uint32) index);
 				}
 				
 				if (c == null) {

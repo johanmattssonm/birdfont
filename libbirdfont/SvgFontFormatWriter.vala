@@ -45,7 +45,7 @@ class SvgFontFormatWriter : Object  {
 		
 		Glyph? g;
 		Glyph glyph;
-		unichar indice = 0;
+		unichar index = 0;
 		
 		string uni;
 		
@@ -66,7 +66,7 @@ class SvgFontFormatWriter : Object  {
 
 		// regular glyphs 
 		while (true) {
-			g = font.get_glyph_indice (indice++);
+			g = font.get_glyph_index (index++);
 			
 			if (g == null) {
 				break;
