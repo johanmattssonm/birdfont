@@ -148,7 +148,7 @@ public class ExportTool : GLib.Object {
 	
 	public static void export_current_glyph () {
 		FileChooser fc = new FileChooser ();
-		fc.file_selected.connect ((f) => {
+		fc.file_selected.connect ((selected_file) => {
 			Glyph glyph = MainWindow.get_current_glyph ();
 			FontDisplay fd = MainWindow.get_current_display ();
 			string glyph_svg;
@@ -159,19 +159,34 @@ public class ExportTool : GLib.Object {
 			string fn;
 			int i;
 			
+			if (fd is Glyph) {
+				glyph = MainWindow.get_current_glyph ();
+			} else if (fd is OverView) {
+				OverView overview = MainWindow.get_overview ();
+				Glyph? g = overview.get_selected_glyph ();
+				
+				if (g == null) {
+					warning("No glyhp selected in overview.");
+					return;
+				}
+				
+				glyph = (!) g;
+			} else {
+				return;
+			}
+			
 			name = glyph.get_name ();
 			
-			if (f == null) {
+			if (selected_file == null) {
 				return;
 			}
 			
-			svg_file = (!) f;
+			svg_file = (!) selected_file;
 
-			if (!(fd is Glyph)) {
-				return;
-			}
-			
 			try {
+#if MAC
+				file = File.new_for_path (svg_file);
+#else
 				i = 1;
 				fn = svg_file.replace (".svg", "");
 				file = File.new_for_path (fn + ".svg");
@@ -179,8 +194,8 @@ public class ExportTool : GLib.Object {
 					file = File.new_for_path (fn + @"$i.svg");
 					i++;
 				}
-				
-				glyph_svg = export_current_glyph_to_string ();
+#endif				
+				glyph_svg = export_to_string (glyph, false);
 				os = new DataOutputStream (file.create(FileCreateFlags.REPLACE_DESTINATION));
 				os.put_string (glyph_svg);
 		
