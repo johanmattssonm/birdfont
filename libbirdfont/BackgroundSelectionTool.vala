@@ -28,6 +28,7 @@ public class BackgroundSelectionTool : CutBackgroundTool {
 		new_image.connect (add_new_image);
 
 		select_action.connect ((t) => {
+			DrawingTools.move_canvas.set_selected (false);
 			GlyphCanvas.redraw ();
 		});
 
