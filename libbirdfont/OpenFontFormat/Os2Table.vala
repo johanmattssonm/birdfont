@@ -141,7 +141,7 @@ public class Os2Table : OtfTable {
 		// usWinDescent (not like sTypoDescender)
 		win_descent = hhea_table.get_windescent ();
 		if (win_descent < 0) {
-			warning (@"usWinDescent is unsigned, can not write $(-win_descent) to the field.");
+			warning (@"usWinDescent is unsigned, can not write $(win_descent) to the field.");
 			fd.add_u16 (0);
 		} else {
 			fd.add_u16 (-win_descent); 

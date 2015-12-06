@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012, 2013, 2014 Johan Mattsson
+	Copyright (C) 2012 2013 2014 2015 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -15,12 +15,26 @@
 namespace BirdFont {
 
 /** Format 12 cmap subtable */
-public class CmapSubtableFormat12 : GLib.Object {
+public class CmapSubtableFormat12 : CmapSubtable {
+	
+	FontData cmap_data;
 	
 	public CmapSubtableFormat12 () {
 	}
+
+	public override ushort get_platform () {
+		return 3;
+	}
+
+	public override ushort get_encoding () {
+		return 10;
+	}
+
+	public override FontData get_cmap_data () {
+		return cmap_data;
+	}
 	
-	public FontData get_cmap_data (GlyfTable glyf_table) throws GLib.Error {
+	public override void generate_cmap_data (GlyfTable glyf_table) throws GLib.Error {
 		GlyphRange glyph_range = new GlyphRange ();
 		Gee.ArrayList<UniRange> ranges;
 		FontData fd = new FontData ();
@@ -59,7 +73,7 @@ public class CmapSubtableFormat12 : GLib.Object {
 			}
 		}
 		
-		return fd;
+		cmap_data = fd;
 	}
 }
 

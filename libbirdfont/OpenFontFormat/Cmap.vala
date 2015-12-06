@@ -11,6 +11,7 @@
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
 	Lesser General Public License for more details.
 */
+using Gee;
 
 namespace BirdFont {
 
@@ -86,40 +87,37 @@ public class CmapTable : OtfTable {
 	/** Character to glyph mapping */
 	public void process (GlyfTable glyf_table) throws GLib.Error {
 		FontData fd = new FontData ();
-		FontData cmap0_data;
-		FontData cmap4_data;
-		FontData cmap12_data;
 		CmapSubtableFormat0 cmap0 = new CmapSubtableFormat0 ();
 		CmapSubtableFormat4 cmap4 = new CmapSubtableFormat4 ();
 		CmapSubtableFormat12 cmap12 = new CmapSubtableFormat12 ();
 		uint16 n_encoding_tables;
-			
-		cmap0_data = cmap0.get_cmap_data (glyf_table);
-		cmap4_data = cmap4.get_cmap_data (glyf_table);
-		cmap12_data = cmap12.get_cmap_data (glyf_table);
+		ArrayList<CmapSubtable> cmap_tables = new ArrayList<CmapSubtable> ();
 		
-		n_encoding_tables = 3;
+		cmap0.generate_cmap_data (glyf_table);
+		cmap4.generate_cmap_data (glyf_table);
+		cmap12.generate_cmap_data (glyf_table);
+
+		cmap_tables.add(cmap0);
+		cmap_tables.add(cmap4);
+		cmap_tables.add(cmap12);
+
+		n_encoding_tables = (uint16) cmap_tables.size;
 		
 		fd.add_u16 (0); // table version
 		fd.add_u16 (n_encoding_tables);
 	
-		fd.add_u16 (1); // platform 
-		fd.add_u16 (0); // encoding
-		fd.add_ulong (28); // subtable offseet
+		uint subtable_offset = 4 + 8 * cmap_tables.size;
+		foreach (CmapSubtable subtable in cmap_tables) {
+			fd.add_u16 (subtable.get_platform ());
+			fd.add_u16 (subtable.get_encoding ());
+			fd.add_ulong (subtable_offset);
+			subtable_offset += subtable.get_cmap_data ().length ();
+		}
 		
-		fd.add_u16 (3); // platform 
-		fd.add_u16 (1); // encoding (Format Unicode UCS-4)
-		fd.add_ulong (28 + cmap0_data.length ()); // subtable offseet
+		foreach (CmapSubtable subtable in cmap_tables) {
+			fd.append (subtable.get_cmap_data ());
+		}
 
-		fd.add_u16 (3); // platform 
-		fd.add_u16 (10); // encoding
-		fd.add_ulong (28 + cmap0_data.length () + cmap4_data.length ()); // subtable offseet
-
-		fd.append (cmap0_data);
-		fd.append (cmap4_data);
-		fd.append (cmap12_data);
-
-		// padding
 		fd.pad ();
 
 		this.font_data = fd;

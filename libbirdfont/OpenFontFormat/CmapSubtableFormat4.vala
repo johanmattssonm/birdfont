@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012, 2013, 2014 Johan Mattsson
+	Copyright (C) 2012 2013 2014 2015 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -15,16 +15,29 @@
 namespace BirdFont {
 
 /** Format 4 cmap subtable */
-public class CmapSubtableFormat4 : GLib.Object {
+public class CmapSubtableFormat4 : CmapSubtable {
 	public uint32 offset;
 	uint16 format = 0;
 	HashTable <uint64?, unichar> table = new HashTable <uint64?, unichar> (int64_hash, int_equal);
 	
 	uint16 length = 0;
+	FontData cmap_data = new FontData ();
 	
 	public CmapSubtableFormat4 () {
 	}
 
+	public override ushort get_platform () {
+		return 3;
+	}
+
+	public override ushort get_encoding () {
+		return 1;
+	}
+	
+	public override FontData get_cmap_data () {
+		return cmap_data;
+	}
+	
 	public uint get_length () {
 		return table.size ();
 	}
@@ -174,7 +187,7 @@ public class CmapSubtableFormat4 : GLib.Object {
 		if (glyph_id_array != null) delete glyph_id_array;
 	}
 	
-	public FontData get_cmap_data (GlyfTable glyf_table) throws GLib.Error {
+	public override void generate_cmap_data (GlyfTable glyf_table) throws GLib.Error {
 		FontData fd = new FontData ();
 		GlyphRange glyph_range = new GlyphRange ();
 		Gee.ArrayList<UniRange> ranges;
@@ -190,8 +203,7 @@ public class CmapSubtableFormat4 : GLib.Object {
 		uint32 index;
 		uint32 first_assigned;
 		
-		first_assigned = 1;
-		
+		first_assigned = 1;		
 		foreach (GlyphCollection g in glyf_table.glyphs) {
 			if (!g.is_unassigned () && g.get_unicode_character () < 0xFFFF) {
 				glyph_range.add_single (g.get_unicode_character ());
@@ -234,7 +246,7 @@ public class CmapSubtableFormat4 : GLib.Object {
 		fd.add_ushort (0); // Reserved
 		
 		// start codes
-		index = first_assigned; // since first glyph are notdef, null and nonmarkingreturn
+		index = first_assigned;
 		foreach (UniRange u in ranges) {
 			if (u.start >= 0xFFFF) {
 				warning ("Not implemented yet.");
@@ -251,7 +263,7 @@ public class CmapSubtableFormat4 : GLib.Object {
 			if ((u.start - index) > 0xFFFF && u.start > index) {
 				warning ("Need range offset.");
 			} else {
-				fd.add_ushort ((uint16) (index - u.start));
+				fd.add_short ((int16) (index - u.start));
 				index += u.length ();
 			}
 		}
@@ -269,7 +281,7 @@ public class CmapSubtableFormat4 : GLib.Object {
 		
 		// FIXME: implement the rest of type 4 (mind gid_length in length field)
 		
-		return fd;
+		cmap_data = fd;
 	}
 }
 

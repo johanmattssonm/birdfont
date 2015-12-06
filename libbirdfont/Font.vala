@@ -492,7 +492,7 @@ public class Font : GLib.Object {
 		
 		gc = new GlyphCollection (' ', "space");
 			
-		n = new Glyph ("space", ' ');
+		n = new Glyph (" ", ' ');
 		n.left_limit = 0;
 		n.right_limit = 27;
 		n.remove_empty_paths ();
