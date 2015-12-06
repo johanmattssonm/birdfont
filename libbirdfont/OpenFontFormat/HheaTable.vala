@@ -125,7 +125,7 @@ public class HheaTable : OtfTable {
 		total_height = get_winascent () - get_windescent ();
 		ascender = (int16) rint (upm * get_winascent () / (double) total_height);
 		descender = (int16) (ascender - upm);
-		line_gap = (int16) rint (total_height - upm);
+		line_gap = (int16) rint (ascender + descender - upm);
 				
 		fd.add_16 (ascender); // Ascender
 		fd.add_16 (descender); // Descender
