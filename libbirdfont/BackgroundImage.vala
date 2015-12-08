@@ -47,6 +47,8 @@ public class BackgroundImage {
 	
 	public signal void updated ();
 
+	private ScaledBackgrounds? scaled = null;
+
 	public double img_offset_x {
 		get { return img_x + Glyph.xc (); }
 		set { img_x = value - Glyph.xc (); }
@@ -114,6 +116,14 @@ public class BackgroundImage {
 		return bg;		
 	}
 
+	public ScaledBackgrounds get_scaled_backgrounds () {
+		if (scaled == null) {
+			scaled = new ScaledBackgrounds ((ImageSurface) get_rotated_image ());
+		}
+		
+		return (!) scaled;
+ 	}
+
 	public void add_selection (BackgroundSelection bs) {
 		selections.add (bs);
 	}
@@ -160,7 +170,7 @@ public class BackgroundImage {
 		
 		if (background_image == null) {
 			background_image = new ImageSurface.from_png (path);
-			original_image = new ImageSurface.from_png (path);
+			original_image = new ImageSurface.from_png (path);			
 		}
 		
 		return (!) original_image;
@@ -387,7 +397,9 @@ public class BackgroundImage {
 		img_offset_y = g.get_line ("top").pos;		
 	}
 
-	public void draw (Context cr, WidgetAllocation allocation, double view_offset_x, double view_offset_y, double view_zoom) {
+	public void draw (Context cr, WidgetAllocation allocation,
+			double view_offset_x, double view_offset_y, double view_zoom) {
+				
 		double scale_x, scale_y;
 		double image_scale_x, image_scale_y;
 		ImageSurface s;
@@ -417,29 +429,50 @@ public class BackgroundImage {
 			image_scale_y = img_scale_y * ((double) rotated_image.get_height () / s.get_height ());			
 		}
 		
-		st = new Surface.similar (s, s.get_content (), allocation.width, allocation.height);
-		ct = new Context (st);
-		ct.save ();
+		// FIXME: rotated and contrast
+		ScaledBackgrounds backgrounds = get_scaled_backgrounds ();
+		ScaledBackground scaled = backgrounds.get_image (view_zoom * img_scale_x); // FIXME: y
 
-		ct.set_source_rgba (1, 1, 1, 1);
-		ct.rectangle (0, 0, allocation.width, allocation.height);
-		ct.fill ();
+		ScaledBackgroundPart part;
+		double part_scale_x = view_zoom * image_scale_x;
+		double part_scale_y = view_zoom * image_scale_y;
+		
+		double part_offset_x = img_offset_x - view_offset_x;
+		part_offset_x *= view_zoom;
+		part_offset_x = -part_offset_x;
 
-		// scale both canvas and image at the same time
+		double part_offset_y = img_offset_y - view_offset_y;
+		part_offset_y *= view_zoom;
+		part_offset_y = -part_offset_y;
+		
+		part = scaled.get_part (part_offset_x, part_offset_y, 
+			allocation.width, allocation.height); 
+
 		scale_x = view_zoom * image_scale_x;
 		scale_y = view_zoom * image_scale_y;
 		
-		ct.scale (scale_x, scale_y);
-		ct.translate (-view_offset_x / image_scale_x, -view_offset_y / image_scale_y);
+		scale_x /= part.get_scale ();
+		scale_y /= part.get_scale ();
 		
-		ct.set_source_surface (s, img_offset_x / image_scale_x, img_offset_y / image_scale_y);
+		ImageSurface scaled_image;
+		Context scaled_context;
+		scaled_image = new ImageSurface (Format.ARGB32, allocation.width, allocation.height);
+		scaled_context = new Context (scaled_image);
 
-		ct.paint ();
-		ct.restore ();
+		scaled_context.scale (scale_x, scale_y);
 		
+		double scaled_x = part.offset_x;
+		double scaled_y = part.offset_y;
+		
+		scaled_x += view_zoom * (img_offset_x / scale_x - view_offset_x / scale_x);
+		scaled_y += view_zoom * (img_offset_y / scale_y - view_offset_y / scale_y);
+		
+		scaled_context.set_source_surface (part.get_image (), scaled_x, scaled_y);
+		scaled_context.paint ();
+
 		// add it
 		cr.save ();
-		cr.set_source_surface (st, 0, 0);
+		cr.set_source_surface (scaled_image, 0, 0);
 		cr.paint ();
 		cr.restore ();
 	}
