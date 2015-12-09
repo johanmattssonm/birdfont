@@ -20,15 +20,16 @@ namespace BirdFont {
 
 public class ScaledBackground : GLib.Object {
 	ImageSurface image;
-	double scale;
 	ArrayList<ImageSurface> parts;
 	int size;
 	int part_width;
 	int part_height;
+	double scale;
 	
 	public ScaledBackground (ImageSurface image, double scale) {
 		this.image = image;
 		this.scale = scale;
+		
 		parts = new ArrayList<ImageSurface> ();
 		
 		size = 10;

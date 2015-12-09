@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012, 2013, 2014 Johan Mattsson
+	Copyright (C) 2012 2013 2014 2015 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -29,13 +29,25 @@ public class BackgroundImage {
 	public double img_scale_x = 1;
 	public double img_scale_y = 1;
 	
-	public double img_rotation = 0;
+	public double img_rotation {
+		get {
+			return img_rotation_angle;
+		}
+		
+		set {
+			scaled = null;
+			scaled_contrast = null;
+			img_rotation_angle = value;
+		}
+	}
+	
+	private double img_rotation_angle = 0;
+	
 	private int size = -1;
 
 	public int active_handle = -1;
 	public int selected_handle = -1;
 	
-	private ImageSurface? contrast_image = null;
 	private ImageSurface? background_image = null;
 	private ImageSurface? original_image = null;
 	
@@ -48,6 +60,7 @@ public class BackgroundImage {
 	public signal void updated ();
 
 	private ScaledBackgrounds? scaled = null;
+	private ScaledBackgrounds? scaled_contrast = null;
 
 	public double img_offset_x {
 		get { return img_x + Glyph.xc (); }
@@ -118,7 +131,8 @@ public class BackgroundImage {
 
 	public ScaledBackgrounds get_scaled_backgrounds () {
 		if (scaled == null) {
-			scaled = new ScaledBackgrounds ((ImageSurface) get_rotated_image ());
+			ImageSurface rotated = rotate ((ImageSurface) get_padded_image ());
+			scaled = new ScaledBackgrounds (rotated);
 		}
 		
 		return (!) scaled;
@@ -402,13 +416,11 @@ public class BackgroundImage {
 				
 		double scale_x, scale_y;
 		double image_scale_x, image_scale_y;
-		ImageSurface s;
-		Surface st;
-		Context ct;
-		ImageSurface rotated_image;
 
-		if (high_contrast && contrast_image == null) {
-			contrast_image = get_contrast_image ();
+		ScaledBackgrounds backgrounds = get_scaled_backgrounds ();
+
+		if (high_contrast) {
+			backgrounds = get_contrast_image ();
 		}
 		
 		if (unlikely (get_img ().status () != Cairo.Status.SUCCESS)) {
@@ -416,27 +428,15 @@ public class BackgroundImage {
 			MainWindow.get_current_glyph ().set_background_visible (false);
 			return;
 		}
-		
-		rotated_image = (ImageSurface) get_rotated_image ();
-		
-		if (contrast_image == null) {
-			s = rotated_image;
-			image_scale_x = img_scale_x;
-			image_scale_y = img_scale_y;
-		} else {
-			s = (!) contrast_image;
-			image_scale_x = img_scale_x * ((double) rotated_image.get_width () / s.get_width ());
-			image_scale_y = img_scale_y * ((double) rotated_image.get_height () / s.get_height ());			
-		}
-		
-		// FIXME: rotated and contrast
-		ScaledBackgrounds backgrounds = get_scaled_backgrounds ();
-		ScaledBackground scaled = backgrounds.get_image (view_zoom * img_scale_x); // FIXME: y
 
+		image_scale_x = img_scale_x;
+		image_scale_y = img_scale_y;
+
+		ScaledBackground scaled;
 		ScaledBackgroundPart part;
-		double part_scale_x = view_zoom * image_scale_x;
-		double part_scale_y = view_zoom * image_scale_y;
-		
+
+		scaled = backgrounds.get_image (view_zoom * img_scale_x); // FIXME: y
+
 		double part_offset_x = img_offset_x - view_offset_x;
 		part_offset_x *= view_zoom;
 		part_offset_x = -part_offset_x;
@@ -456,6 +456,7 @@ public class BackgroundImage {
 		
 		ImageSurface scaled_image;
 		Context scaled_context;
+		
 		scaled_image = new ImageSurface (Format.ARGB32, allocation.width, allocation.height);
 		scaled_context = new Context (scaled_image);
 
@@ -471,30 +472,19 @@ public class BackgroundImage {
 		scaled_context.paint ();
 
 		// add it
-		cr.save ();
-
-		if (img_rotation != 0) {
-			cr.translate (Glyph.xc (), Glyph.xc ());
-			cr.rotate (img_rotation);
-			cr.translate (-Glyph.xc (), -Glyph.xc ());
-		}
-		
+		cr.save ();		
 		cr.set_source_surface (scaled_image, 0, 0);
 		cr.paint ();
 		cr.restore ();
 	}
 	
-	public Surface get_rotated_image () {
+	public Surface get_padded_image () {
 		double x, y;
 		double iw, ih;
 		int h, w;
 		double oy, ox;
 		
 		Surface o;
-				
-		Surface s;
-		Context c;
-
 		Surface sg;
 		Context cg;
 
@@ -528,24 +518,33 @@ public class BackgroundImage {
 		oy = size_margin;
 		ox = size_margin;
 
-		// rotate image
-		s = new Surface.similar (sg, sg.get_content (), (int) (ox), (int) (oy));
+		return sg;
+	}
+	
+	private ImageSurface rotate (ImageSurface padded_image) {				
+		ImageSurface s;
+		Context c;
+		
+		int w = padded_image.get_width ();
+		int h = padded_image.get_height ();
+		
+		s = new ImageSurface (Format.ARGB32, w, h);
 		c = new Context (s);
 	
 		c.save ();
 
 		Theme.color (c, "Background 1");
-		c.rectangle (0, 0, size_margin, size_margin);
+		c.rectangle (0, 0, w, h);
 		c.fill ();
 			
-		c.translate (size_margin * 0.5, size_margin * 0.5);
+		c.translate (w * 0.5, h * 0.5);
 		c.rotate (img_rotation);
-		c.translate (-size_margin * 0.5, -size_margin * 0.5);
+		c.translate (-w * 0.5, -h * 0.5);
 		
-		c.set_source_surface (cg.get_target (), 0, 0);
+		c.set_source_surface (padded_image, 0, 0);
 		c.paint ();	
 		c.restore ();
-
+		
 		return s;
 	}
 	
@@ -710,13 +709,22 @@ public class BackgroundImage {
 
 	public void update_background () {
 		background_image = null;
-		contrast_image = null;
+		scaled_contrast = null;
 		
 		GlyphCanvas.redraw ();
 		updated ();
 	}
 
-	ImageSurface get_contrast_image () {
+	ScaledBackgrounds get_contrast_image () {
+		if (scaled_contrast == null) {
+			ImageSurface image = get_contrast_image_surface ();
+			scaled_contrast = new ScaledBackgrounds (image);
+		}
+		
+		return (!) scaled_contrast;
+	}
+	
+	ImageSurface get_contrast_image_surface () {
 		ImageSurface s;
 		Context c;
 
@@ -739,7 +747,7 @@ public class BackgroundImage {
 		scaled_width = (int) (600 * trace_resolution);
 
 		s = new ImageSurface (Format.RGB24, scaled_width, scaled_width);
-		sg = (ImageSurface) get_rotated_image ();	
+		sg = (ImageSurface) get_padded_image ();	
 		c = new Context (s);
 	
 		c.save ();
@@ -802,8 +810,7 @@ public class BackgroundImage {
 		ns = new ImageSurface.for_data ((uchar[])outline_img, s.get_format (), s.get_width (), s.get_height (), s.get_stride ());		
 		background_image = null;
 		original_image = null;
-		contrast_image = ns;
-
+		
 		return (ImageSurface) ns;
 	}
 	
@@ -826,7 +833,7 @@ public class BackgroundImage {
 			return pl;
 		}
 
-		img = (contrast_image == null) ? get_contrast_image () : (!) contrast_image;
+		img = get_contrast_image ().get_image (1).get_image ();
 
 		w = img.get_width();
 		h = img.get_height();
@@ -1207,7 +1214,7 @@ public class BackgroundImage {
 		ImageSurface img;
 		double simplification = DrawingTools.auto_trace_simplify.get_value ();
 
-		img = (contrast_image == null) ? get_contrast_image () : (!) contrast_image;
+		img = get_contrast_image ().get_image (1).get_image ();
 
 		image_scale_x = ((double) size_margin / img.get_width ());
 		image_scale_y = ((double) size_margin / img.get_height ());
