@@ -29,19 +29,7 @@ public class BackgroundImage {
 	public double img_scale_x = 1;
 	public double img_scale_y = 1;
 	
-	public double img_rotation {
-		get {
-			return img_rotation_angle;
-		}
-		
-		set {
-			scaled = null;
-			scaled_contrast = null;
-			img_rotation_angle = value;
-		}
-	}
-	
-	private double img_rotation_angle = 0;
+	public double img_rotation = 0;
 	
 	private int size = -1;
 
@@ -60,7 +48,7 @@ public class BackgroundImage {
 	public signal void updated ();
 
 	private ScaledBackgrounds? scaled = null;
-	private ScaledBackgrounds? scaled_contrast = null;
+	private ImageSurface? contrast_image = null;
 
 	public double img_offset_x {
 		get { return img_x + Glyph.xc (); }
@@ -366,11 +354,47 @@ public class BackgroundImage {
 		
 		path = (!) png_image.get_path ();
 	}
+
+	private ScaledBackgrounds get_image () {
+		return get_scaled_backgrounds ();
+	}
 	
+	public void preview_img_rotation_from_coordinate (double x, double y) {
+		double rotation;
+		ScaledBackgrounds backgounds;
+		
+		if (get_img_rotation_from_coordinate (x, y, out rotation)) {
+			img_rotation = rotation;
+			backgounds = get_image ();
+			double view_zoom = MainWindow.get_current_glyph ().view_zoom;
+			ImageSurface rotated;
+			
+			img_rotation = rotation;
+			
+			if (!high_contrast) {
+				rotated = rotate ((ImageSurface) get_padded_image ());
+				scaled = new ScaledBackgrounds.single_size (rotated, 1);
+			} else {
+				contrast_image = null;
+			}
+		}
+	}
+
 	public void set_img_rotation_from_coordinate (double x, double y) {
+		double rotation;
+		if (get_img_rotation_from_coordinate (x, y, out rotation)) {
+			img_rotation = rotation;
+			scaled = null;
+			contrast_image = null;
+		}
+	}
+	
+	public bool get_img_rotation_from_coordinate (double x, double y, out double rotation) {
 		double bcx, bcy;
 		double a, b, c, length;
 
+		rotation = 0;
+		
 		bcx = img_middle_x;
 		bcy = img_middle_y;
 
@@ -379,7 +403,7 @@ public class BackgroundImage {
 		c = a * a + b * b;
 		
 		if (c == 0) {
-			return;
+			return false;
 		}
 		
 		length = sqrt (fabs (c));	
@@ -388,9 +412,8 @@ public class BackgroundImage {
 			length = -length;
 		}
 	
-		img_rotation =  (y > bcy) ? acos (a / length) + PI : -acos (a / length) + PI;
-		
-		background_image = null;
+		rotation = (y > bcy) ? acos (a / length) + PI : -acos (a / length) + PI;
+		return true;
 	}
 	
 	public void set_img_scale (double xs, double ys) {
@@ -418,10 +441,6 @@ public class BackgroundImage {
 		double image_scale_x, image_scale_y;
 
 		ScaledBackgrounds backgrounds = get_scaled_backgrounds ();
-
-		if (high_contrast) {
-			backgrounds = get_contrast_image ();
-		}
 		
 		if (unlikely (get_img ().status () != Cairo.Status.SUCCESS)) {
 			warning (@"Background image is invalid. (\"$path\")\n");
@@ -432,45 +451,73 @@ public class BackgroundImage {
 		image_scale_x = img_scale_x;
 		image_scale_y = img_scale_y;
 
-		ScaledBackground scaled;
-		ScaledBackgroundPart part;
-
-		scaled = backgrounds.get_image (view_zoom * img_scale_x); // FIXME: y
-
-		double part_offset_x = img_offset_x - view_offset_x;
-		part_offset_x *= view_zoom;
-		part_offset_x = -part_offset_x;
-
-		double part_offset_y = img_offset_y - view_offset_y;
-		part_offset_y *= view_zoom;
-		part_offset_y = -part_offset_y;
-		
-		part = scaled.get_part (part_offset_x, part_offset_y, 
-			allocation.width, allocation.height); 
-
-		scale_x = view_zoom * image_scale_x;
-		scale_y = view_zoom * image_scale_y;
-		
-		scale_x /= part.get_scale ();
-		scale_y /= part.get_scale ();
-		
 		ImageSurface scaled_image;
 		Context scaled_context;
-		
-		scaled_image = new ImageSurface (Format.ARGB32, allocation.width, allocation.height);
-		scaled_context = new Context (scaled_image);
 
-		scaled_context.scale (scale_x, scale_y);
-		
-		double scaled_x = part.offset_x;
-		double scaled_y = part.offset_y;
-		
-		scaled_x += view_zoom * (img_offset_x / scale_x - view_offset_x / scale_x);
-		scaled_y += view_zoom * (img_offset_y / scale_y - view_offset_y / scale_y);
-		
-		scaled_context.set_source_surface (part.get_image (), scaled_x, scaled_y);
-		scaled_context.paint ();
+		if (!high_contrast) {
+			ScaledBackground scaled;
+			ScaledBackgroundPart part;
 
+			scaled = backgrounds.get_image (view_zoom * img_scale_x); // FIXME: y
+
+			double part_offset_x = img_offset_x - view_offset_x;
+			part_offset_x *= view_zoom;
+			part_offset_x = -part_offset_x;
+
+			double part_offset_y = img_offset_y - view_offset_y;
+			part_offset_y *= view_zoom;
+			part_offset_y = -part_offset_y;
+			
+			part = scaled.get_part (part_offset_x, part_offset_y, 
+				(int) (allocation.width * view_zoom), (int) (allocation.height * view_zoom)); 
+
+			scale_x = view_zoom * image_scale_x;
+			scale_y = view_zoom * image_scale_y;
+			
+			scale_x /= part.get_scale ();
+			scale_y /= part.get_scale ();
+						
+			scaled_image = new ImageSurface (Format.ARGB32, allocation.width, allocation.height);
+			
+			scaled_context = new Context (scaled_image);
+
+			scaled_context.scale (scale_x, scale_y);
+			
+			double scaled_x = part.offset_x;
+			double scaled_y = part.offset_y;
+			
+			scaled_x += view_zoom * (img_offset_x / scale_x - view_offset_x / scale_x);
+			scaled_y += view_zoom * (img_offset_y / scale_y - view_offset_y / scale_y);
+			
+			scaled_context.set_source_surface (part.get_image (), scaled_x, scaled_y);
+			scaled_context.paint ();
+		} else {		
+			ImageSurface contrast = get_contrast_image ();
+			
+			image_scale_x = img_scale_x * ((double) size_margin / contrast.get_width ());
+			image_scale_y = img_scale_y * ((double) size_margin / contrast.get_height ());			
+			
+			scaled_image = new ImageSurface (Format.ARGB32, allocation.width, allocation.height);
+			Context contrast_context = new Context (scaled_image);
+			contrast_context.save ();
+
+			contrast_context.set_source_rgba (1, 1, 1, 1);
+			contrast_context.rectangle (0, 0, allocation.width, allocation.height);
+			contrast_context.fill ();
+
+			// scale both canvas and image at the same time
+			scale_x = view_zoom * image_scale_x;
+			scale_y = view_zoom * image_scale_y;
+			
+			contrast_context.scale (scale_x, scale_y);
+			contrast_context.translate (-view_offset_x / image_scale_x, -view_offset_y / image_scale_y);
+			
+			contrast_context.set_source_surface (contrast, img_offset_x / image_scale_x, img_offset_y / image_scale_y);
+
+			contrast_context.paint ();
+			contrast_context.restore ();
+		}
+		
 		// add it
 		cr.save ();		
 		cr.set_source_surface (scaled_image, 0, 0);
@@ -521,7 +568,11 @@ public class BackgroundImage {
 		return sg;
 	}
 	
-	private ImageSurface rotate (ImageSurface padded_image) {				
+	private ImageSurface rotate (ImageSurface padded_image) {
+		return rotate_image (padded_image, img_rotation);
+	}
+	
+	public static ImageSurface rotate_image (ImageSurface padded_image, double angle) {
 		ImageSurface s;
 		Context c;
 		
@@ -533,12 +584,8 @@ public class BackgroundImage {
 	
 		c.save ();
 
-		Theme.color (c, "Background 1");
-		c.rectangle (0, 0, w, h);
-		c.fill ();
-			
 		c.translate (w * 0.5, h * 0.5);
-		c.rotate (img_rotation);
+		c.rotate (angle);
 		c.translate (-w * 0.5, -h * 0.5);
 		
 		c.set_source_surface (padded_image, 0, 0);
@@ -709,21 +756,20 @@ public class BackgroundImage {
 
 	public void update_background () {
 		background_image = null;
-		scaled_contrast = null;
+		contrast_image = null;
 		
 		GlyphCanvas.redraw ();
 		updated ();
 	}
 
-	ScaledBackgrounds get_contrast_image () {
-		if (scaled_contrast == null) {
-			ImageSurface image = get_contrast_image_surface ();
-			scaled_contrast = new ScaledBackgrounds (image);
+	ImageSurface get_contrast_image () {
+		if (contrast_image == null) {
+			contrast_image  = get_contrast_image_surface ();
 		}
 		
-		return (!) scaled_contrast;
+		return (!) contrast_image;
 	}
-	
+
 	ImageSurface get_contrast_image_surface () {
 		ImageSurface s;
 		Context c;
@@ -748,6 +794,7 @@ public class BackgroundImage {
 
 		s = new ImageSurface (Format.RGB24, scaled_width, scaled_width);
 		sg = (ImageSurface) get_padded_image ();	
+		sg = rotate (sg);
 		c = new Context (s);
 	
 		c.save ();
@@ -833,7 +880,7 @@ public class BackgroundImage {
 			return pl;
 		}
 
-		img = get_contrast_image ().get_image (1).get_image ();
+		img = get_contrast_image ();
 
 		w = img.get_width();
 		h = img.get_height();
@@ -1214,7 +1261,7 @@ public class BackgroundImage {
 		ImageSurface img;
 		double simplification = DrawingTools.auto_trace_simplify.get_value ();
 
-		img = get_contrast_image ().get_image (1).get_image ();
+		img = get_contrast_image ();
 
 		image_scale_x = ((double) size_margin / img.get_width ());
 		image_scale_y = ((double) size_margin / img.get_height ());

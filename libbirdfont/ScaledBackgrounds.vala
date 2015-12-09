@@ -35,6 +35,14 @@ public class ScaledBackgrounds : GLib.Object {
 		}
 	}
 
+	public ScaledBackgrounds.single_size (ImageSurface original, double scale_factor) {
+		this.original = original;
+		scaled = new ArrayList<ScaledBackground> ();
+
+		ScaledBackground image = scale (scale_factor);
+		scaled.add (image);
+	}
+	
 	public ScaledBackground get_image (double scale) {
 		foreach (ScaledBackground image in scaled) {
 			if (image.get_scale () < scale) {

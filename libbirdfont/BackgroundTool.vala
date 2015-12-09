@@ -21,6 +21,9 @@ public class BackgroundTool : Tool {
 	double begin_x = 0;
 	double begin_y = 0;
 
+	int last_x;
+	int last_y;
+	
 	public double img_offset_x = 0;
 	public double img_offset_y = 0;
 
@@ -78,20 +81,33 @@ public class BackgroundTool : Tool {
 			img_height = background.get_img ().get_height () * background.img_scale_y;
 			
 			move_bg = true;
+			
+			last_x = x;
+			last_y = y;
 		});
 
 		release_action.connect((self, b, x, y) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			BackgroundImage? bg = g.get_background_image ();
+			double coordinate_x, coordinate_y;
 			
 			if (bg == null) {
 				return;
 			}
 			
-			img_offset_x = ((!)bg).img_offset_x;
-			img_offset_y = ((!)bg).img_offset_y;
+			BackgroundImage background = (!) bg;
+
+			coordinate_x = Glyph.path_coordinate_x (x);
+			coordinate_y = Glyph.path_coordinate_y (y);
+		
+			if (background.selected_handle == 2) {
+				background.set_img_rotation_from_coordinate (coordinate_x, coordinate_y);
+			}
+						
+			img_offset_x = background.img_offset_x;
+			img_offset_y = background.img_offset_y;
 			
-			((!)bg).handler_release (x, y);
+			background.handler_release (x, y);
 			
 			move_bg = false;
 		});
@@ -135,7 +151,7 @@ public class BackgroundTool : Tool {
 		});
 	}
 		
-	void move (double x, double y) {
+	void move (int x, int y) {
 		Glyph g = MainWindow.get_current_glyph ();
 		BackgroundImage? background_image = g.get_background_image ();
 		BackgroundImage bg = (!) background_image;
@@ -156,11 +172,11 @@ public class BackgroundTool : Tool {
 	
 		dx *= PenTool.precision;
 		dy *= PenTool.precision;
-		
+
 		if (bg.selected_handle == 2) {
 			coordinate_x = Glyph.path_coordinate_x (x);
 			coordinate_y = Glyph.path_coordinate_y (y);
-			bg.set_img_rotation_from_coordinate (coordinate_x, coordinate_y);
+			bg.preview_img_rotation_from_coordinate (coordinate_x, coordinate_y);
 		}
 		
 		if (bg.selected_handle == 1) {
@@ -181,6 +197,9 @@ public class BackgroundTool : Tool {
 		}
 
 		GlyphCanvas.redraw ();
+		
+		last_x = x;
+		last_y = y;
 	}
 
 	public static void load_background_image () {

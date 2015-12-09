@@ -20,6 +20,7 @@ namespace BirdFont {
 
 public class ScaledBackground : GLib.Object {
 	ImageSurface image;
+	ImageSurface rotated;
 	ArrayList<ImageSurface> parts;
 	int size;
 	int part_width;
@@ -28,24 +29,39 @@ public class ScaledBackground : GLib.Object {
 	
 	public ScaledBackground (ImageSurface image, double scale) {
 		this.image = image;
+		rotated = image;
 		this.scale = scale;
+		parts = new ArrayList<ImageSurface> ();		
 		
-		parts = new ArrayList<ImageSurface> ();
+		create_parts ();
+	}
+	
+	void create_parts () {
+		parts.clear ();
+		size = image.get_width () / 100;
 		
-		size = 10;
+		if (size < 10) {
+			size = 10;
+		}
+
 		part_width = image.get_width () / size;
 		part_height = image.get_height () / size;
-
+				
 		for (int y = 0; y < size; y++) {
 			for (int x = 0; x < size; x++) {
 				ImageSurface next_part;
-				next_part = new ImageSurface (Format.RGB24, part_width, part_height);
+				next_part = new ImageSurface (Format.ARGB32, part_width, part_height);
 				Context context = new Context (next_part);
-				context.set_source_surface (image, -x * part_width, -y * part_width);
+				context.set_source_surface (rotated, -x * part_width, -y * part_width);
 				context.paint ();
 				parts.add (next_part);
 			}
-		}
+		}	
+	}
+	
+	public void rotate (double angle) {
+		rotated = BackgroundImage.rotate_image (image, angle);
+		create_parts ();
 	}
 	
 	public double get_scale () {
@@ -88,7 +104,9 @@ public class ScaledBackground : GLib.Object {
 
 		int assembled_width = (int) ((size + 2) * image_width);
 		int assembled_height = (int) ((size + 2) * image_height);
-		image = new ImageSurface (Format.RGB24, assembled_width, assembled_height);
+		
+		image = new ImageSurface (Format.ARGB32, assembled_width, assembled_height);
+
 		Context context = new Context (image);
 
 		int start_offset_x = start_x * part_width;
