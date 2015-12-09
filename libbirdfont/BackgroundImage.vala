@@ -472,6 +472,13 @@ public class BackgroundImage {
 
 		// add it
 		cr.save ();
+
+		if (img_rotation != 0) {
+			cr.translate (Glyph.xc (), Glyph.xc ());
+			cr.rotate (img_rotation);
+			cr.translate (-Glyph.xc (), -Glyph.xc ());
+		}
+		
 		cr.set_source_surface (scaled_image, 0, 0);
 		cr.paint ();
 		cr.restore ();
