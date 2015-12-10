@@ -40,17 +40,22 @@ public class BackgroundTools : ToolCollection  {
 		parts.set_unique (true);
 		
 		background_tools.add_tool (select_background);
+		select_background.select_action.connect (update_tool_selection);	
+
+		background_tools.add_tool (DrawingTools.move_background);
+		DrawingTools.move_background.select_action.connect (update_tool_selection);	
 		
+		background_tools.add_tool (DrawingTools.move_canvas);
+		DrawingTools.move_canvas.select_action.connect (update_tool_selection);	
+		
+		background_tools.add_tool (DrawingTools.background_scale);
+
 		LabelTool add_new_image = new LabelTool (t_("Add"));
 		add_new_image.select_action.connect ((t) => {
 			load_image ();
 		});
 		background_selection.add_tool (add_new_image);
-
-		background_tools.add_tool (DrawingTools.move_background);
-		background_tools.add_tool (DrawingTools.move_canvas);
-		background_tools.add_tool (DrawingTools.background_scale);
-
+		
 		expanders.add (font_name);
 		expanders.add (background_tools);
 		expanders.add (DrawingTools.zoombar_tool);
@@ -58,6 +63,14 @@ public class BackgroundTools : ToolCollection  {
 		expanders.add (background_selection);
 		expanders.add (files);
 		expanders.add (parts);
+	}
+
+	public void update_tool_selection (Tool selected) {
+		select_background.set_selected (false);
+		DrawingTools.move_background.set_selected (false);
+		DrawingTools.move_canvas.set_selected (false);
+		DrawingTools.background_scale.set_selected (false);
+		selected.set_selected (true);
 	}
 
 	public void remove_images () {

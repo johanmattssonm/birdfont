@@ -1377,14 +1377,19 @@ public class DrawingTools : ToolCollection  {
 		idle.set_callback (() => {
 			Glyph g = MainWindow.get_current_glyph ();
 
-			hide_all_modifiers ();
-
 			foreach (Tool t in draw_tools.tool) {
 				if (t != current_tool) {
 					t.set_selected (false);
 				}
 			}
 			
+			FontDisplay display = MainWindow.get_current_display ();
+			
+			if (display.get_name () == "Backgrounds") {
+				return false;
+			}
+
+			hide_all_modifiers ();			
 			cut_background.set_selected (false);
 			
 			bezier_tool.set_selected (false);

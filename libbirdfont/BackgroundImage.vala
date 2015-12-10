@@ -366,7 +366,6 @@ public class BackgroundImage {
 		if (get_img_rotation_from_coordinate (x, y, out rotation)) {
 			img_rotation = rotation;
 			backgounds = get_image ();
-			double view_zoom = MainWindow.get_current_glyph ().view_zoom;
 			ImageSurface rotated;
 			
 			img_rotation = rotation;
