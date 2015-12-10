@@ -1371,18 +1371,21 @@ public class DrawingTools : ToolCollection  {
 		full_height_tool.set_tool_visibility (true);
 	}
 	
+	public override void reset_selection (Tool current_tool) {
+		foreach (Tool t in draw_tools.tool) {
+			if (t != current_tool) {
+				t.set_selected (false);
+			}
+		}
+	}
+	
 	public void update_drawing_and_background_tools (Tool current_tool) {
 		IdleSource idle = new IdleSource ();
 
 		idle.set_callback (() => {
 			Glyph g = MainWindow.get_current_glyph ();
 
-			foreach (Tool t in draw_tools.tool) {
-				if (t != current_tool) {
-					t.set_selected (false);
-				}
-			}
-			
+			reset_selection (current_tool);
 			FontDisplay display = MainWindow.get_current_display ();
 			
 			if (display.get_name () == "Backgrounds") {

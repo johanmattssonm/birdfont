@@ -20,11 +20,20 @@ namespace BirdFont {
 public abstract class ToolCollection : GLib.Object  {
 	public double scroll = 0;
 	public double content_height = 0;
+	private Tool current_tool = new Tool ("no_icon");
 	
 	public abstract Gee.ArrayList<Expander> get_expanders ();
 
 	public virtual Gee.ArrayList<string> get_displays () {
 		return new Gee.ArrayList<string> ();
+	}
+	
+	public void set_current_tool (Tool tool) {
+		current_tool = tool;
+	}
+	
+	public Tool get_current_tool () {
+		return current_tool;
 	}
 	
 	public void redraw () {
@@ -33,7 +42,12 @@ public abstract class ToolCollection : GLib.Object  {
 		}
 	}
 	
-	public virtual void selected () {	
+	public virtual void selected () {
+		reset_selection (current_tool);
+		current_tool.set_selected (true);
+	}
+
+	public virtual void reset_selection (Tool current_tool) {
 	}
 }
 

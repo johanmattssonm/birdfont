@@ -30,8 +30,6 @@ public class Toolbox : GLib.Object  {
 	public static FileTools file_tools;
 	public static ThemeTools theme_tools;
 	
-	Tool current_tool;
-	
 	public Tool press_tool;
 	
 	public signal void redraw (int x, int y, int w, int h);
@@ -57,7 +55,6 @@ public class Toolbox : GLib.Object  {
 	
 	public Toolbox (GlyphCanvas glyph_canvas, TabBar tab_bar) {
 		tool_sets = new Gee.ArrayList<ToolCollection> ();
-		current_tool = new Tool ("no_icon");
 		press_tool = new Tool (null);
 
 		hidden_tools = new HiddenTools ();
@@ -369,12 +366,12 @@ public class Toolbox : GLib.Object  {
 
 	public void set_current_tool (Tool tool) {
 		if (tool.editor_events) {
-			current_tool = tool;
+			current_set.set_current_tool (tool);
 		}
 	}
 
 	public Tool get_current_tool () {
-		return current_tool;
+		return current_set.get_current_tool ();
 	}
 	
 	public void select_tool (Tool tool) {

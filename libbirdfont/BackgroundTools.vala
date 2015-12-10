@@ -65,11 +65,15 @@ public class BackgroundTools : ToolCollection  {
 		expanders.add (parts);
 	}
 
-	public void update_tool_selection (Tool selected) {
+	public override void reset_selection (Tool selected) {
 		select_background.set_selected (false);
 		DrawingTools.move_background.set_selected (false);
 		DrawingTools.move_canvas.set_selected (false);
 		DrawingTools.background_scale.set_selected (false);
+	}
+	
+	public void update_tool_selection (Tool selected) {
+		reset_selection (selected);
 		selected.set_selected (true);
 	}
 
@@ -97,6 +101,8 @@ public class BackgroundTools : ToolCollection  {
 			return false;
 		});
 		idle.attach (null);
+		
+		base.selected ();
 	}
 
 	public void update_parts_list (BackgroundImage current_image) {
