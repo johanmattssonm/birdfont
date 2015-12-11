@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-28 14:22+0100\n"
+"POT-Creation-Date: 2015-12-11 22:24+0100\n"
 "PO-Revision-Date: 2015-06-01 11:21+0000\n"
 "Last-Translator: Dheeta <dita.m.saputri@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -84,11 +84,11 @@ msgstr "Pilih latar belakang"
 msgid "Background Image"
 msgstr "Gambar Latar Belakang"
 
-#: libbirdfont/BackgroundTool.vala:41
+#: libbirdfont/BackgroundTool.vala:44
 msgid "Move, resize and rotate background image"
 msgstr "Pindah, ubah ukuran dan putar gambar latar belakang"
 
-#: libbirdfont/BackgroundTool.vala:223
+#: libbirdfont/BackgroundTool.vala:246
 msgid "Select background image"
 msgstr "Pilih gambar latar belakang"
 
@@ -105,16 +105,16 @@ msgstr "Berkas"
 msgid "Parts"
 msgstr "Bagian"
 
-#: libbirdfont/BackgroundTools.vala:44 libbirdfont/Glyph.vala:2348
+#: libbirdfont/BackgroundTools.vala:53 libbirdfont/Glyph.vala:2348
 #: libbirdfont/LigatureList.vala:106 libbirdfont/OtfFeatureTable.vala:181
 msgid "Add"
 msgstr "Tambah"
 
-#: libbirdfont/BackgroundTools.vala:103
+#: libbirdfont/BackgroundTools.vala:122
 msgid "Select Glyph"
 msgstr "Pilih Glyph"
 
-#: libbirdfont/BackgroundTools.vala:212 libbirdfont/LoadCallback.vala:102
+#: libbirdfont/BackgroundTools.vala:231 libbirdfont/LoadCallback.vala:102
 #: libbirdfont/Menu.vala:50
 msgid "Open"
 msgstr "Buka"
@@ -522,7 +522,7 @@ msgstr ""
 msgid "Object Tools"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:1513
+#: libbirdfont/DrawingTools.vala:1521
 msgid "Set size for grid"
 msgstr ""
 

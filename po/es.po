@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-28 14:22+0100\n"
+"POT-Creation-Date: 2015-12-11 22:24+0100\n"
 "PO-Revision-Date: 2015-11-26 23:26+0000\n"
 "Last-Translator: Adolfo <fitojb@ubuntu.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -84,11 +84,11 @@ msgstr "Seleccione el fondo"
 msgid "Background Image"
 msgstr "Imagen de fondo"
 
-#: libbirdfont/BackgroundTool.vala:41
+#: libbirdfont/BackgroundTool.vala:44
 msgid "Move, resize and rotate background image"
 msgstr "Mover, redimensionar y girar la imagen de fondo"
 
-#: libbirdfont/BackgroundTool.vala:223
+#: libbirdfont/BackgroundTool.vala:246
 msgid "Select background image"
 msgstr "Seleccionar una imagen de fondo"
 
@@ -105,16 +105,16 @@ msgstr "Archivos"
 msgid "Parts"
 msgstr "Partes"
 
-#: libbirdfont/BackgroundTools.vala:44 libbirdfont/Glyph.vala:2348
+#: libbirdfont/BackgroundTools.vala:53 libbirdfont/Glyph.vala:2348
 #: libbirdfont/LigatureList.vala:106 libbirdfont/OtfFeatureTable.vala:181
 msgid "Add"
 msgstr "Agregar"
 
-#: libbirdfont/BackgroundTools.vala:103
+#: libbirdfont/BackgroundTools.vala:122
 msgid "Select Glyph"
 msgstr "Seleccionar glifo"
 
-#: libbirdfont/BackgroundTools.vala:212 libbirdfont/LoadCallback.vala:102
+#: libbirdfont/BackgroundTools.vala:231 libbirdfont/LoadCallback.vala:102
 #: libbirdfont/Menu.vala:50
 msgid "Open"
 msgstr "Abrir"
@@ -525,7 +525,7 @@ msgstr "Punto de Control"
 msgid "Object Tools"
 msgstr "Herramientas de objeto"
 
-#: libbirdfont/DrawingTools.vala:1513
+#: libbirdfont/DrawingTools.vala:1521
 msgid "Set size for grid"
 msgstr "Establecer tamaño de la cuadrícula"
 

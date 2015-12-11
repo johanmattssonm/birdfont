@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-28 14:22+0100\n"
-"PO-Revision-Date: 2015-11-25 21:47+0000\n"
+"POT-Creation-Date: 2015-12-11 22:24+0100\n"
+"PO-Revision-Date: 2015-12-01 08:47+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: nl\n"
@@ -16,13 +16,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1448488059.000000\n"
+"X-POOTLE-MTIME: 1448959643.000000\n"
 
 # Please, fix the capitalization errors
 #: libbirdfont/Argument.vala:277
-#, fuzzy
 msgid "Usage"
-msgstr "gebruik"
+msgstr "Gebruik"
 
 #: libbirdfont/Argument.vala:279 libbirdfont/ExportUtils.vala:19
 #: birdfont-autotrace/AutoTrace.vala:68
@@ -86,11 +85,11 @@ msgstr "Achtergrond selecteren"
 msgid "Background Image"
 msgstr "Achtergrondafbeelding"
 
-#: libbirdfont/BackgroundTool.vala:41
+#: libbirdfont/BackgroundTool.vala:44
 msgid "Move, resize and rotate background image"
 msgstr "Achtergrondafbeelding manipuleren"
 
-#: libbirdfont/BackgroundTool.vala:223
+#: libbirdfont/BackgroundTool.vala:246
 msgid "Select background image"
 msgstr "Selecteer achtergrondafbeelding"
 
@@ -107,16 +106,16 @@ msgstr "Bestanden"
 msgid "Parts"
 msgstr "Delen"
 
-#: libbirdfont/BackgroundTools.vala:44 libbirdfont/Glyph.vala:2348
+#: libbirdfont/BackgroundTools.vala:53 libbirdfont/Glyph.vala:2348
 #: libbirdfont/LigatureList.vala:106 libbirdfont/OtfFeatureTable.vala:181
 msgid "Add"
 msgstr "Toevoegen"
 
-#: libbirdfont/BackgroundTools.vala:103
+#: libbirdfont/BackgroundTools.vala:122
 msgid "Select Glyph"
 msgstr "kies symbool"
 
-#: libbirdfont/BackgroundTools.vala:212 libbirdfont/LoadCallback.vala:102
+#: libbirdfont/BackgroundTools.vala:231 libbirdfont/LoadCallback.vala:102
 #: libbirdfont/Menu.vala:50
 msgid "Open"
 msgstr "open"
@@ -527,7 +526,7 @@ msgstr "controlepunten"
 msgid "Object Tools"
 msgstr "Objectgereedschap"
 
-#: libbirdfont/DrawingTools.vala:1513
+#: libbirdfont/DrawingTools.vala:1521
 msgid "Set size for grid"
 msgstr "instellen gridmaat"
 

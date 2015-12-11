@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-28 14:22+0100\n"
-"PO-Revision-Date: 2015-11-27 17:25+0000\n"
+"POT-Creation-Date: 2015-12-11 22:24+0100\n"
+"PO-Revision-Date: 2015-11-28 20:02+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: ru\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1448645146.000000\n"
+"X-POOTLE-MTIME: 1448740946.000000\n"
 
 #: libbirdfont/Argument.vala:277
 msgid "Usage"
@@ -87,11 +87,11 @@ msgstr "Выбор фона"
 msgid "Background Image"
 msgstr "Фоновое изображение"
 
-#: libbirdfont/BackgroundTool.vala:41
+#: libbirdfont/BackgroundTool.vala:44
 msgid "Move, resize and rotate background image"
 msgstr "Перемещение, изменение размера и поворот фонового изображения"
 
-#: libbirdfont/BackgroundTool.vala:223
+#: libbirdfont/BackgroundTool.vala:246
 msgid "Select background image"
 msgstr "Выбор фонового изображения"
 
@@ -108,16 +108,16 @@ msgstr "Файлы"
 msgid "Parts"
 msgstr "Части"
 
-#: libbirdfont/BackgroundTools.vala:44 libbirdfont/Glyph.vala:2348
+#: libbirdfont/BackgroundTools.vala:53 libbirdfont/Glyph.vala:2348
 #: libbirdfont/LigatureList.vala:106 libbirdfont/OtfFeatureTable.vala:181
 msgid "Add"
 msgstr "Добавить"
 
-#: libbirdfont/BackgroundTools.vala:103
+#: libbirdfont/BackgroundTools.vala:122
 msgid "Select Glyph"
 msgstr "выбрать глифф"
 
-#: libbirdfont/BackgroundTools.vala:212 libbirdfont/LoadCallback.vala:102
+#: libbirdfont/BackgroundTools.vala:231 libbirdfont/LoadCallback.vala:102
 #: libbirdfont/Menu.vala:50
 msgid "Open"
 msgstr "Открыть"
@@ -135,8 +135,9 @@ msgid "corner"
 msgstr "угол"
 
 #: libbirdfont/BezierTool.vala:103
+#, fuzzy
 msgid "on axis"
-msgstr ""
+msgstr "Ось Y"
 
 #: libbirdfont/CircleTool.vala:36
 msgid "Circle"
@@ -147,7 +148,6 @@ msgid "Crop background image"
 msgstr "Обрезать фоновое изображение"
 
 #: libbirdfont/DefaultCharactersSet.vala:25
-#, fuzzy
 msgid "Default Language"
 msgstr "Язык по умолчанию"
 
@@ -275,8 +275,9 @@ msgid "Designer"
 msgstr "Дизайнер"
 
 #: libbirdfont/DescriptionDisplay.vala:241
+#, fuzzy
 msgid "Vendor URL"
-msgstr ""
+msgstr "ID производителя"
 
 #: libbirdfont/DescriptionDisplay.vala:252
 msgid "Designer URL"
@@ -534,7 +535,7 @@ msgstr "Контрольные точки"
 msgid "Object Tools"
 msgstr "Инструменты обьекта"
 
-#: libbirdfont/DrawingTools.vala:1513
+#: libbirdfont/DrawingTools.vala:1521
 msgid "Set size for grid"
 msgstr "Установить размер сетки"
 
