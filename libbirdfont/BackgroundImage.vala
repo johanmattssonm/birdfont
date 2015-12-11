@@ -383,7 +383,7 @@ public class BackgroundImage {
 		return get_scaled_backgrounds ();
 	}
 	
-	public void preview_img_rotation_from_coordinate (double x, double y) {
+	public void preview_img_rotation_from_coordinate (double x, double y, double view_zoom) {
 		double rotation;
 		ScaledBackgrounds backgounds;
 		
@@ -396,7 +396,8 @@ public class BackgroundImage {
 			
 			if (!high_contrast) {
 				rotated = rotate ((ImageSurface) get_padded_image ());
-				scaled = new ScaledBackgrounds.single_size (rotated, 1);
+				// FIXME: y
+				scaled = new ScaledBackgrounds.single_size (rotated, img_scale_x * view_zoom);
 			} else {
 				contrast_image = null;
 			}
@@ -491,11 +492,19 @@ public class BackgroundImage {
 			part_offset_y /= img_scale_y / scaled.get_scale ();
 			part_offset_y = -part_offset_y;
 
-			double zoom = 1 / view_zoom;
-			zoom /= img_scale_y / scaled.get_scale ();
+			double part_allocation_width;
+			double part_allocation_height;
+
+			part_allocation_height = allocation.height;
+			part_allocation_height /= view_zoom;
+			part_allocation_height /= image_scale_x;
+
+			part_allocation_width = allocation.width;
+			part_allocation_width /= view_zoom;
+			part_allocation_width /= image_scale_y;
 			
 			part = scaled.get_part (part_offset_x, part_offset_y, 
-				(int) (allocation.width * zoom), (int) (allocation.height * zoom)); 
+				(int) (part_allocation_width), (int) (part_allocation_height)); 
 
 			scale_x = view_zoom * image_scale_x;
 			scale_y = view_zoom * image_scale_y;

@@ -133,6 +133,14 @@ public class ScaledBackground : GLib.Object {
 			start_y = 0;
 		}
 
+		if (stop_x > size) {
+			stop_x = size;
+		}
+
+		if (stop_y > size) {
+			stop_y = size;
+		}
+				
 		int assembled_width = (int) ((stop_x - start_x) * image_width);
 		int assembled_height = (int) ((stop_y - start_y) * image_height);
 		

@@ -157,7 +157,8 @@ public class BackgroundTool : Tool {
 		BackgroundImage bg = (!) background_image;
 		double xscale, yscale, dx, dy, xc, yc;
 		double coordinate_x, coordinate_y;
-
+		double view_zoom;
+		
 		if (background_image == null) {
 			return;
 		}
@@ -176,7 +177,8 @@ public class BackgroundTool : Tool {
 		if (bg.selected_handle == 2) {
 			coordinate_x = Glyph.path_coordinate_x (x);
 			coordinate_y = Glyph.path_coordinate_y (y);
-			bg.preview_img_rotation_from_coordinate (coordinate_x, coordinate_y);
+			view_zoom = MainWindow.get_current_glyph ().view_zoom;
+			bg.preview_img_rotation_from_coordinate (coordinate_x, coordinate_y, view_zoom);
 		}
 		
 		if (bg.selected_handle == 1) {
