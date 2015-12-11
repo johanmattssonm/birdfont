@@ -57,6 +57,12 @@ public class ScaledBackgrounds : GLib.Object {
 
 	private ScaledBackground scale (double scale_factor) {
 		ImageSurface scaled_image;
+		
+		if (scale_factor <= 0) {
+			warning ("scale_factor <= 0");
+			scale_factor = 1;
+		}
+		
 		int width = (int) (scale_factor * original.get_width ());
 		int height = (int) (scale_factor * original.get_height ());
 		scaled_image = new ImageSurface (Format.ARGB32, width, height);

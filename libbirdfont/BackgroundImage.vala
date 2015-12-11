@@ -25,9 +25,33 @@ public class BackgroundImage {
 	/** Image position in canvas coordinates. */
 	public double img_x = 0;
 	public double img_y = 0;
+
+	public double img_scale_x {
+		get {
+			return img_scale_x_size;
+		}
 		
-	public double img_scale_x = 1;
-	public double img_scale_y = 1;
+		set {
+			if (value > 0.0001) {
+				img_scale_x_size = value;
+			}
+		}
+	}
+	
+	public double img_scale_y {
+		get {
+			return img_scale_y_size;
+		}
+		
+		set {
+			if (value > 0.0001) {
+				img_scale_y_size = value;
+			}
+		}
+	}
+	
+	private double img_scale_x_size = 1;	
+	private double img_scale_y_size = 1;
 	
 	public double img_rotation = 0;
 	
@@ -458,17 +482,20 @@ public class BackgroundImage {
 			ScaledBackgroundPart part;
 
 			scaled = backgrounds.get_image (view_zoom * img_scale_x); // FIXME: y
-
+			
 			double part_offset_x = img_offset_x - view_offset_x;
-			part_offset_x *= view_zoom;
+			part_offset_x /= img_scale_x / scaled.get_scale ();
 			part_offset_x = -part_offset_x;
 
 			double part_offset_y = img_offset_y - view_offset_y;
-			part_offset_y *= view_zoom;
+			part_offset_y /= img_scale_y / scaled.get_scale ();
 			part_offset_y = -part_offset_y;
+
+			double zoom = 1 / view_zoom;
+			zoom /= img_scale_y / scaled.get_scale ();
 			
 			part = scaled.get_part (part_offset_x, part_offset_y, 
-				(int) (allocation.width * view_zoom), (int) (allocation.height * view_zoom)); 
+				(int) (allocation.width * zoom), (int) (allocation.height * zoom)); 
 
 			scale_x = view_zoom * image_scale_x;
 			scale_y = view_zoom * image_scale_y;
