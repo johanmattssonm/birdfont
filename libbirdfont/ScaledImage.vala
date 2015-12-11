@@ -20,7 +20,7 @@ namespace BirdFont {
 
 public class ScaledBackground : GLib.Object {
 	ImageSurface image;
-	ImageSurface rotated;
+	ImageSurface original;
 	ArrayList<ImageSurface> parts;
 	int size;
 	int part_width;
@@ -33,11 +33,16 @@ public class ScaledBackground : GLib.Object {
 			scale = 1;
 		}
 		
+		original = image;
 		this.image = image;
-		rotated = image;
 		this.scale = scale;
 		parts = new ArrayList<ImageSurface> ();		
 		
+		create_parts ();
+	}
+
+	public void rotate (double angle) {
+		image = BackgroundImage.rotate_image (original, angle);
 		create_parts ();
 	}
 	
@@ -65,16 +70,15 @@ public class ScaledBackground : GLib.Object {
 				ImageSurface next_part;
 				next_part = new ImageSurface (Format.ARGB32, part_width, part_height);
 				Context context = new Context (next_part);
-				context.set_source_surface (rotated, -x * part_width, -y * part_width);
+				context.set_source_surface (image, -x * part_width, -y * part_width);
 				context.paint ();
 				parts.add (next_part);
 			}
 		}	
 	}
 	
-	public void rotate (double angle) {
-		rotated = BackgroundImage.rotate_image (image, angle);
-		create_parts ();
+	public void set_scale (double s) {
+		scale = s;
 	}
 	
 	public double get_scale () {
@@ -141,12 +145,12 @@ public class ScaledBackground : GLib.Object {
 			stop_y = size;
 		}
 				
-		int assembled_width = (int) ((stop_x - start_x) * image_width);
-		int assembled_height = (int) ((stop_y - start_y) * image_height);
+		int assembled_width = (int) ((stop_x - start_x) * part_width);
+		int assembled_height = (int) ((stop_y - start_y) * part_height);
 		
-		image = new ImageSurface (Format.ARGB32, assembled_width, assembled_height);
+		ImageSurface assembled_image = new ImageSurface (Format.ARGB32, assembled_width, assembled_height);
 
-		Context context = new Context (image);
+		Context context = new Context (assembled_image);
 
 		int start_offset_x = start_x * part_width;
 		int start_offset_y = start_y * part_height;
@@ -168,7 +172,7 @@ public class ScaledBackground : GLib.Object {
 			}
 		}
 		
-		return new ScaledBackgroundPart (image, scale,
+		return new ScaledBackgroundPart (assembled_image, scale,
 				start_offset_x, start_offset_y);
 	}
 }

@@ -54,6 +54,7 @@ public class BackgroundImage {
 	private double img_scale_y_size = 1;
 	
 	public double img_rotation = 0;
+	private double preview_img_rotation = 0;
 	
 	private int size = -1;
 
@@ -383,21 +384,23 @@ public class BackgroundImage {
 		return get_scaled_backgrounds ();
 	}
 	
+	public void start_rotation_preview () {
+		preview_img_rotation = img_rotation;
+	}
+
 	public void preview_img_rotation_from_coordinate (double x, double y, double view_zoom) {
 		double rotation;
-		ScaledBackgrounds backgounds;
+		ScaledBackgrounds backgrounds;
+		ScaledBackground backgound;
 		
-		if (get_img_rotation_from_coordinate (x, y, out rotation)) {
-			img_rotation = rotation;
-			backgounds = get_image ();
-			ImageSurface rotated;
+		if (get_img_rotation_from_coordinate (x, y, out rotation)) {	
+			backgrounds = get_scaled_backgrounds ();
+			backgound = backgrounds.get_image (view_zoom * img_scale_x); // FIXME: y
 			
 			img_rotation = rotation;
 			
 			if (!high_contrast) {
-				rotated = rotate ((ImageSurface) get_padded_image ());
-				// FIXME: y
-				scaled = new ScaledBackgrounds.single_size (rotated, img_scale_x * view_zoom);
+				backgound.rotate (rotation - preview_img_rotation);
 			} else {
 				contrast_image = null;
 			}
@@ -408,9 +411,15 @@ public class BackgroundImage {
 		double rotation;
 		if (get_img_rotation_from_coordinate (x, y, out rotation)) {
 			img_rotation = rotation;
-			scaled = null;
-			contrast_image = null;
+			Task task = new Task (cache_scaled_image); // cache all sizes
+			MainWindow.run_blocking_task (task);
 		}
+	}
+	
+	void cache_scaled_image () {
+		scaled = null;
+		contrast_image = null;
+		get_image ();
 	}
 	
 	public bool get_img_rotation_from_coordinate (double x, double y, out double rotation) {
@@ -526,7 +535,7 @@ public class BackgroundImage {
 			
 			scaled_context.set_source_surface (part.get_image (), scaled_x, scaled_y);
 			scaled_context.paint ();
-		} else {		
+		} else {
 			ImageSurface contrast = get_contrast_image ();
 			
 			image_scale_x = img_scale_x * ((double) size_margin / contrast.get_width ());

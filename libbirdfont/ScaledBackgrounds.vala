@@ -34,14 +34,6 @@ public class ScaledBackgrounds : GLib.Object {
 			scaled.add (image);
 		}
 	}
-
-	public ScaledBackgrounds.single_size (ImageSurface original, double scale_factor) {
-		this.original = original;
-		scaled = new ArrayList<ScaledBackground> ();
-
-		ScaledBackground image = scale (scale_factor);
-		scaled.add (image);
-	}
 	
 	public ScaledBackground get_image (double scale) {
 		foreach (ScaledBackground image in scaled) {
@@ -63,8 +55,9 @@ public class ScaledBackgrounds : GLib.Object {
 			scale_factor = 1;
 		}
 		
-		int width = (int) (scale_factor * original.get_width ());
-		int height = (int) (scale_factor * original.get_height ());
+		int width = (int) (original.get_width () * scale_factor);
+		int height = (int) (original.get_height () * scale_factor);
+		
 		scaled_image = new ImageSurface (Format.ARGB32, width, height);
 		Context context = new Context (scaled_image);
 		context.scale (scale_factor, scale_factor);

@@ -80,6 +80,8 @@ public class BackgroundTool : Tool {
 			img_width = background.get_img ().get_width () * background.img_scale_x;
 			img_height = background.get_img ().get_height () * background.img_scale_y;
 			
+			background.start_rotation_preview ();
+			
 			move_bg = true;
 			
 			last_x = x;
