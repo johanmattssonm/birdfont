@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012, 2013, 2014 Johan Mattsson
+	Copyright (C) 2012 2013 2014 2015 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -504,62 +504,6 @@ public class EditPoint : GLib.Object {
 		s.append (@"Flags $(flags)\n");
 		
 		return s.str;
-	}
-	
-	public double max_x () {
-		double mx = x;
-		
-		if (get_right_handle ().x > mx) {
-			mx = get_right_handle ().x;
-		}
-
-		if (get_left_handle ().x > mx) {
-			mx = get_left_handle ().x;
-		}
-		
-		return mx;
-	}
-
-	public double min_x () {
-		double mx = x;
-		
-		if (get_right_handle ().x < mx) {
-			mx = get_right_handle ().x;
-		}
-
-		if (get_left_handle ().x < mx) {
-			mx = get_left_handle ().x;
-		}
-		
-		return mx;
-	}
-	
-	public double max_y () {
-		double my = y;
-		
-		if (get_right_handle ().y > my) {
-			my = get_right_handle ().y;
-		}
-
-		if (get_left_handle ().y > my) {
-			my = get_left_handle ().y;
-		}
-		
-		return my;
-	}
-
-	public double min_y () {
-		double my = y;
-		
-		if (get_right_handle ().y < my) {
-			my = get_right_handle ().y;
-		}
-
-		if (get_left_handle ().y < my) {
-			my = get_left_handle ().y;
-		}
-		
-		return my;
 	}
 }
 
