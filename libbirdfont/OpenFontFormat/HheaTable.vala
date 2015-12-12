@@ -70,7 +70,7 @@ public class HheaTable : OtfTable {
 
 		foreach (GlyfData glyph in glyf_table.glyf_data) {
 			if (glyph.bounding_box_ymin < winDescent) {
-				winDescent = glyph.bounding_box_ymin;
+				winDescent = -glyph.bounding_box_ymin;
 			}
 		}
 		
@@ -122,10 +122,10 @@ public class HheaTable : OtfTable {
 		descender -= (int16) rint (font.base_line * HeadTable.UNITS);
 
 		upm = HeadTable.units_per_em;
-		total_height = get_winascent () - get_windescent ();
+		total_height = get_winascent () + get_windescent ();
 		ascender = (int16) rint (upm * get_winascent () / (double) total_height);
 		descender = (int16) (ascender - upm);
-		line_gap = (int16) rint (ascender + descender - upm);
+		line_gap = (int16) rint (total_height - upm);
 				
 		fd.add_16 (ascender); // Ascender
 		fd.add_16 (descender); // Descender
