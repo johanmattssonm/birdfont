@@ -30,28 +30,17 @@ public class LigatureSet : GLib.Object {
 		if (ligatures.size == 0) {
 			return false;
 		}
-		
+				
 		return ligatures.get (0).substitution.has_prefix (s);
 	}
 	
 	public string get_coverage_char () {
-		string s;
-		string[] sp;
-		
 		if (ligatures.size == 0) {
 			warning ("No ligatures in set.");
 			return "";
 		}
 		
-		s = ligatures.get (0).substitution;
-		
-		if (s.has_prefix ("U+") || s.has_prefix ("u+")) {
-			sp = s.split (" ");
-			return_val_if_fail (sp.length > 0, "");
-			s = (!) Font.to_unichar (sp[0]).to_string ();
-		}
-		
-		return (!) s.get (0).to_string ();
+		return Ligature.get_coverage (ligatures.get (0).substitution);
 	}
 	
 	public FontData get_set_data () throws GLib.Error {
@@ -90,6 +79,10 @@ public class LigatureSet : GLib.Object {
 		if (l.has_prefix ("U+") || l.has_prefix ("u+")) {
 			l = (!) Font.to_unichar (l).to_string ();
 		}
+		
+		if (l == "space") {
+			l = " ";
+		}
 			
 		gid = glyf_table.get_gid (l);
 					
@@ -108,6 +101,10 @@ public class LigatureSet : GLib.Object {
 				p = (!) Font.to_unichar (p).to_string ();
 			}
 
+			if (p == "space") {
+				p = " ";
+			}
+			
 			gid = (uint16) glyf_table.get_gid (p);
 
 			if (gid == -1) {

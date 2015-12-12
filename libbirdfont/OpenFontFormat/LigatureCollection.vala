@@ -64,7 +64,11 @@ public class LigatureCollection : GLib.Object {
 		if (l.has_prefix ("U+") || l.has_prefix ("u+")) {
 			l = (!) Font.to_unichar (l).to_string ();
 		}
-						
+		
+		if (l == "space") {
+			l = " ";
+		}
+		
 		if (!font.has_glyph (l)) {
 			warning (@"Ligature $l does not correspond to a glyph in this font.");
 			return;
@@ -73,6 +77,10 @@ public class LigatureCollection : GLib.Object {
 		foreach (string p in parts) {		
 			if (p.has_prefix ("U+") || p.has_prefix ("u+")) {
 				p = (!) Font.to_unichar (p).to_string ();
+			}
+
+			if (p == "space") {
+				p = " ";
 			}
 			
 			if (!font.has_glyph (p)) {
@@ -105,7 +113,21 @@ public class LigatureCollection : GLib.Object {
 		ligature_sets.sort ((a, b) => {
 			LigatureSet la = (LigatureSet) a;
 			LigatureSet lb = (LigatureSet) b;
-			return (int) (la.get_coverage_char ().get_char () - lb.get_coverage_char ().get_char ());
+			string ca, cb;
+			
+			if (la.get_coverage_char () == "space") {
+				ca = " ";
+			} else {
+				ca = la.get_coverage_char ();
+			}
+
+			if (lb.get_coverage_char () == "space") {
+				cb = " ";
+			} else {
+				cb = lb.get_coverage_char ();
+			}
+
+			return strcmp (ca, cb);
 		});
 	}
 

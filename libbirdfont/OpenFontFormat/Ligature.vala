@@ -24,7 +24,38 @@ public class Ligature : GLib.Object {
 	}
 	
 	public unichar get_first_char () {
-		return substitution.get (0);
+		unichar first;
+		int index = 0;
+
+		get_coverage (substitution).get_next_char (ref index, out first);
+
+		return first;
+	}
+	
+	public static string get_coverage (string ligatures) {
+		string[] sp;
+		unichar first;
+		int index = 0;
+		string characters = ligatures;
+		
+		if (characters.has_prefix ("U+") || characters.has_prefix ("u+")) {
+			sp = characters.split (" ");
+			return_val_if_fail (sp.length > 0, "");
+			characters = (!) Font.to_unichar (sp[0]).to_string ();
+		}
+		sp = characters.split (" ");
+		
+		if (sp.length == 0) {
+			return "";
+		}
+
+		if (sp[0] == "space") {
+			sp[0] = " ";
+		}
+		
+		sp[0].get_next_char (ref index, out first);
+		
+		return (!) first.to_string ();	
 	}
 	
 	public void set_ligature () {
