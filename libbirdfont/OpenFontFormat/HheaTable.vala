@@ -120,16 +120,10 @@ public class HheaTable : OtfTable {
 		
 		descender = (int16) rint (font.bottom_limit * HeadTable.UNITS);
 		descender -= (int16) rint (font.base_line * HeadTable.UNITS);
-
-		upm = HeadTable.units_per_em;
-		total_height = get_winascent () + get_windescent ();
-		ascender = (int16) rint (upm * get_winascent () / (double) total_height);
-		descender = (int16) (ascender - upm);
-		line_gap = (int16) rint (total_height - upm);
-				
+		
 		fd.add_16 (ascender); // Ascender
 		fd.add_16 (descender); // Descender
-		fd.add_16 (line_gap); // LineGap
+		fd.add_16 (0); // LineGap
 				
 		fd.add_u16 (hmtx_table.max_advance); // maximum advance width value in 'hmtx' table.
 		

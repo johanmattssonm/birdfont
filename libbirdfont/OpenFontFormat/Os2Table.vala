@@ -130,10 +130,13 @@ public class Os2Table : OtfTable {
 		
 		fd.add_u16 (glyf_table.get_first_char ()); // usFirstCharIndex
 		fd.add_u16 (glyf_table.get_last_char ()); // usLastCharIndex
-		
-		fd.add_16 (hhea_table.ascender); // sTypoAscender
-		fd.add_16 (hhea_table.descender); // sTypoDescender
-		fd.add_16 (hhea_table.line_gap); // sTypoLineGap
+
+		int16 ascender = (int16) rint (font.top_limit * HeadTable.UNITS);
+		int16 descender = (int16) rint (font.bottom_limit * HeadTable.UNITS);
+	
+		fd.add_16 (ascender); // sTypoAscender
+		fd.add_16 (descender); // sTypoDescender
+		fd.add_16 (100); // sTypoLineGap
 
 		// usWinAscent
 		fd.add_u16 (hhea_table.get_winascent ()); 
