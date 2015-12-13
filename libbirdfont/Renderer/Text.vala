@@ -13,6 +13,7 @@
 */
 
 using Cairo;
+using Math;
 
 namespace BirdFont {
 	
@@ -338,7 +339,7 @@ public class Text : Widget {
 		
 		double s = get_font_scale ();
 		double cache_y = py - s * (cached_font.top_limit - cached_font.base_line);
-		cr.set_source_surface ((!) cache, (int) px, (int) cache_y);
+		cr.set_source_surface ((!) cache, (int) rint (px), (int) rint (cache_y));
 		cr.paint ();
 	}
 	
