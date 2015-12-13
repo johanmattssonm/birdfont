@@ -68,8 +68,11 @@ public class GlyphCollection : GLib.Object {
 			i = glyph_masters.size - 1;
 		}
 		
-		return_val_if_fail (0 <= i < glyph_masters.size, new GlyphMaster ());
-		
+		if (unlikely (!(0 <= i < glyph_masters.size))) {
+			warning(@"index out of bounds $i");
+			return new GlyphMaster ();
+		}
+				
 		return glyph_masters.get (i);
 	}
 
@@ -84,14 +87,20 @@ public class GlyphCollection : GLib.Object {
 	}
 		
 	public GlyphMaster get_master (string id) {
+		GlyphMaster? found = null;
+		
 		foreach (GlyphMaster m in glyph_masters) {
 			if (m.get_id () == id) {
-				return m;
+				found = m;
 			}
 		}
 		
-		warning ("Master not found for id $(id).");
-		return new GlyphMaster ();
+		if (unlikely (found == null)) {
+			warning ("Master not found for id $(id).");
+			return new GlyphMaster ();
+		}
+
+		return (!) found;
 	}
 		
 	public bool is_multimaster() {
@@ -121,7 +130,7 @@ public class GlyphCollection : GLib.Object {
 	public void set_selected_master (GlyphMaster m) {
 		current_master = glyph_masters.index_of (m);
 		
-		if (current_master == -1) {
+		if (unlikely (current_master == -1)) {
 			warning ("Master does not exits");
 			current_master = 0;
 		}
