@@ -49,6 +49,8 @@ public class Text : Widget {
 	public double a = 1;
 	double truncated_width = -1;
 	
+	double margin_left = 0;
+	
 	public Text (string text = "", double size = 17, double margin_bottom = 0) {
 		this.margin_bottom = margin_bottom;
 		font_cache = FontCache.get_default_cache ();
@@ -158,6 +160,20 @@ public class Text : Widget {
 			kc = new KerningClasses (empty);
 		}	
 
+		if (word_with_ligatures.glyph.size > 0) {
+			double none = 0;
+			g = word_with_ligatures.glyph.get (0);
+			if (g != null) {
+				margin_left = ((!) g).get_left_side_bearing ();
+				
+				if (margin_left < 0) {
+					margin_left = -margin_left;
+				} else {
+					margin_left = 0;
+				}
+			}
+		}
+		
 		for (int i = 0; i < word_with_ligatures.glyph.size; i++) {
 			g = word_with_ligatures.glyph.get (i);
 			
@@ -339,32 +355,32 @@ public class Text : Widget {
 		
 		double s = get_font_scale ();
 		double cache_y = py - s * (cached_font.top_limit - cached_font.base_line);
-		cr.set_source_surface ((!) cache, (int) rint (px), (int) rint (cache_y));
+		cr.set_source_surface ((!) cache, (int) rint (px - s * margin_left), (int) rint (cache_y));
 		cr.paint ();
 	}
 	
 	Surface draw_on_cache_surface (string cacheid) {
-		double x, y;
+		double y;
 		double ratio;
 		double cc_y;
 		Context cr;
 		Surface cache_surface;
 		double screen_scale = Screen.get_scale();
 		double h = font_size * screen_scale + 1;
-		double w = get_sidebearing_extent () * screen_scale + 1;
-		
-		cache_surface = Screen.create_background_surface ((int) w, (int) h);
-		cr = new Context (cache_surface);
-		cr.scale(screen_scale, screen_scale);
 
 		ratio = get_font_scale ();
 		cc_y = (cached_font.top_limit - cached_font.base_line) * ratio;
 
-		double px = 0;
+		double x = margin_left * ratio;
 		double py = cc_y;
+
+		double w = get_sidebearing_extent () * screen_scale + x + margin_left + 1;
 		
+		cache_surface = Screen.create_background_surface ((int) w, (int) h);
+		cr = new Context (cache_surface);
+		cr.scale (screen_scale, screen_scale);
+
 		y = cc_y;
-		x = 0;
 
 		if (unlikely (cached_font.base_line != 0)) {
 			warning ("Base line not zero.");
@@ -377,7 +393,7 @@ public class Text : Widget {
 			end = x + glyph.get_width () * ratio;
 			
 			// truncation
-			if (truncated_width > 0 && end - px > truncated_width) {
+			if (truncated_width > 0 && end > truncated_width) {
 				return;
 			}
 
@@ -418,7 +434,15 @@ public class Text : Widget {
 		Surface cache;
 		Context cc;
 		string cache_id;
-		double xp = x;
+		double glyph_margin_left = glyph.get_left_side_bearing ();
+		
+		if (glyph_margin_left < 0) {
+			glyph_margin_left = -glyph_margin_left;
+		} else {
+			glyph_margin_left = 0;
+		}
+		
+		double xp = x - glyph_margin_left * ratio;
 		double yp = y - cc_y;
 		int offset_x, offset_y;
 
@@ -428,14 +452,14 @@ public class Text : Widget {
 		cache_id = (cacheid == "") ? get_cache_id (offset_x, offset_y) : cacheid;
 				
 		if (unlikely (!glyph.has_cache (cache_id))) {
-			int w = (int) (glyph.get_width () * ratio) + 2;
+			int w = (int) ((glyph_margin_left * ratio + glyph.get_width ()) * ratio) + 2;
 			int h = (int) font_size + 2;
 			cache = Screen.create_background_surface (w, h);
 			cc = new Context (cache);
 
 			cc.scale(Screen.get_scale (), Screen.get_scale ());
 			
-			lsb = glyph.left_limit;
+			lsb = glyph.left_limit - glyph_margin_left;
 
 			cc.save ();
 			cc.set_source_rgba (r, g, b, a);
