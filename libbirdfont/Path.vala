@@ -104,6 +104,8 @@ public class Path : GLib.Object {
 	public Color? stroke_color = null;
 
 	public Gradient? gradient = null;
+	
+	private static Text? arrow = null;
 
 	public Path () {	
 		string width;
@@ -318,9 +320,9 @@ public class Path : GLib.Object {
 	public void draw_orientation_arrow (Context cr, double opacity) {
 		EditPoint top = new EditPoint ();
 		double max = Glyph.CANVAS_MIN;
-		Text arrow;
 		double x, y, angle;
-		double size = 50 * Screen.get_scale ();
+		double size = 200 * Screen.get_scale ();
+		Text arrow_icon;
 		
 		foreach (EditPoint e in points) {
 			if (e.y > max) {
@@ -329,10 +331,15 @@ public class Path : GLib.Object {
 			}
 		}
 		
-		arrow = new Text ("orientation_arrow", size);
-		arrow.load_font ("icons.bf");
+		if (arrow == null) {
+			arrow_icon = new Text ("orientation_arrow", size);
+			arrow_icon.load_font ("icons.bf");
+			arrow = arrow_icon;
+		}
 		
-		Theme.text_color_opacity (arrow, "Highlighted 1", opacity);
+		arrow_icon = (!) arrow;
+		
+		Theme.text_color_opacity (arrow_icon, "Highlighted 1", opacity);
 
 		angle = top.get_right_handle ().angle;
 		x = Glyph.xc () + top.x + cos (angle + PI / 2) * 10 * Glyph.ivz ();	
@@ -342,11 +349,12 @@ public class Path : GLib.Object {
 			cr.save ();
 			cr.translate (x, y);
 			double inverted_zoom = Glyph.ivz ();
-			cr.scale (inverted_zoom, inverted_zoom);
 			cr.rotate (-angle);
 			cr.translate (-x, -y); 
 			
-			arrow.draw_at_baseline (cr, x, y);
+			cr.scale (inverted_zoom, inverted_zoom);
+			
+			arrow_icon.draw_at_baseline (cr, x, y);
 			
 			cr.restore ();
 		}
