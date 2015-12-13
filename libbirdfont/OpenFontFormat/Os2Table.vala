@@ -139,11 +139,11 @@ public class Os2Table : OtfTable {
 		fd.add_16 (100); // sTypoLineGap
 
 		// usWinAscent
-		fd.add_u16 (hhea_table.get_winascent ()); 
+		fd.add_u16 (ascender); 
 		
 		// usWinDescent (not like sTypoDescender)
-		win_descent = hhea_table.get_windescent ();
-		if (win_descent < 0) {
+		win_descent = descender;
+		if (win_descent > 0) {
 			warning (@"usWinDescent is unsigned, can not write $(win_descent) to the field.");
 			fd.add_u16 (0);
 		} else {
