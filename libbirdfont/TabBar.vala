@@ -682,8 +682,6 @@ public class TabBar : GLib.Object {
 			wheel.widget_x = middlex;
 			wheel.widget_y = middley;
 			
-			wheel.use_cache (false);
-			
 			cr.save ();
 			if (!has_stop_button ()) {
 				cr.translate (middlex, middley);
@@ -801,7 +799,6 @@ public class TabBar : GLib.Object {
 			
 			// tab label
 			label = new Text ();
-			label.use_cache (false);
 			label.set_text (t.get_label ());
 			text_height = (int) (16 / scale);
 			label.set_font_size (text_height);

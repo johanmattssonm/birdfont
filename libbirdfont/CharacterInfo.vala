@@ -36,7 +36,6 @@ public class CharacterInfo : GLib.Object {
 			ligature = ((!) gc).is_unassigned ();
 			name = ((!) gc).get_name ();
 			icon.load_font ("icons.bf");
-			icon.use_cache (true);
 		}
 	}
 	

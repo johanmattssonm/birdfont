@@ -53,7 +53,7 @@ public class Expander : GLib.Object {
 		title = new Text ();
 
 		if (headline != null) {
-			set_headline(headline);
+			title.set_text ((!) headline);
 		}
 				
 		tool = new Gee.ArrayList<Tool> ();
@@ -63,9 +63,9 @@ public class Expander : GLib.Object {
 		cached = null;
 	}
 
-	public void set_headline (string? h) {
-		headline = h;
-		title.set_text ((!) headline);
+	public void set_headline (Text h) {
+		headline = h.get_text ();
+		title = h;
 	}
 
 	public double get_content_height () {
@@ -217,7 +217,6 @@ public class Expander : GLib.Object {
 	}
 	
 	public void redraw () {
-		cached = null;
 		Toolbox.redraw_tool_box ();
 	}
 	
@@ -290,11 +289,12 @@ public class Expander : GLib.Object {
 			}
 			
 			draw_content (cc, offset_y);
-			cached = (!) cache;
+			cached = (!) cache;			
 		}
 		
 		if (cached != null) {
 			cache = (!) cached;
+			cr.set_antialias (Cairo.Antialias.NONE);
 			Screen.paint_background_surface (cr, cache, 0, (int) (y + scroll));
 		}
 	}

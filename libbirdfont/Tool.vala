@@ -240,7 +240,6 @@ public class Tool : Widget {
 		icon_file = Theme.get_icon_file ();
 		icon_font = new Text ((!) name);
 		found = icon_font.load_font (icon_file);
-		icon_font.use_cache (true);
 		icon_font.set_font_size (40 * Toolbox.get_scale ());
 		
 		if (!found) {

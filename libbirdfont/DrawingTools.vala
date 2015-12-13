@@ -108,7 +108,11 @@ public class DrawingTools : ToolCollection  {
 	static Tool line_cap_butt;
 	static Tool line_cap_round;
 	static Tool line_cap_square;
-			
+
+	private Text backgrounds_headline = new Text (t_("Background Tools"));
+	private Text control_points_headline = new Text (t_("Control Points"));
+	private Text object_tools_headline = new Text (t_("Object Tools"));
+		
 	public DrawingTools (GlyphCanvas main_glyph_canvas) {
 		bool selected_line;
 		
@@ -1324,7 +1328,7 @@ public class DrawingTools : ToolCollection  {
 	}
 
 	void show_background_tool_modifiers () {
-		draw_tool_modifiers.set_headline (t_("Background Tools"));
+		draw_tool_modifiers.set_headline (backgrounds_headline);
 		
 		cut_background.set_tool_visibility (true);
 		show_bg.set_tool_visibility (true);
@@ -1339,7 +1343,7 @@ public class DrawingTools : ToolCollection  {
 	}
 			
 	void show_point_tool_modifiers () {
-		draw_tool_modifiers.set_headline (t_("Control Points"));
+		draw_tool_modifiers.set_headline (control_points_headline);
 		
 		tie_handles.set_tool_visibility (true);
 		reflect_handle.set_tool_visibility (true);
@@ -1355,7 +1359,7 @@ public class DrawingTools : ToolCollection  {
 	}
 	
 	void show_object_tool_modifiers () {
-		draw_tool_modifiers.set_headline (t_("Object Tools"));
+		draw_tool_modifiers.set_headline (object_tools_headline);
 		
 		x_coordinate.set_tool_visibility (true);
 		y_coordinate.set_tool_visibility (true);

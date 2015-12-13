@@ -64,7 +64,6 @@ public class TextArea : Widget {
 	bool store_undo_state_at_next_event = false;
 	
 	public bool editable;
-	public bool use_cache = true;
 	
 	public TextArea (double font_size = 20, Color? c = null) {
 		this.font_size = font_size;
@@ -1068,7 +1067,6 @@ public class TextArea : Widget {
 		cr.save ();
 
 		word = new Text ();
-		word.use_cache (use_cache);
 		
 		width = this.width - padding;
 		x += padding;

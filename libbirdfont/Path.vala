@@ -320,7 +320,7 @@ public class Path : GLib.Object {
 		double max = Glyph.CANVAS_MIN;
 		Text arrow;
 		double x, y, angle;
-		double size = 50 * Glyph.ivz ();
+		double size = 50 * Screen.get_scale ();
 		
 		foreach (EditPoint e in points) {
 			if (e.y > max) {
@@ -331,7 +331,6 @@ public class Path : GLib.Object {
 		
 		arrow = new Text ("orientation_arrow", size);
 		arrow.load_font ("icons.bf");
-		arrow.use_cache (false);
 		
 		Theme.text_color_opacity (arrow, "Highlighted 1", opacity);
 
@@ -342,6 +341,8 @@ public class Path : GLib.Object {
 		if (points.size > 0) {
 			cr.save ();
 			cr.translate (x, y);
+			double inverted_zoom = Glyph.ivz ();
+			cr.scale (inverted_zoom, inverted_zoom);
 			cr.rotate (-angle);
 			cr.translate (-x, -y); 
 			

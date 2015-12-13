@@ -20,7 +20,9 @@ namespace BirdFont {
 public class Text : Widget {
 	FontCache font_cache;
 	public CachedFont cached_font;
-
+	
+	Surface? cache = null;
+	
 	public string text;
 	
 	GlyphSequence glyph_sequence {
@@ -44,8 +46,6 @@ public class Text : Widget {
 	public double g = 0;
 	public double b = 0;
 	public double a = 1;
-	
-	bool use_cached_glyphs = true;
 	double truncated_width = -1;
 	
 	public Text (string text = "", double size = 17, double margin_bottom = 0) {
@@ -57,8 +57,8 @@ public class Text : Widget {
 		set_font_size (size);
 	}
 	
-	public void use_cache (bool cache) {
-		use_cached_glyphs = cache;
+	public string get_text () {
+		return text;
 	}
 	
 	/** Set font for this text area.
@@ -332,49 +332,61 @@ public class Text : Widget {
 		double ratio;
 		double cc_y;
 
+		if (cache == null) {
+			cache = draw_on_cache_surface (cacheid);
+		}
+		
+		double s = get_font_scale ();
+		double cache_y = py - s * (cached_font.top_limit - cached_font.base_line);
+		cr.set_source_surface ((!) cache, (int) px, (int) cache_y);
+		cr.paint ();
+	}
+	
+	Surface draw_on_cache_surface (string cacheid) {
+		double x, y;
+		double ratio;
+		double cc_y;
+		Context cr;
+		Surface cache_surface;
+		double screen_scale = Screen.get_scale();
+		double h = font_size * screen_scale + 1;
+		double w = get_sidebearing_extent () * screen_scale + 1;
+		
+		cache_surface = Screen.create_background_surface ((int) w, (int) h);
+		cr = new Context (cache_surface);
+		cr.scale(screen_scale, screen_scale);
+
 		ratio = get_font_scale ();
 		cc_y = (cached_font.top_limit - cached_font.base_line) * ratio;
 
-		y = py;
-		x = px;
+		double px = 0;
+		double py = cc_y;
+		
+		y = cc_y;
+		x = 0;
 
 		if (unlikely (cached_font.base_line != 0)) {
 			warning ("Base line not zero.");
 		}
 		
-		if (use_cached_glyphs) {
-			iterate ((glyph, kerning, last) => {
-				double end;
-				
-				x += kerning * ratio;
-				end = x + glyph.get_width () * ratio;
-				
-				// truncation
-				if (truncated_width > 0 && end - px > truncated_width) {
-					return;
-				}
+		iterate ((glyph, kerning, last) => {
+			double end;
+			
+			x += kerning * ratio;
+			end = x + glyph.get_width () * ratio;
+			
+			// truncation
+			if (truncated_width > 0 && end - px > truncated_width) {
+				return;
+			}
 
-				draw_chached (cr, glyph, kerning, last, x, y, cc_y, 
-					ratio, cacheid);
-				
-				x = end;
-			});
-		} else {
-			iterate ((glyph, kerning, last) => {
-				double end;
-				
-				x += kerning * ratio;
-				end = x + glyph.get_width () * ratio;
-				
-				// truncation
-				if (truncated_width > 0 && end - px > truncated_width) {
-					return;
-				}
-				
-				draw_without_cache (cr, glyph, kerning, last, x, y, cc_y, ratio);
-				x = end;
-			});
-		}
+			draw_chached (cr, glyph, kerning, last, x, y, cc_y, 
+				ratio, cacheid);
+			
+			x = end;
+		});
+		
+		return cache_surface;
 	}
 	
 	void draw_without_cache (Context cr, Glyph glyph, double kerning, bool last, 
