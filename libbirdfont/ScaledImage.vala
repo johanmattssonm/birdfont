@@ -126,8 +126,8 @@ public class ScaledBackground : GLib.Object {
 		
 		int start_x = (int) ((offset_x / image_width) * size);
 		int start_y = (int) ((offset_y / image_height) * size);
-		int stop_x = (int) (((offset_x + width) / image_width) * size) + 1;
-		int stop_y = (int) (((offset_y + height) / image_height) * size) + 1;
+		int stop_x = (int) (((offset_x + width) / image_width) * size) + 2;
+		int stop_y = (int) (((offset_y + height) / image_height) * size) + 2;
 
 		if (start_x < 0) {
 			start_x = 0;
