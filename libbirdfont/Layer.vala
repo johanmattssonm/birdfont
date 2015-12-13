@@ -29,6 +29,10 @@ public class Layer : GLib.Object {
 		subgroups = new Gee.ArrayList<Layer> ();
 	}
 
+	public int index_of (Layer sublayer) {
+		return subgroups.index_of (sublayer);
+	}
+	
 	public PathList get_all_paths () {
 		PathList p = new PathList ();
 		

@@ -269,6 +269,14 @@ public class Expander : GLib.Object {
 		return r;
 	}
 
+	public void cache () {
+		if (cached == null) {
+			Surface workbench = Screen.create_background_surface (1, 1);
+			Context context = new Context (workbench);
+			draw (context);
+		}
+	}
+	
 	public void draw (Context cr) {
 		Surface cache;
 	

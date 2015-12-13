@@ -65,7 +65,7 @@ public class FontSettings : GLib.Object {
 			
 			foreach (var k in settings.keys) {
 				sb.append ("\t<setting key=\"");
-				sb.append (k);
+				sb.append (XmlParser.encode (k));
 				sb.append ("\" ");
 				sb.append ("value=\"");
 				sb.append (XmlParser.encode (settings.get (k)));
@@ -114,7 +114,7 @@ public class FontSettings : GLib.Object {
 		string v = "";
 		foreach (Attribute a in tag.get_attributes ()) {
 			if (a.get_name () == "key") {
-				key = a.get_content ();
+				key = XmlParser.decode (a.get_content ());
 			}
 
 			if (a.get_name () == "value") {

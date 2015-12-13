@@ -197,6 +197,10 @@ public class Glyph : FontDisplay {
 		current_layer = layers.subgroups.size - 1;
 	}
 
+	public int get_layer_index (Layer layer) {
+		return layers.index_of (layer);
+	}
+
 	public GlyfData get_ttf_data () {
 		if (ttf_data == null) {
 
@@ -471,6 +475,18 @@ public class Glyph : FontDisplay {
 		}
 
 		update_zoom_bar ();
+		
+		Font font = BirdFont.get_current_font ();
+		string index = font.settings.get_setting (@"Active Layer $(get_name ())");
+		
+		if (index != "") {
+			int i = int.parse (index);
+			
+			if (0 <= i < layers.subgroups.size) {
+				current_layer = i;
+			}
+		}
+		
 		DrawingTools.update_layers ();
 		MainWindow.get_toolbox ().update_expanders ();
 	}

@@ -158,11 +158,16 @@ public class LayerLabel : Tool {
 	}
 	
 	public void select_layer () {
-		MainWindow.get_current_glyph ().set_current_layer (layer);
+		Glyph glyph = MainWindow.get_current_glyph ();
+		glyph.set_current_layer (layer);
 		DrawingTools.deselect_layers ();
 		selected_layer = true;
 		MainWindow.get_current_glyph ().clear_active_paths ();
 		GlyphCanvas.redraw ();
+		
+		Font font = BirdFont.get_current_font ();
+		int index = glyph.get_layer_index (layer);
+		font.settings.set_setting (@"Active Layer $(glyph.get_name ())", @"$(index)");
 	}
 	
 	public void remove_layer () {

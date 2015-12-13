@@ -768,7 +768,7 @@ public class DrawingTools : ToolCollection  {
 		add_layer.select_action.connect ((self) => {
 			layer_tools.visible = true;
 			MainWindow.get_current_glyph ().add_new_layer ();
-			update_layers ();
+			update_layers (); // FIXME: speed optimization
 			show_layers.selected = true;
 			add_layer.selected = false;
 		});
@@ -1619,6 +1619,7 @@ public class DrawingTools : ToolCollection  {
 		}
 		
 		MainWindow.get_toolbox ().update_expanders ();
+		layer_tools.clear_cache ();
 		layer_tools.redraw ();
 		Toolbox.redraw_tool_box ();
 	}

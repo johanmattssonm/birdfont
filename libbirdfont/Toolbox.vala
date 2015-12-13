@@ -103,6 +103,14 @@ public class Toolbox : GLib.Object  {
 			tc.redraw ();
 		}
 	}
+	
+	public static void cache_all_tools () {
+		Toolbox t = MainWindow.get_toolbox ();
+		
+		foreach (ToolCollection tc in t.tool_sets) {
+			tc.cache ();
+		}
+	}
 
 	public static void set_toolbox_from_tab (string tab_name, Tab? t = null) {		
 		if (tab_name == "Spacing") {

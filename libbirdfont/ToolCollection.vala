@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013 Johan Mattsson
+	Copyright (C) 2013 2015 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -34,6 +34,12 @@ public abstract class ToolCollection : GLib.Object  {
 	
 	public Tool get_current_tool () {
 		return current_tool;
+	}
+	
+	public void cache () {
+		foreach (Expander e in get_expanders ()) {
+			e.cache ();
+		}
 	}
 	
 	public void redraw () {
