@@ -106,6 +106,7 @@ public class Text : Widget {
 		this.text = text;
 		gs = null;
 		sidebearing_extent = 0;
+		cache = null;
 	}
 
 	private GlyphSequence generate_glyphs () {

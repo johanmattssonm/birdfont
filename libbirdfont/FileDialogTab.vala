@@ -207,6 +207,7 @@ public class FileDialogTab : Table {
 		layout ();
 		base.selected_canvas ();
 		scroll_to (0);
+		MainWindow.show_scrollbar ();
 	}
 
 	public void show_text_area (string text) {
