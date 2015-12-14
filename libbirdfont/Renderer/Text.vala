@@ -26,6 +26,8 @@ public class Text : Widget {
 	
 	public string text;
 	
+	private bool use_cache = true;
+	
 	GlyphSequence glyph_sequence {
 		get {
 			if (gs == null) {
@@ -58,6 +60,10 @@ public class Text : Widget {
 		
 		set_text (text);
 		set_font_size (size);
+	}
+	
+	public void set_use_cache (bool cache) {
+		use_cache = cache;
 	}
 	
 	public string get_text () {
@@ -432,6 +438,7 @@ public class Text : Widget {
 		
 		double lsb;
 		Surface cache;
+		Surface cached_glyph;
 		Context cc;
 		string cache_id;
 		double glyph_margin_left = glyph.get_left_side_bearing ();
@@ -472,13 +479,19 @@ public class Text : Widget {
 			cc.fill ();
 			cc.restore ();
 
-			glyph.set_cache (cache_id, cache);
+			if (use_cache) {
+				glyph.set_cache (cache_id, cache);
+			}
+			
+			cached_glyph = cache;
+		} else {
+			cached_glyph = glyph.get_cache (cache_id);
 		}
 
 		cr.save ();
 		cr.set_antialias (Cairo.Antialias.NONE);
 		cr.scale(1 / Screen.get_scale (), 1 / Screen.get_scale ());
-		cr.set_source_surface (glyph.get_cache (cache_id),
+		cr.set_source_surface (cached_glyph,
 			(int) (xp * Screen.get_scale ()),
 			(int) (yp * Screen.get_scale ()));
 		cr.paint ();

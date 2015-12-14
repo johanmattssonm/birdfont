@@ -33,7 +33,7 @@ public class CachedFont : GLib.Object {
 	double _top_limit = 92.77; // FIXME: load before first glyph
 	double _bottom_limit = -24.4;
 	
-	FallbackFont fallback_font {
+	static FallbackFont fallback_font {
 		get {
 			if (_fallback_font == null) {
 				_fallback_font = new FallbackFont ();

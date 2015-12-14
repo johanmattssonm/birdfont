@@ -233,9 +233,10 @@ public class OverViewItem : GLib.Object {
 			c.restore ();
 		} else {
 			c.scale (Screen.get_scale (), Screen.get_scale ());
-
+			
 			c.save ();
 			Text fallback = new Text ();
+			fallback.set_use_cache (false);
 			Theme.text_color (fallback, "Overview Glyph");
 			fallback.set_text ((!) character.to_string ());
 			double font_size = height * 0.8;

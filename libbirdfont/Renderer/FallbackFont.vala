@@ -16,17 +16,20 @@ using Gee;
 
 [SimpleType]
 [CCode (has_type_id = false)]
-extern struct FcConfig {
+public extern struct FcConfig {
 }
 
 [CCode (cname = "FcInitLoadConfigAndFonts")]
-extern FcConfig* FcInitLoadConfigAndFonts ();
+public extern FcConfig* FcInitLoadConfigAndFonts ();
 
 [CCode (cname = "find_font")]
-extern string? find_font (FcConfig* font_config, string characters);
+public extern string? find_font (FcConfig* font_config, string characters);
+
+[CCode (cname = "find_font_family")]
+public extern string? find_font_family (FcConfig* font_config, string characters);
 
 [CCode (cname = "find_font_file")]
-extern string? find_font_file (FcConfig* font_config, string font_name);
+public extern string? find_font_file (FcConfig* font_config, string font_name);
 
 namespace BirdFont {
 
@@ -35,7 +38,7 @@ public class FallbackFont : GLib.Object {
 	Gee.ArrayList<File> font_directories;
 	
 	FontFace* default_font = null;
-	static FcConfig* font_config = null;
+	public static FcConfig* font_config = null;
 	static bool font_config_stated = false;
 	
 	string default_font_file_name = "Roboto-Regular.ttf";

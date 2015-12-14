@@ -1455,6 +1455,7 @@ public class OverView : FontDisplay {
 		
 		cr.save ();
 		Text character = new Text ();
+		character.set_use_cache (false);
 		Theme.text_color (character, "Foreground 1");
 		character.set_text ((!) c.to_string ());
 		character.set_font_size (height);

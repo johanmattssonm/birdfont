@@ -21,6 +21,7 @@ public class CharacterInfo : GLib.Object {
 	
 	public unichar unicode;
 
+	private static Text? info_icon = null;
 	Text icon;
 	double x = 0;
 	double y = 0;
@@ -29,13 +30,17 @@ public class CharacterInfo : GLib.Object {
 	
 	public CharacterInfo (unichar c, GlyphCollection? gc) {
 		unicode = c;
-		icon = new Text ("info_icon", 22);
-		icon.load_font ("icons.bf");
+		
+		if (info_icon == null) {
+			info_icon= new Text ("info_icon", 22);
+			((!) info_icon).load_font ("icons.bf");
+		}
+		
+		icon = (!) info_icon;
 		
 		if (gc != null) {
 			ligature = ((!) gc).is_unassigned ();
 			name = ((!) gc).get_name ();
-			icon.load_font ("icons.bf");
 		}
 	}
 	

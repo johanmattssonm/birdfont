@@ -61,7 +61,7 @@ public class Os2Table : OtfTable {
 		uint32 codepage1, codepage2;
 		int16 win_descent;
 		
-		fd.add_u16 (0x0004); // version
+		fd.add_u16 (0x0002); // version
 
 		fd.add_16 (hmtx_table.get_average_width ()); // xAvgCharWidth
 		
@@ -104,6 +104,7 @@ public class Os2Table : OtfTable {
 			fd.add_u32 (0); // ulUnicodeRange3 Bits 64-95
 			fd.add_u32 (0); // ulUnicodeRange4 Bits 96-127
 		} else {
+			warning(@"unicodeRange1: $unicodeRange1 unicodeRange2: $unicodeRange2 unicodeRange3 $unicodeRange3 unicodeRange4: $unicodeRange4");
 			fd.add_u32 (unicodeRange1); // ulUnicodeRange1 Bits 0-31
 			fd.add_u32 (unicodeRange2); // ulUnicodeRange2 Bits 32-63
 			fd.add_u32 (unicodeRange3); // ulUnicodeRange3 Bits 64-95

@@ -1,25 +1,22 @@
 /*
-    Copyright (C) 2015 Johan Mattsson
+	Copyright (C) 2015 Johan Mattsson
 
-    This library is free software; you can redistribute it and/or modify 
-    it under the terms of the GNU Lesser General Public License as 
-    published by the Free Software Foundation; either version 3 of the 
-    License, or (at your option) any later version.
+	This library is free software; you can redistribute it and/or modify 
+	it under the terms of the GNU Lesser General Public License as 
+	published by the Free Software Foundation; either version 3 of the 
+	License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful, but 
-    WITHOUT ANY WARRANTY; without even the implied warranty of 
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-    Lesser General Public License for more details.
+	This library is distributed in the hope that it will be useful, but 
+	WITHOUT ANY WARRANTY; without even the implied warranty of 
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+	Lesser General Public License for more details.
 */
 
 #include <stdio.h>
 #include <glib.h>
 #include <fontconfig/fontconfig.h>
 
-/** Find a fallback font for a set of characters.
- * @return A path to the font file.
- */
-gchar* find_font (FcConfig* fontconfig, const gchar* characters) {
+gchar* find_font_with_property (FcConfig* fontconfig, const gchar* characters, const gchar* property) {
 	FcPattern* pattern;
 	FcCharSet* character_set;
 	FcObjectSet* font_properties;
@@ -58,12 +55,12 @@ gchar* find_font (FcConfig* fontconfig, const gchar* characters) {
 	FcPatternAddInteger (pattern, FC_SLANT, FC_SLANT_ROMAN);
 	
 	FcPatternAddBool(pattern, FC_SCALABLE, FcTrue);
-	font_properties = FcObjectSetBuild (FC_FILE, NULL);	
+	font_properties = FcObjectSetBuild (property, NULL);	
 	fonts = FcFontList (fontconfig, pattern, font_properties);
 
 	if (fonts && fonts->nfont > 0) {
 		font = fonts->fonts[0];
-		if (FcPatternGetString(font, FC_FILE, 0, &path) == FcResultMatch) {
+		if (FcPatternGetString(font, property, 0, &path) == FcResultMatch) {
 			result = g_strdup ((gchar*) path);
 		}
 	}
@@ -77,6 +74,20 @@ gchar* find_font (FcConfig* fontconfig, const gchar* characters) {
 	}
 
 	return result;
+}
+
+/** Find a fallback font for a set of characters.
+ * @return A path to the font file.
+ */
+gchar* find_font (FcConfig* fontconfig, const gchar* characters) {
+	return find_font_with_property (fontconfig, characters, FC_FILE);
+}
+
+/** Find a fallback font for a set of characters.
+ * @return Family name of the font.
+ */
+gchar* find_font_family (FcConfig* fontconfig, const gchar* characters) {
+	return find_font_with_property (fontconfig, characters, FC_FAMILY);
 }
 
 /** Find a font file from its family name.
