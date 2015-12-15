@@ -170,6 +170,7 @@ public class MainWindow : GLib.Object {
 
 	public void set_native (NativeWindow nw) {
 		native_window = nw;
+		OverViewItem.start_thumbnail_processing ();
 	}
 	 
 	public static FontDisplay get_current_display () {

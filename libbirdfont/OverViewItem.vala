@@ -38,12 +38,26 @@ public class OverViewItem : GLib.Object {
 	public VersionList version_menu;
 	Text label;
 	
+	private Surface? cache = null;
+	
 	public static Surface? label_background = null;
 	public static Surface? selected_label_background = null;
 	public static Surface? label_background_no_menu = null;
 	public static Surface? selected_label_background_no_menu = null;
 	
+	private static Task thumbnail_task;
+	private static Gee.PriorityQueue<OverViewItem> thumbnail_queue;
+	private static Cond has_thumnail_task = new Cond ();
+	private static Mutex thumbnail_mutex = new Mutex ();
+	
+	private bool cancel_thumbnail = false;
+	
 	public OverViewItem (GlyphCollection? glyphs, unichar character, double x, double y) {	
+		init (glyphs, character, x, y);
+	}
+
+	// this method makes it possible for the overview tab to reuse its items as a speed optimization
+	public void init (GlyphCollection? glyphs, unichar character, double x, double y) {
 		this.x = x;
 		this.y = y;
 		this.character = character;
@@ -68,6 +82,123 @@ public class OverViewItem : GLib.Object {
 		} else {
 			version_menu = new VersionList (new GlyphCollection (character, (!) character.to_string ()));
 		}
+		
+		thumbnail_mutex.lock ();
+		if (!is_null (thumbnail_queue)) {
+			thumbnail_queue.offer (this);
+			has_thumnail_task.signal ();
+		}
+		thumbnail_mutex.unlock ();
+	}
+
+	public static void start_thumbnail_processing () {
+		thumbnail_task  = new Task (process_thumbnails, true);
+		thumbnail_queue = new Gee.PriorityQueue<OverViewItem> ();	
+		MainWindow.native_window.run_non_blocking_background_thread (thumbnail_task);
+	}
+
+	public void cancel_thumbnail_rendering () {
+		thumbnail_mutex.lock ();
+		cancel_thumbnail = true;
+		thumbnail_mutex.unlock ();
+	}
+
+	private static void process_thumbnails () {
+		bool cancel = false;
+		
+		while (!thumbnail_task.is_cancelled ()) {
+			OverViewItem item;
+			
+			thumbnail_mutex.lock ();
+			item = thumbnail_queue.poll ();
+			thumbnail_mutex.unlock ();
+			
+			if (!is_null (item)) {
+				thumbnail_mutex.lock ();
+				cancel = item.cancel_thumbnail;
+				thumbnail_mutex.unlock ();
+			
+				if (!cancel) {
+					IdleSource idle = new IdleSource ();
+					idle.set_callback (() => {
+						item.draw_background ();
+						return false;
+					});
+					idle.attach (null);
+				}
+			} else {
+				thumbnail_mutex.lock ();
+				has_thumnail_task.wait (thumbnail_mutex);
+				thumbnail_mutex.unlock ();
+			}
+		}
+	}
+
+	public void draw_background () { // FIXME: LOCK for Text and thread exit
+		Glyph g;
+		Font font;
+		double gx, gy;
+		double x1, x2, y1, y2;
+		double scale_box;
+		double w, h;
+		double glyph_width, glyph_height;
+		Surface s;
+		Context c;
+		Color color = Color.black ();
+		
+		w = width;
+		h = height;
+		
+		scale_box = width / DEFAULT_WIDTH;
+
+		s = Screen.create_background_surface ((int) width, (int) height - 20);
+		c = new Context (s);
+		
+		if (glyphs != null) {
+			font = BirdFont.get_current_font ();
+			g = ((!) glyphs).get_current ();
+			
+			c.save ();
+			g.boundaries (out x1, out y1, out x2, out y2);
+		
+			glyph_width = x2 - x1;
+			glyph_height = y2 - y1;
+			
+			c.save ();
+			c.scale (glyph_scale * Screen.get_scale (), glyph_scale * Screen.get_scale ());
+
+			g.add_help_lines ();
+			
+			gx = ((w / glyph_scale) - glyph_width) / 2 - g.get_left_side_bearing ();
+			gy = (h / glyph_scale) - 25 / glyph_scale;
+			
+			c.translate (gx - Glyph.xc () - g.get_lsb (), g.get_baseline () + gy - Glyph.yc ());
+			
+			g.draw_paths (c, color);
+			c.restore ();
+		} else {
+			c.scale (Screen.get_scale (), Screen.get_scale ());
+			
+			c.save ();
+			Text fallback = new Text ();
+			fallback.set_use_cache (false);
+			Theme.text_color (fallback, "Overview Glyph");
+			fallback.set_text ((!) character.to_string ());
+			double font_size = height * 0.8;
+			gx = (width - fallback.get_extent ()) / 2.0;
+			gy = height - 30;
+			fallback.set_font_size (font_size);
+			fallback.draw_at_baseline (c, gx, gy);
+			c.restore ();
+		}
+		
+		IdleSource idle = new IdleSource ();
+		idle.set_callback (() => {
+			cache = s;
+			GlyphCanvas.redraw ();
+			return false;
+		});
+		idle.attach (null);
 	}
 
 	public static void reset_label () {
@@ -143,7 +274,7 @@ public class OverViewItem : GLib.Object {
 		if (!is_on_screen (allocation)) {
 			return;
 		}
-		
+
 		cr.save ();
 		Theme.color (cr, "Background 1");
 		cr.rectangle (x, y, width, height);
@@ -157,9 +288,10 @@ public class OverViewItem : GLib.Object {
 		cr.stroke ();
 		cr.restore ();
 		
-		draw_thumbnail (cr, glyphs, x, y + height); 	
 		draw_caption (cr);
 		draw_menu (cr);
+		
+		draw_thumbnail (cr, x, y + height);
 	}
 
 	public void adjust_scale () {
@@ -189,72 +321,15 @@ public class OverViewItem : GLib.Object {
 		}
 	}
 
-	private void draw_thumbnail (Context cr, GlyphCollection? gl, double x, double y) {
-		Glyph g;
-		Font font;
-		double gx, gy;
-		double x1, x2, y1, y2;
-		double scale_box;
-		double w, h;
-		double glyph_width, glyph_height;
-		Surface s;
-		Context c;
-		Color color = Color.black ();
-		
-		w = width;
-		h = height;
-		
-		scale_box = width / DEFAULT_WIDTH;
-
-		s = Screen.create_background_surface ((int) width, (int) height - 20);
-		c = new Context (s);
-		
-		if (gl != null) {
-			font = BirdFont.get_current_font ();
-			g = ((!) gl).get_interpolated_fast (OverviewTools.current_master_size);
-
-			c.save ();
-			g.boundaries (out x1, out y1, out x2, out y2);
-		
-			glyph_width = x2 - x1;
-			glyph_height = y2 - y1;
-			
-			c.save ();
-			c.scale (glyph_scale * Screen.get_scale (), glyph_scale * Screen.get_scale ());
-
-			g.add_help_lines ();
-			
-			gx = ((w / glyph_scale) - glyph_width) / 2 - g.get_left_side_bearing ();
-			gy = (h / glyph_scale) - 25 / glyph_scale;
-			
-			c.translate (gx - Glyph.xc () - g.get_lsb (), g.get_baseline () + gy - Glyph.yc ());
-			
-			g.draw_paths (c, color);
-			c.restore ();
-		} else {
-			c.scale (Screen.get_scale (), Screen.get_scale ());
-			
-			c.save ();
-			Text fallback = new Text ();
-			fallback.set_use_cache (false);
-			Theme.text_color (fallback, "Overview Glyph");
-			fallback.set_text ((!) character.to_string ());
-			double font_size = height * 0.8;
-			fallback.set_font_size (font_size);
-
-			gx = (width - fallback.get_extent ()) / 2.0;
-			gy = height - 30;
-			fallback.set_font_size (font_size);
-			fallback.draw_at_baseline (c, gx, gy);
-			c.restore ();
+	private void draw_thumbnail (Context cr, double x, double y) {		
+		if (cache != null) {
+			cr.save ();
+			cr.set_antialias (Cairo.Antialias.NONE);
+			cr.scale (1 / Screen.get_scale (), 1 / Screen.get_scale ());	
+			cr.set_source_surface ((!) cache, (int) (x * Screen.get_scale ()), (int) ((y - height)) * Screen.get_scale ());
+			cr.paint ();
+			cr.restore ();
 		}
-		
-		cr.save ();
-		cr.set_antialias (Cairo.Antialias.NONE);
-		cr.scale (1 / Screen.get_scale (), 1 / Screen.get_scale ());	
-		cr.set_source_surface (s, (int) (x * Screen.get_scale ()), (int) ((y - h)) * Screen.get_scale ());
-		cr.paint ();
-		cr.restore ();
 	}
 
 	public bool has_icons () {
@@ -321,7 +396,7 @@ public class OverViewItem : GLib.Object {
 
 		selected_label_background = (!) cache;	
 	
-		// unselected item without menu icon
+		// deselected item without menu icon
 		cache = Screen.create_background_surface ((int) width, 20);
 		cc = new Context (cache);
 		cc.scale(Screen.get_scale(), Screen.get_scale());

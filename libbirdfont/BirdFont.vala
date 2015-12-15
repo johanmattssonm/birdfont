@@ -259,7 +259,7 @@ public class BirdFont {
 		if (has_argument ("--codepages")) {
 			codepage_bits = new CodePageBits ();
 			codepage_bits.generate_codepage_database ();
-		}
+		}		
 	}
 
 	public static bool has_logging () {

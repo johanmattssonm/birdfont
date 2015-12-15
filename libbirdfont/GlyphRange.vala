@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012 2014 Johan Mattsson
+	Copyright (C) 2012 2014 2015 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -26,11 +26,37 @@ public class GlyphRange {
 	uint32 len = 0;
 	
 	bool range_is_class = false;
+	uint32* range_index = null;
+	int index_size = 0;
 	
 	public GlyphRange () {
 		ranges = new Gee.ArrayList<UniRange> ();
 		unassigned = new Gee.ArrayList<string> ();
 		name = "No name";
+	}
+	
+	~GlyphRange () {
+		if (range_index != null) {
+			delete range_index;
+		}
+	}
+	
+	private void generate_unirange_index () {
+		if (range_index != null) {
+			delete range_index;
+		}
+		
+		index_size = ranges.size;
+		range_index = new uint32[index_size];
+		
+		int i = 0;
+		uint32 next_index = 0;
+		
+		foreach (UniRange range in ranges) {
+			range_index[i] = next_index;
+			next_index += (uint32) range.length ();
+			i++;
+		}
 	}
 	
 	public void add_unassigned (string glyph_name) {
@@ -53,13 +79,14 @@ public class GlyphRange {
 		unassigned.clear ();
 		ranges.clear ();
 		len = 0;
+		generate_unirange_index ();
 	}
 	
 	public unowned Gee.ArrayList<UniRange> get_ranges () {
 		return ranges;
 	}
 		
-	// TODO: complete localized alphabetical sort åäö is not the right order for example.
+	// sort by unicode value
 	public void sort () {
 		ranges.sort ((a, b) => {
 			UniRange first, next;
@@ -73,6 +100,8 @@ public class GlyphRange {
 			
 			return (r) ? 1 : -1;
 		});
+		
+		generate_unirange_index ();
 	}
 	
 	public void add_single (unichar c) {
@@ -122,6 +151,8 @@ public class GlyphRange {
 				}				
 			}
 		}
+		
+		generate_unirange_index ();
 	}
 	
 	/** Parse ranges on the form a-z. Single characters can be added as well as 
@@ -131,6 +162,7 @@ public class GlyphRange {
 	 */
 	public void parse_ranges (string ranges) throws MarkupError {
 		parse_range_string (ranges);
+		generate_unirange_index ();
 	}
 	
 	private void parse_range_string (string ranges) throws MarkupError {
@@ -200,11 +232,11 @@ public class GlyphRange {
 			
 			first = false;
 		}
+		
 		return s.str;
 	}
 	
 	public static string serialize (string s) {
-		
 		if (s == "space") {
 			return s;
 		}
@@ -351,7 +383,7 @@ public class GlyphRange {
 	private void append_range (unichar start, unichar stop) {
 		UniRange r;
 		r = insert_range (start, stop); // insert a unique range
-		merge_range (r); // join connecting ranges
+		merge_range (r);
 	}
 	
 	private void merge_range (UniRange r) {
@@ -393,47 +425,89 @@ public class GlyphRange {
 			merge_range (r);
 		}
 	}
+	
+	/** Find a range which containd index. */
+	private void get_unirange_index (uint32 index, out UniRange? range, out uint32 range_start_index) {
+		int lower = 0;
+		int upper = index_size - 1;
+		int i = lower + (upper - lower) / 2;
+		int end = index_size - 1;
+		
+		range_start_index = -1;
+		range = null;
+		
+		if (unlikely (ranges.size != index_size)) {
+			warning (@"Range size does not match index size: $(ranges.size) != $index_size");
+		}
+		
+		while (true) {
+			if (i == end) {
+				range_start_index = range_index[i];
+				range = ranges.get (i);
+				break;
+			} else if (range_index[i] <= index && range_index[i + 1] > index) {
+				range_start_index = range_index[i];
+				range = ranges.get (i);
+				break;
+			}
+			
+			if (lower >= upper) {
+				break;
+			}
 
+			if (range_index[i] < index) {
+				lower = i + 1;
+			} else {
+				upper = i - 1;
+			}
+			
+			i = lower + (upper - lower) / 2;
+		}
+	}
+	
 	public string get_char (uint32 index) {
 		int64 ti;
 		string chr;
 		UniRange r;
 		StringBuilder sb;
 		unichar c;		
+		UniRange? range;
+		uint32 range_start_index;
 		
-		if (index > len + unassigned.size) {
+		if (unlikely (index > len + unassigned.size)) {
 			return "\0".dup();
 		}
 		
 		if (index >= len) {
-			if (index - len >= unassigned.size) {
+			if (unlikely (index - len >= unassigned.size)) {
 				return "\0".dup();
 			} 
 			
 			chr = unassigned.get ((int) (index - len));
 			return chr;
 		}
-
-		r = ranges.get (0);
-		ti = index;
-
-		foreach (UniRange u in ranges) {
-			ti -= u.length ();
-			
-			if (ti < 0) {
-				r = u;
-				break;
-			}
+		
+		get_unirange_index (index, out range, out range_start_index);
+		
+		if (unlikely (range == null)) {
+			warning (@"No range found for index $index");
+			return "";
+		} 
+		
+		if (unlikely (range_start_index > index || range_start_index == -1)) {
+			warning ("Index out of bounds in glyph range.");
+			return "";
 		}
-				
-		sb = new StringBuilder ();
-		c = r.get_char ((unichar) (ti + r.length ()));
+		
+		r = (!) range;
+		c = r.get_char ((unichar) (index - range_start_index));
 		
 		if (unlikely (!c.validate ())) {
 			warning ("Not a valid unicode character.");
 			return "";
 		}
 		
+		sb = new StringBuilder ();
 		sb.append_unichar (c);
 		
 		return sb.str;

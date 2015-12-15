@@ -76,6 +76,8 @@ public class OverView : FontDisplay {
 	double scroll_size = 1;
 	const double UCD_LINE_HEIGHT = 17 * 1.3;
 
+	private bool update_scheduled = true;
+
 	public OverView (GlyphRange? range = null,
 		bool open_selected = true, bool default_character_set = true) {
 			
@@ -512,7 +514,11 @@ public class OverView : FontDisplay {
 		return i - 1;
 	}
 	
-	public void update_item_list (int item_list_length = -1) {
+	public void update_item_list () {
+		update_scheduled = true;
+	}
+	
+	public void process_update_item_list () {
 		string character_string;
 		Font f = BirdFont.get_current_font ();
 		GlyphCollection? glyphs = null;
@@ -522,17 +528,21 @@ public class OverView : FontDisplay {
 		unichar character;
 		Glyph glyph;
 		double tab_with;
+		int item_list_length;
+		
+		Test test = new Test.time("update_item_list");
 		
 		tab_with =  allocation.width - 30; // scrollbar
 		
 		items_per_row = get_items_per_row ();
 		rows = (int) (allocation.height /  OverViewItem.full_height ()) + 2;
 		
-		if (item_list_length == -1) {
-			item_list_length = items_per_row * rows;
+		item_list_length = items_per_row * rows;
+		
+		foreach  (OverViewItem overview_item in visible_items) {
+			overview_item.cancel_thumbnail_rendering ();
 		}
 		
-		visible_items.clear ();
 		visible_items = new Gee.ArrayList<OverViewItem> ();
 						
 		// update item list
@@ -561,9 +571,6 @@ public class OverView : FontDisplay {
 				character = character_string.get_char (0);
 			}
 			
-			item = new OverViewItem (glyphs, character, x, y);
-			item.adjust_scale ();
-			
 			x += OverViewItem.full_width ();
 			
 			if (x + OverViewItem.full_width () >= tab_with) {
@@ -571,31 +578,44 @@ public class OverView : FontDisplay {
 				y += OverViewItem.full_height ();
 			}
 			
-			item.selected = (i == selected);
+			bool selected_item = (i == selected);
 			
 			if (glyphs != null) {
-				item.selected |= selected_items.index_of ((!) glyphs) != -1;
+				selected_item |= selected_items.index_of ((!) glyphs) != -1;
 			}
 			
-			visible_items.add (item);
+			if (i >= visible_items.size) {
+				item = new OverViewItem (glyphs, character, x, y);
+				item.adjust_scale ();
+				item.selected = selected_item;
+				visible_items.add (item);
+			} else {
+				visible_items.get (i).init (glyphs, character, x, y);
+			}
+			
 			index++;
 		}
-				
+		
 		foreach (OverViewItem i in visible_items) {
 			i.y += view_offset_y;
 			i.x += view_offset_x;
-		}		
+		}
+		
+		warning (test.get_test_time ());
+		
+		update_scheduled = false;
 	}
 	
 	public override void draw (WidgetAllocation allocation, Context cr) {
-		
-		if (this.allocation.width != allocation.width
+		if (update_scheduled
+			|| this.allocation.width != allocation.width
 			|| this.allocation.height != allocation.height
 			|| this.allocation.width == 0) {
 			this.allocation = allocation;
-			update_item_list ();
+			process_update_item_list ();
 		}
 		
+		Test test = new Test.time("Overview.draw");
 		this.allocation = allocation;
 		
 		// clear canvas
@@ -616,6 +636,8 @@ public class OverView : FontDisplay {
 		if (unlikely (character_info != null)) {
 			draw_character_info (cr);
 		}
+		
+		warning (test.get_test_time ());
 	}
 		
 	void draw_empty_canvas (WidgetAllocation allocation, Context cr) {
