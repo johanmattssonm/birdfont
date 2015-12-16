@@ -52,22 +52,25 @@ public class OverViewItem : GLib.Object {
 	
 	private bool cancel_thumbnail = false;
 	
-	public OverViewItem (GlyphCollection? glyphs, unichar character, double x, double y) {	
-		init (glyphs, character, x, y);
+	public OverViewItem () {	
 	}
 
-	// this method makes it possible for the overview tab to reuse its items as a speed optimization
-	public void init (GlyphCollection? glyphs, unichar character, double x, double y) {
-		this.x = x;
-		this.y = y;
+	public void set_character (unichar character) {
 		this.character = character;
-		this.glyphs = glyphs;
-		this.info = new CharacterInfo (character, glyphs);		
-
-		label = new Text ((!) character.to_string (), 17);		
-		truncate_label ();
-			
-		if (glyphs != null) {
+		info = new CharacterInfo (character, glyphs);
+		
+		if (glyphs == null) {
+			label = new Text ();
+		} else {
+			label = new Text ((!) character.to_string (), 17);		
+			truncate_label ();
+		}
+	}
+	
+	public void set_glyphs (GlyphCollection? gc) {
+		glyphs = gc;
+		
+		if (glyphs != null) {	
 			version_menu = new VersionList ((!) glyphs);
 			version_menu.add_glyph_item.connect ((glyph) => {
 				((!) glyphs).insert_glyph (glyph, true);
@@ -79,10 +82,8 @@ public class OverViewItem : GLib.Object {
 				v.update_item_list ();
 				GlyphCanvas.redraw ();
 			});
-		} else {
-			version_menu = new VersionList (new GlyphCollection (character, (!) character.to_string ()));
-		}
-		
+		}	
+
 		thumbnail_mutex.lock ();
 		if (!is_null (thumbnail_queue)) {
 			thumbnail_queue.offer (this);
@@ -119,12 +120,7 @@ public class OverViewItem : GLib.Object {
 				thumbnail_mutex.unlock ();
 			
 				if (!cancel) {
-					IdleSource idle = new IdleSource ();
-					idle.set_callback (() => {
-						item.draw_background ();
-						return false;
-					});
-					idle.attach (null);
+					item.draw_background ();
 				}
 			} else {
 				thumbnail_mutex.lock ();
@@ -132,6 +128,55 @@ public class OverViewItem : GLib.Object {
 				thumbnail_mutex.unlock ();
 			}
 		}
+	}
+
+	public void draw_glyph_from_font () {
+		if (glyphs == null) {
+			return;
+		}
+
+		Glyph g;
+		Font font;
+		double gx, gy;
+		double x1, x2, y1, y2;
+		double scale_box;
+		double w, h;
+		double glyph_width, glyph_height;
+		Surface s;
+		Context c;
+		Color color = Color.black ();
+		
+		w = width;
+		h = height;
+		
+		scale_box = width / DEFAULT_WIDTH;
+
+		s = Screen.create_background_surface ((int) width, (int) height - 20);
+		c = new Context (s);
+		
+		g = ((!) glyphs).get_current ();
+		
+		c.save ();
+		g.boundaries (out x1, out y1, out x2, out y2);
+	
+		glyph_width = x2 - x1;
+		glyph_height = y2 - y1;
+		
+		c.save ();
+		c.scale (glyph_scale * Screen.get_scale (), glyph_scale * Screen.get_scale ());
+
+		g.add_help_lines ();
+		
+		gx = ((w / glyph_scale) - glyph_width) / 2 - g.get_left_side_bearing ();
+		gy = (h / glyph_scale) - 25 / glyph_scale;
+		
+		c.translate (gx - Glyph.xc () - g.get_lsb (), g.get_baseline () + gy - Glyph.yc ());
+		
+		g.draw_paths (c, color);
+		c.restore ();
+		
+		cache = s;
+		GlyphCanvas.redraw ();
 	}
 
 	public void draw_background () { // FIXME: LOCK for Text and thread exit
@@ -154,28 +199,13 @@ public class OverViewItem : GLib.Object {
 		s = Screen.create_background_surface ((int) width, (int) height - 20);
 		c = new Context (s);
 		
-		if (glyphs != null) {
-			font = BirdFont.get_current_font ();
-			g = ((!) glyphs).get_current ();
-			
-			c.save ();
-			g.boundaries (out x1, out y1, out x2, out y2);
-		
-			glyph_width = x2 - x1;
-			glyph_height = y2 - y1;
-			
-			c.save ();
-			c.scale (glyph_scale * Screen.get_scale (), glyph_scale * Screen.get_scale ());
-
-			g.add_help_lines ();
-			
-			gx = ((w / glyph_scale) - glyph_width) / 2 - g.get_left_side_bearing ();
-			gy = (h / glyph_scale) - 25 / glyph_scale;
-			
-			c.translate (gx - Glyph.xc () - g.get_lsb (), g.get_baseline () + gy - Glyph.yc ());
-			
-			g.draw_paths (c, color);
-			c.restore ();
+		if (glyphs != null) { // FIXME: lock
+			IdleSource idle_glyph = new IdleSource ();
+			idle_glyph.set_callback (() => {
+				draw_glyph_from_font ();
+				return false;
+			});
+			idle_glyph.attach (null);
 		} else {
 			c.scale (Screen.get_scale (), Screen.get_scale ());
 			
@@ -185,20 +215,21 @@ public class OverViewItem : GLib.Object {
 			Theme.text_color (fallback, "Overview Glyph");
 			fallback.set_text ((!) character.to_string ());
 			double font_size = height * 0.8;
+			fallback.set_font_size (font_size);
 			gx = (width - fallback.get_extent ()) / 2.0;
 			gy = height - 30;
-			fallback.set_font_size (font_size);
 			fallback.draw_at_baseline (c, gx, gy);
 			c.restore ();
-		}
-		
-		IdleSource idle = new IdleSource ();
-		idle.set_callback (() => {
-			cache = s;
-			GlyphCanvas.redraw ();
-			return false;
-		});
-		idle.attach (null);
+			
+			IdleSource idle = new IdleSource ();
+			idle.set_callback (() => {
+				cache = s;
+				GlyphCanvas.redraw ();
+				return false;
+			});
+			idle.attach (null);
+			
+		}		
 	}
 
 	public static void reset_label () {

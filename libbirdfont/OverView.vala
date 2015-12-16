@@ -20,7 +20,7 @@ namespace BirdFont {
 public class OverView : FontDisplay {
 	public WidgetAllocation allocation = new WidgetAllocation ();
 	
-	public OverViewItem selected_item = new OverViewItem (null, '\0', 0, 0);
+	public OverViewItem selected_item = new OverViewItem ();
 
 	public Gee.ArrayList<GlyphCollection> copied_glyphs = new Gee.ArrayList<GlyphCollection> ();
 	public Gee.ArrayList<GlyphCollection> selected_items = new Gee.ArrayList<GlyphCollection> ();	
@@ -490,7 +490,7 @@ public class OverView : FontDisplay {
 	
 	OverViewItem get_selected_item () {
 		if (visible_items.size == 0) {
-			return new OverViewItem (null, '\0', 0, 0);
+			return new OverViewItem ();
 		}
 		
 		if (!(0 <= selected < visible_items.size)) { 
@@ -518,7 +518,7 @@ public class OverView : FontDisplay {
 		update_scheduled = true;
 	}
 	
-	public void process_update_item_list () {
+	public void process_item_list_update () {
 		string character_string;
 		Font f = BirdFont.get_current_font ();
 		GlyphCollection? glyphs = null;
@@ -529,80 +529,118 @@ public class OverView : FontDisplay {
 		Glyph glyph;
 		double tab_with;
 		int item_list_length;
+		int visible_size;
 		
 		Test test = new Test.time("update_item_list");
 		
-		tab_with =  allocation.width - 30; // scrollbar
+		tab_with = allocation.width - 30; // scrollbar
 		
 		items_per_row = get_items_per_row ();
 		rows = (int) (allocation.height /  OverViewItem.full_height ()) + 2;
 		
 		item_list_length = items_per_row * rows;
-		
+
 		foreach  (OverViewItem overview_item in visible_items) {
 			overview_item.cancel_thumbnail_rendering ();
 		}
 		
-		visible_items = new Gee.ArrayList<OverViewItem> ();
-						
-		// update item list
+		visible_items.clear ();
+		Test test3 = new Test.time("two conditions");
+		
 		index = (uint32) first_visible;
 		x = OverViewItem.margin;
 		y = OverViewItem.margin;
-		for (int i = 0; i < item_list_length; i++) {
-			if (all_available) {
-				if (! (0 <= index < f.length ())) {
-					break;
-				}
-				
+		
+		if (all_available) {
+			uint font_length = f.length ();
+			
+			for (int i = 0; i < item_list_length && index < font_length; i++) {
 				glyphs = f.get_glyph_collection_index ((uint32) index);
 				return_if_fail (glyphs != null);
 				
 				glyph = ((!) glyphs).get_current ();
 				character_string = glyph.name;
 				character = glyph.unichar_code;
-			} else {
-				if (!(0 <= index < glyph_range.get_length ())) {
-					break;
-				}
 				
-				character_string = glyph_range.get_char ((uint32) index);
-				glyphs = f.get_glyph_collection_by_name (character_string);
-				character = character_string.get_char (0);
+				item = new OverViewItem ();
+				item.set_glyphs (glyphs);
+				item.set_character (character);
+				item.x = x;
+				item.y = y;
+				visible_items.add (item);
+				index++;
+			}
+		} else {
+
+			Test test_mk = new Test.time("mk items");
+			uint32 glyph_range_size = glyph_range.get_length ();
+			
+			for (int i = 0; i < item_list_length && index < glyph_range_size; i++) {			
+				item = new OverViewItem ();
+				visible_items.add (item);
+			}
+			warning (test_mk.get_test_time ());
+			
+			Test test_gl = new Test.time("get_glyph");
+			visible_size = visible_items.size;
+			for (int i = 0; i < visible_size; i++) {
+				item = visible_items.get (i);
+				glyphs = f.get_glyph_collection_by_name ((!) item.character.to_string ());
+				item.set_glyphs (glyphs);
+			}
+			warning (test_gl.get_test_time ());
+
+			Test test_a = new Test.time("get_char");
+			
+			visible_size = visible_items.size;
+			for (int i = 0; i < visible_size; i++) {
+				item = visible_items.get (i);
+				character = glyph_range.get_character ((uint32) index);
+				item.set_character (character);
+				index++;
+			}
+			warning (test_a.get_test_time ());
+		}
+		
+		Test test_b = new Test.time("adjust pos");
+		x = OverViewItem.margin;
+		y = OverViewItem.margin;
+		
+		visible_size = visible_items.size;
+		int selected_index;
+		bool selected_item;
+		double full_width = OverViewItem.full_width ();
+		
+		for (int i = 0; i < visible_size; i++) {
+			item = visible_items.get (i);
+
+			selected_item = false;
+			
+			if (glyphs != null) {
+				selected_index = selected_items.index_of ((!) glyphs);
+				selected_item = (selected_index != -1);
 			}
 			
-			x += OverViewItem.full_width ();
+			item.adjust_scale ();
 			
-			if (x + OverViewItem.full_width () >= tab_with) {
+			selected_item |= (i == selected);
+			item.selected = selected_item;
+			
+			item.x = x + view_offset_y;
+			item.y = y + view_offset_x;
+			
+			x += full_width;
+			
+			if (x + full_width >= tab_with) {
 				x = OverViewItem.margin;
 				y += OverViewItem.full_height ();
 			}
-			
-			bool selected_item = (i == selected);
-			
-			if (glyphs != null) {
-				selected_item |= selected_items.index_of ((!) glyphs) != -1;
-			}
-			
-			if (i >= visible_items.size) {
-				item = new OverViewItem (glyphs, character, x, y);
-				item.adjust_scale ();
-				item.selected = selected_item;
-				visible_items.add (item);
-			} else {
-				visible_items.get (i).init (glyphs, character, x, y);
-			}
-			
-			index++;
 		}
 		
-		foreach (OverViewItem i in visible_items) {
-			i.y += view_offset_y;
-			i.x += view_offset_x;
-		}
+		warning (test_b.get_test_time ());
 		
+		warning (test3.get_test_time ());
 		warning (test.get_test_time ());
-		
 		update_scheduled = false;
 	}
 	
@@ -612,7 +650,7 @@ public class OverView : FontDisplay {
 			|| this.allocation.height != allocation.height
 			|| this.allocation.width == 0) {
 			this.allocation = allocation;
-			process_update_item_list ();
+			process_item_list_update ();
 		}
 		
 		Test test = new Test.time("Overview.draw");

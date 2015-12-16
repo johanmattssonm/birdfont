@@ -28,6 +28,7 @@ public class GlyphRange {
 	bool range_is_class = false;
 	uint32* range_index = null;
 	int index_size = 0;
+	int index_hint = 0;
 	
 	public GlyphRange () {
 		ranges = new Gee.ArrayList<UniRange> ();
@@ -430,8 +431,14 @@ public class GlyphRange {
 	private void get_unirange_index (uint32 index, out UniRange? range, out uint32 range_start_index) {
 		int lower = 0;
 		int upper = index_size - 1;
-		int i = lower + (upper - lower) / 2;
+		int i;
 		int end = index_size - 1;
+		
+		if (index_hint >= 0 && index_hint < index_size) {
+			i = index_hint;
+		} else {
+			i = (lower + upper) / 2;
+		}
 		
 		range_start_index = -1;
 		range = null;
@@ -444,10 +451,12 @@ public class GlyphRange {
 			if (i == end) {
 				range_start_index = range_index[i];
 				range = ranges.get (i);
+				index_hint = i;
 				break;
 			} else if (range_index[i] <= index && range_index[i + 1] > index) {
 				range_start_index = range_index[i];
 				range = ranges.get (i);
+				index_hint = i;
 				break;
 			}
 			
@@ -461,42 +470,50 @@ public class GlyphRange {
 				upper = i - 1;
 			}
 			
-			i = lower + (upper - lower) / 2;
+			i = (lower + upper) / 2;
 		}
 	}
 	
 	public string get_char (uint32 index) {
+		StringBuilder sb;
+		
+		sb = new StringBuilder ();
+		sb.append_unichar (get_character (index));
+		
+		return sb.str;
+	}
+	
+	public unichar get_character (uint32 index) {
 		int64 ti;
 		string chr;
 		UniRange r;
-		StringBuilder sb;
 		unichar c;		
 		UniRange? range;
 		uint32 range_start_index;
 		
 		if (unlikely (index > len + unassigned.size)) {
-			return "\0".dup();
+			return '\0';
 		}
 		
 		if (index >= len) {
 			if (unlikely (index - len >= unassigned.size)) {
-				return "\0".dup();
+				return '\0';
 			} 
 			
 			chr = unassigned.get ((int) (index - len));
-			return chr;
+			return chr.get_char ();
 		}
 		
 		get_unirange_index (index, out range, out range_start_index);
 		
 		if (unlikely (range == null)) {
 			warning (@"No range found for index $index");
-			return "";
+			return '\0';
 		} 
 		
 		if (unlikely (range_start_index > index || range_start_index == -1)) {
 			warning ("Index out of bounds in glyph range.");
-			return "";
+			return '\0';
 		}
 		
 		r = (!) range;
@@ -504,13 +521,10 @@ public class GlyphRange {
 		
 		if (unlikely (!c.validate ())) {
 			warning ("Not a valid unicode character.");
-			return "";
+			return '\0';
 		}
 		
-		sb = new StringBuilder ();
-		sb.append_unichar (c);
-		
-		return sb.str;
+		return c;
 	}
 	
 	public uint32 length () {
