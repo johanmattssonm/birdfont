@@ -65,6 +65,8 @@ public class OverViewItem : GLib.Object {
 			label = new Text ((!) character.to_string (), 17);		
 			truncate_label ();
 		}
+		
+		draw_background ();
 	}
 	
 	public void set_glyphs (GlyphCollection? gc) {
@@ -84,18 +86,20 @@ public class OverViewItem : GLib.Object {
 			});
 		}	
 
+/*
 		thumbnail_mutex.lock ();
 		if (!is_null (thumbnail_queue)) {
 			thumbnail_queue.offer (this);
 			has_thumnail_task.signal ();
 		}
 		thumbnail_mutex.unlock ();
+*/
 	}
 
 	public static void start_thumbnail_processing () {
-		thumbnail_task  = new Task (process_thumbnails, true);
+		//thumbnail_task  = new Task (process_thumbnails, true);
 		thumbnail_queue = new Gee.PriorityQueue<OverViewItem> ();	
-		MainWindow.native_window.run_non_blocking_background_thread (thumbnail_task);
+		//MainWindow.native_window.run_non_blocking_background_thread (thumbnail_task);
 	}
 
 	public void cancel_thumbnail_rendering () {
@@ -179,7 +183,7 @@ public class OverViewItem : GLib.Object {
 		GlyphCanvas.redraw ();
 	}
 
-	public void draw_background () { // FIXME: LOCK for Text and thread exit
+	public void draw_background () {
 		Glyph g;
 		Font font;
 		double gx, gy;
@@ -200,12 +204,7 @@ public class OverViewItem : GLib.Object {
 		c = new Context (s);
 		
 		if (glyphs != null) { // FIXME: lock
-			IdleSource idle_glyph = new IdleSource ();
-			idle_glyph.set_callback (() => {
-				draw_glyph_from_font ();
-				return false;
-			});
-			idle_glyph.attach (null);
+			draw_glyph_from_font ();
 		} else {
 			c.scale (Screen.get_scale (), Screen.get_scale ());
 			
@@ -221,15 +220,9 @@ public class OverViewItem : GLib.Object {
 			fallback.draw_at_baseline (c, gx, gy);
 			c.restore ();
 			
-			IdleSource idle = new IdleSource ();
-			idle.set_callback (() => {
-				cache = s;
-				GlyphCanvas.redraw ();
-				return false;
-			});
-			idle.attach (null);
-			
-		}		
+			cache = s;
+			GlyphCanvas.redraw ();
+		}
 	}
 
 	public static void reset_label () {
