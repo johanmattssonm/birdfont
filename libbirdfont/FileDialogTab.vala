@@ -225,7 +225,12 @@ public class FileDialogTab : Table {
 			if (selected_filename == "") {
 				action.cancel ();
 			} else {
-				f = get_child (current_dir, selected_filename);
+				if (selected_filename.index_of (":\\") != -1) {
+					f = File.new_for_path (selected_filename);
+				} else {
+					f = get_child (current_dir, selected_filename);
+				}
+				
 				action.file_selected ((!)f.get_path ());
 			}
 		});

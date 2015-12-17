@@ -24,11 +24,24 @@ public class LabelTool : Tool {
 		}
 		
 		set {
+			clear_cache ();
 			label_text.set_text (value);
 		}
 	}
 	
-	public string number { get; set; }
+	public string number {
+		get {
+			return counter_number;
+		}
+	
+		set {
+			clear_cache ();
+			counter_number = value;
+		} 
+	}
+	
+	string counter_number = "";
+	
 	public bool has_counter { get; set; }
 	public bool has_delete_button { get; set; }
 	public signal void delete_action (LabelTool self);
@@ -38,6 +51,9 @@ public class LabelTool : Tool {
 	double counter_box_height = 11 * Toolbox.get_scale ();
 	
 	Text label_text;
+
+	Surface? selected_cache = null;
+	Surface? deselected_cache = null;
 
 	public LabelTool (string label) {
 		double text_height;
@@ -62,18 +78,58 @@ public class LabelTool : Tool {
 			}
 		});
 	}
+
+	void clear_cache () {
+		selected_cache = null;
+		deselected_cache = null;
+	}
 	
 	public override void draw_tool (Context cr, double px, double py) {
+		double x = this.x - px;
+		double y = this.y - py;
+		
+		if (is_selected ()) {
+		
+			if (selected_cache == null) {
+				selected_cache = Screen.create_background_surface ((int) w, (int) h + 2);
+				Context c = new Context ((!) selected_cache);
+				c.scale (1 / Screen.get_scale (), 1 / Screen.get_scale ());
+				draw_tool_surface (c, x, 2, true);
+			}
+			
+			cr.save ();
+			cr.set_antialias (Cairo.Antialias.NONE);
+			cr.set_source_surface ((!) selected_cache, 0, (int) y - 2);
+			cr.paint ();
+			cr.restore ();
+		} else {
+		
+			if (deselected_cache == null) {
+				deselected_cache = Screen.create_background_surface ((int) w, (int) h + 2);
+				Context c = new Context ((!) deselected_cache);
+				c.scale (1 / Screen.get_scale (), 1 / Screen.get_scale ());
+				draw_tool_surface (c, x, 2, false);
+			}
+			
+			cr.save ();
+			cr.set_antialias (Cairo.Antialias.NONE);
+			cr.set_source_surface ((!) deselected_cache, 0, (int) y - 2);
+			cr.paint ();
+			cr.restore ();
+		}
+	}
+	
+	public void draw_tool_surface (Context cr, double px, double py, bool selected) {
 		Text glyph_count;
 		double bgx, bgy;
 		double center_x, center_y;
-		double x = this.x - px;
-		double y = this.y - py;
 		double text_height;
 		double text_width;
+		double x = px;
+		double y = py;
 		
 		// background
-		if (is_selected ()) {
+		if (selected) {
 			cr.save ();
 			Theme.color (cr, "Menu Background");
 			cr.rectangle (0, y - 2 * Toolbox.get_scale (), w, h); // labels overlap with 2 pixels
@@ -84,11 +140,7 @@ public class LabelTool : Tool {
 		// tab label
 		cr.save ();
 
-		if (is_selected ()) {
-			Theme.text_color (label_text, "Text Tool Box");
-		} else {
-			Theme.text_color (label_text, "Text Tool Box");
-		}
+		Theme.text_color (label_text, "Text Tool Box");
 		
 		text_width = Toolbox.allocation_width;
 		
@@ -101,7 +153,6 @@ public class LabelTool : Tool {
 		}
 		
 		label_text.truncate (text_width);
-		
 		label_text.draw_at_top (cr, x, y);
 		cr.restore ();
 
