@@ -18,8 +18,9 @@ using Cairo;
 namespace BirdFont {
 
 public class ResizeTool : Tool {
-	
-	bool resize_path = false;
+	bool resize_path_proportional = false;
+	bool resize_width = false;
+
 	Path? resized_path = null;
 	double last_resize_y;
 	double last_resize_x;
@@ -41,8 +42,19 @@ public class ResizeTool : Tool {
 	public signal void objects_rotated (double angle);
 	public signal void objects_resized (double width, double height);
 	
+	Text proportional_handle;
+	Text horizontal_handle;
+	
 	public ResizeTool (string n) {
 		base (n, t_("Resize and rotate paths"));
+
+		proportional_handle = new Text ("resize_handle", 60);
+		proportional_handle.load_font ("icons.bf");
+		Theme.text_color (proportional_handle, "Highlighted 1");
+
+		horizontal_handle = new Text ("resize_handle_horizontal", 60);
+		horizontal_handle.load_font ("icons.bf");
+		Theme.text_color (horizontal_handle, "Highlighted 1");
 	
 		select_action.connect((self) => {
 		});
@@ -59,17 +71,16 @@ public class ResizeTool : Tool {
 			
 			foreach (Path p in glyph.active_paths) {
 				if (is_over_resize_handle (p, x, y)) {
-					resize_path = true;
+					resize_path_proportional = true;
 					resized_path = p;
 					last_resize_x = x;
 					last_resize_y = y;
 					return;
 				}
-			}
-			
-			if (resized_path != null) {
-				if (is_over_resize_handle ((!) resized_path, x, y)) {
-					resize_path = true;
+
+				if (is_over_horizontal_resize_handle (p, x, y)) {
+					resize_width = true;
+					resized_path = p;
 					last_resize_x = x;
 					last_resize_y = y;
 					return;					
@@ -85,14 +96,16 @@ public class ResizeTool : Tool {
 
 			if (glyph.active_paths.size > 0) {
 				last_path = glyph.active_paths.get (glyph.active_paths.size - 1);
-				last_rotate = last_path.rotation ;
+				last_rotate = last_path.rotation;
 			}
 					
 			rotation = last_rotate;
 			last_resize_x = x;
 			last_rotate_y = y;
 			
-			DrawingTools.move_tool.press (b, x, y);
+			if (!resize_path_proportional && !resize_width && !rotate_path) {
+				DrawingTools.move_tool.press (b, x, y);
+			}
 			
 			move_paths = true;
 			
@@ -100,7 +113,8 @@ public class ResizeTool : Tool {
 		});
 
 		release_action.connect((self, b, x, y) => {
-			resize_path = false;
+			resize_path_proportional = false;
+			resize_width = false;
 			rotate_path = false;
 			move_paths = false;
 			DrawingTools.move_tool.release (b, x, y);
@@ -115,22 +129,32 @@ public class ResizeTool : Tool {
 		move_action.connect ((self, x, y)	 => {
 			Glyph glyph;
 			
-			if (resize_path && can_resize (x, y)) {
-				resize (x, y);
+			if (resize_path_proportional && can_resize (x, y)) {
+				resize_proportional (x, y);
+				update_selection_box ();
+			}
+
+			if (resize_width && can_resize (x, y)) {
+				resize_horizontal (x, y);
+				update_selection_box ();
 			}
 
 			if (rotate_path) {
 				rotate (x, y);
+				update_selection_box ();
 			}
 
-			if (move_paths || rotate_path || resize_path) {
+			if (move_paths 
+				|| rotate_path
+				|| resize_path_proportional
+				|| resize_width) {
+				
 				glyph = MainWindow.get_current_glyph ();
 				
 				foreach (Path selected_path in glyph.active_paths) {
 					selected_path.reset_stroke ();
 				}
 				
-				update_selection_box ();
 				GlyphCanvas.redraw ();
 			}
 			
@@ -142,19 +166,32 @@ public class ResizeTool : Tool {
 			Glyph g = MainWindow.get_current_glyph ();
 			
 			if (!rotate_path) {
-				handle = new Text ("resize_handle", 60 * MainWindow.units);
-				handle.load_font ("icons.bf");
+				if (!resize_width) {
+					handle = proportional_handle;
+					get_resize_handle_position (out handle.widget_x, out handle.widget_y);
+					
+					handle.widget_x -= handle.get_sidebearing_extent () / 2;
+					handle.widget_y -= handle.get_height () / 2;
+					
+					handle.draw (cr);
+				} 
 				
-				get_reseize_handle_position (out handle.widget_x, out handle.widget_y);
-				
-				handle.widget_x -= handle.get_sidebearing_extent () / 2;
-				handle.widget_y -= handle.get_height () / 2;
-				
-				Theme.text_color (handle, "Highlighted 1");
-				handle.draw (cr);
+				if (!resize_path_proportional) {
+					handle = horizontal_handle;
+					
+					get_horizontal_reseize_handle_position (out handle.widget_x, 
+						out handle.widget_y);
+					
+					handle.widget_x -= handle.get_sidebearing_extent () / 2;
+					handle.widget_y -= handle.get_height () / 2;
+					
+					handle.draw (cr);
+				}
 			}
-			
-			if (!resize_path && g.active_paths.size > 0) {
+
+			if (!resize_path_proportional && !resize_width 
+				&& g.active_paths.size > 0) {
+				
 				draw_rotate_handle (cr);
 			}
 		
@@ -166,9 +203,15 @@ public class ResizeTool : Tool {
 		});
 	}
 
-	public static void get_reseize_handle_position (out double px, out double py) {
+	public static void get_resize_handle_position (out double px, out double py) {
 		px = Glyph.reverse_path_coordinate_x (selection_box_center_x + selection_box_width / 2);
 		py = Glyph.reverse_path_coordinate_y (selection_box_center_y + selection_box_height / 2);
+	}
+
+	public static void get_horizontal_reseize_handle_position (out double px, out double py) {
+		px = Glyph.reverse_path_coordinate_x (selection_box_center_x + selection_box_width / 2);
+		px += 40;
+		py = Glyph.reverse_path_coordinate_y (selection_box_center_y);
 	}
 
 	public static double get_rotated_handle_length () {
@@ -306,12 +349,14 @@ public class ResizeTool : Tool {
 		return ratio;
 	}
 
-	public void resize_selected_paths (double ratio) {
+	public void resize_selected_paths (double ratio_x, double ratio_y) {
 		Glyph g = MainWindow.get_current_glyph ();
-		resize_glyph (g, ratio, true);
+		resize_glyph (g, ratio_x, ratio_y, true);
 	}
 	
-	public void resize_glyph (Glyph glyph, double ratio, bool selected = true) {
+	public void resize_glyph (Glyph glyph, double ratio_x,
+			double ratio_y, bool selected = true) {
+					
 		double resize_pos_x = 0;
 		double resize_pos_y = 0;
 		double selection_minx, selection_miny, dx, dy;
@@ -328,7 +373,7 @@ public class ResizeTool : Tool {
 		
 		// resize paths
 		foreach (Path selected_path in glyph.active_paths) {
-			selected_path.resize (ratio);
+			selected_path.resize (ratio_x, ratio_y);
 			selected_path.reset_stroke ();
 		}
 		
@@ -348,7 +393,7 @@ public class ResizeTool : Tool {
 
 		if (!selected) {
 			double w;
-			w = (ratio * glyph.get_width () - glyph.get_width ()) / 2.0;
+			w = (ratio_x * glyph.get_width () - glyph.get_width ()) / 2.0;
 			glyph.left_limit -= w; 
 			glyph.right_limit += w;
 			glyph.clear_active_paths ();
@@ -365,18 +410,35 @@ public class ResizeTool : Tool {
 	}
 
 	/** Move resize handle to pixel x,y. */
-	void resize (double px, double py) {
+	void resize_proportional (double px, double py) {
 		double ratio;
 		
 		ratio = get_resize_ratio (px, py);
 		
 		if (ratio != 1) {
-			resize_selected_paths (ratio);
+			resize_selected_paths (ratio, ratio);
 			last_resize_x = px;
 			last_resize_y = py;
 		}
 	}
 
+	/** Move resize handle to pixel x,y. */
+	void resize_horizontal (double px, double py) {
+		double ratio, x, y, w, h;
+
+		Glyph glyph = MainWindow.get_current_glyph ();
+		glyph.selection_boundaries (out x, out y, out w, out h);
+				
+		ratio = 1 + (Glyph.path_coordinate_x (px) 
+			- Glyph.path_coordinate_x (last_resize_x)) / w;
+		
+		if (ratio != 1) {
+			resize_selected_paths (ratio, 1);
+			last_resize_x = px;
+			last_resize_y = py;
+		}
+	}
+	
 	public void full_height () {
 		double xc, yc, w, h;
 		Glyph glyph = MainWindow.get_current_glyph ();
@@ -395,7 +457,7 @@ public class ResizeTool : Tool {
 		double font_height = font.top_position - font.base_line;
 		double scale = font_height / (h - descender);
 		
-		resize_selected_paths (scale);
+		resize_selected_paths (scale, scale);
 		PenTool.reset_stroke ();
 
 		MoveTool.update_boundaries_for_selection ();
@@ -406,10 +468,8 @@ public class ResizeTool : Tool {
 											   out selection_box_width,
 											   out selection_box_height);
 		
-		
 		DrawingTools.move_tool.move_to_baseline ();
 
-		
 		foreach (Path path in glyph.active_paths) {
 			path.move (0, -descender * scale);
 		}
@@ -455,8 +515,14 @@ public class ResizeTool : Tool {
 
 	bool is_over_resize_handle (Path p, double x, double y) {
 		double handle_x, handle_y;
-		get_reseize_handle_position (out handle_x, out handle_y);
+		get_resize_handle_position (out handle_x, out handle_y);
 		return Path.distance (handle_x, x, handle_y, y) < 12 * MainWindow.units;
+	}
+
+	bool is_over_horizontal_resize_handle (Path p, double x, double y) {
+		double handle_x, handle_y;
+		get_horizontal_reseize_handle_position (out handle_x, out handle_y);
+		return Path.distance (handle_x, x, handle_y, y) < 12 * MainWindow.units;		
 	}
 
 	public void skew (double skew) {

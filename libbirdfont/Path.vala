@@ -754,18 +754,20 @@ public class Path : GLib.Object {
 	}
 
 	/** Resize path relative to bottom left coordinates. */
-	public void resize (double ratio) {	
+	public void resize (double ratio_x, double ratio_y) {	
 		foreach (EditPoint p in points) {
-			p.x *= ratio;
-			p.y *= ratio;
-			p.right_handle.length *= ratio;
-			p.left_handle.length *= ratio;
+			p.independent_x *= ratio_x;
+			p.independent_y *= ratio_y;
+			p.get_right_handle ().independent_x *= ratio_x;
+			p.get_right_handle ().independent_y *= ratio_y;
+			p.get_left_handle ().independent_x *= ratio_x;
+			p.get_left_handle ().independent_y *= ratio_y;
 		}
 		
-		xmin *= ratio;	
-		xmax *= ratio;
-		ymin *= ratio;
-		ymax *= ratio;
+		xmin *= ratio_x;	
+		xmax *= ratio_x;
+		ymin *= ratio_y;
+		ymax *= ratio_y;
 	}
 
 	public void scale (double scale_x, double scale_y) {		

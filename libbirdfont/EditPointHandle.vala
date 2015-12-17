@@ -77,7 +77,41 @@ public class EditPointHandle : GLib.Object {
 			}
 		}
 	}
-	
+
+	public double independent_x {
+		get { 
+			double r = px ();	
+			
+			if (unlikely (r <= -100000)) {
+				print_position ();
+				move_to (0, 0);
+			}
+		
+			return r;
+		}
+		
+		set { 
+			move_to_coordinate_internal (value, py ());
+		}
+	}
+
+	public double independent_y {
+		get {
+			double r = py ();
+		
+			if (unlikely (r <= -100000)) {
+				print_position ();
+				move_to (0, 0);
+			}
+			
+			return r;	
+		}
+		
+		set { 
+			move_to_coordinate_internal (px (), value);	
+		}
+	}
+		
 	public EditPointHandle.empty() {
 		this.parent = none;
 		this.angle = 0;

@@ -270,7 +270,7 @@ public class OverviewTools : ToolCollection  {
 				
 				if (resize.get_value () != 100) {
 					double scale = resize.get_value () / 100;
-					DrawingTools.resize_tool.resize_glyph (g, scale, false);
+					DrawingTools.resize_tool.resize_glyph (g, scale, scale, false);
 				}
 			}
 		}

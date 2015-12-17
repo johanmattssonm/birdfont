@@ -419,7 +419,7 @@ public class DrawingTools : ToolCollection  {
 			new_size = self.get_value () / w;
 			
 			if (self.get_value () > 0 && new_size != 1) {
-				resize_tool.resize_selected_paths (new_size);
+				resize_tool.resize_selected_paths (new_size, new_size);
 			}
 			
 			GlyphCanvas.redraw ();
@@ -444,7 +444,7 @@ public class DrawingTools : ToolCollection  {
 			new_size = self.get_value () / h;
 			
 			if (self.get_value () > 0 && new_size != 1) {
-				resize_tool.resize_selected_paths (new_size);
+				resize_tool.resize_selected_paths (new_size, new_size);
 			}
 						
 			GlyphCanvas.redraw ();

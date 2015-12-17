@@ -73,7 +73,7 @@ public class CircleTool : Tool {
 			ratio = 2 * radius / diameter;
 			
 			if (diameter * ratio > 0.5) {
-				circle.resize (ratio);
+				circle.resize (ratio, ratio);
 			}
 			
 			get_boundaries (out xmin, out xmax, out ymin);
