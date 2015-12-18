@@ -360,10 +360,17 @@ public class Text : Widget {
 			cache = draw_on_cache_surface (cacheid);
 		}
 		
-		double s = get_font_scale ();
-		double cache_y = py - s * (cached_font.top_limit - cached_font.base_line);
-		cr.set_source_surface ((!) cache, (int) rint (px - s * margin_left), (int) rint (cache_y));
+		double screen_scale = Screen.get_scale ();
+		double font_scale = get_font_scale ();
+		double cache_y = py - font_scale * (cached_font.top_limit - cached_font.base_line);
+
+		cr.save();
+		cr.scale (1 / screen_scale, 1 / screen_scale);
+		double scaled_x = (px - margin_left) * screen_scale;
+		double scaled_y = cache_y * screen_scale;
+		cr.set_source_surface ((!) cache, (int) rint (scaled_x), (int) rint (scaled_y));
 		cr.paint ();
+		cr.restore();
 	}
 	
 	Surface draw_on_cache_surface (string cacheid) {
@@ -378,7 +385,8 @@ public class Text : Widget {
 		ratio = get_font_scale ();
 		cc_y = (cached_font.top_limit - cached_font.base_line) * ratio;
 
-		double x = margin_left * ratio;
+		// double x = margin_left * ratio;
+		double x = 0;
 		double py = cc_y;
 
 		double w = get_sidebearing_extent () * screen_scale + x + margin_left + 1;
@@ -404,15 +412,19 @@ public class Text : Widget {
 				return;
 			}
 
-			draw_chached (cr, glyph, kerning, last, x, y, cc_y, 
-				ratio, cacheid);
+			if (use_cache) {
+				draw_chached (cr, glyph, kerning, last, x, y, cc_y, 
+					ratio, cacheid);
+			} else {
+				draw_without_cache (cr, glyph, kerning, last, x, y, cc_y, ratio);
+			}
 			
 			x = end;
 		});
 		
 		return cache_surface;
 	}
-	
+
 	void draw_without_cache (Context cr, Glyph glyph, double kerning, bool last, 
 		double x, double y, double cc_y, double ratio) {
 	
@@ -432,7 +444,7 @@ public class Text : Widget {
 		cr.restore ();
 		
 	}
-	
+		
 	void draw_chached (Context cr, Glyph glyph, double kerning, bool last, 
 		double x, double y, double cc_y, double ratio,
 		string cacheid = "") {
@@ -450,8 +462,8 @@ public class Text : Widget {
 			glyph_margin_left = 0;
 		}
 		
-		double xp = x - glyph_margin_left * ratio;
-		double yp = y - cc_y;
+		double xp = (x - glyph_margin_left * ratio) * Screen.get_scale ();
+		double yp = (y - cc_y) * Screen.get_scale ();
 		int offset_x, offset_y;
 
 		offset_x = (int) (10 * (xp - (int) xp));
@@ -459,7 +471,7 @@ public class Text : Widget {
 		
 		cache_id = (cacheid == "") ? get_cache_id (offset_x, offset_y) : cacheid;
 				
-		if (unlikely (!glyph.has_cache (cache_id))) {
+		if (!glyph.has_cache (cache_id)) {
 			int w = (int) ((glyph_margin_left * ratio + glyph.get_width ()) * ratio) + 2;
 			int h = (int) font_size + 2;
 			cache = Screen.create_background_surface (w, h);
@@ -493,8 +505,8 @@ public class Text : Widget {
 		cr.set_antialias (Cairo.Antialias.NONE);
 		cr.scale(1 / Screen.get_scale (), 1 / Screen.get_scale ());
 		cr.set_source_surface (cached_glyph,
-			(int) (xp * Screen.get_scale ()),
-			(int) (yp * Screen.get_scale ()));
+			(int) xp,
+			(int) yp);
 		cr.paint ();
 		cr.restore ();
 	}

@@ -145,8 +145,8 @@ public class EditPoint : GLib.Object {
 		set { 
 			double d = value - x;
 			x = value;
-			right_handle.x -= d;
-			left_handle.x -= d;
+			right_handle.independent_x -= d;
+			left_handle.independent_x -= d;
 		}
 	}
 
@@ -158,8 +158,8 @@ public class EditPoint : GLib.Object {
 		set { 
 			double d = value - y;
 			y = value;
-			right_handle.y -= d;
-			left_handle.y -= d;
+			right_handle.independent_y -= d;
+			left_handle.independent_y -= d;
 		}
 	}
 	
