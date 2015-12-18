@@ -95,7 +95,7 @@ public class OverViewItem : GLib.Object {
 		if (glyphs == null) {
 			return;
 		}
-
+		
 		Glyph g;
 		Font font;
 		double gx, gy;
@@ -107,6 +107,13 @@ public class OverViewItem : GLib.Object {
 		Context c;
 		Color color = Color.black ();
 		
+		g = ((!) glyphs).get_current ();
+		
+		if (g.overview_thumbnail != null) {
+			cache = g.overview_thumbnail;
+			return;
+		}
+		
 		w = width;
 		h = height;
 		
@@ -114,8 +121,6 @@ public class OverViewItem : GLib.Object {
 
 		s = Screen.create_background_surface ((int) width, (int) height - 20);
 		c = new Context (s);
-		
-		g = ((!) glyphs).get_current ();
 		
 		c.save ();
 		g.boundaries (out x1, out y1, out x2, out y2);

@@ -139,6 +139,8 @@ public class Glyph : FontDisplay {
 	public double baseline = 0;
 	public double bottom_limit = 0;
 
+	public Surface? overview_thumbnail = null;
+
 	public Glyph (string name, unichar unichar_code = 0) {
 		this.name = name;
 		this.unichar_code = unichar_code;
@@ -454,6 +456,7 @@ public class Glyph : FontDisplay {
 		TimeoutSource input_delay;
 
 		ttf_data = null; // recreate quatradic path on export
+		overview_thumbnail = null; 
 
 		ignore_input = true; // make sure that tripple clicks in overview are ignored
 
