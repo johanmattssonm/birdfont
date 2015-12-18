@@ -330,10 +330,17 @@ public class Text : Widget {
 	}
 	
 	public void set_source_rgba (double r, double g, double b, double a) {
-		this.r = r;
-		this.g = g;
-		this.b = b;
-		this.a = a;
+		if (this.r != r || 
+			this.g != g || 
+			this.b != b || 
+			this.a != a) {
+		
+			this.r = r;
+			this.g = g;
+			this.b = b;
+			this.a = a;
+			cache = null;
+		}
 	}
 	
 	public string get_cache_id (int offset_x, int offset_y) {
@@ -472,11 +479,11 @@ public class Text : Widget {
 		cache_id = (cacheid == "") ? get_cache_id (offset_x, offset_y) : cacheid;
 				
 		if (!glyph.has_cache (cache_id)) {
-			int w = (int) ((glyph_margin_left * ratio + glyph.get_width ()) * ratio) + 2;
+			int w = (int) ((2 * glyph_margin_left * ratio + glyph.get_width ()) * ratio) + 2;
 			int h = (int) font_size + 2;
 			cache = Screen.create_background_surface (w, h);
 			cc = new Context (cache);
-
+			
 			cc.scale(Screen.get_scale (), Screen.get_scale ());
 			
 			lsb = glyph.left_limit - glyph_margin_left;
@@ -486,7 +493,7 @@ public class Text : Widget {
 			cc.new_path ();
 
 			foreach (Path path in glyph.get_visible_paths ()) {
-				draw_path (cc, glyph, path, lsb, offset_x / 10.0, cc_y + offset_y / 10.0, ratio);
+				draw_path (cc, glyph, path, lsb, glyph_margin_left * ratio + offset_x / 10.0, cc_y + offset_y / 10.0, ratio);
 			}
 			
 			cc.fill ();

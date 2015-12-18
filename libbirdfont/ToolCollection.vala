@@ -42,6 +42,12 @@ public abstract class ToolCollection : GLib.Object  {
 		}
 	}
 	
+	public void clear_cache () {
+		foreach (Expander e in get_expanders ()) {
+			e.clear_cache ();
+		}
+	}
+	
 	public void redraw () {
 		foreach (Expander e in get_expanders ()) {
 			e.redraw ();

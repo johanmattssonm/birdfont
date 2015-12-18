@@ -71,16 +71,18 @@ public class FileTools : ToolCollection  {
 				
 				Preferences.set ("theme", theme_file);
 				Theme.load_theme (theme_file);
-
+				
 				Toolbox.redraw_tool_box ();
 				GlyphCanvas.redraw ();
 				
-				file_tools.redraw ();
-				font_name.redraw ();
+				file_tools.clear_cache ();
+				font_name.clear_cache ();
+				themes.clear_cache ();
+				
 				tb.redraw (0, 0, tb.width, tb.height);
 				
 				foreach (ToolCollection tc in toolbox.tool_sets) {
-					tc.redraw ();
+					tc.clear_cache ();
 				}
 
 				OverViewItem.label_background = null;
@@ -93,6 +95,7 @@ public class FileTools : ToolCollection  {
 				}
 				
 				self.set_selected (true);
+				themes.clear_cache ();
 			});
 			
 			if (!theme.has_prefix ("generated_")) {

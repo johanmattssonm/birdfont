@@ -50,6 +50,7 @@ gboolean draw_overview_glyph (cairo_t* context, const char* font_file, gdouble w
 
 	error = FT_New_Face (library, font_file, 0, &face);
 	if (error) {
+		FT_Done_FreeType (library);
 		g_warning ("Freetype font face error %d\n", error);
 		return FALSE;
 	}
@@ -60,18 +61,24 @@ gboolean draw_overview_glyph (cairo_t* context, const char* font_file, gdouble w
 	error = FT_Select_Charmap (face , FT_ENCODING_UNICODE);
 	if (error) {
 		g_warning ("Freetype can not use Unicode, error: %d\n", error);
+		FT_Done_Face (face);
+		FT_Done_FreeType (library);
 		return FALSE;
 	}
 
 	error = FT_Set_Char_Size (face, 0, 64, (int) height, (int) height);
 	if (error) {
 		g_warning ("FT_Set_Char_Size, error: %d.\n", error);
+		FT_Done_Face (face);
+		FT_Done_FreeType (library);
 		return FALSE;
 	}
 
 	error = FT_Set_Pixel_Sizes (face, 0, (int) (height * 0.5));
 	if (error) {
 		g_warning ("FT_Set_Pixel_Sizes, error: %d.\n", error);
+		FT_Done_Face (face);
+		FT_Done_FreeType (library);
 		return FALSE;
 	}
 
@@ -86,7 +93,8 @@ gboolean draw_overview_glyph (cairo_t* context, const char* font_file, gdouble w
 		advance = face->glyph->metrics.horiAdvance;
 		advance *= units;
 	} else {
-		g_warning("Glyph not found: %s", text);
+		FT_Done_Face (face);
+		FT_Done_FreeType (library);
 		return FALSE;
 	}
 

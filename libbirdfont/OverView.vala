@@ -639,7 +639,6 @@ public class OverView : FontDisplay {
 			process_item_list_update ();
 		}
 		
-		Test test = new Test.time("Overview.draw");
 		this.allocation = allocation;
 		
 		// clear canvas
@@ -660,8 +659,6 @@ public class OverView : FontDisplay {
 		if (unlikely (character_info != null)) {
 			draw_character_info (cr);
 		}
-		
-		warning (test.get_test_time ());
 	}
 		
 	void draw_empty_canvas (WidgetAllocation allocation, Context cr) {

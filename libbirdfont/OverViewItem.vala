@@ -47,14 +47,7 @@ public class OverViewItem : GLib.Object {
 	public static Surface? selected_label_background = null;
 	public static Surface? label_background_no_menu = null;
 	public static Surface? selected_label_background_no_menu = null;
-	
-	private static Task thumbnail_task;
-	private static Gee.PriorityQueue<OverViewItem> thumbnail_queue;
-	private static Cond has_thumnail_task = new Cond ();
-	private static Mutex thumbnail_mutex = new Mutex ();
-	
-	private bool cancel_thumbnail = false;
-	
+		
 	public OverViewItem () {	
 	}
 

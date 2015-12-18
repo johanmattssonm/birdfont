@@ -426,7 +426,7 @@ public class GlyphRange {
 		}
 	}
 	
-	/** Find a range which containd index. */
+	/** Find a range which contains index. */
 	private void get_unirange_index (uint32 index, out UniRange? range, out uint32 range_start_index) {
 		int lower = 0;
 		int upper = index_size - 1;
