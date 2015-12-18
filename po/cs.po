@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-11 22:24+0100\n"
+"POT-Creation-Date: 2015-12-18 20:16+0100\n"
 "PO-Revision-Date: 2015-11-03 22:37+0000\n"
 "Last-Translator: fri <pavelfric@yahoo.com>\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -106,7 +106,7 @@ msgstr "Soubory"
 msgid "Parts"
 msgstr "Části"
 
-#: libbirdfont/BackgroundTools.vala:53 libbirdfont/Glyph.vala:2348
+#: libbirdfont/BackgroundTools.vala:53 libbirdfont/Glyph.vala:2364
 #: libbirdfont/LigatureList.vala:106 libbirdfont/OtfFeatureTable.vala:181
 msgid "Add"
 msgstr "Přidat"
@@ -283,251 +283,251 @@ msgstr "URL dodavatele"
 msgid "Designer URL"
 msgstr "Adresa návrháře (URL)"
 
-#: libbirdfont/DrawingTools.vala:119
-msgid "Drawing Tools"
-msgstr "Nástroje na kreslení"
-
-#: libbirdfont/DrawingTools.vala:120
-msgid "Control Point"
-msgstr "Ovládací bod"
-
-#: libbirdfont/DrawingTools.vala:122 libbirdfont/Menu.vala:247
-msgid "Layers"
-msgstr "Vrstvy"
-
-#: libbirdfont/DrawingTools.vala:123
-msgid "Stroke"
-msgstr "Tah"
-
-#: libbirdfont/DrawingTools.vala:124
-msgid "Geometrical Shapes"
-msgstr "Geometrické tvary"
-
-#: libbirdfont/DrawingTools.vala:125 libbirdfont/OverviewTools.vala:40
-msgid "Zoom"
-msgstr "Zvětšení"
-
-#: libbirdfont/DrawingTools.vala:126
-msgid "Guidelines & Grid"
-msgstr "Pomocné linky a mřížka"
-
-#: libbirdfont/DrawingTools.vala:131
-msgid "Grid Size"
-msgstr "Velikost mřížky"
-
-#: libbirdfont/DrawingTools.vala:190
-msgid "Move canvas"
-msgstr "Posunout pracovní plochu"
-
-#: libbirdfont/DrawingTools.vala:198
-msgid "Delete"
-msgstr "Smazat"
-
-#: libbirdfont/DrawingTools.vala:205
-msgid "Select all points or paths"
-msgstr "Vybrat všechny body nebo cesty"
-
-#: libbirdfont/DrawingTools.vala:221 libbirdfont/Menu.vala:99
-msgid "Undo"
-msgstr "Zpět"
-
-#: libbirdfont/DrawingTools.vala:228
-msgid "Insert new points on path"
-msgstr "Vložit nové body do cesty"
-
-#: libbirdfont/DrawingTools.vala:237
-msgid "Create quadratic Bézier curves"
-msgstr "Vytvářet kvadratické Bézierovy křivky"
-
-#: libbirdfont/DrawingTools.vala:246
-msgid "Create cubic Bézier curves"
-msgstr "Vytvářet kubické Bézierovy křivky"
-
-#: libbirdfont/DrawingTools.vala:255
-msgid "Quadratic path with two line handles"
-msgstr "Kvadratická cesta se dvěma úchopy"
-
-#: libbirdfont/DrawingTools.vala:264
-msgid "Convert selected points"
-msgstr "Převést vybrané body"
-
-#: libbirdfont/DrawingTools.vala:275
-msgid "X coordinate"
-msgstr "Souřadnice x"
-
-#: libbirdfont/DrawingTools.vala:319
-msgid "Y coordinate"
-msgstr "Souřadnice y"
-
-#: libbirdfont/DrawingTools.vala:362
-msgid "Rotation"
-msgstr "Otočit"
-
-#: libbirdfont/DrawingTools.vala:401
-msgid "Width"
-msgstr "Šířka"
-
-#: libbirdfont/DrawingTools.vala:426
-msgid "Height"
-msgstr "Výška"
-
-#: libbirdfont/DrawingTools.vala:469
-msgid "Tie curve handles for the selected edit point"
-msgstr "Svázat úchopy křivky vybraných bodů úprav"
-
-#: libbirdfont/DrawingTools.vala:520
-msgid "Symmetrical handles"
-msgstr "Souměrné úchopy"
-
-#: libbirdfont/DrawingTools.vala:550
-msgid "Convert segment to line."
-msgstr "Převést část na čáru."
-
-#: libbirdfont/DrawingTools.vala:558
-msgid "Create counter from outline"
-msgstr "Obrátit cestu"
-
-#: libbirdfont/DrawingTools.vala:561
-msgid "Scale object to font top/baseline"
-msgstr ""
-
-#: libbirdfont/DrawingTools.vala:570
-msgid "Close path"
-msgstr "Uzavřít cestu"
-
-#: libbirdfont/DrawingTools.vala:592
-msgid "Move to path to the bottom of the layer"
-msgstr "Přesunout cestu do spodní vrstvy"
-
-#: libbirdfont/DrawingTools.vala:606
-msgid "Flip path vertically"
-msgstr "Zrcadlit svisle"
-
-#: libbirdfont/DrawingTools.vala:614
-msgid "Flip path horizontally"
-msgstr "Zrcadlit vodorovně"
-
-#: libbirdfont/DrawingTools.vala:623
-msgid "Set size for background image"
-msgstr "Nastavit velikost obrázku pozadí"
-
-#: libbirdfont/DrawingTools.vala:661
-msgid "Show/hide background image"
-msgstr "Ukázat/Skrýt obrázek pozadí"
-
-#: libbirdfont/DrawingTools.vala:672
-msgid "Insert a new background image"
-msgstr "Vložit nový obrázek pozadí"
-
-#: libbirdfont/DrawingTools.vala:686 libbirdfont/ThemeTab.vala:151
-msgid "High contrast"
-msgstr "Vysoký kontrast"
-
-#: libbirdfont/DrawingTools.vala:700
-msgid "Set background threshold"
-msgstr "Nastavit práh pro pozadí"
-
-#: libbirdfont/DrawingTools.vala:719
-msgid "Amount of autotrace details"
-msgstr "Podrobnost automatického obkreslení"
-
-#: libbirdfont/DrawingTools.vala:738
-msgid "Autotrace simplification"
-msgstr "Zjednodušení automatického obkreslení"
-
-#: libbirdfont/DrawingTools.vala:748
-msgid "Autotrace background image"
-msgstr "Automaticky obkreslit obrázek pozadí"
-
-#: libbirdfont/DrawingTools.vala:756
-msgid "Delete background image"
-msgstr "Smazat obrázek pozadí"
-
-#: libbirdfont/DrawingTools.vala:763
-msgid "Add layer"
-msgstr "Přidat vrstvu"
-
-#: libbirdfont/DrawingTools.vala:773
-msgid "Show layers"
-msgstr "Ukázat vrstvy"
-
-#: libbirdfont/DrawingTools.vala:783
-msgid "Apply stroke"
-msgstr "Použít tah"
-
-#: libbirdfont/DrawingTools.vala:817 libbirdfont/SettingsTab.vala:34
-msgid "Stroke width"
-msgstr "Šířka tahu"
-
-#: libbirdfont/DrawingTools.vala:859
-msgid "Create outline form stroke"
-msgstr "Vytvořit obrys z tahu"
-
-#: libbirdfont/DrawingTools.vala:868
-msgid "Butt line cap"
-msgstr "Nepřesahující konec"
-
-#: libbirdfont/DrawingTools.vala:892
-msgid "Round line cap"
-msgstr "Zaoblený konec"
-
-#: libbirdfont/DrawingTools.vala:917
-msgid "Square line cap"
-msgstr "Čtvercový konec"
-
-#: libbirdfont/DrawingTools.vala:986
-msgid "Show guidelines"
-msgstr "Zobrazit pomocné linky"
-
-#: libbirdfont/DrawingTools.vala:998
-msgid "Show more guidelines"
-msgstr "Ukázat více pomocných linek"
-
-#: libbirdfont/DrawingTools.vala:1014
-msgid "Show guidelines at top and bottom margin"
-msgstr "Zobrazit pomocné linky horního a dolního okraje"
-
-#: libbirdfont/DrawingTools.vala:1038
-msgid "Lock guides and grid"
-msgstr "Zamknout vodítka a mřížku"
-
-#: libbirdfont/DrawingTools.vala:1080
-msgid "Zoom Out More"
-msgstr "Oddálit více"
-
-#: libbirdfont/DrawingTools.vala:1089
-msgid "Show full glyph"
-msgstr "Ukázat celý znak"
-
-#: libbirdfont/DrawingTools.vala:1096
-msgid "Fit in view"
-msgstr "Přizpůsobit velikosti okna"
-
-#: libbirdfont/DrawingTools.vala:1103
-msgid "Zoom in on background image"
-msgstr "Přiblížit na obrázek pozadí"
-
-#: libbirdfont/DrawingTools.vala:1113
-msgid "Previous view"
-msgstr "Předchozí zobrazení"
-
-#: libbirdfont/DrawingTools.vala:1119
-msgid "Next view"
-msgstr "Další zobrazení"
-
-#: libbirdfont/DrawingTools.vala:1327
+#: libbirdfont/DrawingTools.vala:112
 msgid "Background Tools"
 msgstr "Nástroje pro práci s pozadím"
 
-#: libbirdfont/DrawingTools.vala:1342
+#: libbirdfont/DrawingTools.vala:113
 msgid "Control Points"
 msgstr "Ovládací body"
 
-#: libbirdfont/DrawingTools.vala:1358
+#: libbirdfont/DrawingTools.vala:114
 msgid "Object Tools"
 msgstr "Nástroje pro práci s předměty"
 
-#: libbirdfont/DrawingTools.vala:1521
+#: libbirdfont/DrawingTools.vala:123
+msgid "Drawing Tools"
+msgstr "Nástroje na kreslení"
+
+#: libbirdfont/DrawingTools.vala:124
+msgid "Control Point"
+msgstr "Ovládací bod"
+
+#: libbirdfont/DrawingTools.vala:126 libbirdfont/Menu.vala:247
+msgid "Layers"
+msgstr "Vrstvy"
+
+#: libbirdfont/DrawingTools.vala:127
+msgid "Stroke"
+msgstr "Tah"
+
+#: libbirdfont/DrawingTools.vala:128
+msgid "Geometrical Shapes"
+msgstr "Geometrické tvary"
+
+#: libbirdfont/DrawingTools.vala:129 libbirdfont/OverviewTools.vala:40
+msgid "Zoom"
+msgstr "Zvětšení"
+
+#: libbirdfont/DrawingTools.vala:130
+msgid "Guidelines & Grid"
+msgstr "Pomocné linky a mřížka"
+
+#: libbirdfont/DrawingTools.vala:135
+msgid "Grid Size"
+msgstr "Velikost mřížky"
+
+#: libbirdfont/DrawingTools.vala:194
+msgid "Move canvas"
+msgstr "Posunout pracovní plochu"
+
+#: libbirdfont/DrawingTools.vala:202
+msgid "Delete"
+msgstr "Smazat"
+
+#: libbirdfont/DrawingTools.vala:209
+msgid "Select all points or paths"
+msgstr "Vybrat všechny body nebo cesty"
+
+#: libbirdfont/DrawingTools.vala:225 libbirdfont/Menu.vala:99
+msgid "Undo"
+msgstr "Zpět"
+
+#: libbirdfont/DrawingTools.vala:232
+msgid "Insert new points on path"
+msgstr "Vložit nové body do cesty"
+
+#: libbirdfont/DrawingTools.vala:241
+msgid "Create quadratic Bézier curves"
+msgstr "Vytvářet kvadratické Bézierovy křivky"
+
+#: libbirdfont/DrawingTools.vala:250
+msgid "Create cubic Bézier curves"
+msgstr "Vytvářet kubické Bézierovy křivky"
+
+#: libbirdfont/DrawingTools.vala:259
+msgid "Quadratic path with two line handles"
+msgstr "Kvadratická cesta se dvěma úchopy"
+
+#: libbirdfont/DrawingTools.vala:268
+msgid "Convert selected points"
+msgstr "Převést vybrané body"
+
+#: libbirdfont/DrawingTools.vala:279
+msgid "X coordinate"
+msgstr "Souřadnice x"
+
+#: libbirdfont/DrawingTools.vala:323
+msgid "Y coordinate"
+msgstr "Souřadnice y"
+
+#: libbirdfont/DrawingTools.vala:366
+msgid "Rotation"
+msgstr "Otočit"
+
+#: libbirdfont/DrawingTools.vala:405
+msgid "Width"
+msgstr "Šířka"
+
+#: libbirdfont/DrawingTools.vala:430
+msgid "Height"
+msgstr "Výška"
+
+#: libbirdfont/DrawingTools.vala:473
+msgid "Tie curve handles for the selected edit point"
+msgstr "Svázat úchopy křivky vybraných bodů úprav"
+
+#: libbirdfont/DrawingTools.vala:524
+msgid "Symmetrical handles"
+msgstr "Souměrné úchopy"
+
+#: libbirdfont/DrawingTools.vala:554
+msgid "Convert segment to line."
+msgstr "Převést část na čáru."
+
+#: libbirdfont/DrawingTools.vala:562
+msgid "Create counter from outline"
+msgstr "Obrátit cestu"
+
+#: libbirdfont/DrawingTools.vala:565
+msgid "Scale object to font top/baseline"
+msgstr ""
+
+#: libbirdfont/DrawingTools.vala:574
+msgid "Close path"
+msgstr "Uzavřít cestu"
+
+#: libbirdfont/DrawingTools.vala:596
+msgid "Move to path to the bottom of the layer"
+msgstr "Přesunout cestu do spodní vrstvy"
+
+#: libbirdfont/DrawingTools.vala:610
+msgid "Flip path vertically"
+msgstr "Zrcadlit svisle"
+
+#: libbirdfont/DrawingTools.vala:618
+msgid "Flip path horizontally"
+msgstr "Zrcadlit vodorovně"
+
+#: libbirdfont/DrawingTools.vala:627
+msgid "Set size for background image"
+msgstr "Nastavit velikost obrázku pozadí"
+
+#: libbirdfont/DrawingTools.vala:665
+msgid "Show/hide background image"
+msgstr "Ukázat/Skrýt obrázek pozadí"
+
+#: libbirdfont/DrawingTools.vala:676
+msgid "Insert a new background image"
+msgstr "Vložit nový obrázek pozadí"
+
+#: libbirdfont/DrawingTools.vala:690 libbirdfont/ThemeTab.vala:151
+msgid "High contrast"
+msgstr "Vysoký kontrast"
+
+#: libbirdfont/DrawingTools.vala:704
+msgid "Set background threshold"
+msgstr "Nastavit práh pro pozadí"
+
+#: libbirdfont/DrawingTools.vala:723
+msgid "Amount of autotrace details"
+msgstr "Podrobnost automatického obkreslení"
+
+#: libbirdfont/DrawingTools.vala:742
+msgid "Autotrace simplification"
+msgstr "Zjednodušení automatického obkreslení"
+
+#: libbirdfont/DrawingTools.vala:752
+msgid "Autotrace background image"
+msgstr "Automaticky obkreslit obrázek pozadí"
+
+#: libbirdfont/DrawingTools.vala:760
+msgid "Delete background image"
+msgstr "Smazat obrázek pozadí"
+
+#: libbirdfont/DrawingTools.vala:767
+msgid "Add layer"
+msgstr "Přidat vrstvu"
+
+#: libbirdfont/DrawingTools.vala:777
+msgid "Show layers"
+msgstr "Ukázat vrstvy"
+
+#: libbirdfont/DrawingTools.vala:787
+msgid "Apply stroke"
+msgstr "Použít tah"
+
+#: libbirdfont/DrawingTools.vala:821 libbirdfont/SettingsTab.vala:34
+msgid "Stroke width"
+msgstr "Šířka tahu"
+
+#: libbirdfont/DrawingTools.vala:863
+msgid "Create outline form stroke"
+msgstr "Vytvořit obrys z tahu"
+
+#: libbirdfont/DrawingTools.vala:872
+msgid "Butt line cap"
+msgstr "Nepřesahující konec"
+
+#: libbirdfont/DrawingTools.vala:896
+msgid "Round line cap"
+msgstr "Zaoblený konec"
+
+#: libbirdfont/DrawingTools.vala:921
+msgid "Square line cap"
+msgstr "Čtvercový konec"
+
+#: libbirdfont/DrawingTools.vala:990
+msgid "Show guidelines"
+msgstr "Zobrazit pomocné linky"
+
+#: libbirdfont/DrawingTools.vala:1002
+msgid "Show more guidelines"
+msgstr "Ukázat více pomocných linek"
+
+#: libbirdfont/DrawingTools.vala:1018
+msgid "Show guidelines at top and bottom margin"
+msgstr "Zobrazit pomocné linky horního a dolního okraje"
+
+#: libbirdfont/DrawingTools.vala:1042
+msgid "Lock guides and grid"
+msgstr "Zamknout vodítka a mřížku"
+
+#: libbirdfont/DrawingTools.vala:1084
+msgid "Zoom Out More"
+msgstr "Oddálit více"
+
+#: libbirdfont/DrawingTools.vala:1093
+msgid "Show full glyph"
+msgstr "Ukázat celý znak"
+
+#: libbirdfont/DrawingTools.vala:1100
+msgid "Fit in view"
+msgstr "Přizpůsobit velikosti okna"
+
+#: libbirdfont/DrawingTools.vala:1107
+msgid "Zoom in on background image"
+msgstr "Přiblížit na obrázek pozadí"
+
+#: libbirdfont/DrawingTools.vala:1117
+msgid "Previous view"
+msgstr "Předchozí zobrazení"
+
+#: libbirdfont/DrawingTools.vala:1123
+msgid "Next view"
+msgstr "Další zobrazení"
+
+#: libbirdfont/DrawingTools.vala:1525
 msgid "Set size for grid"
 msgstr "Nastavit velikost mřížky"
 
@@ -622,39 +622,39 @@ msgstr "Nastavení"
 msgid "Themes"
 msgstr "Motivy"
 
-#: libbirdfont/Glyph.vala:496
+#: libbirdfont/Glyph.vala:512
 msgid "top margin"
 msgstr "Horní okraj"
 
-#: libbirdfont/Glyph.vala:503
+#: libbirdfont/Glyph.vala:519
 msgid "top"
 msgstr "nahoře"
 
-#: libbirdfont/Glyph.vala:510
+#: libbirdfont/Glyph.vala:526
 msgid "x-height"
 msgstr "výška x"
 
-#: libbirdfont/Glyph.vala:519
+#: libbirdfont/Glyph.vala:535
 msgid "baseline"
 msgstr "účaří"
 
-#: libbirdfont/Glyph.vala:526
+#: libbirdfont/Glyph.vala:542
 msgid "bottom"
 msgstr "dole"
 
-#: libbirdfont/Glyph.vala:532
+#: libbirdfont/Glyph.vala:548
 msgid "bottom margin"
 msgstr "dolní okraj"
 
-#: libbirdfont/Glyph.vala:538
+#: libbirdfont/Glyph.vala:554
 msgid "left"
 msgstr "vlevo"
 
-#: libbirdfont/Glyph.vala:547
+#: libbirdfont/Glyph.vala:563
 msgid "right"
 msgstr "vpravo"
 
-#: libbirdfont/Glyph.vala:2348
+#: libbirdfont/Glyph.vala:2364
 msgid "Guide"
 msgstr "Vodítko"
 
@@ -989,8 +989,8 @@ msgstr "Vybrat všechny znaky"
 msgid "Move To Baseline"
 msgstr "Přesunout na účaří"
 
-#: libbirdfont/Menu.vala:155 libbirdfont/OverView.vala:248
-#: libbirdfont/OverView.vala:267
+#: libbirdfont/Menu.vala:155 libbirdfont/OverView.vala:250
+#: libbirdfont/OverView.vala:269 libbirdfont/OverviewTools.vala:154
 msgid "Search"
 msgstr "Hledat"
 
@@ -1150,7 +1150,7 @@ msgstr "Git"
 msgid "Save As .bfp"
 msgstr "Uložit jako BFP"
 
-#: libbirdfont/Menu.vala:464 libbirdfont/OverView.vala:470
+#: libbirdfont/Menu.vala:464 libbirdfont/OverView.vala:472
 msgid "Overview"
 msgstr "Přehled"
 
@@ -1235,15 +1235,15 @@ msgstr "Velká písmena na kapitálky"
 msgid "Swashes"
 msgstr "Ozdobná písmena"
 
-#: libbirdfont/OverView.vala:248 libbirdfont/OverView.vala:267
+#: libbirdfont/OverView.vala:250 libbirdfont/OverView.vala:269
 msgid "Filter"
 msgstr "Filtr"
 
-#: libbirdfont/OverView.vala:625
+#: libbirdfont/OverView.vala:671
 msgid "No glyphs in this view."
 msgstr "Žádné znaky v tomto zobrazení."
 
-#: libbirdfont/OverView.vala:1432
+#: libbirdfont/OverView.vala:1478
 msgid "See also:"
 msgstr "Další podrobnosti:"
 
@@ -1296,12 +1296,12 @@ msgstr "Vytvořit náhražku"
 msgid "Set curve orientation"
 msgstr "Nastavit natočení křivky"
 
-#: libbirdfont/OverviewTools.vala:156
+#: libbirdfont/OverviewTools.vala:160
 #, fuzzy
 msgid "Master Size"
 msgstr "Velikost mřížky"
 
-#: libbirdfont/OverviewTools.vala:171
+#: libbirdfont/OverviewTools.vala:175
 #, fuzzy
 msgid "Create new master font"
 msgstr "Criar uma nova fonte"
@@ -1354,7 +1354,7 @@ msgstr "Zálohy"
 msgid "Rectangle"
 msgstr "Obdélník"
 
-#: libbirdfont/ResizeTool.vala:45
+#: libbirdfont/ResizeTool.vala:49
 msgid "Resize and rotate paths"
 msgstr "Změnit velikost a natočení cest"
 
