@@ -15,6 +15,9 @@
 using Cairo;
 using Math;
 
+[CCode (cname = "draw_overview_glyph")]
+public extern void draw_overview_glyph (Context context, string font_file, double width, double height, unichar character);
+
 namespace BirdFont {
 	
 public class OverViewItem : GLib.Object {
@@ -57,16 +60,6 @@ public class OverViewItem : GLib.Object {
 
 	public void set_character (unichar character) {
 		this.character = character;
-		info = new CharacterInfo (character, glyphs);
-		
-		if (glyphs == null) {
-			label = new Text ();
-		} else {
-			label = new Text ((!) character.to_string (), 17);		
-			truncate_label ();
-		}
-		
-		draw_background ();
 	}
 	
 	public void set_glyphs (GlyphCollection? gc) {
@@ -86,52 +79,16 @@ public class OverViewItem : GLib.Object {
 			});
 		}	
 
-/*
-		thumbnail_mutex.lock ();
-		if (!is_null (thumbnail_queue)) {
-			thumbnail_queue.offer (this);
-			has_thumnail_task.signal ();
-		}
-		thumbnail_mutex.unlock ();
-*/
-	}
-
-	public static void start_thumbnail_processing () {
-		//thumbnail_task  = new Task (process_thumbnails, true);
-		thumbnail_queue = new Gee.PriorityQueue<OverViewItem> ();	
-		//MainWindow.native_window.run_non_blocking_background_thread (thumbnail_task);
-	}
-
-	public void cancel_thumbnail_rendering () {
-		thumbnail_mutex.lock ();
-		cancel_thumbnail = true;
-		thumbnail_mutex.unlock ();
-	}
-
-	private static void process_thumbnails () {
-		bool cancel = false;
+		info = new CharacterInfo (character, glyphs);
 		
-		while (!thumbnail_task.is_cancelled ()) {
-			OverViewItem item;
-			
-			thumbnail_mutex.lock ();
-			item = thumbnail_queue.poll ();
-			thumbnail_mutex.unlock ();
-			
-			if (!is_null (item)) {
-				thumbnail_mutex.lock ();
-				cancel = item.cancel_thumbnail;
-				thumbnail_mutex.unlock ();
-			
-				if (!cancel) {
-					item.draw_background ();
-				}
-			} else {
-				thumbnail_mutex.lock ();
-				has_thumnail_task.wait (thumbnail_mutex);
-				thumbnail_mutex.unlock ();
-			}
+		if (glyphs == null) {
+			label = new Text ();
+		} else {
+			label = new Text ((!) character.to_string (), 17);		
+			truncate_label ();
 		}
+		
+		draw_background ();
 	}
 
 	public void draw_glyph_from_font () {
@@ -209,6 +166,13 @@ public class OverViewItem : GLib.Object {
 			c.scale (Screen.get_scale (), Screen.get_scale ());
 			
 			c.save ();
+			
+			string? font_file = find_font (FallbackFont.font_config, (!) character.to_string ());
+			if (font_file != null) {
+				draw_overview_glyph (c, (!) font_file, width, height, character);
+			}
+			
+			/*
 			Text fallback = new Text ();
 			fallback.set_use_cache (false);
 			Theme.text_color (fallback, "Overview Glyph");
@@ -218,6 +182,7 @@ public class OverViewItem : GLib.Object {
 			gx = (width - fallback.get_extent ()) / 2.0;
 			gy = height - 30;
 			fallback.draw_at_baseline (c, gx, gy);
+			*/
 			c.restore ();
 			
 			cache = s;

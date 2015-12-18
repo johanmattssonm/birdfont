@@ -28,7 +28,6 @@ public class GlyphRange {
 	bool range_is_class = false;
 	uint32* range_index = null;
 	int index_size = 0;
-	int index_hint = 0;
 	
 	public GlyphRange () {
 		ranges = new Gee.ArrayList<UniRange> ();
@@ -431,14 +430,8 @@ public class GlyphRange {
 	private void get_unirange_index (uint32 index, out UniRange? range, out uint32 range_start_index) {
 		int lower = 0;
 		int upper = index_size - 1;
-		int i;
+		int i = (lower + upper) / 2;
 		int end = index_size - 1;
-		
-		if (index_hint >= 0 && index_hint < index_size) {
-			i = index_hint;
-		} else {
-			i = (lower + upper) / 2;
-		}
 		
 		range_start_index = -1;
 		range = null;
@@ -448,22 +441,20 @@ public class GlyphRange {
 		}
 		
 		while (true) {
-			if (i == end) {
+			if (i == end && range_index[i] <= index) {
 				range_start_index = range_index[i];
 				range = ranges.get (i);
-				index_hint = i;
 				break;
-			} else if (range_index[i] <= index && range_index[i + 1] > index) {
+			} else if (i != end && range_index[i] <= index && range_index[i + 1] > index) {
 				range_start_index = range_index[i];
 				range = ranges.get (i);
-				index_hint = i;
 				break;
 			}
 			
 			if (lower >= upper) {
 				break;
 			}
-
+			
 			if (range_index[i] < index) {
 				lower = i + 1;
 			} else {
@@ -512,7 +503,7 @@ public class GlyphRange {
 		} 
 		
 		if (unlikely (range_start_index > index || range_start_index == -1)) {
-			warning ("Index out of bounds in glyph range.");
+			warning (@"Index out of bounds in glyph range, range_start_index: $range_start_index index: $index");
 			return '\0';
 		}
 		

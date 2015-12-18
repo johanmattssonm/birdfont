@@ -531,21 +531,13 @@ public class OverView : FontDisplay {
 		int item_list_length;
 		int visible_size;
 		
-		Test test = new Test.time("update_item_list");
-		
 		tab_with = allocation.width - 30; // scrollbar
 		
 		items_per_row = get_items_per_row ();
 		rows = (int) (allocation.height /  OverViewItem.full_height ()) + 2;
 		
 		item_list_length = items_per_row * rows;
-
-		foreach  (OverViewItem overview_item in visible_items) {
-			overview_item.cancel_thumbnail_rendering ();
-		}
-		
 		visible_items.clear ();
-		Test test3 = new Test.time("two conditions");
 		
 		index = (uint32) first_visible;
 		x = OverViewItem.margin;
@@ -563,35 +555,28 @@ public class OverView : FontDisplay {
 				character = glyph.unichar_code;
 				
 				item = new OverViewItem ();
-				item.set_glyphs (glyphs);
 				item.set_character (character);
+				item.set_glyphs (glyphs);
 				item.x = x;
 				item.y = y;
 				visible_items.add (item);
 				index++;
 			}
 		} else {
-
-			Test test_mk = new Test.time("mk items");
 			uint32 glyph_range_size = glyph_range.get_length ();
+			
+			uint max_length = glyph_range.length () - first_visible;
+			
+			if (item_list_length > max_length) {
+				item_list_length = (int) max_length;
+			}
 			
 			for (int i = 0; i < item_list_length && index < glyph_range_size; i++) {			
 				item = new OverViewItem ();
 				visible_items.add (item);
 			}
-			warning (test_mk.get_test_time ());
 			
-			Test test_gl = new Test.time("get_glyph");
-			visible_size = visible_items.size;
-			for (int i = 0; i < visible_size; i++) {
-				item = visible_items.get (i);
-				glyphs = f.get_glyph_collection_by_name ((!) item.character.to_string ());
-				item.set_glyphs (glyphs);
-			}
-			warning (test_gl.get_test_time ());
-
-			Test test_a = new Test.time("get_char");
-			
+			index = (uint32) first_visible;
 			visible_size = visible_items.size;
 			for (int i = 0; i < visible_size; i++) {
 				item = visible_items.get (i);
@@ -599,10 +584,15 @@ public class OverView : FontDisplay {
 				item.set_character (character);
 				index++;
 			}
-			warning (test_a.get_test_time ());
+
+			visible_size = visible_items.size;
+			for (int i = 0; i < visible_size; i++) {
+				item = visible_items.get (i);
+				glyphs = f.get_glyph_collection_by_name ((!) item.character.to_string ());
+				item.set_glyphs (glyphs);
+			}
 		}
 		
-		Test test_b = new Test.time("adjust pos");
 		x = OverViewItem.margin;
 		y = OverViewItem.margin;
 		
@@ -637,10 +627,6 @@ public class OverView : FontDisplay {
 			}
 		}
 		
-		warning (test_b.get_test_time ());
-		
-		warning (test3.get_test_time ());
-		warning (test.get_test_time ());
 		update_scheduled = false;
 	}
 	

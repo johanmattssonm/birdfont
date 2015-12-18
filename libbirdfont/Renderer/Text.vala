@@ -260,7 +260,7 @@ public class Text : Widget {
 			double h;
 			glyph.boundaries (out x1, out y1, out x2, out y2);
 			h = Math.fmax (y1, y2) - Math.fmin (y1, y2);
-			h *= get_scale(glyph) - glyph.baseline * get_scale(glyph);
+			h *= get_scale (glyph) - glyph.baseline * get_scale (glyph);
 			if (h > max_height) {
 				max_height = h;
 			}
