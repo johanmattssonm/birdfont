@@ -16,7 +16,7 @@ using Cairo;
 using Math;
 
 [CCode (cname = "draw_overview_glyph")]
-public extern void draw_overview_glyph (Context context, string font_file, double width, double height, unichar character);
+public extern bool draw_overview_glyph (Context context, string font_file, double width, double height, unichar character);
 
 namespace BirdFont {
 	
@@ -172,22 +172,22 @@ public class OverViewItem : GLib.Object {
 			
 			c.save ();
 			
-			string? font_file = find_font (FallbackFont.font_config, (!) character.to_string ());
-			if (font_file != null) {
-				draw_overview_glyph (c, (!) font_file, width, height, character);
+			bool glyph_found;
+			string? font_file;
+			
+			Theme.color (c, "Overview Glyph");
+			
+			font_file = FontCache.fallback_font.get_default_font_file ();	
+			glyph_found = draw_overview_glyph (c, (!) font_file, width, height, character);
+			
+			if (!glyph_found) {
+				font_file = find_font (FallbackFont.font_config, (!) character.to_string ());
+				
+				if (font_file != null) {
+					draw_overview_glyph (c, (!) font_file, width, height, character);
+				}
 			}
 			
-			/*
-			Text fallback = new Text ();
-			fallback.set_use_cache (false);
-			Theme.text_color (fallback, "Overview Glyph");
-			fallback.set_text ((!) character.to_string ());
-			double font_size = height * 0.8;
-			fallback.set_font_size (font_size);
-			gx = (width - fallback.get_extent ()) / 2.0;
-			gy = height - 30;
-			fallback.draw_at_baseline (c, gx, gy);
-			*/
 			c.restore ();
 			
 			cache = s;

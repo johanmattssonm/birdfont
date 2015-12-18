@@ -150,6 +150,10 @@ public class OverviewTools : ToolCollection  {
 			idle.attach (null);
 		});
 		glyph_expander.add_tool (curve_orientation);
+
+		Tool search_glyph = new Tool ("search", t_("Search"));
+		search_glyph.select_action.connect (search_for_glyph);
+		glyph_expander.add_tool (search_glyph);
 		
 		SpinButton master_size;
 		current_master_size = 0;
@@ -230,6 +234,11 @@ public class OverviewTools : ToolCollection  {
 		
 		o.undo_items.add (ui);
 		GlyphCanvas.redraw ();
+	}
+	
+	public void search_for_glyph (Tool tool) {
+		tool.set_selected (false);
+		OverView.search ();
 	}
 	
 	public void add_new_alternate (Tool tool) {

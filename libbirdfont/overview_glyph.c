@@ -21,7 +21,7 @@
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
 
-void draw_overview_glyph (cairo_t* context, const char* font_file, gdouble width, gdouble height, gunichar character) {
+gboolean draw_overview_glyph (cairo_t* context, const char* font_file, gdouble width, gdouble height, gunichar character) {
 	FT_Library library;
 	FT_Face face;
 	int error;
@@ -34,45 +34,45 @@ void draw_overview_glyph (cairo_t* context, const char* font_file, gdouble width
 
 	// private use area
 	if (0xe000 <= character && character <= 0xf8ff) {
-		return;
+		return FALSE;
 	}
 	
 	// control characters
 	if (character <= 0x001f || (0x007f <= character && character <= 0x008d)) {
-		return;
+		return FALSE;
 	}
 
 	error = FT_Init_FreeType (&library);
 	if (error) {
 		g_warning ("Freetype init error %d.\n", error);
-		return;
+		return FALSE;
 	}
 
 	error = FT_New_Face (library, font_file, 0, &face);
 	if (error) {
 		g_warning ("Freetype font face error %d\n", error);
-		return;
+		return FALSE;
 	}
 
 	units_per_em = face->units_per_EM;
-	units = (height * 0.7) / units_per_em;
+	units = (height * 0.5) / units_per_em;
 	
 	error = FT_Select_Charmap (face , FT_ENCODING_UNICODE);
 	if (error) {
 		g_warning ("Freetype can not use Unicode, error: %d\n", error);
-		return;
+		return FALSE;
 	}
 
 	error = FT_Set_Char_Size (face, 0, 64, (int) height, (int) height);
 	if (error) {
 		g_warning ("FT_Set_Char_Size, error: %d.\n", error);
-		return;
+		return FALSE;
 	}
 
 	error = FT_Set_Pixel_Sizes (face, 0, (int) (height * 0.5));
 	if (error) {
 		g_warning ("FT_Set_Pixel_Sizes, error: %d.\n", error);
-		return;
+		return FALSE;
 	}
 
 	gchar text[7];
@@ -87,14 +87,14 @@ void draw_overview_glyph (cairo_t* context, const char* font_file, gdouble width
 		advance *= units;
 	} else {
 		g_warning("Glyph not found: %s", text);
-		return;
+		return FALSE;
 	}
 
 	cairo_save (context);
 	cairo_font_face_t* cairo_face = cairo_ft_font_face_create_for_ft_face (face, 0);
-		
+	
 	cairo_set_font_face (context, cairo_face);
-	cairo_set_font_size (context, height);
+	cairo_set_font_size (context, height * 0.5);
 	
 	gdouble x = (width - advance) / 2;
 	
@@ -110,4 +110,6 @@ void draw_overview_glyph (cairo_t* context, const char* font_file, gdouble width
 	
 	FT_Done_Face (face);
 	FT_Done_FreeType (library);
+	
+	return TRUE;
 }
