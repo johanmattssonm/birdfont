@@ -49,6 +49,8 @@ public class FallbackFont : GLib.Object {
 
 	public int max_cached_fonts = 300;
 	
+	string? default_font_file = null;
+	
 	public FallbackFont () {
 		string home = Environment.get_home_dir ();
 		font_directories = new Gee.ArrayList<File> ();
@@ -243,9 +245,13 @@ public class FallbackFont : GLib.Object {
 		return File.new_for_path (font_file);
 	}
 
-	void open_default_font () {
+	public string? get_default_font_file () {
 		File font_file;
 		string? fn = null;
+		
+		if (likely (default_font_file != null)) {
+			return default_font_file;
+		}
 		
 		font_file = SearchPaths.search_file (null, default_font_file_name);
 		
@@ -261,6 +267,18 @@ public class FallbackFont : GLib.Object {
 			}
 		}
 			
+		if (likely (fn != null)) {
+			default_font_file = fn;
+			return fn;
+		}
+		
+		warning(default_font_family_name + " not found");
+		return null;
+	}
+	
+	void open_default_font () {
+		string? fn = get_default_font_file ();
+		
 		if (fn != null) {
 			default_font = open_font ((!) fn);
 		}
