@@ -55,7 +55,7 @@ gboolean draw_overview_glyph (cairo_t* context, const char* font_file, gdouble w
 	}
 
 	units_per_em = face->units_per_EM;
-	units = (height * 0.7) / units_per_em;
+	units = (height * 0.5) / units_per_em;
 	
 	error = FT_Select_Charmap (face , FT_ENCODING_UNICODE);
 	if (error) {

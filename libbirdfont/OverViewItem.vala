@@ -170,11 +170,11 @@ public class OverViewItem : GLib.Object {
 			bool glyph_found;
 			string? font_file;
 			
-			Test t1 = new Test.time("both");
+			Theme.color (c, "Overview Glyph");
+			
 			font_file = FontCache.fallback_font.get_default_font_file ();	
 			glyph_found = draw_overview_glyph (c, (!) font_file, width, height, character);
 			
-			Test t2 = new Test.time("fall");
 			if (!glyph_found) {
 				font_file = find_font (FallbackFont.font_config, (!) character.to_string ());
 				
@@ -182,9 +182,6 @@ public class OverViewItem : GLib.Object {
 					draw_overview_glyph (c, (!) font_file, width, height, character);
 				}
 			}
-			
-			t2.print();
-			t1.print();
 			
 			c.restore ();
 			
