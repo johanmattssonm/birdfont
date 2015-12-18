@@ -92,9 +92,9 @@ void draw_overview_glyph (cairo_t* context, const char* font_file, gdouble width
 
 	cairo_save (context);
 	cairo_font_face_t* cairo_face = cairo_ft_font_face_create_for_ft_face (face, 0);
-		
+	
 	cairo_set_font_face (context, cairo_face);
-	cairo_set_font_size (context, height);
+	cairo_set_font_size (context, height * 0.5);
 	
 	gdouble x = (width - advance) / 2;
 	
