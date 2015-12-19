@@ -616,8 +616,8 @@ public class OverView : FontDisplay {
 			selected_item |= (i == selected);
 			item.selected = selected_item;
 			
-			item.x = x + view_offset_y;
-			item.y = y + view_offset_x;
+			item.x = x + view_offset_x;
+			item.y = y + view_offset_y;
 			
 			x += full_width;
 			

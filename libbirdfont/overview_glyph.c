@@ -16,17 +16,17 @@
 #include <glib.h>
 #include <stdio.h>
 #include <cairo.h>
+#include <cairo-ft.h>
 #include <stdlib.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
 
+FT_Library freetype_library = NULL;
+
 gboolean draw_overview_glyph (cairo_t* context, const char* font_file, gdouble width, gdouble height, gunichar character) {
-	FT_Library library;
 	FT_Face face;
 	int error;
-	FT_Glyph glyph;
-	FT_UInt glyph_index;
 	gdouble units_per_em;
 	gdouble units;
 	gdouble advance;
@@ -42,15 +42,20 @@ gboolean draw_overview_glyph (cairo_t* context, const char* font_file, gdouble w
 		return FALSE;
 	}
 
-	error = FT_Init_FreeType (&library);
-	if (error) {
-		g_warning ("Freetype init error %d.\n", error);
-		return FALSE;
+	gchar text[7];
+	int length = g_unichar_to_utf8 (character, text);
+	text[length] = '\0';
+	
+	if (freetype_library == NULL) {
+		error = FT_Init_FreeType (&freetype_library);
+		if (error) {
+			g_warning ("Freetype init error %d.\n", error);
+			return FALSE;
+		}
 	}
-
-	error = FT_New_Face (library, font_file, 0, &face);
+	
+	error = FT_New_Face (freetype_library, font_file, 0, &face);
 	if (error) {
-		FT_Done_FreeType (library);
 		g_warning ("Freetype font face error %d\n", error);
 		return FALSE;
 	}
@@ -62,7 +67,6 @@ gboolean draw_overview_glyph (cairo_t* context, const char* font_file, gdouble w
 	if (error) {
 		g_warning ("Freetype can not use Unicode, error: %d\n", error);
 		FT_Done_Face (face);
-		FT_Done_FreeType (library);
 		return FALSE;
 	}
 
@@ -70,21 +74,15 @@ gboolean draw_overview_glyph (cairo_t* context, const char* font_file, gdouble w
 	if (error) {
 		g_warning ("FT_Set_Char_Size, error: %d.\n", error);
 		FT_Done_Face (face);
-		FT_Done_FreeType (library);
 		return FALSE;
 	}
-
+	
 	error = FT_Set_Pixel_Sizes (face, 0, (int) (height * 0.5));
 	if (error) {
 		g_warning ("FT_Set_Pixel_Sizes, error: %d.\n", error);
 		FT_Done_Face (face);
-		FT_Done_FreeType (library);
 		return FALSE;
 	}
-
-	gchar text[7];
-	int length = g_unichar_to_utf8 (character, text);
-	text[length] = '\0';
 
 	gid = FT_Get_Char_Index (face, character);
 	advance = 0;
@@ -94,13 +92,29 @@ gboolean draw_overview_glyph (cairo_t* context, const char* font_file, gdouble w
 		advance *= units;
 	} else {
 		FT_Done_Face (face);
-		FT_Done_FreeType (library);
 		return FALSE;
 	}
 
+	static const cairo_user_data_key_t key;
+
 	cairo_save (context);
+	
 	cairo_font_face_t* cairo_face = cairo_ft_font_face_create_for_ft_face (face, 0);
 	
+	if (cairo_face == NULL) {
+		g_warning("cairo font face is null");
+		FT_Done_Face (face);
+		return FALSE;
+	}
+	
+	int status = cairo_font_face_set_user_data (cairo_face, &key, face, (cairo_destroy_func_t) FT_Done_Face);
+	
+	if (status != CAIRO_STATUS_SUCCESS) {		
+		cairo_font_face_destroy (cairo_face);
+		FT_Done_Face (face);
+		return FALSE;
+	}
+
 	cairo_set_font_face (context, cairo_face);
 	cairo_set_font_size (context, height * 0.5);
 	
@@ -116,8 +130,7 @@ gboolean draw_overview_glyph (cairo_t* context, const char* font_file, gdouble w
 	cairo_font_face_destroy (cairo_face);
 	cairo_restore (context);
 	
-	FT_Done_Face (face);
-	FT_Done_FreeType (library);
+	// cairo closes the font face and the library must be kept open
 	
 	return TRUE;
 }

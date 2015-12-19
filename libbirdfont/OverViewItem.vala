@@ -177,7 +177,11 @@ public class OverViewItem : GLib.Object {
 				font_file = find_font (FallbackFont.font_config, (!) character.to_string ());
 				
 				if (font_file != null) {
-					draw_overview_glyph (c, (!) font_file, width, height, character);
+					string path = (!) font_file;
+					
+					if (!path.has_suffix("LastResort.ttf")) {
+						draw_overview_glyph (c, (!) font_file, width, height, character);
+					}
 				}
 			}
 			
