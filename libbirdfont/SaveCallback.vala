@@ -82,9 +82,11 @@ public class SaveCallback : GLib.Object {
 		if (font_file_path != "") {
 			f.font_file = font_file_path;
 		}
-		
+
+#if !MAC
 		Preferences.add_recent_files (f.get_path ());
-		
+#endif
+
 		if (f.is_bfp ()) {
 			MainWindow.native_window.save ();
 		} else {
