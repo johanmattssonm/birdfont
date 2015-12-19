@@ -22,6 +22,24 @@ public extern struct FcConfig {
 [CCode (cname = "FcInitLoadConfigAndFonts")]
 public extern FcConfig* FcInitLoadConfigAndFonts ();
 
+[CCode (cname = "FcConfigAppFontAddDir")]
+public extern string* FcConfigAppFontAddDir (FcConfig* config, string path);
+
+[CCode (cname = "FcConfigSetSysRoot")]
+public extern void FcConfigSetSysRoot (FcConfig* config, string path);
+
+[CCode (cname = "FcConfigParseAndLoad")]
+public extern bool FcConfigParseAndLoad (FcConfig* config, string path, bool complain);
+
+[CCode (cname = "FcConfigSetCurrent")]
+public extern void FcConfigSetCurrent (FcConfig* config);
+
+[CCode (cname = "FcConfigCreate")]
+public extern FcConfig* FcConfigCreate ();
+
+[CCode (cname = "FcConfigFilename")]
+public extern string FcConfigFilename (string path);
+
 [CCode (cname = "find_font")]
 public extern string? find_font (FcConfig* font_config, string characters);
 
@@ -39,7 +57,7 @@ public class FallbackFont : GLib.Object {
 	
 	FontFace* default_font = null;
 	public static FcConfig* font_config = null;
-	static bool font_config_stated = false;
+	static bool font_config_started = false;
 	
 	string default_font_file_name = "Roboto-Regular.ttf";
 	string default_font_family_name = "Roboto";
@@ -55,9 +73,9 @@ public class FallbackFont : GLib.Object {
 		string home = Environment.get_home_dir ();
 		font_directories = new Gee.ArrayList<File> ();
 
-		if (!font_config_stated) {
-			font_config_stated = true;
-
+		if (!font_config_started) {
+			font_config_started = true;
+			
 			IdleSource idle = new IdleSource ();
 			idle.set_callback (() => {
 				Task t = new Task (init_font_config);
@@ -91,11 +109,32 @@ public class FallbackFont : GLib.Object {
 	}
 
 	public void init_font_config () {
-		FcConfig* fc = FcInitLoadConfigAndFonts ();
+		print("init_font_config\n");
+		FcConfig* config;
+		
+#if MAC
+		config = FcConfigCreate();
+		
+		string bundle = (!) BirdFont.get_settings_directory ().get_path ();
+		FcConfigSetSysRoot(config, bundle);
+	
+		string path = FcConfigFilename((!) SearchPaths.search_file(null, "fontconfig.settings").get_path ());
+		bool loaded = FcConfigParseAndLoad(config, path, true);
+		
+		if (!loaded) {
+			warning ("Cannot load fontconfig.");
+		}
+		
+		FcConfigSetCurrent (config);
+#else
+		config = FcInitLoadConfigAndFonts ();
+#endif
+
 		IdleSource idle = new IdleSource ();
 		
 		idle.set_callback (() => {
-			font_config = fc;
+			font_config = config;
+			print("Fontconfog loaded.");
 			return false;
 		});
 		idle.attach (null);

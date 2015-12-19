@@ -180,7 +180,7 @@ public class OverViewItem : GLib.Object {
 					string path = (!) font_file;
 					
 					if (!path.has_suffix("LastResort.ttf")) {
-						draw_overview_glyph (c, (!) font_file, width, height, character);
+						draw_overview_glyph (c, path, width, height, character);
 					}
 				}
 			}

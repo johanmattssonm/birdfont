@@ -57,7 +57,7 @@ gchar* find_font_with_property (FcConfig* fontconfig, const gchar* characters, c
 	FcPatternAddBool(pattern, FC_SCALABLE, FcTrue);
 	font_properties = FcObjectSetBuild (property, NULL);	
 	fonts = FcFontList (fontconfig, pattern, font_properties);
-
+	
 	if (fonts && fonts->nfont > 0) {
 		font = fonts->fonts[0];
 		if (FcPatternGetString(font, property, 0, &path) == FcResultMatch) {

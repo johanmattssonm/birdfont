@@ -42,6 +42,11 @@ gboolean draw_overview_glyph (cairo_t* context, const char* font_file, gdouble w
 		return FALSE;
 	}
 
+	if (font_file == NULL) {
+		g_warning("font_file is null");
+		return FALSE;
+	}
+	
 	gchar text[7];
 	int length = g_unichar_to_utf8 (character, text);
 	text[length] = '\0';
@@ -53,13 +58,13 @@ gboolean draw_overview_glyph (cairo_t* context, const char* font_file, gdouble w
 			return FALSE;
 		}
 	}
-	
+
 	error = FT_New_Face (freetype_library, font_file, 0, &face);
 	if (error) {
 		g_warning ("Freetype font face error %d\n", error);
 		return FALSE;
 	}
-
+	
 	units_per_em = face->units_per_EM;
 	units = (height * 0.5) / units_per_em;
 	
