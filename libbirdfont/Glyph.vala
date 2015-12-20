@@ -15,6 +15,7 @@
 using Cairo;
 using Math;
 using Gee;
+using B;
 
 namespace BirdFont {
 
@@ -153,6 +154,13 @@ public class Glyph : FontDisplay {
 		set {
 			try {
 				if (value != null) {
+					XmlParser xml = new XmlParser ((!) value);
+		 
+					if (!xml.validate ()) {
+						warning("Invalid SVG data, skipping import.");
+						return;
+					}
+					
 					uint8[] svg_array = ((!) value).data;
 					svg_drawing = new Rsvg.Handle.from_data (svg_array);
 				} else {

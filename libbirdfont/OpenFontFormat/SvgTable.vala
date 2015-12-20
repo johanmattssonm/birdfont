@@ -70,12 +70,13 @@ public class SvgTable : OtfTable {
 		svg_tags = new Gee.ArrayList<Tag> ();
 		meta = new Gee.ArrayList<Tag> ();
 		xml = new XmlParser (svg_data);
-		svg_root_tag = xml.get_root_tag ();
 		 
 		if (!xml.validate ()) {
 			warning("Invalid SVG data in TTF table.");
 			return;
 		}
+		
+		svg_root_tag = xml.get_root_tag ();
 		
 		foreach (Tag tag in svg_root_tag) {
 			string name = tag.get_name();
