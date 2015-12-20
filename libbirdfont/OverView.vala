@@ -1311,7 +1311,11 @@ public class OverView : FontDisplay {
 					}
 				}
 				
-				update = !i.version_menu.menu_visible;
+				if (is_null(i.version_menu)) {
+					update = false;
+				} else {
+					update = !i.version_menu.menu_visible;
+				}
 			}
 			index++;
 		}
