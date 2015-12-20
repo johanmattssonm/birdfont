@@ -457,7 +457,9 @@ public class OverViewItem : GLib.Object {
 	}
 	
 	public void hide_menu () {
-		version_menu.menu_visible = false;
+		if (!is_null (version_menu)) {
+			version_menu.menu_visible = false;
+		}
 	}
 	
 	private void draw_menu_icon (Context cc, bool selected) {
