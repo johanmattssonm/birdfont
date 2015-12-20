@@ -253,11 +253,6 @@ class SvgFont : GLib.Object {
 		glyph.right_limit = glyph.left_limit + advance * units;
 		
 		// FIXME: add svg font ligatures
-		/*
-		if (ligature != "") {
-			glyph.set_ligature_substitution (ligature);
-		}
-		*/
 		
 		glyph_collection = new GlyphCollection (unicode_value, glyph_name);
 		glyph_collection.insert_glyph (glyph, true);

@@ -123,19 +123,24 @@ public class MoveTool : Tool {
 
 			delta_x = Glyph.ivz () * -dx * p;
 			delta_y = Glyph.ivz () * dy * p;
-							
-			foreach (Layer group in glyph.selected_groups) {
-				if (group.gradient != null) {
-					Gradient g = (!) group.gradient;
-					g.x1 += delta_x;
-					g.x2 += delta_x;
-					g.y1 += delta_y;
-					g.y2 += delta_y;
-				}
-			}
 			
-			foreach (Path path in glyph.active_paths) {
-				path.move (delta_x, delta_y);
+			if (glyph.color_svg_data != null) {
+				glyph.svg_x += delta_x;
+				glyph.svg_y += delta_y;
+			} else {		
+				foreach (Layer group in glyph.selected_groups) {
+					if (group.gradient != null) {
+						Gradient g = (!) group.gradient;
+						g.x1 += delta_x;
+						g.x2 += delta_x;
+						g.y1 += delta_y;
+						g.y2 += delta_y;
+					}
+				}
+				
+				foreach (Path path in glyph.active_paths) {
+					path.move (delta_x, delta_y);
+				}
 			}
 		}
 
@@ -197,34 +202,36 @@ public class MoveTool : Tool {
 		glyph.store_undo_state ();
 		group_selection = false;
 		
-		group = glyph.get_path_at (x, y);
-		
-		if (group != null) {
-			g = (!) group;
-			return_if_fail (g.paths.paths.size > 0);
-			p = g.paths.paths.get (0);
-			selected = glyph.active_paths.contains (p);
+		if (glyph.color_svg_data == null) {
+			group = glyph.get_path_at (x, y);
 			
-			if (!selected && !KeyBindings.has_shift ()) {
-				glyph.clear_active_paths ();
-			} 
-			
-			foreach (Path lp in g.paths.paths) {
-				if (selected && KeyBindings.has_shift ()) {
-					glyph.selected_groups.remove ((!) group);
-					glyph.active_paths.remove (lp);
-				} else {
-					glyph.add_active_path ((!) group, lp);
+			if (group != null) {
+				g = (!) group;
+				return_if_fail (g.paths.paths.size > 0);
+				p = g.paths.paths.get (0);
+				selected = glyph.active_paths.contains (p);
+				
+				if (!selected && !KeyBindings.has_shift ()) {
+					glyph.clear_active_paths ();
+				} 
+				
+				foreach (Path lp in g.paths.paths) {
+					if (selected && KeyBindings.has_shift ()) {
+						glyph.selected_groups.remove ((!) group);
+						glyph.active_paths.remove (lp);
+					} else {
+						glyph.add_active_path ((!) group, lp);
+					}
 				}
+			} else if (!KeyBindings.has_shift ()) {
+				glyph.clear_active_paths ();
 			}
-		} else if (!KeyBindings.has_shift ()) {
-			glyph.clear_active_paths ();
+			
+			update_selection_boundaries ();
 		}
 		
 		move_path = true;
-
-		update_selection_boundaries ();
-					
+		
 		last_x = x;
 		last_y = y;
 		
@@ -289,14 +296,16 @@ public class MoveTool : Tool {
 		double w = Math.fabs (selection_x - last_x);
 		double h = Math.fabs (selection_y - last_y);
 		
-		cr.save ();
+		Glyph glyph = MainWindow.get_current_glyph ();
 		
-		Theme.color (cr, "Foreground 1");
-		cr.set_line_width (2);
-		cr.rectangle (x, y, w, h);
-		cr.stroke ();
-		
-		cr.restore ();
+		if (glyph.color_svg_data == null) {
+			cr.save ();			
+			Theme.color (cr, "Foreground 1");
+			cr.set_line_width (2);
+			cr.rectangle (x, y, w, h);
+			cr.stroke ();
+			cr.restore ();
+		}
 	}
 	
 	public static void get_selection_box_boundaries (out double x, out double y, out double w, out double h) {

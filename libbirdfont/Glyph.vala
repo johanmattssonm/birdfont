@@ -140,26 +140,37 @@ public class Glyph : FontDisplay {
 	public double bottom_limit = 0;
 
 	public Surface? overview_thumbnail = null;
-	Rsvg.Handle? svg_drawing = null;
-	public string? svg_data = null;
+	
+	public double svg_x = 0;
+	public double svg_y = 0;
+	private Rsvg.Handle? svg_drawing = null;
+
+	public string? color_svg_data {
+		get {
+			return _color_svg_data;
+		}
+		
+		set {
+			try {
+				if (value != null) {
+					uint8[] svg_array = ((!) value).data;
+					svg_drawing = new Rsvg.Handle.from_data (svg_array);
+				} else {
+					svg_drawing = null;
+				}
+				
+				_color_svg_data = value;				
+			} catch (GLib.Error e) {
+				warning (e.message);
+			}
+		}
+	}
+
+	private string? _color_svg_data = null;
 
 	public Glyph (string name, unichar unichar_code = 0) {
 		this.name = name;
 		this.unichar_code = unichar_code;
-
-		try {
-			string data;
-			FileUtils.get_contents ("/home/johan/birdfont/attic/test.svg", out data);
-			svg_data = data;
-
-			if (svg_data != null) {
-				uint8[] svg_array = ((!) svg_data).data;
-				svg_drawing = new Rsvg.Handle.from_data (svg_array);
-				// FIXME: DELETE svg_drawing = new Rsvg.Handle.from_file ("/home/johan/birdfont/attic/test.svg");
-			}
-		} catch (GLib.Error e) {
-			warning (e.message);
-		}
 		
 		add_help_lines ();
 
@@ -1842,19 +1853,21 @@ public class Glyph : FontDisplay {
 			cmp.restore ();
 		}
 
-		cmp.save ();
-		cmp.scale (view_zoom, view_zoom);
-		cmp.translate (-view_offset_x, -view_offset_y);
-		
 		if (svg_drawing != null) {
+			cmp.save ();
+			cmp.scale (view_zoom, view_zoom);
+			cmp.translate (xc () + svg_x - view_offset_x, yc () - svg_y - view_offset_y);
 			Rsvg.Handle svg_handle = (!) svg_drawing;
 			svg_handle.render_cairo (cmp);
-		} else if (!is_empty ()) {
-			draw_path (cmp);
+			cmp.restore ();
+		} else {
+			cmp.save ();
+			cmp.scale (view_zoom, view_zoom);
+			cmp.translate (-view_offset_x, -view_offset_y);
+			draw_path (cmp);		
+			cmp.restore ();	
 		}
-		
-		cmp.restore ();
-		
+				
 		cmp.save ();
 		tool = MainWindow.get_toolbox ().get_current_tool ();
 		tool.draw_action (tool, cmp, this);

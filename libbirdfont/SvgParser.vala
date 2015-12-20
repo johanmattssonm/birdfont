@@ -23,6 +23,11 @@ public enum SvgFormat {
 	ILLUSTRATOR
 }
 
+public enum SvgType {
+	COLOR,
+	REGULAR
+}
+
 public class SvgParser {
 	
 	SvgFormat format = SvgFormat.ILLUSTRATOR;
@@ -34,7 +39,7 @@ public class SvgParser {
 		format = f;
 	}
 	
-	public static void import () {
+	public static void import (SvgType type) {
 		FileChooser fc = new FileChooser ();
 		fc.file_selected.connect ((p) => {
 			string path;
@@ -44,14 +49,35 @@ public class SvgParser {
 			}
 			
 			path = (!) p;
-			import_svg (path);
+			
+			if (type == SvgType.REGULAR) {
+				import_svg (path);
+			} else if (type == SvgType.COLOR) {
+				Glyph glyph = MainWindow.get_current_glyph ();
+				import_color_svg (glyph, path);
+			}
 		});
 		
 		fc.add_extension ("svg");
 		MainWindow.file_chooser (t_("Import"), fc, FileChooser.LOAD);
 	}
+		
+	public static void import_color_svg (Glyph glyph, string path) {
+		try {
+			string data;
+			FileUtils.get_contents (path, out data);
+			glyph.color_svg_data = data;
+
+			if (glyph.color_svg_data != null) {
+				glyph.svg_x = glyph.left_limit;
+				glyph.svg_y = BirdFont.get_current_font ().top_position;
+			}
+		} catch (GLib.Error e) {
+			warning (e.message);
+		}
+	}
 	
-	public static void import_folder () {
+	public static void import_folder (SvgType type) {
 		FileChooser fc = new FileChooser ();
 		fc.file_selected.connect ((p) => {
 			string path;
@@ -78,7 +104,7 @@ public class SvgParser {
 					
 					if (file_name.has_suffix (".svg")) {
 						svg = get_child (svg_folder, file_name);
-						imported = import_svg_file (font, svg);
+						imported = import_svg_file (font, svg, type);
 						
 						if (!imported) {
 							warning ("Can't import %s.", (!) svg.get_path ());

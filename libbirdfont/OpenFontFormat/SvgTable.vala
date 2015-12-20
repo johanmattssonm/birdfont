@@ -42,11 +42,11 @@ public class SvgTable : OtfTable {
 			
 			if (glyph_collection != null) {
 				glyphs = (!) glyph_collection;
-				svg_data = glyphs.get_current ().svg_data;
+				svg_data = glyphs.get_current ().color_svg_data;
 				
 				if (svg_data != null) {
 					gid = glyf_table.get_gid (glyphs.get_name ());
-					add_svg_glyph ((!) svg_data, gid);
+					add_svg_glyph ((!) svg_data, gid, glyphs);
 					glyphs_in_table++;
 				}
 			}
@@ -55,7 +55,7 @@ public class SvgTable : OtfTable {
 		process_svg_data ();
 	}
 	
-	void add_svg_glyph (string svg_data, int glyph_id) {
+	void add_svg_glyph (string svg_data, int glyph_id, GlyphCollection glyphs) {
 		SvgTableEntry entry;
 		Gee.ArrayList<Tag> layer_content;
 		Gee.ArrayList<Tag> svg_tags;
@@ -94,6 +94,7 @@ public class SvgTable : OtfTable {
 		}
 		
 		StringBuilder svg = new StringBuilder ();
+		svg.append ("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n");
 		svg.append ("<");
 		svg.append (svg_root_tag.get_name ());
 		svg.append (" ");
@@ -114,9 +115,12 @@ public class SvgTable : OtfTable {
 		// scale the internal coordinates from 100 units per em to the 
 		// number of units per em in this font and move the glyph
 		// in to the em box
-		double height = -1 * (font.top_position - font.base_line);
+		Glyph glyph = glyphs.get_current ();
+		//FIXME: DELETE double height = font.top_position - font.base_line;
 		double scale = HeadTable.UNITS;
-		svg.append (@"transform=\"scale($scale) translate(0, $height)\"");
+		double x = glyph.svg_x - glyph.left_limit;
+		double y = -glyph.svg_y;
+		svg.append (@"transform=\"scale($scale) translate($x, $y)\"");
 		
 		svg.append (">");
 		svg.append ("\n\n");
