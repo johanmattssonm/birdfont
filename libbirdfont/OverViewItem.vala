@@ -56,8 +56,10 @@ public class OverViewItem : GLib.Object {
 	}
 	
 	public void set_glyphs (GlyphCollection? gc) {
-		glyphs = gc;
-		
+		glyphs = gc;		
+	}
+
+	public void generate_graphics () {
 		if (glyphs != null) {	
 			version_menu = new VersionList ((!) glyphs);
 			version_menu.add_glyph_item.connect ((glyph) => {
@@ -81,7 +83,7 @@ public class OverViewItem : GLib.Object {
 			truncate_label ();
 		}
 		
-		draw_background ();
+		draw_background ();	
 	}
 
 	public void draw_glyph_from_font () {

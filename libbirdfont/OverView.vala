@@ -557,6 +557,7 @@ public class OverView : FontDisplay {
 				item = new OverViewItem ();
 				item.set_character (character);
 				item.set_glyphs (glyphs);
+				item.generate_graphics ();
 				item.x = x;
 				item.y = y;
 				visible_items.add (item);
@@ -590,6 +591,11 @@ public class OverView : FontDisplay {
 				item = visible_items.get (i);
 				glyphs = f.get_glyph_collection_by_name ((!) item.character.to_string ());
 				item.set_glyphs (glyphs);
+			}
+
+			for (int i = 0; i < visible_size; i++) {
+				item = visible_items.get (i);
+				item.generate_graphics ();
 			}
 		}
 		
