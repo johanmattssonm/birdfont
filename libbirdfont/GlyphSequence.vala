@@ -100,7 +100,16 @@ public class GlyphSequence : GLib.Object {
 
 			foreach (Alternate a in alternates) {
 				GlyphSequence old = new GlyphSequence ();
-				Glyph? g = font.get_glyph_by_name (a.glyph_name);
+				string name;
+				Glyph? g;
+				
+				name = a.glyph_name;
+				
+				if (name == "space") {
+					name = " ";
+				}
+				
+				g = font.get_glyph_by_name (name);
 
 				if (g != null) {
 					old.add (g);

@@ -58,6 +58,10 @@ public class Ligatures : GLib.Object {
 			
 			lig = new GlyphSequence ();
 			foreach (string n in font.get_names (ligature)) {
+				if (n == "space") {
+					n = " ";
+				}
+				
 				gc = font.get_glyph_collection_by_name (n);
 				
 				if (gc == null) {
@@ -69,6 +73,10 @@ public class Ligatures : GLib.Object {
 			
 			gs = new GlyphSequence ();
 			foreach (string s in subst_names) {
+				if (s == "space") {
+					s = " ";
+				}
+				
 				gc = font.get_glyph_collection_by_name (s);
 				
 				if (gc == null) {
