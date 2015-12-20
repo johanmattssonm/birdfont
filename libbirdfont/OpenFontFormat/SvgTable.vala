@@ -62,6 +62,9 @@ public class SvgTable : OtfTable {
 		Gee.ArrayList<Tag> meta;
 		XmlParser xml;
 		Tag svg_root_tag;
+		Font font;
+		
+		font = OpenFontFormatWriter.get_current_font ();
 		
 		layer_content = new Gee.ArrayList<Tag> ();
 		svg_tags = new Gee.ArrayList<Tag> ();
@@ -106,7 +109,15 @@ public class SvgTable : OtfTable {
 		svg.append ("\"");
 		svg.append ("glyph");
 		svg.append (@"$glyph_id");
-		svg.append ("\"");
+		svg.append ("\" ");
+		
+		// scale the internal coordinates from 100 units per em to the 
+		// number of units per em in this font and move the glyph
+		// in to the em box
+		double height = -1 * (font.top_position - font.base_line);
+		double scale = HeadTable.UNITS;
+		svg.append (@"transform=\"scale($scale) translate(0, $height)\"");
+		
 		svg.append (">");
 		svg.append ("\n\n");
 		
@@ -132,8 +143,11 @@ public class SvgTable : OtfTable {
 		svg.append ("<");
 		svg.append (tag.get_name ());
 		
+		svg.append (" ");
+		append_tag_attributes (svg, tag);
+		
 		if (content == "") {
-			svg.append ("/");
+			svg.append (" /");
 		}
 		
 		svg.append (">");

@@ -19,7 +19,6 @@ public class SvgTableEntry : GLib.Object {
 	public uint16 glyph_id;
 	
 	public SvgTableEntry (uint16 gid, string svg) {
-		print (svg);
 		glyph_id = gid;
 		data = new FontData ();
 		data.add_str (svg);
