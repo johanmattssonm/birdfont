@@ -22,10 +22,10 @@ Adapted to BirdFont by Johan Mattsson 2015
 
 #include "GraphicsGems.h"
 
-#ifdef MAC
-#include <malloc/malloc.h>
-#else
+#ifdef __linux__
 #include <malloc.h>
+#else
+#include <stdlib.h>
 #endif
 
 #include <math.h>
