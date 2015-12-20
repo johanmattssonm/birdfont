@@ -19,15 +19,16 @@ Install vala and all required libraries, they are most likely in
 packages with a -dev or -devel affix:
 
     valac
-    python3-doit
     font-roboto
-    libxmlbird-dev
+    python3-doit
     libgee-dev
     libglib2.0-dev 
     libgtk-3-dev 
     libwebkitgtk-3.0-dev 
     libnotify-dev
     libsqlite3-dev
+    librsvg2-dev
+    libxmlbird-dev
 
 XML Bird is available from [birdfont.org][xmlbird].
 

@@ -134,17 +134,33 @@ public class Glyph : FontDisplay {
 	public Gee.ArrayList<Path> active_paths = new Gee.ArrayList<Path> ();
 	public Gee.ArrayList<Layer> selected_groups = new Gee.ArrayList<Layer> ();
 
-	// used if this glyph is fetched from a fallback font
+	// used if this glyph originates from a fallback font
 	public double top_limit = 0;
 	public double baseline = 0;
 	public double bottom_limit = 0;
 
 	public Surface? overview_thumbnail = null;
+	Rsvg.Handle? svg_drawing = null;
+	public string? svg_data = null;
 
 	public Glyph (string name, unichar unichar_code = 0) {
 		this.name = name;
 		this.unichar_code = unichar_code;
 
+		try {
+			string data;
+			FileUtils.get_contents ("/home/johan/birdfont/attic/test.svg", out data);
+			svg_data = data;
+
+			if (svg_data != null) {
+				uint8[] svg_array = ((!) svg_data).data;
+				svg_drawing = new Rsvg.Handle.from_data (svg_array);
+				// FIXME: DELETE svg_drawing = new Rsvg.Handle.from_file ("/home/johan/birdfont/attic/test.svg");
+			}
+		} catch (GLib.Error e) {
+			warning (e.message);
+		}
+		
 		add_help_lines ();
 
 		left_limit = -28;
@@ -1811,7 +1827,10 @@ public class Glyph : FontDisplay {
 		}
 
 		draw_background_glyph (allocation, cmp);
-		juxtapose (allocation, cmp);
+		
+		if (svg_drawing != null) {
+			juxtapose (allocation, cmp);
+		}
 
 		if (BirdFont.show_coordinates) {
 			draw_coordinate (cmp);
@@ -1823,14 +1842,19 @@ public class Glyph : FontDisplay {
 			cmp.restore ();
 		}
 
-		if (!is_empty ()) {
-			cmp.save ();
-			cmp.scale (view_zoom, view_zoom);
-			cmp.translate (-view_offset_x, -view_offset_y);
+		cmp.save ();
+		cmp.scale (view_zoom, view_zoom);
+		cmp.translate (-view_offset_x, -view_offset_y);
+		
+		if (svg_drawing != null) {
+			Rsvg.Handle svg_handle = (!) svg_drawing;
+			svg_handle.render_cairo (cmp);
+		} else if (!is_empty ()) {
 			draw_path (cmp);
-			cmp.restore ();
 		}
-
+		
+		cmp.restore ();
+		
 		cmp.save ();
 		tool = MainWindow.get_toolbox ().get_current_tool ();
 		tool.draw_action (tool, cmp, this);

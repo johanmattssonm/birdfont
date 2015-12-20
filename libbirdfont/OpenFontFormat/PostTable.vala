@@ -1102,8 +1102,6 @@ public class PostTable : OtfTable {
 		assert (names.size == 0);
 		add_standard_names ();
 
-		print ("Adding post names\n");
-
 		for (int i = 1; i < glyf_table.glyphs.size; i++) {
 			gc = glyf_table.glyphs.get (i);
 			g = gc.get_current ();

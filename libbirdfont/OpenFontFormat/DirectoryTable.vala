@@ -33,6 +33,7 @@ public class DirectoryTable : OtfTable {
 	public Os2Table  os_2_table;
 	public PostTable post_table;
 	public LocaTable loca_table;
+	public SvgTable svg_table;
 	
 	public OffsetTable offset_table;
 	
@@ -57,6 +58,7 @@ public class DirectoryTable : OtfTable {
 		name_table = new NameTable ();
 		os_2_table = new Os2Table (glyf_table, hmtx_table, hhea_table); 
 		post_table = new PostTable (glyf_table);
+		svg_table = new SvgTable ();
 		
 		id = "Directory table";
 		
@@ -81,6 +83,7 @@ public class DirectoryTable : OtfTable {
 		post_table.process ();
 		kern_table.process ();
 		gpos_table.process (glyf_table);
+		svg_table.process (glyf_table);
 		
 		offset_table.process ();
 		process_directory (); // this table
@@ -101,6 +104,10 @@ public class DirectoryTable : OtfTable {
 			tables.add (gsub_table);
 			
 			tables.add (os_2_table);
+
+			if (svg_table.has_glyphs ()) {
+				tables.add (svg_table);
+			}
 
 			// tables.append (gdef_table); // invalid table
 			
