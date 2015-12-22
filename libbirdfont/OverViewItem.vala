@@ -153,26 +153,16 @@ public class OverViewItem : GLib.Object {
 	}
 
 	public void draw_background () {
-		Glyph g;
-		Font font;
-		double gx, gy;
-		double x1, x2, y1, y2;
 		double scale_box;
-		double w, h;
-		double glyph_width, glyph_height;
 		Surface s;
 		Context c;
-		Color color = Color.black ();
-		
-		w = width;
-		h = height;
-		
+
 		scale_box = width / DEFAULT_WIDTH;
 
 		s = Screen.create_background_surface ((int) width, (int) height - 20);
 		c = new Context (s);
 		
-		if (glyphs != null) { // FIXME: lock
+		if (glyphs != null) {
 			draw_glyph_from_font ();
 		} else {
 			c.scale (Screen.get_scale (), Screen.get_scale ());
