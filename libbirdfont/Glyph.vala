@@ -1864,9 +1864,8 @@ public class Glyph : FontDisplay {
 		if (svg_drawing != null) {
 			cmp.save ();
 			cmp.scale (view_zoom, view_zoom);
-			cmp.translate (xc () + svg_x - view_offset_x, yc () - svg_y - view_offset_y);
-			Rsvg.Handle svg_handle = (!) svg_drawing;
-			svg_handle.render_cairo (cmp);
+			cmp.translate (-view_offset_x, -view_offset_y);
+			draw_svg (cmp);
 			cmp.restore ();
 		} else {
 			cmp.save ();
@@ -1882,6 +1881,16 @@ public class Glyph : FontDisplay {
 		cmp.restore ();
 	}
 
+	public void draw_svg (Context cr) {
+		if (svg_drawing != null) {
+			cr.save ();
+			cr.translate (xc () + svg_x, yc () - svg_y);
+			Rsvg.Handle svg_handle = (!) svg_drawing;
+			svg_handle.render_cairo (cr);
+			cr.restore ();
+		}
+	}
+	
 	private void zoom_in_at_point (double x, double y, double amount = 15) {
 		int n = (int) (-amount);
 		zoom_at_point (x, y, n);

@@ -25,7 +25,7 @@ public class SvgTable : OtfTable {
 		id = "SVG ";
 		entries = new Gee.ArrayList<SvgTableEntry> ();
 	}
-		
+	
 	public bool has_glyphs () {
 		return glyphs_in_table > 0;
 	}
@@ -117,10 +117,9 @@ public class SvgTable : OtfTable {
 		// number of units per em in this font and move the glyph
 		// in to the em box
 		Glyph glyph = glyphs.get_current ();
-		//FIXME: DELETE double height = font.top_position - font.base_line;
 		double scale = HeadTable.UNITS;
 		double x = glyph.svg_x - glyph.left_limit;
-		double y = -glyph.svg_y;
+		double y = font.base_line - glyph.svg_y;
 		svg.append (@"transform=\"scale($scale) translate($x, $y)\"");
 		
 		svg.append (">");
