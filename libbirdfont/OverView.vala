@@ -387,7 +387,6 @@ public class OverView : FontDisplay {
 		KeyBindings.set_require_modifier (true);
 		update_scrollbar ();
 		update_zoom_bar ();
-		OverViewItem.glyph_scale = 1;
 		update_item_list ();
 		selected_item = get_selected_item ();
 		GlyphCanvas.redraw ();
@@ -1319,7 +1318,7 @@ public class OverView : FontDisplay {
 			}
 			index++;
 		}
-	
+
 		if (update) {
 			update_item_list ();
 		}

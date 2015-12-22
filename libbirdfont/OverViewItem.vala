@@ -292,11 +292,10 @@ public class OverViewItem : GLib.Object {
 		cr.set_line_width (1);
 		cr.stroke ();
 		cr.restore ();
-		
+	
+		draw_thumbnail (cr, x, y + height);	
 		draw_caption (cr);
 		draw_menu (cr);
-		
-		draw_thumbnail (cr, x, y + height);
 	}
 
 	public void adjust_scale () {
@@ -307,21 +306,22 @@ public class OverViewItem : GLib.Object {
 		if (glyphs != null) {
 			font = BirdFont.get_current_font ();
 			g = ((!) glyphs).get_current ();
-			g.boundaries (out x1, out y1, out x2, out y2);
-		
-			glyph_width = x2 - x1;
-			glyph_height = y2 - y1;
-
-			if (glyph_scale == 1) {
-				// caption height is 20
-				glyph_scale = (height - 20) / (font.top_limit - font.bottom_limit);	
-			}
 			
-			scale = glyph_scale;			
-			gx = ((width / scale) - glyph_width) / 2;
-		
-			if (gx < 0) {
-				glyph_scale = 1 + 2 * gx / width;
+			if (g.boundaries (out x1, out y1, out x2, out y2)) {
+				glyph_width = x2 - x1;
+				glyph_height = y2 - y1;
+
+				if (glyph_scale == 1) {
+					// caption height is 20
+					glyph_scale = (height - 20) / (font.top_limit - font.bottom_limit);	
+				}
+				
+				scale = glyph_scale;			
+				gx = ((width / scale) - glyph_width) / 2;
+			
+				if (gx < 0) {
+					glyph_scale = 1 + 2 * gx / width;
+				}
 			}
 		}
 	}
@@ -490,7 +490,7 @@ public class OverViewItem : GLib.Object {
 	}
 	
 	private void draw_menu (Context cr) {
-		if (likely (glyphs == null || !version_menu.menu_visible)) {
+		if (glyphs == null || !version_menu.menu_visible) {
 			return;
 		}
 		
