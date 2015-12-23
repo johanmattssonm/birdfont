@@ -25,7 +25,11 @@ public class OverViewItem : GLib.Object {
 	public GlyphCollection? glyphs;
 	public double x;
 	public double y;
-	public bool selected = false;
+	
+	public bool selected {
+		get; set;
+	}
+	
 	public CharacterInfo info;
 		
 	public static double DEFAULT_WIDTH = 100;
@@ -217,10 +221,6 @@ public class OverViewItem : GLib.Object {
 		s.append_unichar (character);
 		
 		return s.str;
-	}
-	
-	public void set_selected (bool s) {
-		selected = s;
 	}
 	
 	public static double full_width () {
@@ -424,6 +424,10 @@ public class OverViewItem : GLib.Object {
 	
 	bool has_menu () {
 		return glyphs != null;
+	}
+	
+	public void clear_cache () {
+		cache = null;
 	}
 	
 	public void draw_label_background (Context cr) {
