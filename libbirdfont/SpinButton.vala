@@ -44,6 +44,12 @@ public class SpinButton : Tool {
 	
 	/** Lock the button to a fixed value. */
 	public bool locked = false;
+
+	static Gee.ArrayList<Text> digits;
+	static double text_height = 14;
+	static Text period;
+	static Text comma;
+	static Text minus;
 	
 	public SpinButton (string? name = null, string tip = "") {
 		base (null , tip);
@@ -51,7 +57,7 @@ public class SpinButton : Tool {
 		if (name != null) {
 			base.name = (!) name;
 		}
-	
+
 		set_icon ("spin_button");
 	
 		panel_press_action.connect ((selected, button, tx, ty) => {
@@ -144,6 +150,23 @@ public class SpinButton : Tool {
 			decrease ();
 			return true;
 		});
+
+		if (is_null (digits)) {
+			add_digits ();
+		}
+	}
+	
+	void add_digits () {
+		digits = new Gee.ArrayList<Text> ();
+		
+		for (int i = 0; i < 10; i++) {
+			Text digit = new Text (@"$i", text_height);
+			digits.add (digit);
+		}
+		
+		period = new Text (".", text_height);
+		comma = new Text (",", text_height);
+		minus = new Text ("-", text_height);
 	}
 	
 	public void show_icon (bool i) {
@@ -453,16 +476,29 @@ public class SpinButton : Tool {
 		return v;
 	}
 	
+	Text get_glyph (unichar character) {
+		Text text;
+		
+		if ('0' <= character <= '9') {
+			int digit_index = int.parse ((!) character.to_string ());
+			text = digits.get (digit_index);
+		} else if (character == '.') {
+			text = period;
+		} else if (character == ',') {
+			text = comma;
+		} else if (character == '-') {
+			text = minus;
+		} else {
+			text = new Text ((!) character.to_string (), text_height);
+		}
+		
+		return text;
+	}
+	
 	public override void draw_tool (Context cr, double px, double py) {
-		double scale = Toolbox.get_scale ();
-		double text_height = 14 * scale;
-		string display_value = get_short_display_value ();
-		Text text = new Text (display_value, text_height);
 		double x = x - px;
 		double y = y - py;
-		
-		double text_x = x + (w - text.get_sidebearing_extent ()) / 2 + 1;
-		double text_y = y + (h - text_height) / 2;
+		string display_value = get_short_display_value ();
 
 		if (!show_icon_tool_icon || waiting_for_icon_switch) {
 			if (is_selected ()) {
@@ -481,15 +517,48 @@ public class SpinButton : Tool {
 		base.draw_tool (cr, px, py);
 	
 		if (!show_icon_tool_icon || waiting_for_icon_switch) {
-			if (is_selected ()) {
-				Theme.text_color (text, "Selected Tool Foreground");
-			} else {
-				Theme.text_color (text, "Tool Foreground");
+			unichar digit;
+			int index;
+			Text text;
+			double extent = 0;
+			double decender = 0;
+			double carret = 0;
+			double total_extent = 0;
+			double x_offset;
+			
+			index = 0;
+			while (display_value.get_next_char (ref index, out digit)) {
+				text = get_glyph (digit);
+				total_extent += text.get_sidebearing_extent ();
 			}
 			
-			text.widget_x = text_x;
-			text.widget_y = text_y + text.get_decender ();
-			text.draw (cr);
+			x_offset = (w - total_extent) / 2 + 1;
+			
+			index = 0;
+			while (display_value.get_next_char (ref index, out digit)) {
+				text = get_glyph (digit);
+				extent = text.get_sidebearing_extent ();
+				
+				if (decender < text.get_decender ()) {
+					decender = text.get_decender ();
+				}
+
+				if (is_selected ()) {
+					Theme.text_color (text, "Selected Tool Foreground");
+				} else {
+					Theme.text_color (text, "Tool Foreground");
+				}
+
+				double text_x = x + carret + x_offset;;
+				double text_y = y + (h - text_height) / 2;
+
+				text.widget_x = text_x;
+				text.widget_y = text_y + decender;
+				text.draw (cr);
+				
+				carret += extent;
+				
+			}			
 		}
 	}
 }
