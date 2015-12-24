@@ -42,7 +42,7 @@ public class OverViewItem : GLib.Object {
 
 	public static double glyph_scale = 1.0;
 	
-	public VersionList version_menu;
+	public VersionList? version_menu = null;
 	Text label;
 	
 	private Surface? cache = null;
@@ -63,19 +63,22 @@ public class OverViewItem : GLib.Object {
 		glyphs = gc;		
 	}
 
-	public void generate_graphics () {
-		if (glyphs != null) {	
-			version_menu = new VersionList ((!) glyphs);
-			version_menu.add_glyph_item.connect ((glyph) => {
+	public void generate_graphics (bool generate_versions = true) {
+		if (glyphs != null && generate_versions) {
+			VersionList versions = new VersionList ((!) glyphs);
+			
+			versions.add_glyph_item.connect ((glyph) => {
 				((!) glyphs).insert_glyph (glyph, true);
 			});
 			
-			version_menu.signal_delete_item.connect ((glyph_index) => {
+			versions.signal_delete_item.connect ((glyph_index) => {
 				OverView v = MainWindow.get_overview ();
 				version_menu = new VersionList ((!) glyphs);
 				v.update_item_list ();
 				GlyphCanvas.redraw ();
 			});
+			
+			version_menu = versions;
 		}	
 
 		info = new CharacterInfo (character, glyphs);
@@ -236,16 +239,17 @@ public class OverViewItem : GLib.Object {
 		GlyphCollection g;
 		bool s = (x <= px <= x + width) && (y <= py <= y + height);
 
-		if (has_icons () && glyphs != null) {
+		if (has_icons () && glyphs != null && version_menu != null) {
 			g = (!) glyphs;
-			version_menu.set_position (x + width - 21, y + height - 18);
-			a = version_menu.menu_item_action (px, py); // select one item on the menu
+			VersionList versions = (!) version_menu;
+			versions.set_position (x + width - 21, y + height - 18);
+			a = versions.menu_item_action (px, py); // select one item on the menu
 			
 			if (a) {
 				return s;
 			}
 			
-			version_menu.menu_icon_action (px, py); // click in the open menu
+			versions.menu_icon_action (px, py); // click in the open menu
 		}
 		
 		info.set_position (x + width - 17, y + height - 22.5);
@@ -367,7 +371,10 @@ public class OverViewItem : GLib.Object {
 		cc.fill ();
 		
 		if (has_icons ()) {
-			draw_menu_icon (cc, false);
+			if (version_menu != null) { 
+				draw_menu_icon (cc, false);
+			}
+			
 			draw_character_info_icon (cc);
 		}
 
@@ -464,7 +471,8 @@ public class OverViewItem : GLib.Object {
 	
 	public void hide_menu () {
 		if (!is_null (version_menu)) {
-			version_menu.menu_visible = false;
+			VersionList v = (!) version_menu;
+			v.menu_visible = false;
 		}
 	}
 	
@@ -484,11 +492,21 @@ public class OverViewItem : GLib.Object {
 	}
 	
 	private void draw_menu (Context cr) {
-		if (glyphs == null || !version_menu.menu_visible) {
+		if (glyphs == null) {
+			return;
+		}
+
+		if (version_menu == null) {
 			return;
 		}
 		
-		version_menu.draw_menu (cr);
+		VersionList v = (!) version_menu;
+		 
+		if (!v.menu_visible) {
+			return;
+		}
+		
+		v.draw_menu (cr);
 	}
 }
 

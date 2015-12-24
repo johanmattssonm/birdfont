@@ -308,9 +308,16 @@ public class OverviewTools : ToolCollection  {
 		GlyphRange gr;
 		uint size;
 		OverView overview;
-
-		// All characters
-		size = BirdFont.get_current_font ().length ();
+		Font font;
+		
+		// All characters including .notdef
+		font = BirdFont.get_current_font ();
+		size = font.length ();
+		
+		if (!font.has_glyph (".notdef")) {
+			size++;
+		}
+		
 		all_glyphs.number = get_display_value (size);
 		
 		// Default

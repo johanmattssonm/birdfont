@@ -163,7 +163,7 @@ public class GlyfTable : OtfTable {
 			g.remove_empty_paths ();
 			unassigned = gc.is_unassigned ();
 
-			if (unassigned) {
+			if (unassigned && gc.get_name () != ".notdef") {
 				unassigned_glyphs.add (gc);
 			}
 			
