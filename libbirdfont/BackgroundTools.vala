@@ -112,6 +112,7 @@ public class BackgroundTools : ToolCollection  {
 			add_part (selection);
 		}
 		
+		parts.clear_cache ();
 		parts.redraw ();
 	}
 

@@ -260,6 +260,8 @@ public class FileDialogTab : Table {
 				action.file_selected ((!) f.get_path ());
 			}
 		}
+		
+		MainWindow.show_scrollbar ();
 	}
 
 	public override string get_label () {
@@ -273,6 +275,7 @@ public class FileDialogTab : Table {
 	public override void button_release (int button, double ex, double ey) {
 		base.button_release (button, ex, ey);
 		show_text_area (selected_filename);
+		MainWindow.show_scrollbar ();
 	}
 	
 	class SelectedFile : GLib.Object {
