@@ -25,7 +25,11 @@ public class OverViewItem : GLib.Object {
 	public GlyphCollection? glyphs;
 	public double x;
 	public double y;
-	public bool selected = false;
+	
+	public bool selected {
+		get; set;
+	}
+	
 	public CharacterInfo info;
 		
 	public static double DEFAULT_WIDTH = 100;
@@ -56,8 +60,10 @@ public class OverViewItem : GLib.Object {
 	}
 	
 	public void set_glyphs (GlyphCollection? gc) {
-		glyphs = gc;
-		
+		glyphs = gc;		
+	}
+
+	public void generate_graphics () {
 		if (glyphs != null) {	
 			version_menu = new VersionList ((!) glyphs);
 			version_menu.add_glyph_item.connect ((glyph) => {
@@ -81,7 +87,7 @@ public class OverViewItem : GLib.Object {
 			truncate_label ();
 		}
 		
-		draw_background ();
+		draw_background ();	
 	}
 
 	public void draw_glyph_from_font () {
@@ -106,10 +112,10 @@ public class OverViewItem : GLib.Object {
 			cache = g.overview_thumbnail;
 			return;
 		}
-		
+
 		w = width;
 		h = height;
-		
+
 		scale_box = width / DEFAULT_WIDTH;
 
 		s = Screen.create_background_surface ((int) width, (int) height - 20);
@@ -117,21 +123,33 @@ public class OverViewItem : GLib.Object {
 		
 		c.save ();
 		g.boundaries (out x1, out y1, out x2, out y2);
-	
-		glyph_width = x2 - x1;
-		glyph_height = y2 - y1;
-		
+
+		if (g.color_svg_data != null) {
+			font = BirdFont.get_current_font ();
+			glyph_width = g.right_limit - g.left_limit;
+			glyph_height = font.top_position - font.bottom_position;
+		} else {
+			glyph_width = x2 - x1;
+			glyph_height = y2 - y1;
+		}
+
 		c.save ();
 		c.scale (glyph_scale * Screen.get_scale (), glyph_scale * Screen.get_scale ());
 
 		g.add_help_lines ();
+				
+		if (g.color_svg_data != null) {
+			gx = 10;
+			gy = (h / glyph_scale) - 25 / glyph_scale;
+			c.translate (gx - Glyph.xc () - g.get_lsb (), g.get_baseline () + gy - Glyph.yc ());
+			g.draw_svg (c);
+		} else {
+			gx = ((w / glyph_scale) - glyph_width) / 2 - g.get_left_side_bearing ();
+			gy = (h / glyph_scale) - 25 / glyph_scale;
+			c.translate (gx - Glyph.xc () - g.get_lsb (), g.get_baseline () + gy - Glyph.yc ());
+			g.draw_paths (c, color);
+		}
 		
-		gx = ((w / glyph_scale) - glyph_width) / 2 - g.get_left_side_bearing ();
-		gy = (h / glyph_scale) - 25 / glyph_scale;
-		
-		c.translate (gx - Glyph.xc () - g.get_lsb (), g.get_baseline () + gy - Glyph.yc ());
-		
-		g.draw_paths (c, color);
 		c.restore ();
 		
 		cache = s;
@@ -139,26 +157,16 @@ public class OverViewItem : GLib.Object {
 	}
 
 	public void draw_background () {
-		Glyph g;
-		Font font;
-		double gx, gy;
-		double x1, x2, y1, y2;
 		double scale_box;
-		double w, h;
-		double glyph_width, glyph_height;
 		Surface s;
 		Context c;
-		Color color = Color.black ();
-		
-		w = width;
-		h = height;
-		
+
 		scale_box = width / DEFAULT_WIDTH;
 
 		s = Screen.create_background_surface ((int) width, (int) height - 20);
 		c = new Context (s);
 		
-		if (glyphs != null) { // FIXME: lock
+		if (glyphs != null) {
 			draw_glyph_from_font ();
 		} else {
 			c.scale (Screen.get_scale (), Screen.get_scale ());
@@ -213,10 +221,6 @@ public class OverViewItem : GLib.Object {
 		s.append_unichar (character);
 		
 		return s.str;
-	}
-	
-	public void set_selected (bool s) {
-		selected = s;
 	}
 	
 	public static double full_width () {
@@ -278,11 +282,10 @@ public class OverViewItem : GLib.Object {
 		cr.set_line_width (1);
 		cr.stroke ();
 		cr.restore ();
-		
+	
+		draw_thumbnail (cr, x, y + height);	
 		draw_caption (cr);
 		draw_menu (cr);
-		
-		draw_thumbnail (cr, x, y + height);
 	}
 
 	public void adjust_scale () {
@@ -293,21 +296,22 @@ public class OverViewItem : GLib.Object {
 		if (glyphs != null) {
 			font = BirdFont.get_current_font ();
 			g = ((!) glyphs).get_current ();
-			g.boundaries (out x1, out y1, out x2, out y2);
-		
-			glyph_width = x2 - x1;
-			glyph_height = y2 - y1;
-
-			if (glyph_scale == 1) {
-				// caption height is 20
-				glyph_scale = (height - 20) / (font.top_limit - font.bottom_limit);	
-			}
 			
-			scale = glyph_scale;			
-			gx = ((width / scale) - glyph_width) / 2;
-		
-			if (gx < 0) {
-				glyph_scale = 1 + 2 * gx / width;
+			if (g.boundaries (out x1, out y1, out x2, out y2)) {
+				glyph_width = x2 - x1;
+				glyph_height = y2 - y1;
+
+				if (glyph_scale == 1) {
+					// caption height is 20
+					glyph_scale = (height - 20) / (font.top_limit - font.bottom_limit);	
+				}
+				
+				scale = glyph_scale;			
+				gx = ((width / scale) - glyph_width) / 2;
+			
+				if (gx < 0) {
+					glyph_scale = 1 + 2 * gx / width;
+				}
 			}
 		}
 	}
@@ -422,6 +426,10 @@ public class OverViewItem : GLib.Object {
 		return glyphs != null;
 	}
 	
+	public void clear_cache () {
+		cache = null;
+	}
+	
 	public void draw_label_background (Context cr) {
 		Surface cache;
 		bool icon;
@@ -455,7 +463,9 @@ public class OverViewItem : GLib.Object {
 	}
 	
 	public void hide_menu () {
-		version_menu.menu_visible = false;
+		if (!is_null (version_menu)) {
+			version_menu.menu_visible = false;
+		}
 	}
 	
 	private void draw_menu_icon (Context cc, bool selected) {
@@ -474,7 +484,7 @@ public class OverViewItem : GLib.Object {
 	}
 	
 	private void draw_menu (Context cr) {
-		if (likely (glyphs == null || !version_menu.menu_visible)) {
+		if (glyphs == null || !version_menu.menu_visible) {
 			return;
 		}
 		

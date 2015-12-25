@@ -24,7 +24,7 @@ class BirdFontFile : GLib.Object {
 	Font font;
 	
 	public static const int FORMAT_MAJOR = 2;
-	public static const int FORMAT_MINOR = 1;
+	public static const int FORMAT_MINOR = 2;
 	
 	public static const int MIN_FORMAT_MAJOR = 0;
 	public static const int MIN_FORMAT_MINOR = 0;
@@ -436,8 +436,74 @@ class BirdFontFile : GLib.Object {
 			write_layer (layer, os);
 		}
 
+		write_embedded_svg (g, os);
+
 		write_glyph_background (g, os);
 		os.put_string ("\t</glyph>\n");
+	}
+
+	void write_embedded_svg (Glyph g, DataOutputStream os) throws GLib.Error {
+		
+		if (g.color_svg_data != null) {
+			XmlParser xml = new XmlParser ((!) g.color_svg_data);
+			
+			if (xml.validate ()) {
+				os.put_string (@"<embedded ");
+				os.put_string (@"type=\"svg\" ");
+				os.put_string (@"x=\"$(round (g.svg_x))\"");
+				os.put_string (@"y=\"$(round (g.svg_y))\"");
+				os.put_string (@">\n");
+				
+				Tag tag = xml.get_root_tag ();
+				
+				os.put_string ("<");
+				os.put_string (tag.get_name ());
+				
+				os.put_string (" ");
+				write_tag_attributes (os, tag);
+				
+				string content = tag.get_content ();
+				
+				if (content == "") {
+					os.put_string (" /");
+				}
+				
+				os.put_string (">");
+		
+				os.put_string (content);
+				
+				os.put_string ("</");
+				os.put_string (tag.get_name ());
+				os.put_string (">\n");
+				
+				os.put_string ("</embedded>");
+			}
+		}
+	}
+
+	void write_tag_attributes (DataOutputStream os, Tag tag) throws GLib.Error {
+		bool first = true;
+		
+		foreach (Attribute attribute in tag.get_attributes ()) {
+			string ns = attribute.get_namespace ();
+			
+			if (!first) {
+				os.put_string (" ");
+			}
+						
+			if (ns != "") {
+				os.put_string (ns);
+				os.put_string (":");
+			}
+			
+			os.put_string (attribute.get_name ());
+			os.put_string ("=");
+			os.put_string ("\"");
+			os.put_string (attribute.get_content ());
+			os.put_string ("\"");
+			
+			first = false;
+		}
 	}
 
 	void write_layer (Layer layer, DataOutputStream os) throws GLib.Error {
@@ -1382,6 +1448,10 @@ class BirdFontFile : GLib.Object {
 			if (t.get_name () == "background") {
 				parse_background_scale (glyph, t);
 			}
+		
+			if (t.get_name () == "embedded") {
+				parse_embedded_svg (glyph, t);
+			}
 		}
 
 		foreach (Path p in glyph.get_all_paths ()) {
@@ -1392,6 +1462,32 @@ class BirdFontFile : GLib.Object {
 		gc.set_unassigned (unassigned);
 		
 		master.insert_glyph (glyph, selected || selected_id == id);
+	}
+
+	void parse_embedded_svg (Glyph glyph, Tag tag) {
+		string type = "";
+		double x = 0;
+		double y = 0;
+		
+		foreach (Attribute attribute in tag.get_attributes ()) {
+			if (attribute.get_name () == "x") {
+				x = parse_double (attribute.get_content ());
+			}
+
+			if (attribute.get_name () == "y") {
+				y = parse_double (attribute.get_content ());
+			}
+
+			if (attribute.get_name () == "type") {
+				type = attribute.get_content ();
+			}
+		}
+		
+		if (type == "svg") {
+			glyph.svg_x = x;
+			glyph.svg_y = y;
+			glyph.color_svg_data = tag.get_content ();
+		}
 	}
 
 	Layer parse_layer (Tag tag) {

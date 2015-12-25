@@ -387,7 +387,6 @@ public class OverView : FontDisplay {
 		KeyBindings.set_require_modifier (true);
 		update_scrollbar ();
 		update_zoom_bar ();
-		OverViewItem.glyph_scale = 1;
 		update_item_list ();
 		selected_item = get_selected_item ();
 		GlyphCanvas.redraw ();
@@ -557,8 +556,14 @@ public class OverView : FontDisplay {
 				item = new OverViewItem ();
 				item.set_character (character);
 				item.set_glyphs (glyphs);
+				item.generate_graphics ();
 				item.x = x;
 				item.y = y;
+				
+				if (glyphs != null) {
+					item.selected = (selected_items.index_of ((!) glyphs) != -1);
+				}
+				
 				visible_items.add (item);
 				index++;
 			}
@@ -590,6 +595,15 @@ public class OverView : FontDisplay {
 				item = visible_items.get (i);
 				glyphs = f.get_glyph_collection_by_name ((!) item.character.to_string ());
 				item.set_glyphs (glyphs);
+				
+				if (glyphs != null) {
+					item.selected = (selected_items.index_of ((!) glyphs) != -1);
+				}
+			}
+
+			for (int i = 0; i < visible_size; i++) {
+				item = visible_items.get (i);
+				item.generate_graphics ();
 			}
 		}
 		
@@ -597,24 +611,16 @@ public class OverView : FontDisplay {
 		y = OverViewItem.margin;
 		
 		visible_size = visible_items.size;
-		int selected_index;
-		bool selected_item;
 		double full_width = OverViewItem.full_width ();
 		
 		for (int i = 0; i < visible_size; i++) {
 			item = visible_items.get (i);
 
-			selected_item = false;
-			
-			if (glyphs != null) {
-				selected_index = selected_items.index_of ((!) glyphs);
-				selected_item = (selected_index != -1);
+			if (item.glyphs == null) {
+				item.selected |= (i == selected);
 			}
 			
 			item.adjust_scale ();
-			
-			selected_item |= (i == selected);
-			item.selected = selected_item;
 			
 			item.x = x + view_offset_x;
 			item.y = y + view_offset_y;
@@ -1287,7 +1293,6 @@ public class OverView : FontDisplay {
 				
 				if (KeyBindings.has_shift ()) {
 					if (selected_item.glyphs != null) {
-						
 						selected_index = selected_items.index_of ((!) selected_item.glyphs);
 						if (selected_index == -1) {
 							selected_items.add ((!) selected_item.glyphs);
@@ -1298,6 +1303,8 @@ public class OverView : FontDisplay {
 							selected_item = get_selected_item ();
 						}
 					}
+					
+					update = true;
 				} else {
 					selected_items.clear ();
 					if (selected_item.glyphs != null) {
@@ -1305,11 +1312,15 @@ public class OverView : FontDisplay {
 					}
 				}
 				
-				update = !i.version_menu.menu_visible;
+				if (is_null(i.version_menu)) {
+					update = true;
+				} else {
+					update = !i.version_menu.menu_visible;
+				}
 			}
 			index++;
 		}
-	
+
 		if (update) {
 			update_item_list ();
 		}

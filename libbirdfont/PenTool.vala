@@ -1447,8 +1447,7 @@ public class PenTool : Tool {
 		}
 		
 		// join path with it self
-		if (is_close_to_point (path.points.get (0), px, py)) {
-			
+		if (is_close_to_point (path.points.get (0), px, py) && path.points.size > 2) {
 			close_path (path);
 			glyph.close_path ();
 			force_direction ();

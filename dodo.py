@@ -78,6 +78,7 @@ def make_birdfont(target_binary, deps):
 		--pkg webkitgtk-3.0 \
 		--pkg libnotify \
 		--pkg xmlbird \
+		--pkg librsvg-2.0 \
 		--pkg libbirdfont
         """
         
@@ -93,6 +94,7 @@ def make_birdfont(target_binary, deps):
 		$(pkg-config --cflags gdk-pixbuf-2.0) \
 		$(pkg-config --cflags webkitgtk-3.0) \
 		$(pkg-config --cflags libnotify) \
+		$(pkg-config --cflags librsvg-2.0) \
         -o OBJECT_FILE"""
         
     linker_command = config.CC + " " + config.LDFLAGS.get("birdfont", "") + """ \
@@ -107,6 +109,7 @@ def make_birdfont(target_binary, deps):
 		$(pkg-config --libs webkitgtk-3.0) \
 		$(pkg-config --libs xmlbird) \
 		$(pkg-config --libs libnotify) \
+        $(pkg-config --libs librsvg-2.0) \
 		-L./build -L./build/bin -l birdgems\
         -o build/bin/""" + target_binary
 
@@ -160,6 +163,7 @@ def make_birdfont_export(target_binary, deps):
 		$(pkg-config --libs cairo) \
 		$(pkg-config --libs glib-2.0) \
 		$(pkg-config --libs xmlbird) \
+        $(pkg-config --libs librsvg-2.0) \
 		-L./build -L./build/bin -l birdgems\
 		-o ./build/bin/""" + target_binary
 
@@ -189,7 +193,7 @@ def make_birdfont_import(target_binary, deps):
 		--pkg gio-2.0  \
 		--pkg cairo \
 		--pkg xmlbird \
-		--pkg libbirdfont
+		--pkg libbirdfont \
         """
         
     cc_command = config.CC + " " + config.CFLAGS.get("birdfont-import", "") + """ \
@@ -213,6 +217,7 @@ def make_birdfont_import(target_binary, deps):
 		$(pkg-config --libs cairo) \
 		$(pkg-config --libs glib-2.0) \
 		$(pkg-config --libs xmlbird) \
+        $(pkg-config --libs librsvg-2.0) \
 		-L./build -L./build/bin -l birdgems\
 		-o ./build/bin/""" + target_binary
 
@@ -267,6 +272,7 @@ def make_birdfont_autotrace(target_binary, deps):
 		$(pkg-config --libs cairo) \
 		$(pkg-config --libs glib-2.0) \
 		$(pkg-config --libs xmlbird) \
+        $(pkg-config --libs librsvg-2.0) \
 		-L./build -L./build/bin -l birdgems\
 		-o ./build/bin/""" + target_binary
 
@@ -302,6 +308,8 @@ def make_libbirdfont(target_binary, deps):
         --pkg xmlbird \
         --pkg libbirdgems \
         --pkg sqlite3 \
+        --pkg gdk-pixbuf-2.0 \
+        --pkg librsvg-2.0 \
         """
 
     cc_command = config.CC + " " + config.CFLAGS.get("libbirdfont", "") + """ \
@@ -317,6 +325,7 @@ def make_libbirdfont(target_binary, deps):
             $(pkg-config --cflags cairo) \
             $(pkg-config --cflags glib-2.0) \
             $(pkg-config --cflags xmlbird) \
+            $(pkg-config --cflags librsvg-2.0) \
             -o OBJECT_FILE"""
 
     linker_command = config.CC + " " + config.LDFLAGS.get("libbirdfont", "") + """ \
@@ -440,7 +449,7 @@ def make_birdfont_test(target_binary, deps):
 		--pkg gio-2.0  \
 		--pkg cairo \
 		--pkg xmlbird \
-		--pkg libbirdfont
+		--pkg libbirdfont \
         """
 
     cc_command = config.CC + " " + config.CFLAGS.get("birdfont-test", "") + """ \
@@ -463,6 +472,7 @@ def make_birdfont_test(target_binary, deps):
 		$(pkg-config --libs cairo) \
 		$(pkg-config --libs glib-2.0) \
 		$(pkg-config --libs xmlbird) \
+        $(pkg-config --libs librsvg-2.0) \
 		-L./build -L./build/bin -l birdgems\
         -o build/bin/""" + target_binary
 

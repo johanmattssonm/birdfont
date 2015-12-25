@@ -169,6 +169,11 @@ public class ContextualLigature : GLib.Object {
 		
 		gs = new GlyphSequence ();
 		foreach (string s in font.get_names (context)) {
+			
+			if (s == "space") {
+				s = " ";
+			}
+			
 			gc = font.get_glyph_collection_by_name (s);
 			
 			if (gc == null) {

@@ -111,8 +111,7 @@ public class HheaTable : OtfTable {
 		FontData fd = new FontData ();
 		Fixed version = 1 << 16;
 		Font font = OpenFontFormatWriter.get_current_font ();
-		int upm, total_height;
-		
+
 		fd.add_fixed (version); // table version
 		
 		ascender = (int16) rint (font.top_limit * HeadTable.UNITS);

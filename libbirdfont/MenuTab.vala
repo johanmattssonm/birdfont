@@ -326,6 +326,7 @@ public class MenuTab : FontDisplay {
 		MainWindow.get_toolbox ().update_expanders ();
 		MainWindow.get_toolbox ().update_all_expanders ();
 		Toolbox.redraw_tool_box ();
+		OverViewItem.glyph_scale = 1;
 	}
 	
 	// FIXME: background thread
