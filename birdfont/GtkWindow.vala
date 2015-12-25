@@ -488,8 +488,8 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		} catch (GLib.Error e) {
 			warning (e.message);
 		}
-	}
-
+	} 
+	
 	public void run_non_blocking_background_thread (Task t) {
 		unowned Thread<void*> bg;
 		
