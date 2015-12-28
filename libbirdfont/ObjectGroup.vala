@@ -17,6 +17,12 @@ namespace BirdFont {
 public class ObjectGroup : GLib.Object {
 	public Gee.ArrayList<Object> objects;
 	
+	public int size { 
+		get {
+			return objects.size;
+		}
+	}
+	
 	public ObjectGroup () {
 		 objects = new Gee.ArrayList<Object> ();
 	}

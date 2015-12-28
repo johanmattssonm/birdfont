@@ -20,51 +20,26 @@ namespace BirdFont {
 public abstract class Object : GLib.Object {
 	bool open = false;
 	
-	public Color? color = null;
-	public Color? stroke_color = null;
-	public Gradient? gradient = null;
+	public abstract Color? color { get; set; }
+	public abstract Color? stroke_color { get; set; }
+	public abstract Gradient? gradient { get; set; }
 
 	/** Path boundaries */
-	public double xmax = Glyph.CANVAS_MIN;
-	public double xmin = Glyph.CANVAS_MAX;
-	public double ymax = Glyph.CANVAS_MIN;
-	public double ymin = Glyph.CANVAS_MAX;
+	public abstract double xmax { get; set; }
+	public abstract double xmin { get; set; }
+	public abstract double ymax { get; set; }
+	public abstract double ymin { get; set; }
 	
-	public double rotation = 0;
-	public virtual double stroke { get; set; }
-	public LineCap line_cap = LineCap.BUTT;
-	
+	public abstract double rotation { get; set; }
+	public abstract double stroke { get; set; }
+	public abstract LineCap line_cap { get; set; default = LineCap.BUTT; }
+	public abstract bool fill { get; set; }
+		
 	public Object () {	
 	}
 
 	public Object.create_copy (Object o) {	
 		open = o.open;
-		
-		if (color != null) {
-			color = ((!) color).copy ();
-		} else {
-			color = null;
-		}
-
-		if (stroke_color != null) {
-			stroke_color = ((!) stroke_color).copy ();
-		} else {
-			stroke_color = null;
-		}
-
-		if (gradient != null) {
-			gradient = ((!) gradient).copy ();
-		} else {
-			gradient = null;
-		}
-		
-		xmax = o.xmax;
-		xmin = o.xmin;
-		ymax = o.ymax;
-		ymin = o.ymin;
-		
-		rotation = o.rotation;
-		stroke = o.stroke;
 	}
 		
 	public void set_open (bool open) {

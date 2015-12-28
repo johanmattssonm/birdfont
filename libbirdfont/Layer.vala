@@ -232,6 +232,18 @@ public class Layer : GLib.Object {
 			l.print (indent + 1);
 		}
 	}
+
+	public PathList get_paths_in_layer () {
+		PathList paths = new PathList ();
+		
+		foreach (Object object in objects) {
+			if (object is FastPath) {
+				paths.add (((FastPath) object).get_path ());
+			}
+		}
+		
+		return paths;
+	}
 }
 
 }

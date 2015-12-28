@@ -799,6 +799,10 @@ public class Glyph : FontDisplay {
 		}
 	}
 
+	public void delete_object (Object o) {
+		layers.remove (o);
+	}
+
 	public void delete_path (Path p) {
 		layers.remove_path(p);
 	}
@@ -1677,9 +1681,16 @@ public class Glyph : FontDisplay {
 
 	/** Draw filled paths. */
 	public void draw_paths (Context cr, Color? c = null) {
+		
+		cr.save ();
+		cr.new_path ();
+		
 		foreach (Object o in get_visible_objects ()) {
 			o.draw (cr, c);
 		}
+		
+		cr.fill ();
+		cr.restore ();
 	}
 
 	public void draw_path (Context cr) {

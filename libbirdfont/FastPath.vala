@@ -29,7 +29,115 @@ public class FastPath : Object {
 			path.stroke = value;
 		}
 	}
-	
+
+	public override double rotation {
+		get {
+			return path.rotation;
+		}
+
+		set {
+			path.rotation = value;
+		}
+	}
+
+	public override LineCap line_cap {
+		get {
+			return path.line_cap;
+		}
+
+		set {
+			path.line_cap = value;
+		}
+	}
+
+	public override bool fill {
+		get {
+			return path.fill;
+		}
+
+		set {
+			path.fill = value;
+		}
+	}
+
+	public override Color? color {
+		get {
+			return path.color;
+		}
+
+		set {
+			path.color = value;
+		}
+	}
+
+	public override Color? stroke_color {
+		get {
+			return path.stroke_color;
+		}
+
+		set {
+			path.stroke_color = value;
+		}
+	}
+
+	public override Gradient? gradient {
+		get {
+			return path.gradient;
+		}
+
+		set {
+			path.gradient = value;
+		}
+	}
+
+	public override double xmin {
+		get {
+			return path.xmin;
+		}
+
+		set {
+			path.xmin = value;
+		}
+		
+		default = Glyph.CANVAS_MAX;
+	}
+
+	public override double xmax {
+		get {
+			return path.xmax;
+		}
+
+		set {
+			path.xmax = value;
+		}
+		
+		default = Glyph.CANVAS_MIN;
+	}
+
+	public override double ymin {
+		get {
+			return path.ymin;
+		}
+
+		set {
+			path.ymin = value;
+		}
+		
+		default = Glyph.CANVAS_MAX;
+	}
+
+	public override double ymax {
+		get {
+			return path.ymax;
+		}
+
+		set {
+			path.ymax = value;
+		}
+		
+		default = Glyph.CANVAS_MIN;
+	}
+			
 	public FastPath () {
 		path = new Path ();
 		update_region_boundaries ();
@@ -54,7 +162,6 @@ public class FastPath : Object {
 		bool open;
 		
 		cr.save ();
-		cr.new_path ();
 		
 		if (c != null) {
 			path_color = (!) c;
@@ -82,7 +189,6 @@ public class FastPath : Object {
 			}
 		}
 
-		cr.fill ();
 		cr.restore ();
 	}
 
@@ -111,8 +217,6 @@ public class FastPath : Object {
 
 	public override void rotate (double theta, double xc, double yc) {
 		path.rotate (theta, xc, yc);
-		rotation += theta;
-		rotation %= 2 * Math.PI;
 	}
 	
 	public override bool is_empty () {
