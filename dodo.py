@@ -301,7 +301,7 @@ def make_libbirdfont(target_binary, deps):
         -H build/libbirdfont/birdfont.h \
         libbirdfont/*.vala \
         libbirdfont/OpenFontFormat/*.vala \
-        libbirdfont/Renderer/*.vala \
+        libbirdfont/TextRendering/*.vala \
         --pkg """ + config.GEE + """ \
         --pkg gio-2.0 \
         --pkg cairo \
