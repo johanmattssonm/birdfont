@@ -285,6 +285,8 @@ public class OverviewTools : ToolCollection  {
 		}
 		
 		o.undo_items.add (ui);
+		
+		MainWindow.get_overview ().update_item_list ();
 		GlyphCanvas.redraw ();
 	}
 	
