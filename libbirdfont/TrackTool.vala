@@ -411,7 +411,7 @@ public class TrackTool : Tool {
 		
 		Object o = glyph.active_paths.get (glyph.active_paths.size - 1);
 		
-		if (o is FastPath) {
+		if (unlikely (!(o is FastPath))) {
 			warning ("Object is not a path");
 			return;
 		}
@@ -424,7 +424,8 @@ public class TrackTool : Tool {
 		added_points++;
 
 		PenTool.convert_point_to_line (new_point, false);
-		new_point.set_point_type (PointType.HIDDEN);
+		new_point.set_point_type (PointType.HIDDEN);		
+		p.recalculate_linear_handles_for_point (new_point);
 		
 		if (p.points.size > 1) {
 			glyph.redraw_segment (new_point, new_point.get_prev ());
