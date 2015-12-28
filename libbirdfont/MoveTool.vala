@@ -95,7 +95,12 @@ public class MoveTool : Tool {
 			}
 			
 			foreach (Object p in g.active_paths) {
-				g.layers.remove (p);
+				if (p is FastPath) {
+					g.layers.remove_path (((FastPath) p).get_path ());
+				} else {
+					g.layers.remove (p);
+				}
+				
 				g.update_view ();
 			}
 
