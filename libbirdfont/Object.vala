@@ -31,7 +31,7 @@ public abstract class Object : GLib.Object {
 	public double ymin = Glyph.CANVAS_MAX;
 	
 	public double rotation = 0;
-	public double stroke = 0;
+	public virtual double stroke { get; set; }
 	public LineCap line_cap = LineCap.BUTT;
 	
 	public Object () {	
@@ -77,7 +77,7 @@ public abstract class Object : GLib.Object {
 
 	public abstract void update_region_boundaries ();
 	public abstract bool is_over (double x, double y);
-	public abstract void draw (Context cr);
+	public abstract void draw (Context cr, Color? c = null);
 	public abstract Object copy ();
 	public abstract void move (double dx, double dy);
 	public abstract void rotate (double theta, double xc, double yc);

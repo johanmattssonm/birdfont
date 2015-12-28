@@ -19,7 +19,17 @@ namespace BirdFont {
 public class FastPath : Object {
 
 	Path path;
+	
+	public override double stroke {
+		get {
+			return path.stroke;
+		}
 
+		set {
+			path.stroke = value;
+		}
+	}
+	
 	public FastPath () {
 		path = new Path ();
 		update_region_boundaries ();
@@ -38,9 +48,50 @@ public class FastPath : Object {
 		return path.is_over (x, y);
 	}
 			
-	public override void draw (Context cr) {
+	public override void draw (Context cr, Color? c = null) {
+		PathList path_stroke;
+		Color path_color;
+		bool open;
+		
+		cr.save ();
+		cr.new_path ();
+		
+		if (c != null) {
+			path_color = (!) c;
+		} else if (color != null) {
+			path_color = (!) color;
+		} else {
+			path_color = Color.black ();
+		}
+
+		if (path.stroke > 0) {
+			path_stroke = path.get_stroke_fast ();
+			draw_path_list (path_stroke, cr, path_color);
+		} else {
+			open = path.is_open ();
+			
+			if (open) {
+				path.close ();
+				path.recalculate_linear_handles ();
+			}
+			
+			path.draw_path (cr, path_color);
+			
+			if (open) {
+				path.reopen ();
+			}
+		}
+
+		cr.fill ();
+		cr.restore ();
 	}
-	
+
+	public static void draw_path_list (PathList pl, Context cr, Color? c = null) {
+		foreach (Path p in pl.paths) {
+			p.draw_path (cr, c);
+		}
+	}
+		
 	public override void move (double dx, double dy) {
 		path.move (dx, dy);
 		path.reset_stroke ();

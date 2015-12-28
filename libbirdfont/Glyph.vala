@@ -1677,41 +1677,9 @@ public class Glyph : FontDisplay {
 
 	/** Draw filled paths. */
 	public void draw_paths (Context cr, Color? c = null) {
-		PathList stroke;
-		Color color;
-		bool open;
-		
-		cr.save ();
-		cr.new_path ();
-		foreach (Path p in get_visible_paths ()) {
-			if (c != null) {
-				color = (!) c;
-			} else if (p.color != null) {
-				color = (!) p.color;
-			} else {
-				color = Color.black ();
-			}
-
-			if (p.stroke > 0) {
-				stroke = p.get_stroke_fast ();
-				draw_path_list (stroke, cr, color);
-			} else {
-				open = p.is_open ();
-				
-				if (open) {
-					p.close ();
-					p.recalculate_linear_handles ();
-				}
-				
-				p.draw_path (cr, color);
-				
-				if (open) {
-					p.reopen ();
-				}
-			}
+		foreach (Object o in get_visible_objects ()) {
+			o.draw (cr, c);
 		}
-		cr.fill ();
-		cr.restore ();
 	}
 
 	public void draw_path (Context cr) {
@@ -1731,7 +1699,7 @@ public class Glyph : FontDisplay {
 					color = Color.black ();
 				}
 
-				draw_path_list (stroke, cr, color);
+				FastPath.draw_path_list (stroke, cr, color);
 			}
 		}
 		cr.fill ();
@@ -1749,7 +1717,7 @@ public class Glyph : FontDisplay {
 					if (p.stroke > 0) {
 						stroke = p.get_stroke_fast ();
 						color = Theme.get_color ("Selected Objects");
-						draw_path_list (stroke, cr, color);
+						FastPath.draw_path_list (stroke, cr, color);
 					}
 				}
 			}
@@ -1827,12 +1795,6 @@ public class Glyph : FontDisplay {
 
 	private Color get_path_fill_color () {
 		return Theme.get_color ("Fill Color");
-	}
-
-	public void draw_path_list (PathList pl, Context cr, Color? c = null) {
-		foreach (Path p in pl.paths) {
-			p.draw_path (cr, c);
-		}
 	}
 
 	public void draw_background_color (Context cr, double opacity) {
