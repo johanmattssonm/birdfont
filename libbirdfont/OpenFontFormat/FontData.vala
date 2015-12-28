@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-public class FontData : Object {
+public class FontData : GLib.Object {
 
 	// Read pointer
 	uint rp = 0;

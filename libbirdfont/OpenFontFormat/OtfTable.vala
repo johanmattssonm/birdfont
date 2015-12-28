@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-public class OtfTable : Object {
+public class OtfTable : GLib.Object {
 
 	public string id = "NO_ID";
 

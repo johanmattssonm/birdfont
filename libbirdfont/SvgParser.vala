@@ -160,12 +160,10 @@ public class SvgParser {
 	
 		glyph = MainWindow.get_current_glyph ();
 		foreach (Path p in path_list.paths) {
-			glyph.add_path (p);
-		}
-		
-		foreach (Path p in path_list.paths) {
-			glyph.add_active_path (null, p); // FIXME: groups
-			p.update_region_boundaries ();
+			FastPath path = new FastPath.for_path (p);
+			glyph.add_object (path);
+			glyph.add_active_object (null, path); // FIXME: groups
+			path.update_region_boundaries ();
 		}
 		
 		glyph.close_path ();	
@@ -302,7 +300,15 @@ public class SvgParser {
 	}
 	
 	private void transform (string transform_functions, Layer layer) {
-		transform_paths (transform_functions, layer.paths);
+		PathList path_list = new PathList ();
+		
+		foreach (Object o in layer.objects) {
+			if (o is FastPath) {
+				path_list.add (((FastPath) o).get_path ());
+			}
+		}
+		
+		transform_paths (transform_functions, path_list);
 		transform_subgroups (transform_functions, layer);
 	}
 	
@@ -315,7 +321,7 @@ public class SvgParser {
 	private void transform_paths (string transform_functions, PathList pl) {
 		string data = transform_functions.dup ();
 		string[] functions;
-		
+				
 		// use only a single space as separator
 		while (data.index_of ("  ") > -1) {
 			data = data.replace ("  ", " ");
@@ -538,7 +544,7 @@ public class SvgParser {
 		}
 		
 		style.apply (npl);
-		pl.paths.append (npl);
+		pl.append_paths (npl);
 	}
 
 	private void parse_ellipse (Tag tag, Layer pl) {
@@ -606,7 +612,7 @@ public class SvgParser {
 		}
 		
 		style.apply (npl);
-		pl.paths.append (npl);
+		pl.append_paths (npl);
 	}
 
 	private void parse_line (Tag tag, Layer pl) {
@@ -683,10 +689,10 @@ public class SvgParser {
 		}
 		
 		style.apply (npl);
-		pl.paths.append (npl);
+		pl.append_paths (npl);
 	}
 		
-	private void parse_rect (Tag tag, Layer pl) {
+	private void parse_rect (Tag tag, Layer layer) {
 		Path p;
 		double x, y, x2, y2;
 		BezierPoints[] bezier_points;
@@ -784,22 +790,22 @@ public class SvgParser {
 		}
 		
 		style.apply (npl);
-		pl.paths.append (npl);
+		layer.append_paths (npl);
 	}
 	
-	private void parse_polygon (Tag tag, Layer pl) {
+	private void parse_polygon (Tag tag, Layer layer) {
 		PathList path_list = get_polyline (tag);
 		
 		foreach (Path p in path_list.paths) {
 			p.close ();
 		}
 		
-		pl.paths.append (path_list);
+		layer.append_paths (path_list);
 	}
 
 	
-	private void parse_polyline (Tag tag, Layer pl) {	
-		pl.paths.append (get_polyline (tag));
+	private void parse_polyline (Tag tag, Layer layer) {	
+		layer.append_paths (get_polyline (tag));
 	}
 	
 	private PathList get_polyline (Tag tag) {
@@ -836,7 +842,7 @@ public class SvgParser {
 		return path_list;
 	}
 	
-	private void parse_path (Tag tag, Layer pl) {
+	private void parse_path (Tag tag, Layer layer) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		PathList path_list = new PathList ();
 		SvgStyle style = new SvgStyle ();
@@ -863,37 +869,47 @@ public class SvgParser {
 		if (hidden) {
 			return;
 		}
-	
-		pl.paths.append (path_list);
+		
+		foreach (Path path in path_list.paths) {
+			layer.add_path (path);
+		}
+		
 		style.apply (path_list);
 
 		// assume the even odd rule is applied and convert the path
 		// to a path using the non-zero rule
 		int inside_count;
 		bool inside;
-		foreach (Path p1 in pl.paths.paths) {
-			inside_count = 0;
-			
-			foreach (Path p2 in pl.paths.paths) {
-				if (p1 != p2) {
-					inside = true;
+		foreach (Object o1 in layer.objects) {
+			if (o1 is FastPath) {
+				Path p1 = ((FastPath) o1).get_path ();
+				inside_count = 0;
+				
+				foreach (Object o2 in layer.objects) {
+					if (o2 is FastPath) {
+						Path p2 = ((FastPath) o2).get_path ();
 					
-					foreach (EditPoint ep in p1.points) {
-						if (!is_inside (ep, p2)) {
-							inside = false;
+						if (p1 != p2) {
+							inside = true;
+							
+							foreach (EditPoint ep in p1.points) {
+								if (!is_inside (ep, p2)) {
+									inside = false;
+								}
+							}
+
+							if (inside) {
+								inside_count++; 
+							}
 						}
 					}
-
-					if (inside) {
-						inside_count++; 
-					}
 				}
-			}
-
-			if (inside_count % 2 == 0) {
-				p1.force_direction (Direction.CLOCKWISE);
-			} else {
-				p1.force_direction (Direction.COUNTER_CLOCKWISE);
+				
+				if (inside_count % 2 == 0) {
+					p1.force_direction (Direction.CLOCKWISE);
+				} else {
+					p1.force_direction (Direction.COUNTER_CLOCKWISE);
+				}
 			}
 		}
 		

@@ -99,13 +99,12 @@ public class Path : GLib.Object {
 	public bool highlight_last_segment = false;
 	
 	public string point_data = "";
+	
+	private static Text? arrow = null;
 
 	public Color? color = null;
 	public Color? stroke_color = null;
-
 	public Gradient? gradient = null;
-	
-	private static Text? arrow = null;
 
 	public Path () {	
 		string width;
@@ -262,7 +261,7 @@ public class Path : GLib.Object {
 	 * Call Context.new_path (); before this method and Context.fill ()
 	 * to show the path.
 	 */
-	public void draw_path (Context cr, Glyph glyph, Color? color = null) {
+	public void draw_path (Context cr, Color? color = null) {
 		unowned EditPoint? n = null;
 		unowned EditPoint en;
 		unowned EditPoint em;
@@ -274,8 +273,8 @@ public class Path : GLib.Object {
 			return;
 		}
 
-		center_x = glyph.allocation.width / 2.0;
-		center_y = glyph.allocation.height / 2.0;
+		center_x = Glyph.xc ();
+		center_y = Glyph.yc ();
 
 		ex = center_x + points.get (0).x;
 		ey = center_y - points.get (0).y;
@@ -2265,12 +2264,6 @@ public class Path : GLib.Object {
 		PathList lines = new PathList ();
 		
 		lines = pl;
-		
-		/** // FIXME: Check automatic orientation.
-		foreach (Path p in pl.paths) {
-			lines.add (SvgParser.get_lines (p));
-		}
-		*/
 		
 		foreach (Path p in lines.paths) {
 			if (p.points.size > 1 && p != path 

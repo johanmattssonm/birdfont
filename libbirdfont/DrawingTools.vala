@@ -292,7 +292,7 @@ public class DrawingTools : ToolCollection  {
 			glyph.selection_boundaries (out x, out y, out w, out h);
 			delta = x_coordinate.get_value () - x + glyph.left_limit;
 			
-			foreach (Path path in glyph.active_paths) {
+			foreach (Object path in glyph.active_paths) {
 				path.move (delta, 0);
 			}
 			
@@ -335,7 +335,7 @@ public class DrawingTools : ToolCollection  {
 			
 			glyph.selection_boundaries (out x, out y, out w, out h);
 			
-			foreach (Path path in glyph.active_paths) {
+			foreach (Path path in glyph.get_active_paths ()) {
 				path.move (0, y_coordinate.get_value () - (y - h) - font.base_line);
 			}
 			
@@ -375,7 +375,7 @@ public class DrawingTools : ToolCollection  {
 			double x, y, w, h;
 			Glyph glyph = MainWindow.get_current_glyph ();
 			double angle = (self.get_value () / 360) * 2 * PI;
-			Path last_path;
+			Object last_path;
 			glyph.selection_boundaries (out x, out y, out w, out h);
 			
 			x += w / 2;
@@ -480,7 +480,7 @@ public class DrawingTools : ToolCollection  {
 				tie = !p.tie_handles;
 				
 				// don't tie end points
-				foreach (Path path in MainWindow.get_current_glyph ().active_paths) {
+				foreach (Path path in MainWindow.get_current_glyph ().get_active_paths ()) {
 					if (path.is_open ()) {
 						if (p == path.get_first_point () || p == path.get_last_point ()) {
 							tie = false;
@@ -598,9 +598,9 @@ public class DrawingTools : ToolCollection  {
 			Glyph g = MainWindow.get_current_glyph ();
 			Layer layer = g.get_current_layer ();
 			
-			foreach (Path p in g.active_paths) {
-				layer.paths.remove (p);
-				layer.paths.paths.insert (0, p);
+			foreach (Object p in g.active_paths) {
+				layer.remove (p);
+				layer.objects.objects.insert (0, p);
 			}
 			
 			GlyphCanvas.redraw ();
@@ -798,12 +798,12 @@ public class DrawingTools : ToolCollection  {
 			g.store_undo_state ();
 		
 			if (StrokeTool.add_stroke) {
-				foreach (Path p in g.active_paths) {
+				foreach (Object p in g.active_paths) {
 					p.stroke = StrokeTool.stroke_width;
 					p.line_cap = StrokeTool.line_cap;
 				}
 			} else {
-				foreach (Path p in g.active_paths) {
+				foreach (Object p in g.active_paths) {
 					p.stroke = 0;
 				}	
 			}
@@ -838,9 +838,13 @@ public class DrawingTools : ToolCollection  {
 			StrokeTool.stroke_width = object_stroke.get_value ();
 					
 			if (tool && StrokeTool.add_stroke) {
-				foreach (Path p in g.active_paths) {
+				foreach (Object p in g.active_paths) {
 					p.stroke = StrokeTool.stroke_width;
-					p.reset_stroke ();
+					
+					if (p is FastPath) {
+						Path path = ((FastPath) p).get_path ();
+						path.reset_stroke ();
+					}
 				}
 			}
 			
@@ -876,9 +880,12 @@ public class DrawingTools : ToolCollection  {
 			g = MainWindow.get_current_glyph ();
 			g.store_undo_state ();
 			
-			foreach (Path p in g.active_paths) {
+			foreach (Object p in g.active_paths) {
 				p.line_cap = LineCap.BUTT;
-				p.reset_stroke ();
+				
+				if (p is FastPath) {
+					((FastPath) p).get_path ().reset_stroke ();
+				}
 			}
 			
 			StrokeTool.line_cap = LineCap.BUTT;
@@ -900,9 +907,12 @@ public class DrawingTools : ToolCollection  {
 			g = MainWindow.get_current_glyph ();
 			g.store_undo_state ();
 			
-			foreach (Path p in g.active_paths) {
+			foreach (Object p in g.active_paths) {
 				p.line_cap = LineCap.ROUND;
-				p.reset_stroke ();
+				
+				if (p is FastPath) {
+					((FastPath) p).get_path ().reset_stroke ();
+				}
 			}
 			
 			StrokeTool.line_cap = LineCap.ROUND;
@@ -925,9 +935,12 @@ public class DrawingTools : ToolCollection  {
 			g = MainWindow.get_current_glyph ();
 			g.store_undo_state ();
 			
-			foreach (Path p in g.active_paths) {
+			foreach (Object p in g.active_paths) {
 				p.line_cap = LineCap.SQUARE;
-				p.reset_stroke ();
+
+				if (p is FastPath) {
+					((FastPath) p).get_path ().reset_stroke ();
+				}
 			}
 			
 			StrokeTool.line_cap = LineCap.SQUARE;
@@ -1249,7 +1262,7 @@ public class DrawingTools : ToolCollection  {
 		bool stroke = false;
 		Glyph g = MainWindow.get_current_glyph ();
 		
-		foreach (Path p in g.active_paths) {
+		foreach (Object p in g.active_paths) {
 			if (p.stroke > 0) {
 				stroke = true;
 			}

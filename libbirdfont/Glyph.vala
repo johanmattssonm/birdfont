@@ -132,7 +132,7 @@ public class Glyph : FontDisplay {
 
 	public Layer layers = new Layer ();
 	public int current_layer = 0;
-	public Gee.ArrayList<Path> active_paths = new Gee.ArrayList<Path> ();
+	public Gee.ArrayList<Object> active_paths = new Gee.ArrayList<Object> ();
 	public Gee.ArrayList<Layer> selected_groups = new Gee.ArrayList<Layer> ();
 
 	// used if this glyph originates from a fallback font
@@ -191,12 +191,12 @@ public class Glyph : FontDisplay {
 		this.unichar_code = unichar_code;
 	}
 
-	public Gee.ArrayList<Path> get_active_paths () {
-		return active_paths;
-	}
-
 	public Layer get_current_layer () {
-		return_val_if_fail (0 <= current_layer < layers.subgroups.size, new Layer ());
+		if (unlikely (!(0 <= current_layer < layers.subgroups.size))) {
+			warning ("Layer index out of bounds.");
+			return new Layer ();
+		}
+		
 		return layers.subgroups.get (current_layer);
 	}
 
@@ -213,12 +213,20 @@ public class Glyph : FontDisplay {
 		warning ("Layer is not added to glyph.");
 	}
 
+	public Gee.ArrayList<Object> get_visible_objects () {
+		return layers.get_visible_objects ().objects;
+	}
+
 	public Gee.ArrayList<Path> get_visible_paths () {
 		return layers.get_visible_paths ().paths;
 	}
 
 	public PathList get_visible_path_list () {
 		return layers.get_visible_paths ();
+	}
+
+	public Gee.ArrayList<Object> get_objects_in_current_layer () {
+		return get_current_layer ().get_all_objects ().objects;
 	}
 
 	public Gee.ArrayList<Path> get_paths_in_current_layer () {
@@ -289,22 +297,35 @@ public class Glyph : FontDisplay {
 	}
 
 	public void add_active_path (Layer? group, Path? p) {
-		Path path;
+		if (p != null) {
+			FastPath path = new FastPath.for_path ((!) p);
+			add_active_object (group, path);
+		} else {
+			add_active_object (group, null);
+		}
+	}
+	
+	public void add_active_object (Layer? group, Object? o) {
+		Object object;
 		Layer g;
 
-		if (p != null) {
-			path = (!) p;
+		if (o != null) {
+			object = (!) o;
 
-			if (Toolbox.get_move_tool ().is_selected ()) {
-				if (path.stroke > 0) {
-					Toolbox.set_object_stroke (path.stroke);
+			if (!active_paths.contains (object)) {
+				active_paths.add (object);
+			}
+			
+			if (object is FastPath) {
+				FastPath path = (FastPath) object;
+				if (Toolbox.get_move_tool ().is_selected ()) {
+					if (path.get_path ().stroke > 0) {
+						Toolbox.set_object_stroke (path.get_path ().stroke);
+					}
 				}
+				
+				PenTool.active_path = path.get_path ();
 			}
-
-			if (!active_paths.contains (path)) {
-				active_paths.add (path);
-			}
-			PenTool.active_path = path;
 		}
 
 		if (group != null) {
@@ -319,11 +340,6 @@ public class Glyph : FontDisplay {
 		store_undo_state ();
 		background_image = null;
 		GlyphCanvas.redraw ();
-	}
-
-	public Path? get_active_path () {
-		return_val_if_fail (active_paths.size > 0, null);
-		return active_paths.get (active_paths.size - 1);
 	}
 
 	public bool boundaries (out double x1, out double y1, out double x2, out double y2) {
@@ -375,7 +391,7 @@ public class Glyph : FontDisplay {
 		px2 = -10000;
 		py2 = -10000;
 
-		foreach (Path p in active_paths) {
+		foreach (Object p in active_paths) {
 			if (p.xmin < px) {
 				px = p.xmin;
 			}
@@ -485,6 +501,14 @@ public class Glyph : FontDisplay {
 		}
 
 		get_current_layer ().add_path (p);
+	}
+
+	public void add_object (Object object) {
+		if (layers.subgroups.size == 0) {
+			layers.add_layer (new Layer ());
+		}
+
+		get_current_layer ().add_object (object);		
 	}
 
 	public override void selected_canvas () {
@@ -926,8 +950,9 @@ public class Glyph : FontDisplay {
 			add_path (path);
 			path.reopen ();
 			path.create_list ();
-
-			add_active_path (null, path);
+			
+			FastPath object = new FastPath.for_path (path);
+			add_active_object (null, object);
 		}
 
 		if (remaining_points.paths.size > 0) {
@@ -1040,7 +1065,7 @@ public class Glyph : FontDisplay {
 	public void set_active_path (Path p) {
 		p.reopen ();
 		clear_active_paths ();
-		add_active_path (null, p);
+		add_active_object (null, new FastPath.for_path (p));
 	}
 
 	/** Move view port centrum to this coordinate. */
@@ -1189,8 +1214,8 @@ public class Glyph : FontDisplay {
 		bool found = false;
 
 		foreach (Layer layer in get_current_layer ().subgroups) {
-			foreach (Path pt in layer.paths.paths) {
-				if (pt.is_over (x, y)) {
+			foreach (Object o in layer.objects) {
+				if (o.is_over (x, y)) {
 					found = true;
 					group = layer;
 				}
@@ -1233,8 +1258,8 @@ public class Glyph : FontDisplay {
 	}
 
 	public bool is_over_selected_path (double x, double y) {
-		foreach (Path pt in active_paths) {
-			if (pt.is_over (x, y)) {
+		foreach (Object p in active_paths) {
+			if (p.is_over (x, y)) {
 				return true;
 			}
 		}
@@ -1349,8 +1374,9 @@ public class Glyph : FontDisplay {
 			return;
 		}
 
-		foreach (Path path in active_paths) {
+		foreach (Object object in active_paths) {
 			EditPoint p;
+			Path path = ((FastPath) object).get_path ();
 			EditPoint pl = path.get_last_point ();
 
 			if (pl.prev != null) {
@@ -1364,7 +1390,6 @@ public class Glyph : FontDisplay {
 
 				if (px > x) px -= tw + 60;
 				if (py > y) py -= th + 60;
-
 			} else {
 				px = x - 60;
 				py = y - 60;
@@ -1678,7 +1703,7 @@ public class Glyph : FontDisplay {
 					p.recalculate_linear_handles ();
 				}
 				
-				p.draw_path (cr, this, color);
+				p.draw_path (cr, color);
 				
 				if (open) {
 					p.reopen ();
@@ -1718,11 +1743,14 @@ public class Glyph : FontDisplay {
 			&& !(MainWindow.get_toolbox ().get_current_tool () is BezierTool)) {
 			cr.save ();
 			cr.new_path ();
-			foreach (Path p in active_paths) {
-				if (p.stroke > 0) {
-					stroke = p.get_stroke_fast ();
-					color = Theme.get_color ("Selected Objects");
-					draw_path_list (stroke, cr, color);
+			foreach (Object o in active_paths) {
+				if (o is FastPath) {
+					Path p = ((FastPath) o).get_path ();
+					if (p.stroke > 0) {
+						stroke = p.get_stroke_fast ();
+						color = Theme.get_color ("Selected Objects");
+						draw_path_list (stroke, cr, color);
+					}
 				}
 			}
 			cr.fill ();
@@ -1735,7 +1763,7 @@ public class Glyph : FontDisplay {
 			foreach (Path p in get_visible_paths ()) {
 				if (p.stroke == 0) {
 					color = p.color == null ? get_path_fill_color () : (!) p.color;
-					p.draw_path (cr, this, color);
+					p.draw_path (cr, color);
 				}
 			}
 			cr.fill ();
@@ -1761,22 +1789,25 @@ public class Glyph : FontDisplay {
 			foreach (Path p in get_visible_paths ()) {
 				if (p.stroke == 0) {
 					color = p.color == null ? Color.black () : (!) p.color;
-					p.draw_path (cr, this, color);
+					p.draw_path (cr, color);
 				}
 			}
 			cr.close_path ();
 			cr.fill ();
 			cr.restore ();
 
-			foreach (Path p in active_paths) {
-				cr.save ();
-				cr.new_path ();
-				if (p.stroke == 0) {
-					p.draw_path (cr, this);
+			foreach (Object o in active_paths) {
+				if (o is FastPath) {
+					Path p = ((FastPath) o).get_path ();
+					cr.save ();
+					cr.new_path ();
+					if (p.stroke == 0) {
+						p.draw_path (cr);
+					}
+					cr.close_path ();
+					cr.fill ();
+					cr.restore ();
 				}
-				cr.close_path ();
-				cr.fill ();
-				cr.restore ();
 			}
 		}
 
@@ -1800,7 +1831,7 @@ public class Glyph : FontDisplay {
 
 	public void draw_path_list (PathList pl, Context cr, Color? c = null) {
 		foreach (Path p in pl.paths) {
-			p.draw_path (cr, this, c);
+			p.draw_path (cr, c);
 		}
 	}
 
@@ -1961,8 +1992,8 @@ public class Glyph : FontDisplay {
 
 		g.layers = layers.copy ();
 
-		foreach (Path p in active_paths) {
-			g.active_paths.add (p);
+		foreach (Object o in active_paths) {
+			g.active_paths.add (o);
 		}
 
 		if (background_image != null) {
@@ -2049,8 +2080,8 @@ public class Glyph : FontDisplay {
 		}
 
 		clear_active_paths ();
-		foreach (Path p in g.active_paths) {
-			add_active_path (null, p);
+		foreach (Object p in g.active_paths) {
+			add_active_object (null, p);
 		}
 
 		redraw_area (0, 0, allocation.width, allocation.height);
@@ -2543,6 +2574,20 @@ public class Glyph : FontDisplay {
 		
 		return g2;
 	}
+	
+	// FIXME: convert everything to the new Object code
+	public Gee.ArrayList<Path> get_active_paths () {
+		Gee.ArrayList<Path> paths = new Gee.ArrayList<Path> ();
+		
+		foreach (Object object in active_paths) {
+			if (object is FastPath) {
+				paths.add (((FastPath) object).get_path ());
+			}
+		}
+		
+		return paths;
+	}
+	
 }
 
 }

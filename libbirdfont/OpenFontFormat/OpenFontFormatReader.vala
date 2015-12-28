@@ -58,7 +58,7 @@ errordomain BadFormat {
 	PARSE
 }
 
-public class OpenFontFormatReader : Object {
+public class OpenFontFormatReader : GLib.Object {
 	
 	public DirectoryTable directory_table;
 	public FontData font_data = new FontData ();

@@ -16,7 +16,7 @@ using Math;
 
 namespace BirdFont {
 
-public class CoordinateFlags {
+public class CoordinateFlags : GLib.Object {
 	/** TTF coordinate flags. */
 
 	public static const uint8 NONE           = 0;

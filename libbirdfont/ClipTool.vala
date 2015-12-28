@@ -95,7 +95,7 @@ public class ClipTool : Tool {
 			dx = g.motion_x - x - w / 2.0;
 			dy = g.motion_y - y + h / 2.0;
 			
-			foreach (Path path in g.active_paths) {
+			foreach (Object path in g.active_paths) {
 				path.move (dx, dy);
 			}
 		} else if (fd is KerningDisplay) {
@@ -260,7 +260,7 @@ public class ClipTool : Tool {
 					}
 				}
 			} else if (glyph.get_visible_paths ().size > 0) {
-				foreach (Path path in glyph.active_paths) {
+				foreach (Path path in glyph.get_active_paths ()) { // FIXME: other objects
 					s.append ("BF path: ");
 					s.append (BirdFontFile.get_point_data (path));
 					s.append ("\n");
@@ -447,13 +447,13 @@ public class ClipTool : Tool {
 		if (path.points.size > 0) {
 			PenTool.clear_directions ();
 			glyph.add_path (path);
-			glyph.active_paths.add (path);
+			glyph.add_active_path (null, path);
 			path.update_region_boundaries ();
 		}
 		
 		PenTool.remove_all_selected_points ();
 		
-		foreach (Path p in glyph.active_paths) {
+		foreach (Path p in glyph.get_active_paths ()) {
 			if (p.is_open ()) {
 				foreach (EditPoint e in p.points) {
 					e.set_selected (true);

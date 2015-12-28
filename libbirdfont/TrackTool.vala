@@ -121,8 +121,11 @@ public class TrackTool : Tool {
 				start_update_timer ();
 				drawing = true;
 				
-				foreach (Path path in glyph.active_paths) {
-					path.create_full_stroke (); // cache merged stroke parts
+				foreach (Object path in glyph.active_paths) {
+					if (path is FastPath) {
+						// cache merged stroke parts
+						((FastPath) path).get_path ().create_full_stroke ();
+					}
 				}
 			}
 		});
@@ -146,8 +149,9 @@ public class TrackTool : Tool {
 				g = MainWindow.get_current_glyph ();
 				
 				if (g.active_paths.size > 0) { // set type for last point
-					p = g.active_paths.get (g.active_paths.size - 1);
-					
+					Object o = g.active_paths.get (g.active_paths.size - 1);
+					p = ((FastPath) o).get_path ();
+									
 					if (p.points.size > 1) {
 						previous = p.points.get (p.points.size - 1);
 						previous.type = DrawingTools.point_type;
@@ -164,8 +168,10 @@ public class TrackTool : Tool {
 					add_endpoint_and_merge (x, y);
 				}
 							
-				foreach (Path path in g.active_paths) {
-					convert_hidden_points (path);
+				foreach (Object path in g.active_paths) {
+					if (path is FastPath) {
+						convert_hidden_points (((FastPath) path).get_path ());
+					}
 				}
 				
 				g.clear_active_paths ();
@@ -403,7 +409,14 @@ public class TrackTool : Tool {
 			return;
 		}
 		
-		p = glyph.active_paths.get (glyph.active_paths.size - 1);
+		Object o = glyph.active_paths.get (glyph.active_paths.size - 1);
+		
+		if (o is FastPath) {
+			warning ("Object is not a path");
+			return;
+		}
+		
+		p = ((FastPath) o).get_path ();
 		p.reopen ();
 		px = Glyph.path_coordinate_x (x);
 		py = Glyph.path_coordinate_y (y);
@@ -488,7 +501,15 @@ public class TrackTool : Tool {
 			return new Path ();
 		}
 			
-		return glyph.active_paths.get (glyph.active_paths.size - 1);		
+		Object o = glyph.active_paths.get (glyph.active_paths.size - 1);
+		
+		if (likely (o is FastPath)) {
+			return ((FastPath) o).get_path ();
+		}
+		
+		warning ("Active object is a path.");
+		
+		return new Path ();
 	}
 	
 	/** Delete all points close to the pixel at x,y. */

@@ -51,22 +51,27 @@ public class StrokeTool : GLib.Object {
 		convert_stroke = true;	
 		g.store_undo_state ();
 		
-		foreach (Path p in g.active_paths) {
-			if (p.stroke > 0) {
-				paths.append (p.get_completed_stroke ());
+		foreach (Object o in g.active_paths) {
+			if (o is FastPath) {
+				FastPath path = (FastPath) o;
+				Path p = path.get_path ();
+				
+				if (p.stroke > 0) {
+					paths.append (p.get_completed_stroke ());
+				}
 			}
 		}
 
 		if (paths.paths.size > 0) {
-			foreach (Path p in g.active_paths) {
-				g.layers.remove_path (p);
+			foreach (Object o in g.active_paths) {
+				g.layers.remove (o);
 			}
 			
 			g.active_paths.clear ();
 
 			foreach (Path np in paths.paths) {
 				g.add_path (np);
-				g.active_paths.add (np);
+				g.active_paths.add (new FastPath.for_path (np));
 			}
 			
 			PenTool.update_orientation ();
@@ -134,11 +139,15 @@ public class StrokeTool : GLib.Object {
 		
 		g.store_undo_state ();
 
-		foreach (Path p in g.active_paths) {
-			if (p.stroke == 0) {
-				o.add (p);
-			} else {
-				o.append (p.get_completed_stroke ());
+		foreach (Object object in g.active_paths) {
+			if (object is FastPath) {
+				Path p = ((FastPath) object).get_path ();
+				
+				if (p.stroke == 0) {
+					o.add (p);
+				} else {
+					o.append (p.get_completed_stroke ());
+				}
 			}
 		}
 						
@@ -217,8 +226,8 @@ public class StrokeTool : GLib.Object {
 			return;
 		}
 				
-		foreach (Path p in g.active_paths) {
-			g.delete_path (p);
+		foreach (Object object in g.active_paths) {
+			g.layers.remove (object);
 		}
 		
 		g.clear_active_paths ();
@@ -226,8 +235,9 @@ public class StrokeTool : GLib.Object {
 		remove_merged_curve_parts (new_paths);
 	
 		foreach (Path p in new_paths.paths) {
-			g.add_path (p);
-			g.add_active_path (null, p);
+			FastPath path = new FastPath.for_path (p);
+			g.add_object (path);
+			g.add_active_object (null, path);
 		}
 		
 		PenTool.update_orientation ();

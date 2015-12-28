@@ -15,7 +15,8 @@
 namespace BirdFont {
 
 public class Layer : GLib.Object {
-	public PathList paths;
+	public ObjectGroup objects;
+	
 	public Gee.ArrayList<Layer> subgroups;
 	public bool visible = true;
 	public string name = "Layer";
@@ -25,40 +26,80 @@ public class Layer : GLib.Object {
 	public bool single_path = false;
 	
 	public Layer () {
-		paths = new PathList ();
+		objects = new ObjectGroup ();
 		subgroups = new Gee.ArrayList<Layer> ();
 	}
 
 	public int index_of (Layer sublayer) {
 		return subgroups.index_of (sublayer);
 	}
-	
-	public PathList get_all_paths () {
-		PathList p = new PathList ();
+
+	public ObjectGroup get_all_objects () {
+		ObjectGroup o = new ObjectGroup ();
 		
-		p.append (paths);
+		o.append (objects);
 		
 		foreach (Layer sublayer in subgroups) {
-			p.append (sublayer.get_all_paths ());
+			o.append (sublayer.get_all_objects ());
 		}
 		
-		return p;
+		return o;
+	}
+		
+	public PathList get_all_paths () {
+		PathList paths = new PathList ();
+		
+		foreach (Object o in objects) {
+			if (o is FastPath) {
+				FastPath p = (FastPath) o;
+				paths.add (p.get_path ());
+			}
+		}
+		
+		foreach (Layer sublayer in subgroups) {
+			paths.append (sublayer.get_all_paths ());
+		}
+		
+		return paths;
 	}
 
-	public PathList get_visible_paths () {
-		PathList p = new PathList ();
+	public ObjectGroup get_visible_objects () {
+		ObjectGroup paths = new ObjectGroup ();
 		
 		if (visible) {
-			p.append (paths);
+			foreach (Object o in objects) {
+				paths.add (o);
+			}
 		}
 		
 		foreach (Layer sublayer in subgroups) {
 			if (sublayer.visible) {
-				p.append (sublayer.get_all_paths ());
+				paths.append (sublayer.get_visible_objects ());
 			}
 		}
 		
-		return p;
+		return paths;		
+	}
+
+	public PathList get_visible_paths () {
+		PathList paths = new PathList ();
+		
+		if (visible) {
+			foreach (Object o in objects) {
+				if (o is FastPath) {
+					FastPath p = (FastPath) o;
+					paths.add (p.get_path ());
+				}
+			}
+		}
+		
+		foreach (Layer sublayer in subgroups) {
+			if (sublayer.visible) {
+				paths.append (sublayer.get_visible_paths ());
+			}
+		}
+		
+		return paths;
 	}
 		
 	public void add_layer (Layer layer) {
@@ -66,18 +107,52 @@ public class Layer : GLib.Object {
 	}
 
 	public void add_path (Path path) {
-		paths.add (path);
+		FastPath p = new FastPath.for_path (path);
+		objects.add (p);
 	}
 
+	public void add_object (Object object) {
+		objects.add (object);
+	}
+
+	public void append_paths (PathList path_list) {
+		foreach (Path p in path_list.paths) {
+			add_path (p);
+		}
+	}
+
+	private FastPath? get_fast_path (Path path) {
+		foreach (Object o in objects) {
+			if (o is FastPath) {
+				FastPath p = (FastPath) o;
+				if (p.get_path () == path) {
+					return p;
+				}
+			}
+		}
+		
+		return null;
+	}
+	
 	public void remove_path (Path path) {
-		paths.remove (path);
+		FastPath? p = get_fast_path (path);
+		
+		if (p != null) {
+			objects.remove ((!) p);
+		}
+
 		foreach (Layer sublayer in subgroups) {
 			sublayer.remove_path (path);
 		}
 	}
 
+	public void remove (Object o) {
+		objects.remove (o);
+	}
+	
 	public void remove_layer (Layer layer) {
 		subgroups.remove (layer);
+		
 		foreach (Layer sublayer in subgroups) {
 			sublayer.remove_layer (layer);
 		}
@@ -87,7 +162,7 @@ public class Layer : GLib.Object {
 		Layer layer = new Layer ();
 		
 		layer.name = name;
-		layer.paths = paths.copy ();
+		layer.objects = objects.copy ();
 		layer.visible = visible;
 		
 		foreach (Layer l in subgroups) {
@@ -111,7 +186,7 @@ public class Layer : GLib.Object {
 		px2 = Glyph.CANVAS_MIN;
 		py2 = Glyph.CANVAS_MIN;
 		
-		foreach (Path p in get_all_paths ().paths) {
+		foreach (Object p in get_all_objects ().objects) {
 			if (px > p.xmin) {
 				px = p.xmin;
 			} 
@@ -136,14 +211,14 @@ public class Layer : GLib.Object {
 	}
 		
 	public void print (int indent = 0) {
-		foreach (Path p in paths.paths) {
+		foreach (Object o in objects) {
 			for (int i = 0; i < indent; i++) {
 				stdout.printf ("\t");
 			}
-			stdout.printf (@"Path open: $(p.is_open ())");
+			stdout.printf (@"Path open: $(o.is_open ())");
 			
-			if (p.color != null) {
-				stdout.printf (" %s", ((!) p.color).to_rgb_hex ());
+			if (o.color != null) {
+				stdout.printf (" %s", ((!) o.color).to_rgb_hex ());
 			}
 			
 			stdout.printf ("\n");

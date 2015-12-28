@@ -645,28 +645,28 @@ public class MenuTab : FontDisplay {
 		Gee.ArrayList<Path> paths = new Gee.ArrayList<Path> ();
 		
 		// selected objects
-		foreach (Path p in g.active_paths) {
+		foreach (Path p in g.get_active_paths ()) {
 			paths.add (PenTool.simplify (p, false, PenTool.simplification_threshold));
 		}
 		
 		// selected segments
 		if (paths.size == 0) {
-			foreach (Path p in g.get_all_paths ()) {
+			foreach (Path p in g.get_active_paths ()) {
 				g.add_active_path (null, p);
 			}
 			
-			foreach (Path p in g.active_paths) {
+			foreach (Path p in g.get_active_paths ()) {
 				paths.add (PenTool.simplify (p, true, PenTool.simplification_threshold));
 			}
 		}
 		
 		g.store_undo_state ();
 		
-		foreach (Path p in g.active_paths) {
-			g.layers.remove_path (p);
+		foreach (Object o in g.active_paths) {
+			g.layers.remove (o);
 		}
 
-		foreach (Path p in g.active_paths) {
+		foreach (Path p in g.get_active_paths ()) {
 			g.layers.remove_path (p);
 		}
 				

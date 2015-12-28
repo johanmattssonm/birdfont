@@ -94,8 +94,8 @@ public class MoveTool : Tool {
 				g.store_undo_state ();
 			}
 			
-			foreach (Path p in g.active_paths) {
-				g.layers.remove_path (p);
+			foreach (Object p in g.active_paths) {
+				g.layers.remove (p);
 				g.update_view ();
 			}
 
@@ -138,7 +138,7 @@ public class MoveTool : Tool {
 					}
 				}
 				
-				foreach (Path path in glyph.active_paths) {
+				foreach (Object path in glyph.active_paths) {
 					path.move (delta_x, delta_y);
 				}
 			}
@@ -167,7 +167,7 @@ public class MoveTool : Tool {
 		if (GridTool.is_visible () && moved) {
 			tie_paths_to_grid (glyph);
 		} else if (GridTool.has_ttf_grid ()) {
-			foreach (Path p in glyph.active_paths) {
+			foreach (Object p in glyph.active_paths) {
 				tie_path_to_ttf_grid (p);
 			}
 		} 
@@ -184,8 +184,11 @@ public class MoveTool : Tool {
 			objects_moved ();
 			DrawingTools.resize_tool.signal_objects_rotated ();
 			
-			foreach (Path p in glyph.active_paths) {
-				p.create_full_stroke ();
+			foreach (Object o in glyph.active_paths) {
+				if (o is FastPath) {
+					FastPath path = (FastPath) o;
+					path.get_path ().create_full_stroke ();
+				}
 			}
 		} else {
 			objects_deselected ();
@@ -194,7 +197,7 @@ public class MoveTool : Tool {
 		
 	public void press (int b, int x, int y) {
 		Glyph glyph = MainWindow.get_current_glyph ();
-		Path p;
+		Object object;
 		bool selected = false;
 		Layer? group;
 		Layer g;
@@ -207,20 +210,20 @@ public class MoveTool : Tool {
 			
 			if (group != null) {
 				g = (!) group;
-				return_if_fail (g.paths.paths.size > 0);
-				p = g.paths.paths.get (0);
-				selected = glyph.active_paths.contains (p);
+				return_if_fail (g.objects.objects.size > 0);
+				object = g.objects.objects.get (0);
+				selected = glyph.active_paths.contains (object);
 				
 				if (!selected && !KeyBindings.has_shift ()) {
 					glyph.clear_active_paths ();
 				} 
 				
-				foreach (Path lp in g.paths.paths) {
+				foreach (Object lp in g.objects) {
 					if (selected && KeyBindings.has_shift ()) {
 						glyph.selected_groups.remove ((!) group);
 						glyph.active_paths.remove (lp);
 					} else {
-						glyph.add_active_path ((!) group, lp);
+						glyph.add_active_object ((!) group, lp);
 					}
 				}
 			} else if (!KeyBindings.has_shift ()) {
@@ -256,10 +259,10 @@ public class MoveTool : Tool {
 		
 		glyph.clear_active_paths ();
 		
-		foreach (Path p in glyph.get_paths_in_current_layer ()) {
+		foreach (Object p in glyph.get_objects_in_current_layer ()) {
 			if (p.xmin > x1 && p.xmax < x2 && p.ymin < y1 && p.ymax > y2) {
-				if (p.points.size > 0) {
-					glyph.add_active_path (null, p);
+				if (!p.is_empty ()) {
+					glyph.add_active_object (null, p);
 				}
 			}
 		}
@@ -280,7 +283,7 @@ public class MoveTool : Tool {
 		
 		get_selection_box_boundaries (out x, out y, out w, out h);
 		
-		foreach (Path path in glyph.active_paths) {
+		foreach (Object path in glyph.active_paths) {
 			path.move (glyph.left_limit - x + w / 2, font.base_line - y + h / 2);
 		}
 		
@@ -317,23 +320,26 @@ public class MoveTool : Tool {
 		px2 = -10000;
 		py2 = -10000;
 		
-		foreach (Path p in glyph.active_paths) {
-			p.update_region_boundaries ();
-			
-			if (px > p.xmin) {
-				px = p.xmin;
-			} 
+		foreach (Object o in glyph.active_paths) {
+			if (o is FastPath) {
+				Path p = ((FastPath) o).get_path ();
+				p.update_region_boundaries ();
+				
+				if (px > p.xmin) {
+					px = p.xmin;
+				} 
 
-			if (py > p.ymin) {
-				py = p.ymin;
-			}
+				if (py > p.ymin) {
+					py = p.ymin;
+				}
 
-			if (px2 < p.xmax) {
-				px2 = p.xmax;
-			}
-			
-			if (py2 < p.ymax) {
-				py2 = p.ymax;
+				if (px2 < p.xmax) {
+					px2 = p.xmax;
+				}
+				
+				if (py2 < p.ymax) {
+					py2 = p.ymax;
+				}
 			}
 		}
 		
@@ -367,7 +373,7 @@ public class MoveTool : Tool {
 				break;
 		}
 		
-		foreach (Path path in glyph.active_paths) {
+		foreach (Object path in glyph.active_paths) {
 			path.move (x * Glyph.ivz (), y * Glyph.ivz ());
 		}
 		
@@ -378,7 +384,7 @@ public class MoveTool : Tool {
 		glyph.redraw_area (0, 0, glyph.allocation.width, glyph.allocation.height);
 	}
 
-	static void tie_path_to_ttf_grid (Path p) {
+	static void tie_path_to_ttf_grid (Object p) {
 		double sx, sy, qx, qy;	
 
 		sx = p.xmax;
@@ -428,7 +434,7 @@ public class MoveTool : Tool {
 		dx_min = Math.fabs (qx - minx);
 		dx_max = Math.fabs (sx - maxx);
 		
-		foreach (Path p in g.active_paths) {
+		foreach (Object p in g.active_paths) {
 			if (dy_min < dy_max) {
 				p.move (0, qy - miny);
 			} else {
@@ -447,8 +453,10 @@ public class MoveTool : Tool {
 	
 	public static void update_boundaries_for_selection () {
 		Glyph glyph = MainWindow.get_current_glyph ();
-		foreach (Path p in glyph.active_paths) {
-			p.update_region_boundaries ();
+		foreach (Object o in glyph.active_paths) {
+			if (o is FastPath) {
+				((FastPath)o).get_path ().update_region_boundaries ();
+			}
 		}
 	}
 	
@@ -470,14 +478,19 @@ public class MoveTool : Tool {
 		xc = selection_box_center_x;
 		yc = selection_box_center_y;
 
-		foreach (Path p in glyph.active_paths) {
-			if (vertical) {
-				p.flip_vertical ();
-			} else {
-				p.flip_horizontal ();
+		foreach (Object p in glyph.active_paths) {
+			if (p is FastPath) {
+				Path path = ((FastPath) p).get_path ();
+				
+				// FIXME: move to object
+				if (vertical) {
+					path.flip_vertical ();
+				} else {
+					path.flip_horizontal ();
+				}
+				
+				path.reverse ();
 			}
-			
-			p.reverse ();
 		}
 
 		get_selection_box_boundaries (out xc2, out yc2, out w, out h); 
@@ -485,7 +498,7 @@ public class MoveTool : Tool {
 		dx = -(xc2 - xc);
 		dy = -(yc2 - yc);
 		
-		foreach (Path p in glyph.active_paths) {
+		foreach (Object p in glyph.active_paths) {
 			p.move (dx, dy);
 		}
 		
@@ -499,9 +512,9 @@ public class MoveTool : Tool {
 		Glyph g = MainWindow.get_current_glyph ();
 		
 		g.clear_active_paths ();
-		foreach (Path p in g.get_paths_in_current_layer ()) {
-			if (p.points.size > 0) {
-				g.add_active_path (null, p);
+		foreach (Object p in g.get_objects_in_current_layer ()) {
+			if (!p.is_empty ()) {
+				g.add_active_object (null, p);
 			}
 		}
 		
