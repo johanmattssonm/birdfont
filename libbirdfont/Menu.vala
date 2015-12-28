@@ -299,23 +299,25 @@ public class Menu : AbstractMenu {
 		});
 		export_menu.items.add (import_svg_folder);
 
-		MenuItem import_color_svg;
-		import_color_svg = add_menu_item (t_("Import SVG file")  + ", " + t_("color"),
-			"import svg file color", "Glyph");
-		import_color_svg.action.connect (() => {
-			SvgParser.import (SvgType.COLOR);
-			show_menu = false;
-		});
-		export_menu.items.add (import_color_svg);
+		if (BirdFont.has_argument ("--test")) {
+			MenuItem import_color_svg;
+			import_color_svg = add_menu_item (t_("Import SVG file")  + ", " + t_("color"),
+				"import svg file color", "Glyph");
+			import_color_svg.action.connect (() => {
+				SvgParser.import (SvgType.COLOR);
+				show_menu = false;
+			});
+			export_menu.items.add (import_color_svg);
 
-		MenuItem import_svg_color_folder;
-		import_svg_color_folder = add_menu_item (t_("Import SVG folder") + ", " + t_("color"), 
-			"import svg folder color", "");
-		import_svg_color_folder.action.connect (() => {
-			SvgParser.import_folder (SvgType.COLOR);
-			show_menu = false;
-		});
-		export_menu.items.add (import_svg_color_folder);
+			MenuItem import_svg_color_folder;
+			import_svg_color_folder = add_menu_item (t_("Import SVG folder") + ", " + t_("color"), 
+				"import svg folder color", "");
+			import_svg_color_folder.action.connect (() => {
+				SvgParser.import_folder (SvgType.COLOR);
+				show_menu = false;
+			});
+			export_menu.items.add (import_svg_color_folder);
+		}
 		
 		MenuItem import_background_image = add_menu_item (t_("Import Background Image"), "import background image");
 		import_background_image.action.connect (() => {
