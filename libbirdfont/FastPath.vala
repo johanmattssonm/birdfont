@@ -209,10 +209,6 @@ public class FastPath : Object {
 
 	public override void update_region_boundaries () {
 		path.update_region_boundaries ();
-		xmax = path.xmax;
-		xmin = path.xmin;
-		ymax = path.ymax;
-		ymin = path.ymin;	
 	}
 
 	public override void rotate (double theta, double xc, double yc) {

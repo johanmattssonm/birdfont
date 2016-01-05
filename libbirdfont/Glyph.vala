@@ -312,7 +312,7 @@ public class Glyph : FontDisplay {
 		if (o != null) {
 			object = (!) o;
 
-			if (!active_paths.contains (object)) {
+			if (!active_paths_contains (object)) {
 				active_paths.add (object);
 			}
 			
@@ -336,6 +336,29 @@ public class Glyph : FontDisplay {
 		}
 	}
 
+	public bool active_paths_contains (Object object) {
+		Glyph glyph = MainWindow.get_current_glyph ();
+
+		if (glyph.active_paths.contains (object)) {
+			return true;
+		}
+		
+		if (object is FastPath) {
+			FastPath path = (FastPath) object;
+			
+			foreach (Object active in glyph.active_paths) {
+				if (active is FastPath) {
+					FastPath path_active = (FastPath) active;
+					if (path_active.get_path () == path.get_path ()) {
+						return true;
+					}
+				}
+			}
+		}
+		
+		return false;
+	}
+	
 	public void delete_background () {
 		store_undo_state ();
 		background_image = null;

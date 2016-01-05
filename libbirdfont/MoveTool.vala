@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012 2013 Johan Mattsson
+	Copyright (C) 2012 2013 2015 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -114,9 +114,8 @@ public class MoveTool : Tool {
 	
 	public void move (int x, int y) {
 		Glyph glyph = MainWindow.get_current_glyph ();
-		double dx = last_x - x;
-		double dy = last_y - y; 
-		double p = PenTool.precision;
+		double dx = Glyph.path_coordinate_x (last_x) - Glyph.path_coordinate_x (x);
+		double dy = Glyph.path_coordinate_y (last_y) - Glyph.path_coordinate_y (y); 
 		double delta_x, delta_y;
 		
 		if (!move_path) {
@@ -126,8 +125,8 @@ public class MoveTool : Tool {
 		if (move_path && (fabs(dx) > 0 || fabs (dy) > 0)) {
 			moved = true;
 
-			delta_x = Glyph.ivz () * -dx * p;
-			delta_y = Glyph.ivz () * dy * p;
+			delta_x = -dx;
+			delta_y = -dy;
 			
 			if (glyph.color_svg_data != null) {
 				glyph.svg_x += delta_x;
@@ -143,8 +142,8 @@ public class MoveTool : Tool {
 					}
 				}
 				
-				foreach (Object path in glyph.active_paths) {
-					path.move (delta_x, delta_y);
+				foreach (Object object in glyph.active_paths) {
+					object.move (delta_x, delta_y);
 				}
 			}
 		}
@@ -217,7 +216,7 @@ public class MoveTool : Tool {
 				g = (!) group;
 				return_if_fail (g.objects.objects.size > 0);
 				object = g.objects.objects.get (0);
-				selected = glyph.active_paths.contains (object);
+				selected = glyph.active_paths_contains (object);
 				
 				if (!selected && !KeyBindings.has_shift ()) {
 					glyph.clear_active_paths ();
@@ -253,8 +252,7 @@ public class MoveTool : Tool {
 		selection_changed ();
 		GlyphCanvas.redraw ();
 	}
-	
-	
+		
 	void select_group () {
 		double x1 = Glyph.path_coordinate_x (Math.fmin (selection_x, last_x));
 		double y1 = Glyph.path_coordinate_y (Math.fmin (selection_y, last_y));
