@@ -79,7 +79,8 @@ public class LabelTool : Tool {
 		});
 	}
 
-	void clear_cache () {
+	public override void clear_cache () {
+		base.clear_cache ();
 		selected_cache = null;
 		deselected_cache = null;
 	}

@@ -191,7 +191,9 @@ public class DrawingTools : ToolCollection  {
 		});	
 		draw_tools.add_tool (move_background);
 
-		move_canvas = new Tool ("move_canvas", t_("Move canvas"));
+		move_canvas = new Tool ("move_canvas",
+			t_("Move canvas"),
+			t_("Press space and click to move the canvas."));
 		move_canvas.select_action.connect ((self) => {
 			update_drawing_and_background_tools (self);
 		});	
@@ -238,7 +240,10 @@ public class DrawingTools : ToolCollection  {
 		key_tools.add_tool (insert_point_on_path_tool);		
 		
 		// quadratic Bézier points
-		quadratic_points = new Tool ("quadratic_points", t_("Create quadratic Bézier curves"));
+		quadratic_points = new Tool ("quadratic_points", 
+			t_("Create quadratic Bézier curves"),
+			t_("All control points will be converted to quadratic points in the TTF format."));
+			
 		quadratic_points.select_action.connect ((self) => {
 			point_type = PointType.QUADRATIC;
 			Preferences.set ("point_type", "quadratic_points");
