@@ -61,6 +61,10 @@ public class Expander : GLib.Object {
 
 	public void clear_cache () {
 		cached = null;
+		
+		foreach (Tool t in tool) {
+			t.clear_cache ();
+		}
 	}
 
 	public void set_headline (Text h) {

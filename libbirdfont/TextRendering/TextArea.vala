@@ -24,7 +24,8 @@ public class TextArea : Widget {
 	public double font_size;
 	public double padding = 3.3;
 	public bool single_line = false;
-	public Color text_color = Color.black ();
+	
+	protected Color text_color = Color.black ();
 	
 	public bool draw_carret {
 		get { return carret_is_visible; }
@@ -896,7 +897,6 @@ public class TextArea : Widget {
 		
 		for (i = paragraphs.size - 1; i >= 0 && paragraphs.size > 1; i--) {
 			if (unlikely (paragraphs.get (i).is_empty ())) {
-				warning ("Empty paragraph.");
 				paragraphs.remove_at (i);
 				update_paragraph_index ();
 			}
@@ -1553,13 +1553,7 @@ public class TextArea : Widget {
 					break;
 				}
 				
-				word = new Text (w, font_size);
-				
-				word.r = text_color.r;
-				word.g = text_color.g;
-				word.b = text_color.b;
-				word.a = text_color.a;
-				
+				word = new Text (w, font_size, 0, text_color);
 				words_in_paragraph.add (word);
 			}
 		}
