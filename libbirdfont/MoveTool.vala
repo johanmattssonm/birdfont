@@ -95,8 +95,8 @@ public class MoveTool : Tool {
 			}
 			
 			foreach (Object p in g.active_paths) {
-				if (p is FastPath) {
-					g.layers.remove_path (((FastPath) p).get_path ());
+				if (p is PathObject) {
+					g.layers.remove_path (((PathObject) p).get_path ());
 				} else {
 					g.layers.remove (p);
 				}
@@ -189,8 +189,8 @@ public class MoveTool : Tool {
 			DrawingTools.resize_tool.signal_objects_rotated ();
 			
 			foreach (Object o in glyph.active_paths) {
-				if (o is FastPath) {
-					FastPath path = (FastPath) o;
+				if (o is PathObject) {
+					PathObject path = (PathObject) o;
 					path.get_path ().create_full_stroke ();
 				}
 			}
@@ -324,8 +324,8 @@ public class MoveTool : Tool {
 		py2 = -10000;
 		
 		foreach (Object o in glyph.active_paths) {
-			if (o is FastPath) {
-				Path p = ((FastPath) o).get_path ();
+			if (o is PathObject) {
+				Path p = ((PathObject) o).get_path ();
 				p.update_region_boundaries ();
 				
 				if (px > p.xmin) {
@@ -457,8 +457,8 @@ public class MoveTool : Tool {
 	public static void update_boundaries_for_selection () {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		foreach (Object o in glyph.active_paths) {
-			if (o is FastPath) {
-				((FastPath)o).get_path ().update_region_boundaries ();
+			if (o is PathObject) {
+				((PathObject)o).get_path ().update_region_boundaries ();
 			}
 		}
 	}
@@ -482,8 +482,8 @@ public class MoveTool : Tool {
 		yc = selection_box_center_y;
 
 		foreach (Object p in glyph.active_paths) {
-			if (p is FastPath) {
-				Path path = ((FastPath) p).get_path ();
+			if (p is PathObject) {
+				Path path = ((PathObject) p).get_path ();
 				
 				// FIXME: move to object
 				if (vertical) {

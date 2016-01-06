@@ -122,9 +122,9 @@ public class TrackTool : Tool {
 				drawing = true;
 				
 				foreach (Object path in glyph.active_paths) {
-					if (path is FastPath) {
+					if (path is PathObject) {
 						// cache merged stroke parts
-						((FastPath) path).get_path ().create_full_stroke ();
+						((PathObject) path).get_path ().create_full_stroke ();
 					}
 				}
 			}
@@ -150,7 +150,7 @@ public class TrackTool : Tool {
 				
 				if (g.active_paths.size > 0) { // set type for last point
 					Object o = g.active_paths.get (g.active_paths.size - 1);
-					p = ((FastPath) o).get_path ();
+					p = ((PathObject) o).get_path ();
 									
 					if (p.points.size > 1) {
 						previous = p.points.get (p.points.size - 1);
@@ -169,8 +169,8 @@ public class TrackTool : Tool {
 				}
 							
 				foreach (Object path in g.active_paths) {
-					if (path is FastPath) {
-						convert_hidden_points (((FastPath) path).get_path ());
+					if (path is PathObject) {
+						convert_hidden_points (((PathObject) path).get_path ());
 					}
 				}
 				
@@ -411,12 +411,12 @@ public class TrackTool : Tool {
 		
 		Object o = glyph.active_paths.get (glyph.active_paths.size - 1);
 		
-		if (unlikely (!(o is FastPath))) {
+		if (unlikely (!(o is PathObject))) {
 			warning ("Object is not a path");
 			return;
 		}
 		
-		p = ((FastPath) o).get_path ();
+		p = ((PathObject) o).get_path ();
 		p.reopen ();
 		px = Glyph.path_coordinate_x (x);
 		py = Glyph.path_coordinate_y (y);
@@ -504,8 +504,8 @@ public class TrackTool : Tool {
 			
 		Object o = glyph.active_paths.get (glyph.active_paths.size - 1);
 		
-		if (likely (o is FastPath)) {
-			return ((FastPath) o).get_path ();
+		if (likely (o is PathObject)) {
+			return ((PathObject) o).get_path ();
 		}
 		
 		warning ("Active object is a path.");

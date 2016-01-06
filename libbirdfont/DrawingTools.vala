@@ -846,8 +846,8 @@ public class DrawingTools : ToolCollection  {
 				foreach (Object p in g.active_paths) {
 					p.stroke = StrokeTool.stroke_width;
 					
-					if (p is FastPath) {
-						Path path = ((FastPath) p).get_path ();
+					if (p is PathObject) {
+						Path path = ((PathObject) p).get_path ();
 						path.reset_stroke ();
 					}
 				}
@@ -888,8 +888,8 @@ public class DrawingTools : ToolCollection  {
 			foreach (Object p in g.active_paths) {
 				p.line_cap = LineCap.BUTT;
 				
-				if (p is FastPath) {
-					((FastPath) p).get_path ().reset_stroke ();
+				if (p is PathObject) {
+					((PathObject) p).get_path ().reset_stroke ();
 				}
 			}
 			
@@ -915,8 +915,8 @@ public class DrawingTools : ToolCollection  {
 			foreach (Object p in g.active_paths) {
 				p.line_cap = LineCap.ROUND;
 				
-				if (p is FastPath) {
-					((FastPath) p).get_path ().reset_stroke ();
+				if (p is PathObject) {
+					((PathObject) p).get_path ().reset_stroke ();
 				}
 			}
 			
@@ -943,8 +943,8 @@ public class DrawingTools : ToolCollection  {
 			foreach (Object p in g.active_paths) {
 				p.line_cap = LineCap.SQUARE;
 
-				if (p is FastPath) {
-					((FastPath) p).get_path ().reset_stroke ();
+				if (p is PathObject) {
+					((PathObject) p).get_path ().reset_stroke ();
 				}
 			}
 			

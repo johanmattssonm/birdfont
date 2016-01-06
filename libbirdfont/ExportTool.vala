@@ -104,8 +104,8 @@ public class ExportTool : GLib.Object {
 		
 		foreach (Object o in pl) {
 			
-			if (o is FastPath) {
-				Path p = ((FastPath) o).get_path ();
+			if (o is PathObject) {
+				Path p = ((PathObject) o).get_path ();
 
 				if (p.stroke > 0) {
 					s.append (@"<path ");
@@ -132,8 +132,8 @@ public class ExportTool : GLib.Object {
 		
 		if (only_selected_paths) {
 			foreach (Object p in glyph.active_paths) {
-				if (p is FastPath) {
-					Path path = ((FastPath) p).get_path ();
+				if (p is PathObject) {
+					Path path = ((PathObject) p).get_path ();
 					if (path.stroke == 0) {
 						glyph_svg += Svg.to_svg_path (path, glyph);
 					}

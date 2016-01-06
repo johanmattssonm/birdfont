@@ -766,8 +766,8 @@ public class PenTool : Tool {
 		}
 		
 		foreach (Object path in g.active_paths) {
-			if (path is FastPath) {
-				FastPath p = (FastPath) path;
+			if (path is PathObject) {
+				PathObject p = (PathObject) path;
 				p.get_path ().reset_stroke ();
 			}
 		}
@@ -1059,8 +1059,8 @@ public class PenTool : Tool {
 				// don't use set point to reflective to on open ends
 				reflective = true;
 				foreach (Object path in MainWindow.get_current_glyph ().active_paths) {
-					if (path.is_open () && !path.is_empty () && path is FastPath) {
-						Path p = ((FastPath) path).get_path ();
+					if (path.is_open () && !path.is_empty () && path is PathObject) {
+						Path p = ((PathObject) path).get_path ();
 						if (selected_handle.parent == p.get_first_point ()	
 							|| selected_handle.parent == p.get_last_point ()) {
 							reflective = false;
@@ -1234,7 +1234,7 @@ public class PenTool : Tool {
 		if (active_edit_point != null) {
 			glyph.clear_active_paths ();
 			
-			FastPath path = new FastPath.for_path (active_path);
+			PathObject path = new PathObject.for_path (active_path);
 			glyph.add_active_object (null, path);
 			
 			DrawingTools.update_stroke_settings ();
@@ -1415,7 +1415,7 @@ public class PenTool : Tool {
 
 			foreach (Path merge in paths) {
 				if (merge.points.size > 0) {
-					FastPath merged_path = new FastPath.for_path (merge);
+					PathObject merged_path = new PathObject.for_path (merge);
 					
 					if (is_close_to_point (merge.points.get (merge.points.size - 1), px, py)) {	
 						glyph.add_active_object (null, merged_path);
@@ -1463,7 +1463,7 @@ public class PenTool : Tool {
 			
 			glyph.clear_active_paths ();
 			
-			FastPath closed_path = new FastPath.for_path (path);
+			PathObject closed_path = new PathObject.for_path (path);
 			glyph.add_active_object (null, closed_path);
 			
 			if (direction_changed) {
@@ -1503,7 +1503,7 @@ public class PenTool : Tool {
 				} else {
 					union = merge_open_paths (path, merge); 
 
-					FastPath union_path = new FastPath.for_path (union);
+					PathObject union_path = new PathObject.for_path (union);
 					glyph.add_path (union);
 					glyph.delete_path (path);
 					glyph.delete_path (merge);
@@ -1791,8 +1791,8 @@ public class PenTool : Tool {
 		return_val_if_fail (glyph.active_paths.size > 0, new PointSelection.empty ());
 		Object object = glyph.active_paths.get (glyph.active_paths.size - 1);
 		
-		if (object is FastPath) {		
-			Path path = ((FastPath) object).get_path ();
+		if (object is PathObject) {		
+			Path path = ((PathObject) object).get_path ();
 			
 			add_selected_point (selected_point, path);
 
@@ -1837,7 +1837,7 @@ public class PenTool : Tool {
 		EditPoint inserted;
 		bool stroke = StrokeTool.add_stroke;
 		Glyph g = MainWindow.get_current_glyph ();
-		FastPath path;
+		PathObject path;
 		
 		if (g.active_paths.size == 0) {
 			np = new Path ();
@@ -1845,7 +1845,7 @@ public class PenTool : Tool {
 			np.stroke = stroke ? StrokeTool.stroke_width : 0;
 			np.line_cap = StrokeTool.line_cap;
 			
-			path = new FastPath.for_path (np);
+			path = new PathObject.for_path (np);
 			g.add_active_object (null, path);
 			
 			active_path = np;
@@ -1872,7 +1872,7 @@ public class PenTool : Tool {
 		}
 
 		g.clear_active_paths ();
-		path = new FastPath.for_path (np);
+		path = new PathObject.for_path (np);
 		g.add_active_object (null, path);
 		active_path = np;
 		selected_path = np;
@@ -2083,7 +2083,7 @@ public class PenTool : Tool {
 		selected_handle.selected = true;
 		
 		active_path = p.path;
-		FastPath path = new FastPath.for_path (active_path);
+		PathObject path = new PathObject.for_path (active_path);
 		g.add_active_object (null, path);
 	}
 

@@ -303,7 +303,7 @@ public class Glyph : FontDisplay {
 
 	public void add_active_path (Layer? group, Path? p) {
 		if (p != null) {
-			FastPath path = new FastPath.for_path ((!) p);
+			PathObject path = new PathObject.for_path ((!) p);
 			add_active_object (group, path);
 		} else {
 			add_active_object (group, null);
@@ -321,8 +321,8 @@ public class Glyph : FontDisplay {
 				active_paths.add (object);
 			}
 			
-			if (object is FastPath) {
-				FastPath path = (FastPath) object;
+			if (object is PathObject) {
+				PathObject path = (PathObject) object;
 				if (Toolbox.get_move_tool ().is_selected ()) {
 					if (path.get_path ().stroke > 0) {
 						Toolbox.set_object_stroke (path.get_path ().stroke);
@@ -348,12 +348,12 @@ public class Glyph : FontDisplay {
 			return true;
 		}
 		
-		if (object is FastPath) {
-			FastPath path = (FastPath) object;
+		if (object is PathObject) {
+			PathObject path = (PathObject) object;
 			
 			foreach (Object active in glyph.active_paths) {
-				if (active is FastPath) {
-					FastPath path_active = (FastPath) active;
+				if (active is PathObject) {
+					PathObject path_active = (PathObject) active;
 					if (path_active.get_path () == path.get_path ()) {
 						return true;
 					}
@@ -983,7 +983,7 @@ public class Glyph : FontDisplay {
 			path.reopen ();
 			path.create_list ();
 			
-			FastPath object = new FastPath.for_path (path);
+			PathObject object = new PathObject.for_path (path);
 			add_active_object (null, object);
 		}
 
@@ -1097,7 +1097,7 @@ public class Glyph : FontDisplay {
 	public void set_active_path (Path p) {
 		p.reopen ();
 		clear_active_paths ();
-		add_active_object (null, new FastPath.for_path (p));
+		add_active_object (null, new PathObject.for_path (p));
 	}
 
 	/** Move view port centrum to this coordinate. */
@@ -1408,7 +1408,7 @@ public class Glyph : FontDisplay {
 
 		foreach (Object object in active_paths) {
 			EditPoint p;
-			Path path = ((FastPath) object).get_path ();
+			Path path = ((PathObject) object).get_path ();
 			EditPoint pl = path.get_last_point ();
 
 			if (pl.prev != null) {
@@ -1737,7 +1737,7 @@ public class Glyph : FontDisplay {
 					color = Color.black ();
 				}
 
-				FastPath.draw_path_list (stroke, cr, color);
+				PathObject.draw_path_list (stroke, cr, color);
 			}
 		}
 		cr.fill ();
@@ -1750,12 +1750,12 @@ public class Glyph : FontDisplay {
 			cr.save ();
 			cr.new_path ();
 			foreach (Object o in active_paths) {
-				if (o is FastPath) {
-					Path p = ((FastPath) o).get_path ();
+				if (o is PathObject) {
+					Path p = ((PathObject) o).get_path ();
 					if (p.stroke > 0) {
 						stroke = p.get_stroke_fast ();
 						color = Theme.get_color ("Selected Objects");
-						FastPath.draw_path_list (stroke, cr, color);
+						PathObject.draw_path_list (stroke, cr, color);
 					}
 				}
 			}
@@ -1797,8 +1797,8 @@ public class Glyph : FontDisplay {
 			
 			foreach (Object o in get_visible_objects ()) {
 				print("visible obj\n");
-				if (o is FastPath) {
-					Path p = ((FastPath) o).get_path ();
+				if (o is PathObject) {
+					Path p = ((PathObject) o).get_path ();
 
 					if (p.stroke == 0) {
 						color = p.color == null ? Color.black () : (!) p.color;
@@ -1813,8 +1813,8 @@ public class Glyph : FontDisplay {
 			cr.restore ();
 
 			foreach (Object o in active_paths) {
-				if (o is FastPath) {
-					Path p = ((FastPath) o).get_path ();
+				if (o is PathObject) {
+					Path p = ((PathObject) o).get_path ();
 					cr.save ();
 					cr.new_path ();
 					if (p.stroke == 0) {
@@ -2590,8 +2590,8 @@ public class Glyph : FontDisplay {
 		Gee.ArrayList<Path> paths = new Gee.ArrayList<Path> ();
 		
 		foreach (Object object in active_paths) {
-			if (object is FastPath) {
-				paths.add (((FastPath) object).get_path ());
+			if (object is PathObject) {
+				paths.add (((PathObject) object).get_path ());
 			}
 		}
 		

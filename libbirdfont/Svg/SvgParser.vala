@@ -151,7 +151,7 @@ public class SvgParser {
 	
 		glyph = MainWindow.get_current_glyph ();
 		foreach (Path p in path_list.paths) {
-			FastPath path = new FastPath.for_path (p);
+			PathObject path = new PathObject.for_path (p);
 			glyph.add_object (path);
 			glyph.add_active_object (null, path); // FIXME: groups
 			path.update_region_boundaries ();
@@ -294,8 +294,8 @@ public class SvgParser {
 		PathList path_list = new PathList ();
 		
 		foreach (Object o in layer.objects) {
-			if (o is FastPath) {
-				path_list.add (((FastPath) o).get_path ());
+			if (o is PathObject) {
+				path_list.add (((PathObject) o).get_path ());
 			}
 		}
 		
@@ -872,13 +872,13 @@ public class SvgParser {
 		int inside_count;
 		bool inside;
 		foreach (Object o1 in layer.objects) {
-			if (o1 is FastPath) {
-				Path p1 = ((FastPath) o1).get_path ();
+			if (o1 is PathObject) {
+				Path p1 = ((PathObject) o1).get_path ();
 				inside_count = 0;
 				
 				foreach (Object o2 in layer.objects) {
-					if (o2 is FastPath) {
-						Path p2 = ((FastPath) o2).get_path ();
+					if (o2 is PathObject) {
+						Path p2 = ((PathObject) o2).get_path ();
 					
 						if (p1 != p2) {
 							inside = true;

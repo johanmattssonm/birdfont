@@ -53,8 +53,8 @@ public class Layer : GLib.Object {
 		PathList paths = new PathList ();
 		
 		foreach (Object o in objects) {
-			if (o is FastPath) {
-				FastPath p = (FastPath) o;
+			if (o is PathObject) {
+				PathObject p = (PathObject) o;
 				paths.add (p.get_path ());
 			}
 		}
@@ -89,8 +89,8 @@ public class Layer : GLib.Object {
 		
 		if (visible) {
 			foreach (Object o in objects) {
-				if (o is FastPath) {
-					FastPath p = (FastPath) o;
+				if (o is PathObject) {
+					PathObject p = (PathObject) o;
 					paths.add (p.get_path ());
 				}
 			}
@@ -110,7 +110,7 @@ public class Layer : GLib.Object {
 	}
 
 	public void add_path (Path path) {
-		FastPath p = new FastPath.for_path (path);
+		PathObject p = new PathObject.for_path (path);
 		objects.add (p);
 	}
 
@@ -124,10 +124,10 @@ public class Layer : GLib.Object {
 		}
 	}
 
-	private FastPath? get_fast_path (Path path) {
+	private PathObject? get_fast_path (Path path) {
 		foreach (Object o in objects) {
-			if (o is FastPath) {
-				FastPath p = (FastPath) o;
+			if (o is PathObject) {
+				PathObject p = (PathObject) o;
 				if (p.get_path () == path) {
 					return p;
 				}
@@ -138,7 +138,7 @@ public class Layer : GLib.Object {
 	}
 	
 	public void remove_path (Path path) {
-		FastPath? p = get_fast_path (path);
+		PathObject? p = get_fast_path (path);
 		
 		if (p != null) {
 			objects.remove ((!) p);
@@ -252,8 +252,8 @@ public class Layer : GLib.Object {
 		PathList paths = new PathList ();
 		
 		foreach (Object object in objects) {
-			if (object is FastPath) {
-				paths.add (((FastPath) object).get_path ());
+			if (object is PathObject) {
+				paths.add (((PathObject) object).get_path ());
 			}
 		}
 		

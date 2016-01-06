@@ -16,7 +16,7 @@ using Cairo;
 
 namespace BirdFont {
 
-public class FastPath : Object {
+public class PathObject : Object {
 
 	Path path;
 	
@@ -138,17 +138,17 @@ public class FastPath : Object {
 		default = Glyph.CANVAS_MIN;
 	}
 			
-	public FastPath () {
+	public PathObject () {
 		path = new Path ();
 		update_region_boundaries ();
 	}
 
-	public FastPath.create_copy (FastPath p) {
+	public PathObject.create_copy (PathObject p) {
 		base.create_copy (p);
 		path = p.path.copy ();
 	}
 
-	public FastPath.for_path (Path path) {
+	public PathObject.for_path (Path path) {
 		this.path = path;
 	}
 
@@ -225,11 +225,11 @@ public class FastPath : Object {
 	}
 	
 	public override Object copy () {
-		return new FastPath.create_copy (this);
+		return new PathObject.create_copy (this);
 	}
 
 	public override string to_string () {
-		return "FastPath";
+		return "PathObject";
 	}
 
 }

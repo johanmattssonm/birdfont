@@ -122,8 +122,8 @@ public class ResizeTool : Tool {
 			GlyphCanvas.redraw ();
 			
 			foreach (Object p in MainWindow.get_current_glyph ().active_paths) {
-				if (p is FastPath) {
-					FastPath path = (FastPath) p;
+				if (p is PathObject) {
+					PathObject path = (PathObject) p;
 					path.get_path ().create_full_stroke ();
 				}
 			}
@@ -546,8 +546,8 @@ public class ResizeTool : Tool {
 		glyph.selection_boundaries (out x, out y, out w, out h);
 	
 		foreach (Object path in glyph.active_paths) {
-			if (path is FastPath) { // FIXME: other objects
-				Path p = ((FastPath) path).get_path ();
+			if (path is PathObject) { // FIXME: other objects
+				Path p = ((PathObject) path).get_path ();
 				SvgParser.apply_matrix (p, 1, 0, s, 1, 0, 0);
 				p.skew = skew;
 				path.update_region_boundaries ();

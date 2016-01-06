@@ -52,8 +52,8 @@ public class StrokeTool : GLib.Object {
 		g.store_undo_state ();
 		
 		foreach (Object o in g.active_paths) {
-			if (o is FastPath) {
-				FastPath path = (FastPath) o;
+			if (o is PathObject) {
+				PathObject path = (PathObject) o;
 				Path p = path.get_path ();
 				
 				if (p.stroke > 0) {
@@ -71,7 +71,7 @@ public class StrokeTool : GLib.Object {
 
 			foreach (Path np in paths.paths) {
 				g.add_path (np);
-				g.active_paths.add (new FastPath.for_path (np));
+				g.active_paths.add (new PathObject.for_path (np));
 			}
 			
 			PenTool.update_orientation ();
@@ -140,8 +140,8 @@ public class StrokeTool : GLib.Object {
 		g.store_undo_state ();
 
 		foreach (Object object in g.active_paths) {
-			if (object is FastPath) {
-				Path p = ((FastPath) object).get_path ();
+			if (object is PathObject) {
+				Path p = ((PathObject) object).get_path ();
 				
 				if (p.stroke == 0) {
 					o.add (p);
@@ -235,7 +235,7 @@ public class StrokeTool : GLib.Object {
 		remove_merged_curve_parts (new_paths);
 	
 		foreach (Path p in new_paths.paths) {
-			FastPath path = new FastPath.for_path (p);
+			PathObject path = new PathObject.for_path (p);
 			g.add_object (path);
 			g.add_active_object (null, path);
 		}

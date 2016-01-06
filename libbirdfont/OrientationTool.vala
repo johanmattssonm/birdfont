@@ -31,8 +31,8 @@ public class OrientationTool : Tool {
 			Glyph g = MainWindow.get_current_glyph ();
 			
 			foreach (Object o in g.active_paths) {
-				if (o is FastPath) {
-					FastPath p = (FastPath) o;
+				if (o is PathObject) {
+					PathObject p = (PathObject) o;
 					p.get_path ().reverse ();
 				}
 			}
@@ -58,8 +58,8 @@ public class OrientationTool : Tool {
 		bool has_counter_clockwise_paths = false;
 		
 		foreach (Object o in glyph.active_paths) {
-			if (o is FastPath) {
-				Path p = ((FastPath) o).get_path ();
+			if (o is PathObject) {
+				Path p = ((PathObject) o).get_path ();
 				
 				if (p.is_clockwise ()) {
 					has_clockwise_paths = true;
