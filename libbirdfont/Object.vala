@@ -20,6 +20,10 @@ namespace BirdFont {
 public abstract class Object : GLib.Object {
 	bool open = false;
 	
+	public bool visible = true;
+	public SvgStyle style = new SvgStyle ();
+	public Gee.ArrayList<SvgTransform> transforms = new Gee.ArrayList<SvgTransform> ();
+	
 	public abstract Color? color { get; set; }
 	public abstract Color? stroke_color { get; set; }
 	public abstract Gradient? gradient { get; set; }
@@ -58,6 +62,28 @@ public abstract class Object : GLib.Object {
 	public abstract void rotate (double theta, double xc, double yc);
 	public abstract bool is_empty ();
 	public abstract void resize (double ratio_x, double ratio_y);
+
+	public static void copy_attributes (Object from, Object to) {
+		to.open = from.open;
+
+		to.color = from.color;
+		to.stroke_color = from.stroke_color;
+		to.gradient = from.gradient;
+		
+		to.xmax = from.xmax;
+		to.xmin = from.xmin;
+		to.ymax = from.ymax;
+		to.ymin = from.ymin;
+		
+		to.rotation = from.rotation;
+		to.stroke = from.stroke;
+		to.line_cap = from.line_cap;
+		to.fill = from.fill;	
+	}
+	
+	public virtual string to_string () {
+		return "Object";
+	}
 }
 
 }

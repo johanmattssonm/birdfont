@@ -227,6 +227,11 @@ public class FastPath : Object {
 	public override Object copy () {
 		return new FastPath.create_copy (this);
 	}
+
+	public override string to_string () {
+		return "FastPath";
+	}
+
 }
 
 }

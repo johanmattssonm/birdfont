@@ -25,9 +25,12 @@ public class Layer : GLib.Object {
 	public Gradient? gradient = null;
 	public bool single_path = false;
 	
+	public Gee.ArrayList<SvgTransform> transforms;
+	
 	public Layer () {
 		objects = new ObjectGroup ();
 		subgroups = new Gee.ArrayList<Layer> ();
+		transforms = new Gee.ArrayList<SvgTransform> ();
 	}
 
 	public int index_of (Layer sublayer) {
@@ -64,21 +67,21 @@ public class Layer : GLib.Object {
 	}
 
 	public ObjectGroup get_visible_objects () {
-		ObjectGroup paths = new ObjectGroup ();
+		ObjectGroup object_group = new ObjectGroup ();
 		
 		if (visible) {
 			foreach (Object o in objects) {
-				paths.add (o);
+				object_group.add (o);
 			}
 		}
 		
 		foreach (Layer sublayer in subgroups) {
 			if (sublayer.visible) {
-				paths.append (sublayer.get_visible_objects ());
+				object_group.append (sublayer.get_visible_objects ());
 			}
 		}
 		
-		return paths;		
+		return object_group;		
 	}
 
 	public PathList get_visible_paths () {
@@ -211,14 +214,26 @@ public class Layer : GLib.Object {
 	}
 		
 	public void print (int indent = 0) {
+		stdout.printf (@"Layer: $(name)");
+
+		if (!visible) {
+			stdout.printf (" hidden");
+		}
+		
+		stdout.printf (@"\n");
+		
 		foreach (Object o in objects) {
 			for (int i = 0; i < indent; i++) {
 				stdout.printf ("\t");
 			}
-			stdout.printf (@"Path open: $(o.is_open ())");
+			stdout.printf (@"Object $(o.to_string ())");
 			
 			if (o.color != null) {
 				stdout.printf (" %s", ((!) o.color).to_rgb_hex ());
+			}
+
+			if (!o.visible) {
+				stdout.printf (" hidden");
 			}
 			
 			stdout.printf ("\n");

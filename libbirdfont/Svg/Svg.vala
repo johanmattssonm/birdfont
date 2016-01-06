@@ -16,6 +16,8 @@ using Cairo;
 
 namespace BirdFont {
 
+// FIXME: substrings
+
 public class Svg {
 
 	/** Export to svg glyph data. */

@@ -242,6 +242,11 @@ public class Glyph : FontDisplay {
 		current_layer = layers.subgroups.size - 1;
 	}
 
+	public void add_layer (Layer layer) {
+		layers.add_layer (layer);
+		current_layer = layers.subgroups.size - 1;
+	}
+	
 	public int get_layer_index (Layer layer) {
 		return layers.index_of (layer);
 	}
@@ -1704,7 +1709,6 @@ public class Glyph : FontDisplay {
 
 	/** Draw filled paths. */
 	public void draw_paths (Context cr, Color? c = null) {
-		
 		cr.save ();
 		cr.new_path ();
 		
@@ -1788,10 +1792,20 @@ public class Glyph : FontDisplay {
 
 			cr.save ();
 			cr.new_path ();
-			foreach (Path p in get_visible_paths ()) {
-				if (p.stroke == 0) {
-					color = p.color == null ? Color.black () : (!) p.color;
-					p.draw_path (cr, color);
+			
+			get_current_layer ().print();
+			
+			foreach (Object o in get_visible_objects ()) {
+				print("visible obj\n");
+				if (o is FastPath) {
+					Path p = ((FastPath) o).get_path ();
+
+					if (p.stroke == 0) {
+						color = p.color == null ? Color.black () : (!) p.color;
+						p.draw_path (cr, color);
+					}
+				} else {
+					o.draw (cr);
 				}
 			}
 			cr.close_path ();

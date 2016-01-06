@@ -63,18 +63,9 @@ public class SvgParser {
 	}
 		
 	public static void import_color_svg (Glyph glyph, string path) {
-		try {
-			string data;
-			FileUtils.get_contents (path, out data);
-			glyph.color_svg_data = data;
-
-			if (glyph.color_svg_data != null) {
-				glyph.svg_x = glyph.left_limit;
-				glyph.svg_y = BirdFont.get_current_font ().top_position;
-			}
-		} catch (GLib.Error e) {
-			warning (e.message);
-		}
+		SvgFile svg_file = new SvgFile ();
+		Layer layer = svg_file.parse (path);
+		glyph.add_layer (layer);
 	}
 	
 	public static void import_folder (SvgType type) {
@@ -1017,7 +1008,7 @@ public class SvgParser {
 	/** Add space as separator to svg data. 
 	 * @param d svg data
 	 */
-	static string add_separators (string d) {
+	public static string add_separators (string d) {
 		string data = d;
 		
 		data = data.replace (",", " ");
@@ -1063,44 +1054,34 @@ public class SvgParser {
 			g.add_path (path);
 		}
 	}
-	
-	/** 
-	 * @param d svg data
-	 * @param glyph use lines from this glyph but don't add the generated paths
-	 * @param svg_glyph parse svg glyph with origo in lower left corner
-	 * 
-	 * @return the new paths
-	 */
-	public PathList parse_svg_data (string d, Glyph glyph, bool svg_glyph = false, double units = 1) {
+
+	public static void get_bezier_points (string point_data, out BezierPoints[] bezier_points, out int points, bool svg_glyph) {
 		double px = 0;
 		double py = 0;
 		double px2 = 0;
 		double py2 = 0;
 		double cx = 0;
 		double cy = 0;
-		string data;
-		Font font;
-		PathList path_list = new PathList ();
-		BezierPoints[] bezier_points;
 		string[] c;
 		double arc_rx, arc_ry;
 		double arc_rotation;
 		int large_arc;
 		int arc_sweep;
 		double arc_dest_x, arc_dest_y;
-
-		font = BirdFont.get_current_font ();
-		
-		data = add_separators (d);
-		c = data.split (" ");
-		bezier_points = new BezierPoints[8 * c.length + 1]; // the arc instruction can use up to eight points
-		
-		for (int i = 0; i < 2 * c.length + 1; i++) {
-			bezier_points[i] = new BezierPoints ();
-		}
 		
 		int bi = 0;
+
+		string data = add_separators (point_data);
+		c = data.split (" ");
+
+		// the arc instruction can use up to eight points
+		int bezier_points_length = 8 * c.length + 1;
+		bezier_points = new BezierPoints[bezier_points_length]; 
 		
+		for (int i = 0; i < bezier_points_length; i++) {
+			bezier_points[i] = new BezierPoints ();
+		}
+
 		// parse path
 		int i = -1;
 		while (++i < c.length && bi < bezier_points.length) {	
@@ -1358,7 +1339,6 @@ public class SvgParser {
 					bi++;
 				}
 			} else if (c[i] == "Q") {
-
 				while (i + 4 < c.length && is_point (c[i + 1])) {
 					bezier_points[bi].type = 'Q';
 					bezier_points[bi].svg_type = 'Q';
@@ -1431,7 +1411,7 @@ public class SvgParser {
 										
 					// the reflection
 					cx = 2 * px - px2;
-					cy = 2 * py - py2; // if (svg_glyph) ?
+					cy = 2 * py - py2;
 					
 					bezier_points[bi].x0 = cx;
 					bezier_points[bi].y0 = cy;
@@ -1538,7 +1518,7 @@ public class SvgParser {
 					px = cx;
 					py = cy;	
 					
-					bi++;				
+					bi++;
 				}
 			} else if (c[i] == "a") {
 				while (i + 7 < c.length && is_point (c[i + 1])) {					
@@ -1564,8 +1544,6 @@ public class SvgParser {
 					
 					px = cx;
 					py = cy;
-					
-					
 				}
 			} else if (i + 7 < c.length && c[i] == "A") {
 				while (is_point (c[i + 1])) {					
@@ -1613,15 +1591,38 @@ public class SvgParser {
 		
 		if (bi == 0) {
 			warning ("No points in path.");
+		}
+
+		points = bi;
+	}
+	
+	/** 
+	 * @param d svg data
+	 * @param glyph use lines from this glyph but don't add the generated paths
+	 * @param svg_glyph parse svg glyph with origo in lower left corner
+	 * 
+	 * @return the new paths
+	 */
+	public PathList parse_svg_data (string d, Glyph glyph, bool svg_glyph = false, double units = 1) {
+		Font font;
+		PathList path_list = new PathList ();
+		BezierPoints[] bezier_points;
+		int points;
+
+		font = BirdFont.get_current_font ();
+		get_bezier_points (d, out bezier_points, out points, svg_glyph);
+	
+		if (points == 0) {
+			warning ("No points in path.");
 			return path_list;	
 		}
 		
-		move_and_resize (bezier_points, bi, svg_glyph, units, glyph);
+		move_and_resize (bezier_points, points, svg_glyph, units, glyph);
 		
 		if (format == SvgFormat.ILLUSTRATOR) {
-			path_list = create_paths_illustrator (bezier_points, bi);
+			path_list = create_paths_illustrator (bezier_points, points);
 		} else {
-			path_list = create_paths_inkscape (bezier_points, bi);
+			path_list = create_paths_inkscape (bezier_points, points);
 		}
 
 		// TODO: Find out if it is possible to tie handles.
@@ -2044,13 +2045,13 @@ public class SvgParser {
 		return int.parse ((!) s);
 	}
 	
-	static double parse_double (string? s) {
-		if (is_null (s)) {
+	public static double parse_double (string? s) {
+		if (unlikely (is_null (s))) {
 			warning ("Got null instead of expected string.");
 			return 0;
 		}
 		
-		if (!is_point ((!) s)) {
+		if (unlikely (!is_point ((!) s))) {
 			warning (@"Expecting a double got: $((!) s)");
 			return 0;
 		}
@@ -2089,7 +2090,7 @@ public class SvgParser {
 			}
 
 			bezier_points[bi] = new BezierPoints ();
-			bezier_points[bi].type == 'L';
+			bezier_points[bi].type = 'L';
 			bezier_points[bi].x0 = parse_double (c[i]);
 			bezier_points[bi].y0 = -parse_double (c[i + 1]);
 			bi++;
