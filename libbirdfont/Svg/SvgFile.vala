@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2015 Johan Mattsson
+	Copyright (C) 2016 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -160,7 +160,7 @@ public class SvgFile : GLib.Object {
 			transform = transform.replace ("  ", " ");
 		}
 		
-		if (unlikely (transform.index_of (")") > -1)) {
+		if (unlikely (transform.index_of (")") == -1)) {
 			warning ("No parenthesis in transform function.");
 			return transform_functions;
 		}
@@ -308,6 +308,7 @@ public class SvgFile : GLib.Object {
 		SvgParser.get_bezier_points (data, out bezier_points, out points_size, true);
 
 		for (int i = 0; i < points_size; i++) {
+			// FIXME: add more types
 			if (bezier_points[i].type == 'M') {
 				points.x = bezier_points[i].x0;
 				points.y = bezier_points[i].y0;

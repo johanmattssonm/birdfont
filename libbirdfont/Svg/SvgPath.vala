@@ -45,58 +45,46 @@ public class SvgPath : Object {
 	}
 			
 	public override void draw (Context cr, Color? c = null) {
+		Color fill, stroke;
+
 		cr.save ();
 		
 		foreach (Points p in points) {
 			cr.new_path ();
-			cr.move_to (p.x, p.y);
-			
+			cr.move_to (p.x, p.y);			
 			draw_points (cr, p);
 		}
 		
-		cr.fill (); // FIXME: stroke etc.
+		if (style.fill != null) {
+			fill = (!) style.fill;
+			cr.set_source_rgba (fill.r, fill.g, fill.b, fill.a);
+			
+			if (style.stroke != null) {
+				cr.fill_preserve ();
+			} else {
+				cr.fill ();
+			}
+		}
+		
+		if (style.stroke != null) {
+			stroke = (!) style.stroke;
+			cr.set_source_rgba (stroke.r, stroke.g, stroke.b, stroke.a);
+			cr.stroke ();
+		}
+
 		cr.restore ();
 	}
 
 	public void draw_points (Context cr, Points points) {
 		Doubles p = points.point_data;
-
-		print(@"draw $(p.size)\n");
 		
-		return_if_fail (p.size % 6 != 0);
+		return_if_fail (p.size % 6 == 0);
 		
 		for (int i = 0; i < p.size; i += 6) {
 			cr.curve_to (p.data[i], p.data[i + 1], 
 				p.data[i + 2], p.data[i + 3],
 				p.data[i + 4], p.data[i + 5]);
-				
-			print(@"$(p.data[i])");
-		}
-		
-		cr.set_source_rgba (0, 0.5, 0, 1);
-		cr.fill ();
-		
-		cr.close_path ();
-		cr.new_path ();
-		cr.move_to (points.x, points.y);
-		cr.set_source_rgba (0, 0, 0.5, 0.5);
-		
-		for (int i = 0; i < p.size; i += 2) {
-			cr.line_to (p.data[i], p.data[i + 1]);
-		}
-
-		cr.fill ();
-
-		cr.close_path ();
-		cr.new_path ();
-		cr.move_to (points.x, points.y);
-		cr.set_source_rgba (0.5, 0, 0, 0.5);
-		
-		for (int i = 0; i < p.size; i += 6) {
-			cr.line_to (p.data[i + 4], p.data[i + 5]);
-		}
-
-		cr.fill ();		
+		}		
 	}
 
 	public override void move (double dx, double dy) {

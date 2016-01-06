@@ -24,7 +24,7 @@ public abstract class Object : GLib.Object {
 	public SvgStyle style = new SvgStyle ();
 	public Gee.ArrayList<SvgTransform> transforms = new Gee.ArrayList<SvgTransform> ();
 	
-	public abstract Color? color { get; set; }
+	public abstract Color? color { get; set; } // FIXME: keep this in svg style
 	public abstract Color? stroke_color { get; set; }
 	public abstract Gradient? gradient { get; set; }
 

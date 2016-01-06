@@ -21,6 +21,9 @@ public class SvgStyle {
 	
 	Gee.HashMap<string, string> style;
 	
+	public Color? stroke = null;
+	public Color? fill = null;
+	
 	public SvgStyle () {
 		style = new Gee.HashMap<string, string> ();
 	}
@@ -82,6 +85,9 @@ public class SvgStyle {
 				s.style.set ("fill", a.get_content ());
 			}
 		}
+	
+		s.stroke = Color.parse (s.style.get ("stroke"));
+		s.fill = Color.parse (s.style.get ("fill"));
 		
 		return s;
 	}

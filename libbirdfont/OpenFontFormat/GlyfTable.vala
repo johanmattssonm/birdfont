@@ -266,7 +266,6 @@ public class GlyfTable : OtfTable {
 		// flags		
 		nflags = glyf_data.get_nflags ();
 		if (unlikely (nflags != npoints)) {
-			print ("glyf table data:\n");
 			fd.dump ();
 			warning (@"(nflags != npoints)  ($nflags != $npoints) in glyph $(g.name). ncontours: $ncontours");
 		}

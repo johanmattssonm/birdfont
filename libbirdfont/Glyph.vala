@@ -1793,10 +1793,7 @@ public class Glyph : FontDisplay {
 			cr.save ();
 			cr.new_path ();
 			
-			get_current_layer ().print();
-			
 			foreach (Object o in get_visible_objects ()) {
-				print("visible obj\n");
 				if (o is PathObject) {
 					Path p = ((PathObject) o).get_path ();
 
@@ -1808,6 +1805,7 @@ public class Glyph : FontDisplay {
 					o.draw (cr);
 				}
 			}
+			
 			cr.close_path ();
 			cr.fill ();
 			cr.restore ();

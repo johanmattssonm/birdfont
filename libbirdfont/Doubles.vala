@@ -18,7 +18,7 @@ namespace BirdFont {
 
 public class Doubles : GLib.Object {
 	public double* data;
-	public int size = 10;
+	public int size = 0;
 	int capacity = 10;
 	
 	public Doubles () {

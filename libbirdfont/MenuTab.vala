@@ -122,8 +122,7 @@ public class MenuTab : FontDisplay {
 		Font current_font = BirdFont.get_current_font ();
 		string ttf_name = ExportSettings.get_file_name (current_font) + ".ttf";
 		string ttf_name_mac = ExportSettings.get_file_name_mac (current_font) + ".ttf";
-		
-		print (@"$ttf_name == $ttf_name_mac");
+
 		if (ttf_name == ttf_name_mac) {
 			MainWindow.show_message (t_("You need to choose a different name for the TTF file with Mac adjustmets."));
 			ttf_name_mac = ExportSettings.get_file_name_mac (current_font) + " Mac.ttf";

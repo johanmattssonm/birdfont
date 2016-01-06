@@ -102,6 +102,62 @@ public class Color {
 		}
 	}
 
+	public static Color? parse (string? svg_color) {
+		if (svg_color == null) {
+			return null;
+		}
+		
+		string color = ((!) svg_color).replace ("#", "");
+		uint32 c;
+		string[] arguments;
+		Color parsed = black ();
+		
+		if (color.char_count () == 6) {
+			color.scanf ("%x", out c);
+			parsed.r = (uint8)((c & 0xFF0000) >> 16) / 254.0;
+			parsed.g = (uint8)((c & 0x00FF00) >> 8)/ 254.0;
+			parsed.b = (uint8)(c & 0x0000FF) / 254.0;
+		} else if (color.char_count () == 3) {
+			color.scanf ("%x", out c);
+			parsed.r = (uint8)(((c & 0xF00) >> 4) | ((c & 0xF00) >> 8)) / 254.0;
+			parsed.g = (uint8)((c & 0x0F0) | ((c & 0x0F0) >> 4)) / 254.0;
+			parsed.b = (uint8)(((c & 0x00F) << 4) | (c & 0x00F)) / 254.0;
+		} else if (color.index_of ("%") > -1) {
+			color = color.replace ("rgb", "");
+			color = color.replace (" ", "");
+			color = color.replace ("\t", "");
+			color = color.replace ("%", "");
+			arguments = color.split (",");
+			
+			return_val_if_fail (arguments.length == 3, parsed);
+			arguments[0].scanf ("%lf", out parsed.r);
+			arguments[1].scanf ("%lf", out parsed.g);
+			arguments[2].scanf ("%lf", out parsed.b);
+		} else if (color.index_of ("rgb") > -1) {
+			color = color.replace ("rgb", "");
+			color = color.replace (" ", "");
+			color = color.replace ("\t", "");
+			arguments = color.split (",");
+			
+			return_val_if_fail (arguments.length == 3, parsed);
+			
+			int r, g, b;
+			arguments[0].scanf ("%d", out r);
+			parsed.r = r / 254.0;
+			
+			arguments[1].scanf ("%d", out g);
+			parsed.g = g / 254.0;
+			
+			arguments[2].scanf ("%d", out b);
+			parsed.b = b / 254.0;
+		} else {
+			warning ("Unknown color type: " + color);
+		}
+		
+		
+		return parsed;
+ 	}
+
 	public void to_hsva (out double h, out double s, out double v, out double a) {
 		double red, green, blue;
 		double min, max;
