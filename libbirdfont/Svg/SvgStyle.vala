@@ -19,10 +19,14 @@ namespace BirdFont {
 
 public class SvgStyle {
 	
-	Gee.HashMap<string, string> style;
+	public Gee.HashMap<string, string> style;
 	
 	public Color? stroke = null;
 	public Color? fill = null;
+	public Gradient? stroke_gradient = null;
+	public Gradient? fill_gradient = null;
+
+	public double stroke_width = 0;
 	
 	public SvgStyle () {
 		style = new Gee.HashMap<string, string> ();
@@ -64,9 +68,10 @@ public class SvgStyle {
 		return double.parse (style.get ("stroke-width"));
 	}
 	
-	
 	public static SvgStyle parse (Attributes attributes) {
 		SvgStyle s = new SvgStyle ();
+		double fill_opacity = 1;
+		double stroke_opacity = 1;
 		
 		foreach (Attribute a in attributes) {
 			if (a.get_name () == "style") {
@@ -84,9 +89,29 @@ public class SvgStyle {
 			if (a.get_name () == "fill") {
 				s.style.set ("fill", a.get_content ());
 			}
+
+			if (a.get_name () == "fill-opacity") {
+				fill_opacity = SvgFile.parse_number (a.get_content ());
+			}
+
+			if (a.get_name () == "stroke-opacity") {
+				stroke_opacity = SvgFile.parse_number (a.get_content ());
+			}
 		}
 	
 		s.stroke = Color.parse (s.style.get ("stroke"));
+
+		if (s.fill != null) {
+			Color color = (!) s.fill;
+			color.a = fill_opacity;
+		}
+		
+		if (s.stroke != null) {
+			Color color = (!) s.stroke;
+			color.a = stroke_opacity;
+		}
+		
+		s.stroke_width = SvgFile.parse_number (s.style.get ("stroke-width"));
 		s.fill = Color.parse (s.style.get ("fill"));
 		
 		return s;

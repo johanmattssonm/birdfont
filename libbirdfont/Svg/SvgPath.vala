@@ -32,15 +32,19 @@ public class SvgPath : Object {
 			
 	public override void draw (Context cr, Color? c = null) {
 		cr.save ();
+		apply_transform (cr);		
+		cr.new_path ();
 		
 		foreach (Points p in points) {
-			cr.new_path ();
-			cr.move_to (p.x, p.y);			
+			cr.move_to (p.x, p.y);
 			draw_points (cr, p);
+			
+			if (p.closed) {
+				cr.close_path ();
+			}
 		}
-
+			
 		fill_and_stroke	(cr);
-
 		cr.restore ();
 	}
 

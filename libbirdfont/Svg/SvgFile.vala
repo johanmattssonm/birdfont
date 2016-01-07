@@ -21,7 +21,7 @@ public class SvgFile : GLib.Object {
 	public SvgFile () {		
 	}
 	
-	public Layer parse (string path) {
+	public SvgDrawing parse (string path) {
 		string xml_data;
 		
 		try {
@@ -38,23 +38,27 @@ public class SvgFile : GLib.Object {
 			warning (error.message);
 		}
 		
-		return new Layer ();
+		return new SvgDrawing ();
 	}
 	
-	private Layer parse_svg_file (Tag tag) {
-		Layer layer = new Layer ();
-	
+	private SvgDrawing parse_svg_file (Tag tag) {
+		SvgDrawing drawing = new SvgDrawing ();
+		
 		foreach (Tag t in tag) {
 			string name = t.get_name ();
 			
 			if (name == "g") {
-				parse_layer (layer, t);
+				parse_layer (drawing.root_layer, t);
+			}
+
+			if (name == "defs") {
+				parse_defs (drawing, t);
 			}
 			
-			parse_object (layer, t);
+			parse_object (drawing.root_layer, t);
 		}
 		
-		return layer;
+		return drawing;
 	}
 
 	private void parse_layer (Layer layer, Tag tag) {
@@ -77,12 +81,14 @@ public class SvgFile : GLib.Object {
 		}
 					
 		foreach (Tag t in tag) {
-			if (t.get_name () == "g") {
+			string name = t.get_name ();
+			
+			if (name == "g") {
 				Layer sublayer = new Layer ();
 				parse_layer (layer, t);
 				layer.subgroups.add (sublayer);
 			}
-
+			
 			parse_object (layer, t);
 		}
 
@@ -93,6 +99,89 @@ public class SvgFile : GLib.Object {
 		}
 	}
 
+	void parse_defs (SvgDrawing drawing, Tag tag) {
+		foreach (Tag t in tag) {
+			// FIXME: radial
+			string name = t.get_name ();
+			
+			if (name == "linearGradient") {
+				parse_linear_gradient (drawing, t);
+			}
+		}
+	}
+
+	void parse_linear_gradient (SvgDrawing drawing, Tag tag) {
+		Gradient gradient = new Gradient ();
+		
+		foreach (Attribute attr in tag.get_attributes ()) {
+			string name = attr.get_name ();
+			
+			if (name == "href") {	
+			}
+
+			if (name == "x1") {
+				gradient.x1 = parse_number (attr.get_content ());
+			}
+
+			if (name == "y1") {	
+				gradient.y1 = parse_number (attr.get_content ());
+			}
+			
+			if (name == "x2") {
+				gradient.x2 = parse_number (attr.get_content ());
+			}
+
+			if (name == "y2") {
+				gradient.y2 = parse_number (attr.get_content ());
+			}
+		}
+		
+		foreach (Tag t in tag) {
+			// FIXME: radial
+			string name = t.get_name ();
+			
+			if (name == "stop") {
+				parse_stop (gradient, tag);
+			}
+		}
+	}
+
+	void parse_stop (Gradient gradient, Tag tag) {
+		SvgStyle style = SvgStyle.parse (tag.get_attributes ());
+		Stop stop = new Stop ();
+		
+		foreach (Attribute attr in tag.get_attributes ()) {
+			string name = attr.get_name ();
+			
+			if (name == "offset") {
+				string stop_offset = attr.get_content ();
+				
+				if (stop_offset.index_of ("%") > -1) {
+					stop_offset = stop_offset.replace ("%", "");
+					stop.offset = parse_number (stop_offset) / 100.0;
+				} else {
+					stop.offset = parse_number (stop_offset);
+				}
+			}
+		}
+		
+		string? stop_color = style.style.get ("stop-color");
+		string? stop_opacity = style.style.get ("stop-opacity");
+		Color? color = Color.black ();
+		
+		if (stop_color != null) {
+			color = Color.parse (stop_color);
+			
+			if (color != null) {
+				stop.color = (!) color;
+			}
+		}
+
+		if (stop_opacity != null && color != null) {
+			((!) color).a = parse_number (stop_opacity);
+		}
+	}
+	
 	void parse_object (Layer layer, Tag tag) {
 		string name = tag.get_name ();
 		
@@ -243,16 +332,22 @@ public class SvgFile : GLib.Object {
 		return transform;
 	}
 
-    private string remove_unit (string d) {
+    private static string remove_unit (string d) {
 		string s = d.replace ("pt", "");
 		s = s.replace ("pc", "");
 		s = s.replace ("mm", "");
 		s = s.replace ("cm", "");
 		s = s.replace ("in", "");
+		s = s.replace ("px", "");
 		return s;
 	}
     
-	private double parse_number (string d) {
+	public static double parse_number (string? number_with_unit) {
+		if (number_with_unit == null) {
+			return 0;
+		}
+		
+		string d = (!) number_with_unit;
 		string s = remove_unit (d);
 		double n = SvgParser.parse_double (s);
 		
@@ -397,12 +492,17 @@ public class SvgFile : GLib.Object {
 				points.add (bezier_points[i].x0);
 				points.add (bezier_points[i].y0);
 			} else if (bezier_points[i].type == 'z') {
+				points.closed = true;
 				path_data.add (points);
 				points = new Points ();
 			} else {
 				string type = (!) bezier_points[i].type.to_string ();
 				warning (@"SVG conversion not implemented for $type");
 			}
+		}
+
+		if (points.point_data.size > 0) {
+			path_data.add (points);
 		}
 
 		return path_data;

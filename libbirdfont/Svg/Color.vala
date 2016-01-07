@@ -111,6 +111,10 @@ public class Color {
 		uint32 c;
 		string[] arguments;
 		Color parsed = black ();
+
+		if (color == "none") {
+			return null;
+		}
 		
 		if (color.char_count () == 6) {
 			color.scanf ("%x", out c);

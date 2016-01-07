@@ -48,6 +48,20 @@ public class Doubles : GLib.Object {
 		data[size] = d;
 		size++;
 	}
+	
+	public double get_double (int index) {
+		if (unlikely (index < 0)) {
+			warning ("index < 0");
+			return 0;
+		}
+
+		if (unlikely (index >= size)) {
+			warning ("index >= size");
+			return 0;
+		}
+		
+		return data[index];
+	}
 }
 
 }

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2015 Johan Mattsson
+	Copyright (C) 2016 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -87,22 +87,97 @@ public abstract class Object : GLib.Object {
 
 	public void fill_and_stroke (Context cr) {
 		Color fill, stroke;
+		bool need_fill = style.fill_gradient != null || style.fill != null;
+		bool need_stroke = style.stroke_gradient != null || style.stroke != null;
+		
+		cr.set_line_width (style.stroke_width);
+	
+		if (style.fill_gradient != null) {
+			apply_gradient (cr, (!) style.fill_gradient);
+		}
 		
 		if (style.fill != null) {
 			fill = (!) style.fill;
 			cr.set_source_rgba (fill.r, fill.g, fill.b, fill.a);
-			
-			if (style.stroke != null) {
+		}
+
+		if (need_fill) {
+			if (need_stroke) {
 				cr.fill_preserve ();
 			} else {
 				cr.fill ();
-			}
+			}	
+		}
+
+		if (style.stroke_gradient != null) {
+			apply_gradient (cr, (!) style.stroke_gradient);
 		}
 		
 		if (style.stroke != null) {
 			stroke = (!) style.stroke;
 			cr.set_source_rgba (stroke.r, stroke.g, stroke.b, stroke.a);
+		}
+
+		if (need_stroke) {
 			cr.stroke ();
+		}
+	}
+	
+	public void apply_gradient (Context cr, Gradient? gradient) {
+		Cairo.Pattern pattern;
+		Gradient g;
+		
+		if (gradient != null) {
+			g = (!) gradient;
+			
+			pattern = new Cairo.Pattern.linear (
+				g.x1,
+				g.y1,
+				g.x2,
+				g.y2);
+			
+			foreach (Stop s in g.stops) {
+				Color c = s.color;
+				pattern.add_color_stop_rgba (s.offset, c.r, c.g, c.b, c.a);
+			}
+			
+			cr.set_source (pattern);
+		}
+	}
+	
+	public void apply_transform (Context cr) {
+		foreach (SvgTransform transform in transforms) {
+			if (transform.type == TransformType.SCALE) {
+				if (transform.arguments.size == 1) {
+					double s = transform.arguments.get_double (0);
+					cr.scale (s, s);
+				} else if (transform.arguments.size == 2) {
+					double s0 = transform.arguments.get_double (0);
+					double s1 = transform.arguments.get_double (1);
+					cr.scale (s0, s1);
+				}
+			} else if (transform.type == TransformType.TRANSLATE) {
+				if (transform.arguments.size == 1) {
+					double s = transform.arguments.get_double (0);
+					cr.translate (s, 0);
+				} else if (transform.arguments.size == 2) {
+					double s0 = transform.arguments.get_double (0);
+					double s1 = transform.arguments.get_double (1);
+					cr.translate (s0, s1);
+				}
+			} else if (transform.type == TransformType.MATRIX) {
+				if (transform.arguments.size == 1) {
+					double s0 = transform.arguments.get_double (0);
+					double s1 = transform.arguments.get_double (1);
+					double s2 = transform.arguments.get_double (2);
+					double s3 = transform.arguments.get_double (3);					
+					double s4 = transform.arguments.get_double (4);
+					double s5 = transform.arguments.get_double (5);
+					
+					Matrix matrix = Matrix (s0, s1, s2, s3, s4, s5);
+					cr.set_matrix (matrix);
+				}
+			}
 		}
 	}
 }

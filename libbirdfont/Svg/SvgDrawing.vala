@@ -12,20 +12,14 @@
 	Lesser General Public License for more details.
 */
 
-using Cairo;
+using B;
+using Math;
 
 namespace BirdFont {
 
-public class Points : GLib.Object {
-	public Doubles point_data = new Doubles.for_capacity (100);
-	public double x = 0;
-	public double y = 0;
-	public bool closed = false;
-
-	public void add (double p) {
-		point_data.add (p);
-	}
+public class SvgDrawing {
+	public Layer root_layer = new Layer ();
+	public Gee.ArrayList<Gradient> gradients = new Gee.ArrayList<Gradient> ();
 }
 
 }
-

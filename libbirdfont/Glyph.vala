@@ -1793,6 +1793,7 @@ public class Glyph : FontDisplay {
 			cr.save ();
 			cr.new_path ();
 			
+			// FIXME: layer transforms
 			foreach (Object o in get_visible_objects ()) {
 				if (o is PathObject) {
 					Path p = ((PathObject) o).get_path ();
