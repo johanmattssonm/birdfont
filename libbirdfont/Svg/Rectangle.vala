@@ -13,17 +13,20 @@
 */
 
 using Cairo;
+using Math;
 
 namespace BirdFont {
 
-public class SvgPath : Object {	
-	public Gee.ArrayList<Points> points = new Gee.ArrayList<Points> ();
-	
-	public SvgPath () {
-	}
+public class Rectangle : Object {
 
-	public SvgPath.create_copy (SvgPath p) {
-		Object.copy_attributes (p, this);
+	public double x = 0;
+	public double y = 0;
+	public double width = 0;
+	public double height = 0;
+	public double rx = 0;
+	public double ry = 0;
+
+	public Rectangle () {
 	}
 	
 	public override bool is_over (double x, double y) {
@@ -33,30 +36,37 @@ public class SvgPath : Object {
 	public override void draw (Context cr, Color? c = null) {
 		cr.save ();
 		
-		foreach (Points p in points) {
-			cr.new_path ();
-			cr.move_to (p.x, p.y);			
-			draw_points (cr, p);
+		if (rx == 0 && ry == 0) {
+			cr.rectangle (x, y, width, height);
+		} else {
+			draw_rounded_corners (cr);
 		}
-
-		fill_and_stroke	(cr);
+		
+		fill_and_stroke (cr);
 
 		cr.restore ();
 	}
-
-	public void draw_points (Context cr, Points points) {
-		Doubles p = points.point_data;
-		
-		return_if_fail (p.size % 6 == 0);
-		
-		for (int i = 0; i < p.size; i += 6) {
-			cr.curve_to (p.data[i], p.data[i + 1], 
-				p.data[i + 2], p.data[i + 3],
-				p.data[i + 4], p.data[i + 5]);
-		}		
+	
+	public void draw_rounded_corners (Context cr) {
+		cr.new_path ();
+		elliptical_arc (cr, x + width - rx, y + ry, -PI / 2, 0);
+		elliptical_arc (cr, x + width - rx, y + height - ry, 0, PI / 2);
+		elliptical_arc (cr, x + rx, y + height - ry, PI / 2, PI);
+		elliptical_arc (cr, x + rx, y + ry, PI, PI + PI / 2);
+		cr.close_path ();
 	}
-
+	
+	public void elliptical_arc (Context cr, double x, double y, double angle_start, double angle_stop) {
+		cr.save ();
+		cr.translate (x + rx, y + ry);
+		cr.scale (rx, ry);
+		cr.arc (0, 0, 1, angle_start, angle_stop);
+		cr.restore ();
+	}
+	
 	public override void move (double dx, double dy) {
+		x += dx;
+		y += dy;
 	}
 	
 	public override void update_region_boundaries () {
@@ -73,11 +83,20 @@ public class SvgPath : Object {
 	}
 	
 	public override Object copy () {
-		return new SvgPath.create_copy (this);
+		Rectangle r = new Rectangle ();
+		
+		r.x = x;
+		r.y = y;
+		r.width = width;
+		r.height = height;
+		
+		Object.copy_attributes (this, r);
+		
+		return r;
 	}
 
 	public override string to_string () {
-		return "SvgPath";
+		return "Rectangle";
 	}
 }
 

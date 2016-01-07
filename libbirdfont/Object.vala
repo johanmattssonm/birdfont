@@ -24,20 +24,20 @@ public abstract class Object : GLib.Object {
 	public SvgStyle style = new SvgStyle ();
 	public Gee.ArrayList<SvgTransform> transforms = new Gee.ArrayList<SvgTransform> ();
 	
-	public abstract Color? color { get; set; } // FIXME: keep this in svg style
-	public abstract Color? stroke_color { get; set; }
-	public abstract Gradient? gradient { get; set; }
+	public virtual Color? color { get; set; } // FIXME: keep this in svg style
+	public virtual Color? stroke_color { get; set; }
+	public virtual Gradient? gradient { get; set; }
 
 	/** Path boundaries */
-	public abstract double xmax { get; set; }
-	public abstract double xmin { get; set; }
-	public abstract double ymax { get; set; }
-	public abstract double ymin { get; set; }
+	public virtual double xmax { get; set; }
+	public virtual double xmin { get; set; }
+	public virtual double ymax { get; set; }
+	public virtual double ymin { get; set; }
 	
-	public abstract double rotation { get; set; }
-	public abstract double stroke { get; set; }
-	public abstract LineCap line_cap { get; set; default = LineCap.BUTT; }
-	public abstract bool fill { get; set; }
+	public virtual double rotation { get; set; }
+	public virtual double stroke { get; set; }
+	public virtual LineCap line_cap { get; set; default = LineCap.BUTT; }
+	public virtual bool fill { get; set; }
 		
 	public Object () {	
 	}
@@ -83,6 +83,27 @@ public abstract class Object : GLib.Object {
 	
 	public virtual string to_string () {
 		return "Object";
+	}
+
+	public void fill_and_stroke (Context cr) {
+		Color fill, stroke;
+		
+		if (style.fill != null) {
+			fill = (!) style.fill;
+			cr.set_source_rgba (fill.r, fill.g, fill.b, fill.a);
+			
+			if (style.stroke != null) {
+				cr.fill_preserve ();
+			} else {
+				cr.fill ();
+			}
+		}
+		
+		if (style.stroke != null) {
+			stroke = (!) style.stroke;
+			cr.set_source_rgba (stroke.r, stroke.g, stroke.b, stroke.a);
+			cr.stroke ();
+		}
 	}
 }
 

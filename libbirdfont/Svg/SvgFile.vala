@@ -132,7 +132,41 @@ public class SvgFile : GLib.Object {
 	}
 	
 	private void parse_rect (Layer layer, Tag tag) {
+		Rectangle rectangle = new Rectangle ();
 
+		foreach (Attribute attr in tag.get_attributes ()) {
+			string attribute = attr.get_name ();
+			
+			if (attribute == "x") {
+				rectangle.x = parse_number (attr.get_content ());
+			}
+
+			if (attribute == "y") {
+				rectangle.y = parse_number (attr.get_content ());
+			}
+
+			if (attribute == "width") {
+				rectangle.width = parse_number (attr.get_content ());
+			}
+
+			if (attribute == "height") {
+				rectangle.height = parse_number (attr.get_content ());
+			}
+			
+			if (attribute == "rx") {
+				rectangle.rx = parse_number (attr.get_content ());
+			}
+
+			if (attribute == "ry") {
+				rectangle.ry = parse_number (attr.get_content ());
+			}
+		}
+		
+		rectangle.transforms = get_transform (tag.get_attributes ());
+		rectangle.style = SvgStyle.parse (tag.get_attributes ());
+		rectangle.visible = is_visible (tag);	
+		
+		layer.add_object (rectangle);
 	}
 	
 	private void parse_circle (Layer layer, Tag tag) {
@@ -209,7 +243,7 @@ public class SvgFile : GLib.Object {
 		return transform;
 	}
 
-    private void remove_unit (string d) {
+    private string remove_unit (string d) {
 		string s = d.replace ("pt", "");
 		s = s.replace ("pc", "");
 		s = s.replace ("mm", "");
@@ -310,7 +344,7 @@ public class SvgFile : GLib.Object {
 	}
 
 	private Gee.ArrayList<SvgTransform> get_transform (Attributes attributes) {
-		foreach (Attribute attr in tag.get_attributes ()) {
+		foreach (Attribute attr in attributes) {
 			if (attr.get_name () == "transform") {
 				return parse_transform (attr.get_content ());
 			}
