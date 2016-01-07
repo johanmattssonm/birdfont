@@ -637,7 +637,7 @@ public class SvgParser {
 		bezier_points[1].y0 = y2;
 		
 		g = MainWindow.get_current_glyph ();
-		move_and_resize (bezier_points, 4, false, 1, g);
+		move_and_resize (bezier_points, 2, false, 1, g);
 					
 		p = new Path ();	
 		
