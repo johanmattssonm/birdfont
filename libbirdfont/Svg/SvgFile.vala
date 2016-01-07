@@ -132,6 +132,7 @@ public class SvgFile : GLib.Object {
 	}
 	
 	private void parse_rect (Layer layer, Tag tag) {
+
 	}
 	
 	private void parse_circle (Layer layer, Tag tag) {
@@ -207,7 +208,35 @@ public class SvgFile : GLib.Object {
 		
 		return transform;
 	}
+
+    private void remove_unit (string d) {
+		string s = d.replace ("pt", "");
+		s = s.replace ("pc", "");
+		s = s.replace ("mm", "");
+		s = s.replace ("cm", "");
+		s = s.replace ("in", "");
+		return s;
+	}
+    
+	private double parse_number (string d) {
+		string s = remove_unit (d);
+		double n = SvgParser.parse_double (s);
 		
+		if (d.has_suffix ("pt")) {
+			n *= 1.25;
+		} else if (d.has_suffix ("pc")) {
+			n *= 15;
+		} else if (d.has_suffix ("mm")) {
+			n *= 3.543307;
+		} else if (d.has_suffix ("cm")) {
+			n *= 35.43307;
+		} else if (d.has_suffix ("in")) {
+			n *= 90;
+		}
+		
+		return n;
+	}
+	
 	private SvgTransform scale (string function) {
 		string parameters = get_transform_parameters (function);
 		string[] p = parameters.split (" ");
@@ -280,6 +309,16 @@ public class SvgFile : GLib.Object {
 		return !hidden;
 	}
 
+	private Gee.ArrayList<SvgTransform> get_transform (Attributes attributes) {
+		foreach (Attribute attr in tag.get_attributes ()) {
+			if (attr.get_name () == "transform") {
+				return parse_transform (attr.get_content ());
+			}
+		}
+		
+		return new Gee.ArrayList<SvgTransform> ();
+	}
+	
 	private void parse_path (Layer layer, Tag tag) {
 		SvgPath path = new SvgPath ();
 
@@ -287,12 +326,9 @@ public class SvgFile : GLib.Object {
 			if (attr.get_name () == "d") {
 				path.points = parse_points (attr.get_content ());
 			}
-
-			if (attr.get_name () == "transform") {
-				path.transforms = parse_transform (attr.get_content ());
-			}
 		}
 		
+		path.transforms = get_transform (tag.get_attributes ());
 		path.style = SvgStyle.parse (tag.get_attributes ());
 		path.visible = is_visible (tag);	
 		
