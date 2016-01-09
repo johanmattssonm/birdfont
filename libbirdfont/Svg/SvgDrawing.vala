@@ -19,7 +19,7 @@ namespace BirdFont {
 
 public class SvgDrawing {
 	public Layer root_layer = new Layer ();
-	public Gee.ArrayList<Gradient> gradients = new Gee.ArrayList<Gradient> ();
+	public Defs defs = new Defs ();
 }
 
 }

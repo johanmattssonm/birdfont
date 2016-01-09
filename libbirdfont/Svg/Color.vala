@@ -266,7 +266,8 @@ public class Color {
 	}
 	
 	public string to_string () {
-		return @"r: $r, g: $g, b: $b, a: $a";
+		string alpha = Font.to_hex_code ((unichar) Math.rint (a  * 254));
+		return @"$(to_rgb_hex ())" + alpha;
 	}
 	
 	public Color copy () {

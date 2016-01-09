@@ -13,6 +13,7 @@
 */
 
 using B;
+using Cairo;
 
 namespace BirdFont {
 
@@ -28,6 +29,46 @@ public class SvgTransform : GLib.Object {
 	public Doubles arguments = new Doubles.for_capacity (10);
 	
 	public SvgTransform () {
+	}
+	
+	public Matrix get_matrix () {
+		Matrix matrix;
+		
+		matrix = Matrix.identity ();
+		
+		if (type == TransformType.SCALE) {
+			if (arguments.size == 1) {
+				double s = arguments.get_double (0);
+				matrix.scale (s, s);
+				return matrix;
+			} else if (arguments.size == 2) {
+				double s0 = arguments.get_double (0);
+				double s1 = arguments.get_double (1);
+				matrix.scale (s0, s1);
+			}
+		} else if (type == TransformType.TRANSLATE) {
+			if (arguments.size == 1) {
+				double s = arguments.get_double (0);
+				matrix.translate (s, 0);
+			} else if (arguments.size == 2) {
+				double s0 = arguments.get_double (0);
+				double s1 = arguments.get_double (1);
+				matrix.translate (s0, s1);
+			}
+		} else if (type == TransformType.MATRIX) {
+			if (arguments.size == 6) {
+				double s0 = arguments.get_double (0);
+				double s1 = arguments.get_double (1);
+				double s2 = arguments.get_double (2);
+				double s3 = arguments.get_double (3);					
+				double s4 = arguments.get_double (4);
+				double s5 = arguments.get_double (5);
+				
+				matrix = Matrix (s0, s1, s2, s3, s4, s5);
+			}
+		}
+		
+		return matrix;
 	}
 }
 

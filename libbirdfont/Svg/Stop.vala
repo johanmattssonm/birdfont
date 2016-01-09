@@ -30,6 +30,10 @@ public class Stop : GLib.Object {
 		s.offset = offset;
 		return s;
 	}
+	
+	public string to_string () {
+		return @"Stop: $(offset), " + color.to_string ();
+	}
 }
 
 }

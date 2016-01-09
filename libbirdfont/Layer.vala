@@ -25,12 +25,12 @@ public class Layer : GLib.Object {
 	public Gradient? gradient = null;
 	public bool single_path = false;
 	
-	public Gee.ArrayList<SvgTransform> transforms;
+	public SvgTransforms transforms;
 	
 	public Layer () {
 		objects = new ObjectGroup ();
 		subgroups = new Gee.ArrayList<Layer> ();
-		transforms = new Gee.ArrayList<SvgTransform> ();
+		transforms = new SvgTransforms ();
 	}
 
 	public int index_of (Layer sublayer) {

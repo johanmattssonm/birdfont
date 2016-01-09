@@ -25,7 +25,9 @@ public class Gradient : GLib.Object {
 
 	public Gee.ArrayList<Stop> stops;
 	
-	public int id = -1;
+	public string id = "";
+	public string? href = null;
+	public SvgTransforms transforms;
 
 	public Gradient () {
 		x1 = 0;
@@ -33,6 +35,7 @@ public class Gradient : GLib.Object {
 		x2 = 0;
 		y2 = 0;
 		stops = new Gee.ArrayList<Stop> ();
+		transforms = new SvgTransforms ();
 	}
 	
 	public Gradient copy () {
@@ -47,6 +50,29 @@ public class Gradient : GLib.Object {
 		}
 		
 		return g;
+	}
+	
+	public void copy_stops (Gradient g) {
+		foreach (Stop stop in g.stops) {
+			stops.add (stop.copy ());
+		}
+	}
+	
+	public string to_string () {
+		StringBuilder description = new StringBuilder ();
+		description.append ("Gradient: ");
+		description.append (@"x1=$x1, y1=$y1, x2=$x2, y2=$y2");
+		
+		foreach (Stop stop in stops) {
+			description.append (" ");
+			description.append (stop.to_string ());
+		}
+		
+		return description.str;
+	}
+	
+	public Matrix get_matrix () {
+		return transforms.get_matrix ();
 	}
 }
 

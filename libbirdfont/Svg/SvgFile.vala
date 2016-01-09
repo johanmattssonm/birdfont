@@ -18,6 +18,8 @@ namespace BirdFont {
 
 public class SvgFile : GLib.Object {
 
+	SvgDrawing drawing;
+
 	public SvgFile () {		
 	}
 	
@@ -42,7 +44,7 @@ public class SvgFile : GLib.Object {
 	}
 	
 	private SvgDrawing parse_svg_file (Tag tag) {
-		SvgDrawing drawing = new SvgDrawing ();
+		drawing = new SvgDrawing ();
 		
 		foreach (Tag t in tag) {
 			string name = t.get_name ();
@@ -108,15 +110,37 @@ public class SvgFile : GLib.Object {
 				parse_linear_gradient (drawing, t);
 			}
 		}
+		
+		foreach (Gradient gradient in drawing.defs.gradients) {
+			if (gradient.href != null) {
+				Gradient? referenced;
+				referenced = drawing.defs.get_gradient_for_id ((!) gradient.href);
+				
+				if (referenced != null) {
+					gradient.copy_stops ((!) referenced);
+				}
+				
+				gradient.href = null;
+			}
+		}
 	}
 
 	void parse_linear_gradient (SvgDrawing drawing, Tag tag) {
 		Gradient gradient = new Gradient ();
 		
+		drawing.defs.add (gradient);
+		
 		foreach (Attribute attr in tag.get_attributes ()) {
 			string name = attr.get_name ();
 			
-			if (name == "href") {	
+			// FIXME: gradientUnits
+			
+			if (name == "gradientTransform") {
+				gradient.transforms = parse_transform (attr.get_content ());
+			}
+
+			if (name == "href") {
+				gradient.href = attr.get_content ();
 			}
 
 			if (name == "x1") {
@@ -134,6 +158,10 @@ public class SvgFile : GLib.Object {
 			if (name == "y2") {
 				gradient.y2 = parse_number (attr.get_content ());
 			}
+
+			if (name == "id") {
+				gradient.id = attr.get_content ();
+			}
 		}
 		
 		foreach (Tag t in tag) {
@@ -141,14 +169,16 @@ public class SvgFile : GLib.Object {
 			string name = t.get_name ();
 			
 			if (name == "stop") {
-				parse_stop (gradient, tag);
+				parse_stop (gradient, t);
 			}
 		}
 	}
 
 	void parse_stop (Gradient gradient, Tag tag) {
-		SvgStyle style = SvgStyle.parse (tag.get_attributes ());
+		SvgStyle style = SvgStyle.parse (drawing.defs, tag.get_attributes ());
 		Stop stop = new Stop ();
+		
+		gradient.stops.add (stop);
 		
 		foreach (Attribute attr in tag.get_attributes ()) {
 			string name = attr.get_name ();
@@ -252,7 +282,7 @@ public class SvgFile : GLib.Object {
 		}
 		
 		rectangle.transforms = get_transform (tag.get_attributes ());
-		rectangle.style = SvgStyle.parse (tag.get_attributes ());
+		rectangle.style = SvgStyle.parse (drawing.defs,tag.get_attributes ());
 		rectangle.visible = is_visible (tag);	
 		
 		layer.add_object (rectangle);
@@ -268,12 +298,12 @@ public class SvgFile : GLib.Object {
 	}
 	
 	// FIXME: reverse order?
-	public Gee.ArrayList<SvgTransform> parse_transform (string transforms) {
+	public SvgTransforms parse_transform (string transforms) {
 		string[] functions;
 		string transform = transforms;
-		Gee.ArrayList<SvgTransform> transform_functions;
+		SvgTransforms transform_functions;
 		
-		transform_functions = new Gee.ArrayList<SvgTransform> ();
+		transform_functions = new SvgTransforms ();
 		
 		transform = transform.replace ("\t", " ");
 		transform = transform.replace ("\n", " ");
@@ -438,14 +468,14 @@ public class SvgFile : GLib.Object {
 		return !hidden;
 	}
 
-	private Gee.ArrayList<SvgTransform> get_transform (Attributes attributes) {
+	private SvgTransforms get_transform (Attributes attributes) {
 		foreach (Attribute attr in attributes) {
 			if (attr.get_name () == "transform") {
 				return parse_transform (attr.get_content ());
 			}
 		}
 		
-		return new Gee.ArrayList<SvgTransform> ();
+		return new SvgTransforms ();
 	}
 	
 	private void parse_path (Layer layer, Tag tag) {
@@ -458,7 +488,7 @@ public class SvgFile : GLib.Object {
 		}
 		
 		path.transforms = get_transform (tag.get_attributes ());
-		path.style = SvgStyle.parse (tag.get_attributes ());
+		path.style = SvgStyle.parse (drawing.defs, tag.get_attributes ());
 		path.visible = is_visible (tag);	
 		
 		layer.add_object (path);

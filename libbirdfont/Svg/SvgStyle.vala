@@ -68,7 +68,7 @@ public class SvgStyle {
 		return double.parse (style.get ("stroke-width"));
 	}
 	
-	public static SvgStyle parse (Attributes attributes) {
+	public static SvgStyle parse (Defs? d, Attributes attributes) {
 		SvgStyle s = new SvgStyle ();
 		double fill_opacity = 1;
 		double stroke_opacity = 1;
@@ -99,8 +99,17 @@ public class SvgStyle {
 			}
 		}
 	
+		s.stroke_width = SvgFile.parse_number (s.style.get ("stroke-width"));
 		s.stroke = Color.parse (s.style.get ("stroke"));
+		s.fill = Color.parse (s.style.get ("fill"));
 
+		if (d != null) {
+			Defs defs = (!) d;
+
+			s.stroke_gradient = defs.get_gradient_for_url (s.style.get ("stroke"));
+			s.fill_gradient = defs.get_gradient_for_url (s.style.get ("fill"));
+		}
+		
 		if (s.fill != null) {
 			Color color = (!) s.fill;
 			color.a = fill_opacity;
@@ -110,9 +119,6 @@ public class SvgStyle {
 			Color color = (!) s.stroke;
 			color.a = stroke_opacity;
 		}
-		
-		s.stroke_width = SvgFile.parse_number (s.style.get ("stroke-width"));
-		s.fill = Color.parse (s.style.get ("fill"));
 		
 		return s;
 	}
