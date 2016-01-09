@@ -80,6 +80,17 @@ public class Defs {
 		
 		return ((!) attribute).has_prefix ("url");
 	}
+
+	public Defs copy () {
+		Defs d = new Defs ();
+		
+		foreach (Gradient g in gradients) {
+			d.add (g);
+		}
+		
+		return d;
+	}
+
 }
 
 }

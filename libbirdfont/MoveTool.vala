@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012 2013 2015 Johan Mattsson
+	Copyright (C) 2012 2013 2015 2016 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -127,24 +127,19 @@ public class MoveTool : Tool {
 
 			delta_x = -dx;
 			delta_y = -dy;
+	
+			foreach (Layer group in glyph.selected_groups) {
+				if (group.gradient != null) {
+					Gradient g = (!) group.gradient;
+					g.x1 += delta_x;
+					g.x2 += delta_x;
+					g.y1 += delta_y;
+					g.y2 += delta_y;
+				}
+			}
 			
-			if (glyph.color_svg_data != null) {
-				glyph.svg_x += delta_x;
-				glyph.svg_y += delta_y;
-			} else {		
-				foreach (Layer group in glyph.selected_groups) {
-					if (group.gradient != null) {
-						Gradient g = (!) group.gradient;
-						g.x1 += delta_x;
-						g.x2 += delta_x;
-						g.y1 += delta_y;
-						g.y2 += delta_y;
-					}
-				}
-				
-				foreach (Object object in glyph.active_paths) {
-					object.move (delta_x, delta_y);
-				}
+			foreach (Object object in glyph.active_paths) {
+				object.move (delta_x, delta_y);
 			}
 		}
 
@@ -208,35 +203,33 @@ public class MoveTool : Tool {
 		
 		glyph.store_undo_state ();
 		group_selection = false;
+	
+		group = glyph.get_path_at (x, y);
 		
-		if (glyph.color_svg_data == null) {
-			group = glyph.get_path_at (x, y);
+		if (group != null) {
+			g = (!) group;
+			return_if_fail (g.objects.objects.size > 0);
+			object = g.objects.objects.get (0);
+			selected = glyph.active_paths_contains (object);
 			
-			if (group != null) {
-				g = (!) group;
-				return_if_fail (g.objects.objects.size > 0);
-				object = g.objects.objects.get (0);
-				selected = glyph.active_paths_contains (object);
-				
-				if (!selected && !KeyBindings.has_shift ()) {
-					glyph.clear_active_paths ();
-				} 
-				
-				foreach (Object lp in g.objects) {
-					if (selected && KeyBindings.has_shift ()) {
-						glyph.selected_groups.remove ((!) group);
-						glyph.active_paths.remove (lp);
-					} else {
-						glyph.add_active_object ((!) group, lp);
-					}
-				}
-			} else if (!KeyBindings.has_shift ()) {
+			if (!selected && !KeyBindings.has_shift ()) {
 				glyph.clear_active_paths ();
-			}
+			} 
 			
-			update_selection_boundaries ();
+			foreach (Object lp in g.objects) {
+				if (selected && KeyBindings.has_shift ()) {
+					glyph.selected_groups.remove ((!) group);
+					glyph.active_paths.remove (lp);
+				} else {
+					glyph.add_active_object ((!) group, lp);
+				}
+			}
+		} else if (!KeyBindings.has_shift ()) {
+			glyph.clear_active_paths ();
 		}
 		
+		update_selection_boundaries ();
+
 		move_path = true;
 		
 		last_x = x;
@@ -293,25 +286,6 @@ public class MoveTool : Tool {
 		update_selection_boundaries ();
 		objects_moved ();
 		GlyphCanvas.redraw ();
-	}
-
-	static void draw_selection_box (Context cr) {
-		double x = Math.fmin (selection_x, last_x);
-		double y = Math.fmin (selection_y, last_y);
-
-		double w = Math.fabs (selection_x - last_x);
-		double h = Math.fabs (selection_y - last_y);
-		
-		Glyph glyph = MainWindow.get_current_glyph ();
-		
-		if (glyph.color_svg_data == null) {
-			cr.save ();			
-			Theme.color (cr, "Foreground 1");
-			cr.set_line_width (2);
-			cr.rectangle (x, y, w, h);
-			cr.stroke ();
-			cr.restore ();
-		}
 	}
 	
 	public static void get_selection_box_boundaries (out double x, out double y, out double w, out double h) {
@@ -525,6 +499,23 @@ public class MoveTool : Tool {
 		
 		update_selection_boundaries ();
 		objects_moved ();
+	}
+
+	static void draw_selection_box (Context cr) {
+		double x = Math.fmin (selection_x, last_x);
+		double y = Math.fmin (selection_y, last_y);
+
+		double w = Math.fabs (selection_x - last_x);
+		double h = Math.fabs (selection_y - last_y);
+		
+		Glyph glyph = MainWindow.get_current_glyph ();
+		
+		cr.save ();			
+		Theme.color (cr, "Foreground 1");
+		cr.set_line_width (2);
+		cr.rectangle (x, y, w, h);
+		cr.stroke ();
+		cr.restore ();
 	}
 }
 

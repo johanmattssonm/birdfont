@@ -27,7 +27,6 @@ packages with a -dev or -devel affix:
     libwebkitgtk-3.0-dev 
     libnotify-dev
     libsqlite3-dev
-    librsvg2-dev
     libxmlbird-dev
 
 XML Bird is available from [birdfont.org][xmlbird].

@@ -13,6 +13,7 @@
 */
 
 using B;
+using Cairo;
 
 namespace BirdFont {
 
@@ -23,29 +24,50 @@ public class SvgFile : GLib.Object {
 	public SvgFile () {		
 	}
 	
-	public SvgDrawing parse (string path) {
+	public EmbeddedSvg parse (string path) {
 		string xml_data;
 		
 		try {
 			FileUtils.get_contents (path, out xml_data);
-			XmlParser xmlparser = new XmlParser (xml_data);
-			
-			if (xmlparser.validate ()) {
-				Tag root = xmlparser.get_root_tag ();
-				return parse_svg_file (root);
-			} else {
-				warning ("Invalid xml file.");
-			}
+			return parse_data (xml_data);
 		} catch (GLib.Error error) {
 			warning (error.message);
 		}
 		
-		return new SvgDrawing ();
+		SvgDrawing drawing = new SvgDrawing ();
+		return new EmbeddedSvg (drawing);
+	}
+
+	public EmbeddedSvg parse_data (string xml_data) {
+		XmlParser xmlparser = new XmlParser (xml_data);
+		SvgDrawing drawing = new SvgDrawing ();	
+		
+		if (xmlparser.validate ()) {
+			Tag root = xmlparser.get_root_tag ();
+			drawing = parse_svg_file (root);
+			EmbeddedSvg svg = new EmbeddedSvg (drawing);
+			svg.svg_data = xml_data;
+			return svg;
+		} else {
+			warning ("Invalid xml file.");
+		}
+	
+		return new EmbeddedSvg (drawing);
 	}
 	
 	private SvgDrawing parse_svg_file (Tag tag) {
 		drawing = new SvgDrawing ();
-		
+
+		foreach (Attribute attr in tag.get_attributes ()) {	
+			if (attr.get_name () == "width") {
+				drawing.width = parse_number (attr.get_content ());
+			}
+
+			if (attr.get_name () == "height") {
+				drawing.height = parse_number (attr.get_content ());
+			}
+		}
+				
 		foreach (Tag t in tag) {
 			string name = t.get_name ();
 			

@@ -12,14 +12,57 @@
 	Lesser General Public License for more details.
 */
 
+
 using B;
+using Cairo;
 using Math;
 
 namespace BirdFont {
 
-public class SvgDrawing {
+public class SvgDrawing : Object {
 	public Layer root_layer = new Layer ();
 	public Defs defs = new Defs ();
+
+	public double x = 0;
+	public double y = 0;
+	public double width = 0;
+	public double height = 0;
+	
+	public override void update_region_boundaries () {
+	}
+	
+	public override bool is_over (double x, double y) {
+		return (this.x <= x <= this.x + width) 
+			&& (this.y <= y <= this.y + height);
+	}
+	
+	public override void draw (Context cr) {
+		foreach (Object o in root_layer.get_visible_objects ().objects) {
+			o.draw (cr);
+		}
+	}
+	
+	public override Object copy () {
+		SvgDrawing drawing = new SvgDrawing ();
+		drawing.root_layer = root_layer.copy ();
+		drawing.defs = defs.copy ();
+		return drawing;
+	}
+	
+	public override void move (double dx, double dy) {
+		x += dx;
+		y += dy;
+	}
+	
+	public override void rotate (double theta, double xc, double yc) {
+	}
+	
+	public override bool is_empty () {
+		return false;
+	}
+	
+	public override void resize (double ratio_x, double ratio_y) {
+	}
 }
 
 }

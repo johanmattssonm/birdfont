@@ -33,7 +33,7 @@ public class Rectangle : Object {
 		return false;
 	}
 			
-	public override void draw (Context cr, Color? c = null) {
+	public override void draw (Context cr) {
 		cr.save ();
 		apply_transform (cr);
 		

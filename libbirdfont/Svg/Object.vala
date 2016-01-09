@@ -56,7 +56,7 @@ public abstract class Object : GLib.Object {
 
 	public abstract void update_region_boundaries ();
 	public abstract bool is_over (double x, double y);
-	public abstract void draw (Context cr, Color? c = null);
+	public abstract void draw (Context cr);
 	public abstract Object copy ();
 	public abstract void move (double dx, double dy);
 	public abstract void rotate (double theta, double xc, double yc);
@@ -126,11 +126,7 @@ public abstract class Object : GLib.Object {
 		if (gradient != null) {
 			g = (!) gradient;
 			
-			pattern = new Cairo.Pattern.linear (
-				g.x1,
-				g.y1,
-				g.x2,
-				g.y2);
+			pattern = new Cairo.Pattern.linear (g.x1, g.y1, g.x2, g.y2);
 
 			Matrix gradient_matrix = g.get_matrix ();
 			gradient_matrix.invert ();

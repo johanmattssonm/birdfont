@@ -30,7 +30,7 @@ public class SvgPath : Object {
 		return false;
 	}
 			
-	public override void draw (Context cr, Color? c = null) {
+	public override void draw (Context cr) {
 		cr.save ();
 		cr.new_path ();
 		

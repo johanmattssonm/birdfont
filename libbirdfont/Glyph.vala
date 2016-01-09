@@ -141,40 +141,6 @@ public class Glyph : FontDisplay {
 	public double bottom_limit = 0;
 
 	public Surface? overview_thumbnail = null;
-	
-	public double svg_x = 0;
-	public double svg_y = 0;
-	private Rsvg.Handle? svg_drawing = null;
-
-	public string? color_svg_data {
-		get {
-			return _color_svg_data;
-		}
-		
-		set {
-			try {
-				if (value != null) {
-					XmlParser xml = new XmlParser ((!) value);
-		 
-					if (!xml.validate ()) {
-						warning("Invalid SVG data, skipping import.");
-						return;
-					}
-					
-					uint8[] svg_array = ((!) value).data;
-					svg_drawing = new Rsvg.Handle.from_data (svg_array);
-				} else {
-					svg_drawing = null;
-				}
-				
-				_color_svg_data = value;				
-			} catch (GLib.Error e) {
-				warning (e.message);
-			}
-		}
-	}
-
-	private string? _color_svg_data = null;
 
 	public Glyph (string name, unichar unichar_code = 0) {
 		this.name = name;
@@ -1713,7 +1679,11 @@ public class Glyph : FontDisplay {
 		cr.new_path ();
 		
 		foreach (Object o in get_visible_objects ()) {
-			o.draw (cr, c);
+			if (o is PathObject) {
+				((PathObject) o).draw_path (cr, c);
+			} else {
+				o.draw (cr);
+			}
 		}
 		
 		cr.fill ();
@@ -1891,10 +1861,8 @@ public class Glyph : FontDisplay {
 		}
 
 		draw_background_glyph (allocation, cmp);
-		
-		if (svg_drawing != null) {
-			juxtapose (allocation, cmp);
-		}
+
+		juxtapose (allocation, cmp);
 
 		if (BirdFont.show_coordinates) {
 			draw_coordinate (cmp);
@@ -1906,19 +1874,11 @@ public class Glyph : FontDisplay {
 			cmp.restore ();
 		}
 
-		if (svg_drawing != null) {
-			cmp.save ();
-			cmp.scale (view_zoom, view_zoom);
-			cmp.translate (-view_offset_x, -view_offset_y);
-			draw_svg (cmp);
-			cmp.restore ();
-		} else {
-			cmp.save ();
-			cmp.scale (view_zoom, view_zoom);
-			cmp.translate (-view_offset_x, -view_offset_y);
-			draw_path (cmp);		
-			cmp.restore ();	
-		}
+		cmp.save ();
+		cmp.scale (view_zoom, view_zoom);
+		cmp.translate (-view_offset_x, -view_offset_y);
+		draw_path (cmp);		
+		cmp.restore ();	
 				
 		cmp.save ();
 		tool = MainWindow.get_toolbox ().get_current_tool ();
@@ -1926,16 +1886,6 @@ public class Glyph : FontDisplay {
 		cmp.restore ();
 	}
 
-	public void draw_svg (Context cr) {
-		if (svg_drawing != null) {
-			cr.save ();
-			cr.translate (xc () + svg_x, yc () - svg_y);
-			Rsvg.Handle svg_handle = (!) svg_drawing;
-			svg_handle.render_cairo (cr);
-			cr.restore ();
-		}
-	}
-	
 	private void zoom_in_at_point (double x, double y, double amount = 15) {
 		int n = (int) (-amount);
 		zoom_at_point (x, y, n);

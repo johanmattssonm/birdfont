@@ -36,17 +36,53 @@ public class SvgTable : OtfTable {
 		GlyphCollection glyphs;
 		string? svg_data;
 		int gid;
+		Gee.ArrayList<EmbeddedSvg> embedded_svg;
 		
 		for (int index = 0; index < font.length (); index++) {		
 			glyph_collection = font.get_glyph_collection_index (index);
 			
 			if (glyph_collection != null) {
 				glyphs = (!) glyph_collection;
-				svg_data = glyphs.get_current ().color_svg_data;
+				embedded_svg = get_embedded_svg (glyphs);
 				
-				if (svg_data != null) {
+				if (embedded_svg.size > 0) {
 					gid = glyf_table.get_gid (glyphs.get_name ());
-					add_svg_glyph ((!) svg_data, gid, glyphs);
+					
+					StringBuilder svg = new StringBuilder ();
+					svg.append ("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n");
+		
+					foreach (EmbeddedSvg embedded in embedded_svg) {
+						svg.append ("<svg>");
+						svg.append ("\n\n");
+						svg.append ("<g id=");
+						svg.append ("\"");
+						svg.append ("glyph");
+						svg.append (@"$gid");
+						svg.append ("\" ");
+						
+						// scale the internal coordinates from 100 units per em to the 
+						// number of units per em in this font and move the glyph
+						// in to the em box
+						Glyph glyph = glyphs.get_current ();
+						double scale = HeadTable.UNITS;
+						double x = embedded.x - glyph.left_limit;
+						double y = font.base_line - embedded.y;
+						svg.append (@"transform=\"scale($scale) translate($x, $y)\"");
+						
+						svg.append (">");
+						svg.append ("\n\n");
+
+						append_svg_glyph (svg, embedded.svg_data, glyphs);
+
+						svg.append ("\n\n");
+						svg.append ("</g>\n");
+						svg.append ("</svg>");
+					}
+					
+					SvgTableEntry entry;
+					entry = new SvgTableEntry ((uint16) gid, svg.str);
+					entries.add (entry);
+
 					glyphs_in_table++;
 				}
 			}
@@ -55,8 +91,19 @@ public class SvgTable : OtfTable {
 		process_svg_data ();
 	}
 	
-	void add_svg_glyph (string svg_data, int glyph_id, GlyphCollection glyphs) {
-		SvgTableEntry entry;
+	Gee.ArrayList<EmbeddedSvg> get_embedded_svg (GlyphCollection glyphs) {
+		Gee.ArrayList<EmbeddedSvg> svg = new Gee.ArrayList<EmbeddedSvg> ();
+		
+		foreach (Object object in glyphs.get_current ().get_visible_objects ()) {
+			if (object is EmbeddedSvg) {
+				svg.add ((EmbeddedSvg) object);
+			}
+		}
+		
+		return svg;
+	}
+	
+	void append_svg_glyph (StringBuilder svg, string svg_data, GlyphCollection glyphs) {
 		Gee.ArrayList<Tag> layer_content;
 		Gee.ArrayList<Tag> svg_tags;
 		Gee.ArrayList<Tag> meta;
@@ -94,8 +141,6 @@ public class SvgTable : OtfTable {
 			}
 		}
 		
-		StringBuilder svg = new StringBuilder ();
-		svg.append ("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n");
 		svg.append ("<");
 		svg.append (svg_root_tag.get_name ());
 		svg.append (" ");
@@ -105,40 +150,14 @@ public class SvgTable : OtfTable {
 		foreach (Tag tag in svg_tags) {
 			append_tag (svg, tag);
 		}
-
-		svg.append ("\n\n");
-		svg.append ("<g id=");
-		svg.append ("\"");
-		svg.append ("glyph");
-		svg.append (@"$glyph_id");
-		svg.append ("\" ");
-		
-		// scale the internal coordinates from 100 units per em to the 
-		// number of units per em in this font and move the glyph
-		// in to the em box
-		Glyph glyph = glyphs.get_current ();
-		double scale = HeadTable.UNITS;
-		double x = glyph.svg_x - glyph.left_limit;
-		double y = font.base_line - glyph.svg_y;
-		svg.append (@"transform=\"scale($scale) translate($x, $y)\"");
-		
-		svg.append (">");
-		svg.append ("\n\n");
 		
 		foreach (Tag tag in layer_content) {
 			append_tag (svg, tag);
 		}
-		
-		svg.append ("\n\n");
-		svg.append ("</g>");
-		svg.append ("\n\n");
-		
+				
 		svg.append ("</");
 		svg.append (svg_root_tag.get_name ());
-		svg.append (">\n");
-		
-		entry = new SvgTableEntry ((uint16) glyph_id, svg.str);
-		entries.add (entry);
+		svg.append (">\n");		
 	}
 
 	public void append_tag (StringBuilder svg, Tag tag) {

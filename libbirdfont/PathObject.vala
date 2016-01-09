@@ -155,8 +155,12 @@ public class PathObject : Object {
 	public override bool is_over (double x, double y) {
 		return path.is_over (x, y);
 	}
-			
-	public override void draw (Context cr, Color? c = null) {
+
+	public override void draw (Context cr) {
+		draw_path (cr);
+	}
+	
+	public void draw_path (Context cr, Color? c = null) {
 		PathList path_stroke;
 		Color path_color;
 		bool open;

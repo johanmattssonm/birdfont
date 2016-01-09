@@ -64,8 +64,15 @@ public class SvgParser {
 		
 	public static void import_color_svg (Glyph glyph, string path) {
 		SvgFile svg_file = new SvgFile ();
-		SvgDrawing drawing = svg_file.parse (path);
-		glyph.add_layer (drawing.root_layer);
+		EmbeddedSvg drawing = svg_file.parse (path);
+		
+		Layer layer = new Layer ();
+		layer.name = "SVG";
+		layer.add_object (drawing);
+		
+		glyph.add_layer (layer);
+		
+		// FIXME: update GUI
 	}
 	
 	public static void import_folder (SvgType type) {

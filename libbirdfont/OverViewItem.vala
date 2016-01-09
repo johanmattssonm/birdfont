@@ -127,31 +127,18 @@ public class OverViewItem : GLib.Object {
 		c.save ();
 		g.boundaries (out x1, out y1, out x2, out y2);
 
-		if (g.color_svg_data != null) {
-			font = BirdFont.get_current_font ();
-			glyph_width = g.right_limit - g.left_limit;
-			glyph_height = font.top_position - font.bottom_position;
-		} else {
-			glyph_width = x2 - x1;
-			glyph_height = y2 - y1;
-		}
+		glyph_width = x2 - x1;
+		glyph_height = y2 - y1;
 
 		c.save ();
 		c.scale (glyph_scale * Screen.get_scale (), glyph_scale * Screen.get_scale ());
 
 		g.add_help_lines ();
 				
-		if (g.color_svg_data != null) {
-			gx = 10;
-			gy = (h / glyph_scale) - 25 / glyph_scale;
-			c.translate (gx - Glyph.xc () - g.get_lsb (), g.get_baseline () + gy - Glyph.yc ());
-			g.draw_svg (c);
-		} else {
-			gx = ((w / glyph_scale) - glyph_width) / 2 - g.get_left_side_bearing ();
-			gy = (h / glyph_scale) - 25 / glyph_scale;
-			c.translate (gx - Glyph.xc () - g.get_lsb (), g.get_baseline () + gy - Glyph.yc ());
-			g.draw_paths (c, color);
-		}
+		gx = ((w / glyph_scale) - glyph_width) / 2 - g.get_left_side_bearing ();
+		gy = (h / glyph_scale) - 25 / glyph_scale;
+		c.translate (gx - Glyph.xc () - g.get_lsb (), g.get_baseline () + gy - Glyph.yc ());
+		g.draw_paths (c, color);
 		
 		c.restore ();
 		
