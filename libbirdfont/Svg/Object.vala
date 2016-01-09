@@ -85,11 +85,11 @@ public abstract class Object : GLib.Object {
 		return "Object";
 	}
 
-	public void fill_and_stroke (Context cr) {
+	public void paint (Context cr) {
 		Color fill, stroke;
 		bool need_fill = style.fill_gradient != null || style.fill != null;
 		bool need_stroke = style.stroke_gradient != null || style.stroke != null;
-		
+
 		cr.set_line_width (style.stroke_width);
 	
 		if (style.fill_gradient != null) {
@@ -131,21 +131,26 @@ public abstract class Object : GLib.Object {
 				g.y1,
 				g.x2,
 				g.y2);
+
+			Matrix gradient_matrix = g.get_matrix ();
+			gradient_matrix.invert ();
+			pattern.set_matrix (gradient_matrix);
 			
 			foreach (Stop s in g.stops) {
 				Color c = s.color;
 				pattern.add_color_stop_rgba (s.offset, c.r, c.g, c.b, c.a);
 			}
-			
-			pattern.set_matrix (g.get_matrix ());
-			
+					
 			cr.set_source (pattern);
 		}
 	}
 	
 	public void apply_transform (Context cr) {
-		Matrix matrix = transforms.get_matrix ();
-		cr.set_matrix (matrix);
+		Matrix view_matrix = cr.get_matrix ();
+		Matrix object_matrix = transforms.get_matrix ();
+		
+		object_matrix.multiply (object_matrix, view_matrix);
+		cr.set_matrix (object_matrix);
 	}
 					
 }

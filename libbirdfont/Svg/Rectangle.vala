@@ -35,7 +35,6 @@ public class Rectangle : Object {
 			
 	public override void draw (Context cr, Color? c = null) {
 		cr.save ();
-		
 		apply_transform (cr);
 		
 		if (rx == 0 && ry == 0) {
@@ -44,8 +43,7 @@ public class Rectangle : Object {
 			draw_rounded_corners (cr);
 		}
 		
-		fill_and_stroke (cr);
-
+		paint (cr);
 		cr.restore ();
 	}
 	

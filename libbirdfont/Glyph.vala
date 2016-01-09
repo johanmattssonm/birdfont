@@ -1802,14 +1802,19 @@ public class Glyph : FontDisplay {
 						color = p.color == null ? Color.black () : (!) p.color;
 						p.draw_path (cr, color);
 					}
-				} else {
-					o.draw (cr);
 				}
 			}
 			
 			cr.close_path ();
 			cr.fill ();
 			cr.restore ();
+
+			// FIXME: layer transforms
+			foreach (Object o in get_visible_objects ()) {
+				if (!(o is PathObject)) {
+					o.draw (cr);
+				}
+			}
 
 			foreach (Object o in active_paths) {
 				if (o is PathObject) {
