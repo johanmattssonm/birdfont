@@ -133,7 +133,6 @@ public class Glyph : FontDisplay {
 	public Layer layers = new Layer ();
 	public int current_layer = 0;
 	public Gee.ArrayList<Object> active_paths = new Gee.ArrayList<Object> ();
-	public Gee.ArrayList<Layer> selected_groups = new Gee.ArrayList<Layer> ();
 
 	// used if this glyph originates from a fallback font
 	public double top_limit = 0;
@@ -263,7 +262,6 @@ public class Glyph : FontDisplay {
 	}
 
 	public void clear_active_paths () {
-		selected_groups.clear ();
 		active_paths.clear ();
 	}
 
@@ -276,6 +274,7 @@ public class Glyph : FontDisplay {
 		}
 	}
 	
+	// FIXME: delete group
 	public void add_active_object (Layer? group, Object? o) {
 		Object object;
 		Layer g;
@@ -296,13 +295,6 @@ public class Glyph : FontDisplay {
 				}
 				
 				PenTool.active_path = path.get_path ();
-			}
-		}
-
-		if (group != null) {
-			g = (!) group;
-			if (!selected_groups.contains (g)) {
-				selected_groups.add (g);
 			}
 		}
 	}
@@ -1207,61 +1199,14 @@ public class Glyph : FontDisplay {
 		return -y;
 	}
 
-	public Layer? get_path_at (double x, double y) {
-		Layer? group = null;
-		bool found = false;
-
-		foreach (Layer layer in get_current_layer ().subgroups) {
-			foreach (Object o in layer.objects) {
-				if (o.is_over (x, y)) {
-					found = true;
-					group = layer;
-				}
+	public Object? get_object_at (double x, double y) {
+		foreach (Object o in get_current_layer ().objects) {
+			if (o.is_over (x, y)) {
+				return o;
 			}
 		}
-
-		if (!found) {
-			foreach (Path pt in get_paths_in_current_layer ()) {
-				if (pt.is_over (x, y)) {
-					Layer layer = new Layer ();
-					layer.is_counter = true;
-					layer.single_path = true;
-					layer.add_path (pt);
-					group = layer;
-				}
-			}
-		}
-
-		return group;
-	}
-
-	public bool select_path (double x, double y) {
-		Path? p = null;
-		bool found = false;
-
-		foreach (Path pt in get_paths_in_current_layer ()) {
-			if (pt.is_over (x, y)) {
-				p = pt;
-				found = true;
-			}
-		}
-
-		if (!KeyBindings.has_shift ()) {
-			clear_active_paths ();
-		}
-
-		add_active_path (null, p);
-
-		return found;
-	}
-
-	public bool is_over_selected_path (double x, double y) {
-		foreach (Object p in active_paths) {
-			if (p.is_over (x, y)) {
-				return true;
-			}
-		}
-		return false;
+		
+		return null;
 	}
 
 	public void queue_redraw_path (Path path) {
@@ -1278,48 +1223,6 @@ public class Glyph : FontDisplay {
 		double xtb = -view_offset_x - xmax;
 
 		redraw_area ((int)xtb - 10, (int)yta - 10, (int)(xtb - xta) + 10, (int) (yta - ytb) + 10);
-	}
-
-	public Path get_closeset_path (double x, double y) {
-		double d;
-		EditPoint ep = new EditPoint ();
-
-		Path min_point = new Path ();
-		double min_distance = double.MAX;
-
-		double xt = path_coordinate_x (x);
-		double yt = path_coordinate_y (y);
-		var paths = get_visible_paths ();
-
-		foreach (Path p in paths) {
-			if (p.is_over (xt, yt)) {
-				return p;
-			}
-		}
-
-		foreach (Path p in paths) {
-			if (p.points.size == 0) continue;
-
-			p.get_closest_point_on_path (ep, xt, yt);
-			d = Math.pow (ep.x - xt, 2) + Math.pow (ep.y - yt, 2);
-
-			if (d < min_distance) {
-				min_distance = d;
-				min_point = p;
-			}
-
-		}
-
-		// a path without any editpoints
-		if (paths.size > 0) {
-			return paths.get (0);
-		}
-
-		if (unlikely (min_distance == double.MAX)) {
-			warning (@"No path found in path_list.");
-		}
-
-		return min_point;
 	}
 
 	public void move_selected_edit_point_coordinates (EditPoint selected_point, double xt, double yt) {
@@ -1756,6 +1659,13 @@ public class Glyph : FontDisplay {
 			cr.restore ();
 		}
 
+		// FIXME: layer transforms
+		foreach (Object o in get_visible_objects ()) {
+			if (!(o is PathObject)) {
+				o.draw (cr);
+			}
+		}
+
 		if (!is_open ()) {
 			// This was good for testing but it is way too slow:
 			// Svg.draw_svg_path (cr, get_svg_data (), Glyph.xc () + left, Glyph.yc () - baseline);
@@ -1778,13 +1688,6 @@ public class Glyph : FontDisplay {
 			cr.close_path ();
 			cr.fill ();
 			cr.restore ();
-
-			// FIXME: layer transforms
-			foreach (Object o in get_visible_objects ()) {
-				if (!(o is PathObject)) {
-					o.draw (cr);
-				}
-			}
 
 			foreach (Object o in active_paths) {
 				if (o is PathObject) {
@@ -1855,8 +1758,8 @@ public class Glyph : FontDisplay {
 		}
 
 		if (unlikely (Preferences.draw_boundaries)) {
-			foreach (Path p in get_visible_paths ()) {
-				p.draw_boundaries (cmp);
+			foreach (Object o in get_visible_objects ()) {
+				draw_boundaries (o, cmp);
 			}
 		}
 
@@ -2552,6 +2455,21 @@ public class Glyph : FontDisplay {
 		return paths;
 	}
 	
+	public void draw_boundaries  (Object object, Context cr) {
+		double x = Glyph.reverse_path_coordinate_x (object.xmin); 
+		double y = Glyph.reverse_path_coordinate_y (object.ymin);
+		double x2 = Glyph.reverse_path_coordinate_x (object.xmax);
+		double y2 = Glyph.reverse_path_coordinate_y (object.ymax);
+		
+		cr.save ();
+		
+		Theme.color (cr, "Default Background");
+		cr.set_line_width (2);
+		cr.rectangle (x, y, x2 - x, y2 - y);
+		cr.stroke ();
+		
+		cr.restore ();
+	}
 }
 
 }

@@ -153,7 +153,7 @@ public class PathObject : Object {
 	}
 
 	public override bool is_over (double x, double y) {
-		return path.is_over (x, y);
+		return path.is_over_coordinate (x, y);
 	}
 
 	public override void draw (Context cr) {

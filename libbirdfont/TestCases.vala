@@ -33,7 +33,6 @@ class TestCases {
 		add (test_drawing, "Pen tool");
 		add (test_delete_points, "Delete edit points");
 		add (test_convert_to_quadratic_bezier_path, "Convert to quadratic path");
-		add (test_over_path, "Over path");
 		add (test_export, "Export");
 		add (test_background_coordinates, "Background coordinates");
 		add (test_spin_button, "Spin button");
@@ -580,58 +579,6 @@ class TestCases {
 			MainWindow.get_tab_bar ().select_tab_name ("Preview");
 			Tool.yield ();
 		}
-		
-	}
-
-	public static void test_over_path () {
-		Glyph g;
-		Path p = new Path ();
-		Tool pen_tool;
-		
-		pen_tool = MainWindow.get_toolbox ().get_tool ("pen_tool");
-		test_select_action (pen_tool);
-		test_open_next_glyph ();
-		
-		g = MainWindow.get_current_glyph ();
-
-		test_click_action (pen_tool, 3, 10, 10);
-		test_click_action (pen_tool, 3, 10, 10);
-		test_click_action (pen_tool, 3, 100, 10);
-		test_click_action (pen_tool, 3, 100, 100);
-		test_click_action (pen_tool, 3, 10, 100);
-		test_click_action (pen_tool, 2, 0, 0);
-
-		g.close_path ();
-
-		warn_if_fail (g.active_paths.size == 0);
-
-		g.select_path (50, 50);
-
-		warn_if_fail (g.active_paths.size == 1);
-		
-		p.add (-10, 10);
-		p.add (10, 10);
-		p.add (10, -10);
-		p.add (-10, -10);
-		p.update_region_boundaries();
-		g.add_path (p);
-		g.close_path ();
-
-		if (!p.is_over_coordinate (0, 0)) {
-			warning ("Coordinate 0, 0 is not in path.");
-		}
-		
-		if (!p.is_over_coordinate (-10, 10)) {
-			warning ("Corner corrdinate -10, 10 is not in path.");
-		}
-		
-		warn_if_fail (!p.is_over_coordinate (-20, -20));
-		
-		for (double x = -10; x <= 10; x += 0.1) {
-			for (double y = 10; y <= 10; y += 0.1) {
-				warn_if_fail (p.is_over_coordinate (x, y));
-			} 
-		} 
 		
 	}
 

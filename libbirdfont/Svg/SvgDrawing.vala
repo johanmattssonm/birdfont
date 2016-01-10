@@ -27,7 +27,7 @@ public class SvgDrawing : Object {
 	public double y = 0;
 	public double width = 0;
 	public double height = 0;
-	
+		
 	public override void update_region_boundaries () {
 	}
 	
@@ -37,9 +37,14 @@ public class SvgDrawing : Object {
 	}
 	
 	public override void draw (Context cr) {
+		cr.save ();
+		cr.translate (x, y);
+
 		foreach (Object o in root_layer.get_visible_objects ().objects) {
 			o.draw (cr);
 		}
+
+		cr.restore ();
 	}
 	
 	public override Object copy () {

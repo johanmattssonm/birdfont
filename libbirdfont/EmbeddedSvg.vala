@@ -22,32 +22,12 @@ public class EmbeddedSvg : Object {
 	public string svg_data = "";
 	public SvgDrawing drawing = new SvgDrawing ();
 	
-	public double x {
-		get {
-			return drawing.x;
-		}
+	public double x { get; set; }
+	public double y { get; set; }
 
-		set {
-			drawing.x = value;
-		}
-	}
-
-	public double y {
-		get {
-			return drawing.y;
-		}
-		
-		set {
-			drawing.y = value;
-		}
-	}
-	
-	// FIXME: boundaries for embedded SVG
-	
 	public override double xmin {
 		get {
-			Glyph g = MainWindow.get_current_glyph ();
-			return g.left_limit;
+			return x;
 		}
 		
 		set {
@@ -56,8 +36,7 @@ public class EmbeddedSvg : Object {
 
 	public override double xmax {
 		get {
-			Glyph g = MainWindow.get_current_glyph ();
-			return g.right_limit;
+			return x + drawing.width;
 		}
 
 		set {
@@ -67,8 +46,7 @@ public class EmbeddedSvg : Object {
 
 	public override double ymin {
 		get {
-			Font font = BirdFont.get_current_font ();
-			return font.bottom_position;
+			return y - drawing.height;
 		}
 
 		set {
@@ -77,8 +55,7 @@ public class EmbeddedSvg : Object {
 
 	public override double ymax {
 		get {
-			Font font = BirdFont.get_current_font ();
-			return font.top_position;
+			return y;
 		}
 
 		set {
@@ -93,12 +70,20 @@ public class EmbeddedSvg : Object {
 		drawing.update_region_boundaries ();
 	}
 
+	// FIXME: handle this in SVG library instead
 	public override bool is_over (double x, double y) {
-		return drawing.is_over (x, y);
+		print (@" $(this.x) <= $(x) <= $(this.x) + $(drawing.width)");
+		print (@" $(this.y) <= $(y) <= $(this.y) + $(drawing.height)");
+			
+		return (this.x <= x <= this.x + drawing.width) 
+			&& (this.y - drawing.height <= y <= this.y);
 	}
 	
 	public override void draw (Context cr) {
+		cr.save ();
+		cr.translate (Glyph.xc () + x, Glyph.yc () - y);
 		drawing.draw (cr);
+		cr.restore ();
 	}
 	
 	public override Object copy () {
@@ -108,7 +93,8 @@ public class EmbeddedSvg : Object {
 	}
 	
 	public override void move (double dx, double dy) {
-		drawing.move (dx, dy);
+		x += dx;
+		y += dy;
 	}
 	
 	public override void rotate (double theta, double xc, double yc) {

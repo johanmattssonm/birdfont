@@ -1470,7 +1470,6 @@ class BirdFontFile : GLib.Object {
 		string type = "";
 		double x = 0;
 		double y = 0;
-		EmbeddedSvg svg;
 		
 		foreach (Attribute attribute in tag.get_attributes ()) {
 			if (attribute.get_name () == "x") {
@@ -1488,7 +1487,9 @@ class BirdFontFile : GLib.Object {
 		
 		if (type == "svg") {
 			SvgFile svg_file = new SvgFile ();
-			svg = svg_file.parse_data (tag.get_content ());
+			EmbeddedSvg svg = svg_file.parse_data (tag.get_content ());
+			svg.x = x;
+			svg.y = y;
 			layer.add_object (svg);
 		}
 	}

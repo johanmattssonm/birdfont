@@ -174,22 +174,6 @@ public class Path : GLib.Object {
 		return points.size == 0;
 	}
 
-	public void draw_boundaries  (Context cr) {
-		double x = Glyph.reverse_path_coordinate_x (xmin); 
-		double y = Glyph.reverse_path_coordinate_y (ymin);
-		double x2 = Glyph.reverse_path_coordinate_x (xmax);
-		double y2 = Glyph.reverse_path_coordinate_y (ymax);
-		
-		cr.save ();
-		
-		Theme.color (cr, "Default Background");
-		cr.set_line_width (2);
-		cr.rectangle (x, y, x2 - x, y2 - y);
-		cr.stroke ();
-		
-		cr.restore ();
-	}
-
 	public void draw_outline (Context cr) {
 		unowned EditPoint? n = null;
 		unowned EditPoint en;
@@ -821,17 +805,6 @@ public class Path : GLib.Object {
 		new_path.highlight_last_segment = highlight_last_segment;
 		
 		return new_path;
-	}	
-	
-	public bool is_over (double x, double y) {
-		Glyph g = MainWindow.get_current_glyph ();
-		
-		x = x * Glyph.ivz () + g.view_offset_x - Glyph.xc ();
-		y = y * Glyph.ivz () + g.view_offset_y - Glyph.yc ();
-
-		y *= -1;
-		
-		return is_over_coordinate (x, y);
 	}
 	
 	public bool is_over_coordinate (double x, double y) {

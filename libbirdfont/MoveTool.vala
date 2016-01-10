@@ -127,16 +127,6 @@ public class MoveTool : Tool {
 
 			delta_x = -dx;
 			delta_y = -dy;
-	
-			foreach (Layer group in glyph.selected_groups) {
-				if (group.gradient != null) {
-					Gradient g = (!) group.gradient;
-					g.x1 += delta_x;
-					g.x2 += delta_x;
-					g.y1 += delta_y;
-					g.y2 += delta_y;
-				}
-			}
 			
 			foreach (Object object in glyph.active_paths) {
 				object.move (delta_x, delta_y);
@@ -198,36 +188,30 @@ public class MoveTool : Tool {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		Object object;
 		bool selected = false;
-		Layer? group;
-		Layer g;
+		Object? o;
 		
-		glyph.store_undo_state ();
-		group_selection = false;
-	
-		group = glyph.get_path_at (x, y);
-		
-		if (group != null) {
-			g = (!) group;
-			return_if_fail (g.objects.objects.size > 0);
-			object = g.objects.objects.get (0);
+		glyph.store_undo_state ();	
+		double px = Glyph.path_coordinate_x (x);
+		double py = Glyph.path_coordinate_y (y);
+		o = glyph.get_object_at (px, py);
+
+		if (o != null) {
+			object = (!) o;
 			selected = glyph.active_paths_contains (object);
-			
+ 			
 			if (!selected && !KeyBindings.has_shift ()) {
 				glyph.clear_active_paths ();
 			} 
 			
-			foreach (Object lp in g.objects) {
-				if (selected && KeyBindings.has_shift ()) {
-					glyph.selected_groups.remove ((!) group);
-					glyph.active_paths.remove (lp);
-				} else {
-					glyph.add_active_object ((!) group, lp);
-				}
-			}
+			if (selected && KeyBindings.has_shift ()) {
+				glyph.active_paths.remove (object);
+			} else {
+				glyph.add_active_object (null, object);
+			}			
 		} else if (!KeyBindings.has_shift ()) {
 			glyph.clear_active_paths ();
 		}
-		
+
 		update_selection_boundaries ();
 
 		move_path = true;
