@@ -89,7 +89,7 @@ class Builder(object):
         
         yield {
             'basename': 'valac ' + source_directory,
-            'file_dep': [build_file] + vala_source_paths + bindep,
+            'file_dep': [build_file] + vala_source_paths,
             'actions': [valac_command],
             'targets': generated_csource_paths
         }
@@ -106,7 +106,7 @@ class Builder(object):
             command = command.replace('OBJECT_FILE', object_path)
             yield {
                 'basename': 'compile ' + csource,
-                'file_dep': [build_file, csource] + bindep + copied_cheader,
+                'file_dep': [build_file, csource] + copied_cheader,
                 'actions': [command],
                 'targets': [path.join(build_directory, object_file)],
             }
@@ -114,7 +114,7 @@ class Builder(object):
         object_paths = [path.join(build_directory, f) for f in object_files] 
         yield {
             'basename': source_directory,
-            'file_dep': object_paths + [build_file] + bindep,
+            'file_dep': object_paths + [build_file],
             'actions': [linker_command],
             'targets': [path.join('build', 'bin', target_binary)]
         }

@@ -48,6 +48,10 @@ public class SvgFile : GLib.Object {
 				parse_defs (drawing, t);
 			}
 			
+			if (name == "a") {
+				parse_link (drawing.root_layer, tag);
+			}
+			
 			parse_object (drawing.root_layer, t);
 		}
 		
@@ -75,11 +79,15 @@ public class SvgFile : GLib.Object {
 					
 		foreach (Tag t in tag) {
 			string name = t.get_name ();
-			
+
 			if (name == "g") {
 				Layer sublayer = new Layer ();
 				parse_layer (layer, t);
 				layer.subgroups.add (sublayer);
+			}
+
+			if (name == "a") {
+				parse_link (layer, t);
 			}
 			
 			parse_object (layer, t);
@@ -203,13 +211,18 @@ public class SvgFile : GLib.Object {
 		}
 	}
 	
+	// links are ignored, add the content to the layer
+	void parse_link (Layer layer, Tag tag) {
+		parse_layer (layer, tag);
+	}
+	
 	void parse_object (Layer layer, Tag tag) {
 		string name = tag.get_name ();
 		
 		if (name == "path") {
 			parse_path (layer, tag);
 		}
-					
+							
 		if (name == "polygon") {
 			parse_polygon (layer, tag);
 		}
@@ -280,11 +293,36 @@ public class SvgFile : GLib.Object {
 	}
 	
 	private void parse_circle (Layer layer, Tag tag) {
+		Circle circle = new Circle ();
+		
+		foreach (Attribute attr in tag.get_attributes ()) {
+			string name = attr.get_name ();
+			
+			if (name == "cx") {
+				circle.cx = parse_number (attr.get_content ());
+			}
+
+			if (name == "cy") {
+				circle.cy = parse_number (attr.get_content ());
+			}
+			
+			if (name == "r") {
+				circle.r = parse_number (attr.get_content ());
+			}
+		}
+		
+		circle.transforms = get_transform (tag.get_attributes ());
+		circle.style = SvgStyle.parse (drawing.defs, tag.get_attributes ());
+		circle.visible = is_visible (tag);	
+		
+		layer.add_object (circle);		
 	}
 	
+	// FIXME:
 	private void parse_ellipse (Layer layer, Tag tag) {
 	}
 	
+	// FIXME:
 	private void parse_line (Layer layer, Tag tag) {
 	}
 	
