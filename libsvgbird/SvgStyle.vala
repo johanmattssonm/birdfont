@@ -68,11 +68,18 @@ public class SvgStyle {
 		return double.parse (style.get ("stroke-width"));
 	}
 	
-	public static SvgStyle parse (Defs? d, Attributes attributes) {
+	public static SvgStyle parse (Defs? d, SvgStyle inherited, Attributes attributes) {
 		SvgStyle s = new SvgStyle ();
 		double fill_opacity = 1;
 		double stroke_opacity = 1;
-		
+
+		s.style.set ("fill", "#000000"); // default fill value
+				
+		// inherit
+		foreach (string key in inherited.style.keys) {
+			s.style.set (key, inherited.style.get (key));
+		}
+
 		foreach (Attribute a in attributes) {
 			if (a.get_name () == "style") {
 				s.parse_key_value_pairs (a.get_content ());
@@ -91,11 +98,11 @@ public class SvgStyle {
 			}
 
 			if (a.get_name () == "fill-opacity") {
-				fill_opacity = SvgFile.parse_number (a.get_content ());
+				s.style.set ("fill-opacity", a.get_content ());
 			}
 
 			if (a.get_name () == "stroke-opacity") {
-				stroke_opacity = SvgFile.parse_number (a.get_content ());
+				s.style.set ("stroke-opacity", a.get_content ());
 			}
 		}
 	
@@ -103,6 +110,16 @@ public class SvgStyle {
 		s.stroke = Color.parse (s.style.get ("stroke"));
 		s.fill = Color.parse (s.style.get ("fill"));
 
+		string? opacity = s.style.get ("fill-opacity");
+		if (opacity != null) {
+			fill_opacity = SvgFile.parse_number ((!) opacity);
+		}
+
+		opacity = s.style.get ("stroke-opacity");
+		if (opacity != null) {
+			stroke_opacity = SvgFile.parse_number ((!) opacity);
+		}
+			
 		if (d != null) {
 			Defs defs = (!) d;
 

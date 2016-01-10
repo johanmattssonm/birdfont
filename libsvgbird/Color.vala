@@ -32,7 +32,7 @@ public class Color {
 			return null;
 		}
 		
-		string color = (!) svg_color
+		string color = (!) svg_color;
 		uint32 c;
 		string[] arguments;
 		Color parsed = new Color (0, 0, 0, 1);
@@ -114,7 +114,7 @@ public class Color {
 	}
 	
 	public static string get_hex_for_name (string name) {
-		string color = name.to_lower ();
+		string color = name.down ();
 		
 		if (color == "black") return "#000000";
 		if (color == "silver") return "#C0C0C0";

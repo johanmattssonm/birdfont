@@ -27,6 +27,9 @@ public class SvgFile : GLib.Object {
 	public SvgDrawing parse_svg_file (Tag tag) {
 		drawing = new SvgDrawing ();
 
+		SvgStyle style = new SvgStyle ();
+		SvgStyle.parse (drawing.defs, style, tag.get_attributes ());
+
 		foreach (Attribute attr in tag.get_attributes ()) {	
 			if (attr.get_name () == "width") {
 				drawing.width = parse_number (attr.get_content ());
@@ -41,7 +44,7 @@ public class SvgFile : GLib.Object {
 			string name = t.get_name ();
 			
 			if (name == "g") {
-				parse_layer (drawing.root_layer, t);
+				parse_layer (drawing.root_layer, style, t);
 			}
 
 			if (name == "defs") {
@@ -49,16 +52,16 @@ public class SvgFile : GLib.Object {
 			}
 			
 			if (name == "a") {
-				parse_link (drawing.root_layer, tag);
+				parse_link (drawing.root_layer, style, tag);
 			}
 			
-			parse_object (drawing.root_layer, t);
+			parse_object (drawing.root_layer, style, t);
 		}
 		
 		return drawing;
 	}
 
-	private void parse_layer (Layer layer, Tag tag) {
+	private void parse_layer (Layer layer, SvgStyle parent_style, Tag tag) {
 		bool hidden = false;
 
 		foreach (Attribute attr in tag.get_attributes ()) {	
@@ -76,21 +79,23 @@ public class SvgFile : GLib.Object {
 		if (hidden) {
 			layer.visible = !hidden;
 		}
-					
+		
+		SvgStyle style = SvgStyle.parse (drawing.defs, parent_style, tag.get_attributes ());
+		
 		foreach (Tag t in tag) {
 			string name = t.get_name ();
 
 			if (name == "g") {
 				Layer sublayer = new Layer ();
-				parse_layer (layer, t);
+				parse_layer (layer, parent_style, t);
 				layer.subgroups.add (sublayer);
 			}
 
 			if (name == "a") {
-				parse_link (layer, t);
+				parse_link (layer, style, t);
 			}
 			
-			parse_object (layer, t);
+			parse_object (layer, style, t);
 		}
 
 		foreach (Attribute attr in tag.get_attributes ()) {	
@@ -174,7 +179,8 @@ public class SvgFile : GLib.Object {
 	}
 
 	void parse_stop (Gradient gradient, Tag tag) {
-		SvgStyle style = SvgStyle.parse (drawing.defs, tag.get_attributes ());
+		SvgStyle parent_style = new SvgStyle (); // not inherited
+		SvgStyle style = SvgStyle.parse (drawing.defs, parent_style, tag.get_attributes ());
 		Stop stop = new Stop ();
 		
 		gradient.stops.add (stop);
@@ -212,49 +218,49 @@ public class SvgFile : GLib.Object {
 	}
 	
 	// links are ignored, add the content to the layer
-	void parse_link (Layer layer, Tag tag) {
-		parse_layer (layer, tag);
+	void parse_link (Layer layer, SvgStyle parent_style, Tag tag) {
+		parse_layer (layer, parent_style, tag);
 	}
 	
-	void parse_object (Layer layer, Tag tag) {
+	void parse_object (Layer layer, SvgStyle parent_style, Tag tag) {
 		string name = tag.get_name ();
 		
 		if (name == "path") {
-			parse_path (layer, tag);
+			parse_path (layer, parent_style, tag);
 		}
 							
 		if (name == "polygon") {
-			parse_polygon (layer, tag);
+			parse_polygon (layer, parent_style, tag);
 		}
 
 		if (name == "polyline") {
-			parse_polyline (layer, tag);
+			parse_polyline (layer, parent_style, tag);
 		}
 		
 		if (name == "rect") {
-			parse_rect (layer, tag);
+			parse_rect (layer, parent_style, tag);
 		}
 
 		if (name == "circle") {
-			parse_circle (layer, tag);
+			parse_circle (layer, parent_style, tag);
 		}
 
 		if (name == "ellipse") {
-			parse_ellipse (layer, tag);
+			parse_ellipse (layer, parent_style, tag);
 		}
 		
 		if (name == "line") {
-			parse_line (layer, tag);
+			parse_line (layer, parent_style, tag);
 		}
 	}
 
-	private void parse_polygon (Layer layer, Tag tag) {
+	private void parse_polygon (Layer layer, SvgStyle parent_style, Tag tag) {
 	}
 	
-	private void parse_polyline (Layer layer, Tag tag) {
+	private void parse_polyline (Layer layer, SvgStyle parent_style, Tag tag) {
 	}
 	
-	private void parse_rect (Layer layer, Tag tag) {
+	private void parse_rect (Layer layer, SvgStyle parent_style, Tag tag) {
 		Rectangle rectangle = new Rectangle ();
 
 		foreach (Attribute attr in tag.get_attributes ()) {
@@ -286,13 +292,13 @@ public class SvgFile : GLib.Object {
 		}
 		
 		rectangle.transforms = get_transform (tag.get_attributes ());
-		rectangle.style = SvgStyle.parse (drawing.defs,tag.get_attributes ());
+		rectangle.style = SvgStyle.parse (drawing.defs, parent_style, tag.get_attributes ());
 		rectangle.visible = is_visible (tag);	
 		
 		layer.add_object (rectangle);
 	}
 	
-	private void parse_circle (Layer layer, Tag tag) {
+	private void parse_circle (Layer layer, SvgStyle parent_style, Tag tag) {
 		Circle circle = new Circle ();
 		
 		foreach (Attribute attr in tag.get_attributes ()) {
@@ -312,13 +318,13 @@ public class SvgFile : GLib.Object {
 		}
 		
 		circle.transforms = get_transform (tag.get_attributes ());
-		circle.style = SvgStyle.parse (drawing.defs, tag.get_attributes ());
+		circle.style = SvgStyle.parse (drawing.defs, parent_style, tag.get_attributes ());
 		circle.visible = is_visible (tag);	
 		
 		layer.add_object (circle);
 	}
 	
-	private void parse_ellipse (Layer layer, Tag tag) {
+	private void parse_ellipse (Layer layer, SvgStyle parent_style, Tag tag) {
 		Ellipse ellipse = new Ellipse ();
 		
 		foreach (Attribute attr in tag.get_attributes ()) {
@@ -342,13 +348,13 @@ public class SvgFile : GLib.Object {
 		}
 		
 		ellipse.transforms = get_transform (tag.get_attributes ());
-		ellipse.style = SvgStyle.parse (drawing.defs, tag.get_attributes ());
+		ellipse.style = SvgStyle.parse (drawing.defs, parent_style, tag.get_attributes ());
 		ellipse.visible = is_visible (tag);	
 		
 		layer.add_object (ellipse);
 	}
 	
-	private void parse_line (Layer layer, Tag tag) {
+	private void parse_line (Layer layer, SvgStyle parent_style, Tag tag) {
 		Line line = new Line ();
 		
 		foreach (Attribute attr in tag.get_attributes ()) {
@@ -372,7 +378,7 @@ public class SvgFile : GLib.Object {
 		}
 		
 		line.transforms = get_transform (tag.get_attributes ());
-		line.style = SvgStyle.parse (drawing.defs, tag.get_attributes ());
+		line.style = SvgStyle.parse (drawing.defs, parent_style, tag.get_attributes ());
 		line.visible = is_visible (tag);	
 		
 		layer.add_object (line);
@@ -559,7 +565,7 @@ public class SvgFile : GLib.Object {
 		return new SvgTransforms ();
 	}
 	
-	private void parse_path (Layer layer, Tag tag) {
+	private void parse_path (Layer layer, SvgStyle parent_style, Tag tag) {
 		SvgPath path = new SvgPath ();
 
 		foreach (Attribute attr in tag.get_attributes ()) {
@@ -569,7 +575,7 @@ public class SvgFile : GLib.Object {
 		}
 		
 		path.transforms = get_transform (tag.get_attributes ());
-		path.style = SvgStyle.parse (drawing.defs, tag.get_attributes ());
+		path.style = SvgStyle.parse (drawing.defs, parent_style, tag.get_attributes ());
 		path.visible = is_visible (tag);	
 		
 		layer.add_object (path);
