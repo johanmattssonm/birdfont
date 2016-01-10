@@ -348,9 +348,34 @@ public class SvgFile : GLib.Object {
 		layer.add_object (ellipse);
 	}
 	
-	// FIXME:
 	private void parse_line (Layer layer, Tag tag) {
+		Line line = new Line ();
+		
+		foreach (Attribute attr in tag.get_attributes ()) {
+			string name = attr.get_name ();
+			
+			if (name == "x1") {
+				line.x1 = parse_number (attr.get_content ());
+			}
 
+			if (name == "y1") {
+				line.y1 = parse_number (attr.get_content ());
+			}
+			
+			if (name == "x2") {
+				line.x2 = parse_number (attr.get_content ());
+			}
+			
+			if (name == "y2") {
+				line.y2 = parse_number (attr.get_content ());
+			}
+		}
+		
+		line.transforms = get_transform (tag.get_attributes ());
+		line.style = SvgStyle.parse (drawing.defs, tag.get_attributes ());
+		line.visible = is_visible (tag);	
+		
+		layer.add_object (line);
 	}
 	
 	// FIXME: reverse order?
