@@ -515,7 +515,7 @@ public class SvgParser {
 			}
 		}
 		
-		style = SvgStyle.parse (null, tag.get_attributes ());
+		style = SvgStyle.parse (null, style, tag.get_attributes ());
 		
 		if (hidden) {
 			return;
@@ -583,7 +583,7 @@ public class SvgParser {
 			}
 		}
 		
-		style = SvgStyle.parse (null, tag.get_attributes ());
+		style = SvgStyle.parse (null, style, tag.get_attributes ());
 		
 		if (hidden) {
 			return;
@@ -649,7 +649,7 @@ public class SvgParser {
 			}
 		}
 		
-		style = SvgStyle.parse (null, tag.get_attributes ());
+		style = SvgStyle.parse (null, style, tag.get_attributes ());
 		
 		if (hidden) {
 			return;
@@ -727,7 +727,7 @@ public class SvgParser {
 			}
 		}
 		
-		style = SvgStyle.parse (null, tag.get_attributes ());
+		style = SvgStyle.parse (null, style, tag.get_attributes ());
 		
 		if (hidden) {
 			return;
@@ -825,7 +825,7 @@ public class SvgParser {
 			}
 		}
 
-		style = SvgStyle.parse (null, tag.get_attributes ());
+		style = SvgStyle.parse (null, style, tag.get_attributes ());
 		
 		if (hidden) {
 			return path_list;
@@ -865,7 +865,7 @@ public class SvgParser {
 			}
 		}
 		
-		style = SvgStyle.parse (null, tag.get_attributes ());
+		style = SvgStyle.parse (null, style, tag.get_attributes ());
 		
 		if (hidden) {
 			return;

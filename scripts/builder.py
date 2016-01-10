@@ -89,7 +89,7 @@ class Builder(object):
         
         yield {
             'basename': 'valac ' + source_directory,
-            'file_dep': [build_file] + vala_source_paths,
+            'file_dep': [build_file] + vala_source_paths + bindep,
             'actions': [valac_command],
             'targets': generated_csource_paths
         }
