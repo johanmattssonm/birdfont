@@ -12,6 +12,8 @@
 	Lesser General Public License for more details.
 */
 
+using SvgBird;
+
 namespace BirdFont {
 
 public class MenuTab : FontDisplay {
@@ -274,6 +276,7 @@ public class MenuTab : FontDisplay {
 		}
 		
 		DrawingTools.set_stroke_tool_visibility ();
+
 
 		string lock_grid = f.settings.get_setting ("lock_grid");
 		bool lg = bool.parse (lock_grid);		
@@ -661,12 +664,12 @@ public class MenuTab : FontDisplay {
 		
 		g.store_undo_state ();
 		
-		foreach (Object o in g.active_paths) {
+		foreach (SvgBird.Object o in g.active_paths) {
 			g.layers.remove (o);
 		}
 
 		foreach (Path p in g.get_active_paths ()) {
-			g.layers.remove_path (p);
+			LayerUtils.remove_path (g.layers, p);
 		}
 				
 		foreach (Path p in paths) {

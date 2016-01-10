@@ -14,7 +14,7 @@
 
 using Cairo;
 
-namespace BirdFont {
+namespace SvgBird {
 
 public class Doubles : GLib.Object {
 	public double* data;

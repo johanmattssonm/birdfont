@@ -14,6 +14,7 @@
 
 using Cairo;
 using Math;
+using SvgBird;
 
 namespace BirdFont {
 
@@ -297,7 +298,7 @@ public class DrawingTools : ToolCollection  {
 			glyph.selection_boundaries (out x, out y, out w, out h);
 			delta = x_coordinate.get_value () - x + glyph.left_limit;
 			
-			foreach (Object path in glyph.active_paths) {
+			foreach (SvgBird.Object path in glyph.active_paths) {
 				path.move (delta, 0);
 			}
 			
@@ -380,7 +381,7 @@ public class DrawingTools : ToolCollection  {
 			double x, y, w, h;
 			Glyph glyph = MainWindow.get_current_glyph ();
 			double angle = (self.get_value () / 360) * 2 * PI;
-			Object last_path;
+			SvgBird.Object last_path;
 			glyph.selection_boundaries (out x, out y, out w, out h);
 			
 			x += w / 2;
@@ -603,7 +604,7 @@ public class DrawingTools : ToolCollection  {
 			Glyph g = MainWindow.get_current_glyph ();
 			Layer layer = g.get_current_layer ();
 			
-			foreach (Object p in g.active_paths) {
+			foreach (SvgBird.Object p in g.active_paths) {
 				layer.remove (p);
 				layer.objects.objects.insert (0, p);
 			}
@@ -803,12 +804,12 @@ public class DrawingTools : ToolCollection  {
 			g.store_undo_state ();
 		
 			if (StrokeTool.add_stroke) {
-				foreach (Object p in g.active_paths) {
+				foreach (SvgBird.Object p in g.active_paths) {
 					p.stroke = StrokeTool.stroke_width;
 					p.line_cap = StrokeTool.line_cap;
 				}
 			} else {
-				foreach (Object p in g.active_paths) {
+				foreach (SvgBird.Object p in g.active_paths) {
 					p.stroke = 0;
 				}	
 			}
@@ -843,7 +844,7 @@ public class DrawingTools : ToolCollection  {
 			StrokeTool.stroke_width = object_stroke.get_value ();
 					
 			if (tool && StrokeTool.add_stroke) {
-				foreach (Object p in g.active_paths) {
+				foreach (SvgBird.Object p in g.active_paths) {
 					p.stroke = StrokeTool.stroke_width;
 					
 					if (p is PathObject) {
@@ -885,15 +886,15 @@ public class DrawingTools : ToolCollection  {
 			g = MainWindow.get_current_glyph ();
 			g.store_undo_state ();
 			
-			foreach (Object p in g.active_paths) {
-				p.line_cap = LineCap.BUTT;
+			foreach (SvgBird.Object p in g.active_paths) {
+				p.line_cap = SvgBird.LineCap.BUTT;
 				
 				if (p is PathObject) {
 					((PathObject) p).get_path ().reset_stroke ();
 				}
 			}
 			
-			StrokeTool.line_cap = LineCap.BUTT;
+			StrokeTool.line_cap = SvgBird.LineCap.BUTT;
 			Font f = BirdFont.get_current_font ();
 			f.settings.set_setting ("line_cap", @"butt");
 
@@ -912,15 +913,15 @@ public class DrawingTools : ToolCollection  {
 			g = MainWindow.get_current_glyph ();
 			g.store_undo_state ();
 			
-			foreach (Object p in g.active_paths) {
-				p.line_cap = LineCap.ROUND;
+			foreach (SvgBird.Object p in g.active_paths) {
+				p.line_cap = SvgBird.LineCap.ROUND;
 				
 				if (p is PathObject) {
 					((PathObject) p).get_path ().reset_stroke ();
 				}
 			}
 			
-			StrokeTool.line_cap = LineCap.ROUND;
+			StrokeTool.line_cap = SvgBird.LineCap.ROUND;
 
 			Font f = BirdFont.get_current_font ();
 			f.settings.set_setting ("line_cap", @"round");
@@ -940,15 +941,15 @@ public class DrawingTools : ToolCollection  {
 			g = MainWindow.get_current_glyph ();
 			g.store_undo_state ();
 			
-			foreach (Object p in g.active_paths) {
-				p.line_cap = LineCap.SQUARE;
+			foreach (SvgBird.Object p in g.active_paths) {
+				p.line_cap = SvgBird.LineCap.SQUARE;
 
 				if (p is PathObject) {
 					((PathObject) p).get_path ().reset_stroke ();
 				}
 			}
 			
-			StrokeTool.line_cap = LineCap.SQUARE;
+			StrokeTool.line_cap = SvgBird.LineCap.SQUARE;
 
 			Font f = BirdFont.get_current_font ();
 			f.settings.set_setting ("line_cap", @"square");
@@ -1267,7 +1268,7 @@ public class DrawingTools : ToolCollection  {
 		bool stroke = false;
 		Glyph g = MainWindow.get_current_glyph ();
 		
-		foreach (Object p in g.active_paths) {
+		foreach (SvgBird.Object p in g.active_paths) {
 			if (p.stroke > 0) {
 				stroke = true;
 			}

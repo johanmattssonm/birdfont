@@ -15,10 +15,11 @@
 using B;
 using Math;
 using Cairo;
+using SvgBird;
 
 namespace BirdFont {
 
-public class EmbeddedSvg : Object {
+public class EmbeddedSvg : SvgBird.Object {
 	public string svg_data = "";
 	public SvgDrawing drawing = new SvgDrawing ();
 	
@@ -86,7 +87,7 @@ public class EmbeddedSvg : Object {
 		cr.restore ();
 	}
 	
-	public override Object copy () {
+	public override SvgBird.Object copy () {
 		EmbeddedSvg svg = new EmbeddedSvg (drawing);
 		svg.svg_data = svg_data;
 		return svg;

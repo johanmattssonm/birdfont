@@ -12,60 +12,53 @@
 	Lesser General Public License for more details.
 */
 
+
+using B;
 using Cairo;
+using Math;
 
-namespace BirdFont {
+namespace SvgBird {
 
-public class SvgPath : Object {	
-	public Gee.ArrayList<Points> points = new Gee.ArrayList<Points> ();
-	
-	public SvgPath () {
-	}
+public class SvgDrawing : Object {
+	public Layer root_layer = new Layer ();
+	public Defs defs = new Defs ();
 
-	public SvgPath.create_copy (SvgPath p) {
-		Object.copy_attributes (p, this);
+	public double x = 0;
+	public double y = 0;
+	public double width = 0;
+	public double height = 0;
+		
+	public override void update_region_boundaries () {
 	}
 	
 	public override bool is_over (double x, double y) {
-		return false;
-	}
-			
-	public override void draw (Context cr) {
-		cr.save ();
-		cr.new_path ();
-		
-		foreach (Points p in points) {
-			cr.move_to (p.x, p.y);
-			draw_points (cr, p);
-			
-			if (p.closed) {
-				cr.close_path ();
-			}
-		}
-			
-		apply_transform (cr);		
-		paint (cr);
-		cr.restore ();
-	}
-
-	public void draw_points (Context cr, Points points) {
-		Doubles p = points.point_data;
-		
-		return_if_fail (p.size % 6 == 0);
-		
-		for (int i = 0; i < p.size; i += 6) {
-			cr.curve_to (p.data[i], p.data[i + 1], 
-				p.data[i + 2], p.data[i + 3],
-				p.data[i + 4], p.data[i + 5]);
-		}		
-	}
-
-	public override void move (double dx, double dy) {
+		return (this.x <= x <= this.x + width) 
+			&& (this.y <= y <= this.y + height);
 	}
 	
-	public override void update_region_boundaries () {
-	}
+	public override void draw (Context cr) {
+		cr.save ();
+		cr.translate (x, y);
 
+		foreach (Object o in root_layer.get_visible_objects ().objects) {
+			o.draw (cr);
+		}
+
+		cr.restore ();
+	}
+	
+	public override Object copy () {
+		SvgDrawing drawing = new SvgDrawing ();
+		drawing.root_layer = root_layer.copy ();
+		drawing.defs = defs.copy ();
+		return drawing;
+	}
+	
+	public override void move (double dx, double dy) {
+		x += dx;
+		y += dy;
+	}
+	
 	public override void rotate (double theta, double xc, double yc) {
 	}
 	
@@ -74,14 +67,6 @@ public class SvgPath : Object {
 	}
 	
 	public override void resize (double ratio_x, double ratio_y) {
-	}
-	
-	public override Object copy () {
-		return new SvgPath.create_copy (this);
-	}
-
-	public override string to_string () {
-		return "SvgPath";
 	}
 }
 

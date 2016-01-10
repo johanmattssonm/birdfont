@@ -15,7 +15,7 @@
 using B;
 using Math;
 
-namespace BirdFont {
+namespace SvgBird {
 
 public class Defs {
 	public Gee.ArrayList<Gradient> gradients = new Gee.ArrayList<Gradient> ();

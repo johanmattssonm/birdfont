@@ -14,6 +14,7 @@
 
 using Math;
 using Cairo;
+using SvgBird;
 
 namespace BirdFont {
 
@@ -94,9 +95,9 @@ public class MoveTool : Tool {
 				g.store_undo_state ();
 			}
 			
-			foreach (Object p in g.active_paths) {
+			foreach (SvgBird.Object p in g.active_paths) {
 				if (p is PathObject) {
-					g.layers.remove_path (((PathObject) p).get_path ());
+					LayerUtils.remove_path (g.layers, ((PathObject) p).get_path ());
 				} else {
 					g.layers.remove (p);
 				}
@@ -128,7 +129,7 @@ public class MoveTool : Tool {
 			delta_x = -dx;
 			delta_y = -dy;
 			
-			foreach (Object object in glyph.active_paths) {
+			foreach (SvgBird.Object object in glyph.active_paths) {
 				object.move (delta_x, delta_y);
 			}
 		}
@@ -156,7 +157,7 @@ public class MoveTool : Tool {
 		if (GridTool.is_visible () && moved) {
 			tie_paths_to_grid (glyph);
 		} else if (GridTool.has_ttf_grid ()) {
-			foreach (Object p in glyph.active_paths) {
+			foreach (SvgBird.Object p in glyph.active_paths) {
 				tie_path_to_ttf_grid (p);
 			}
 		} 
@@ -173,7 +174,7 @@ public class MoveTool : Tool {
 			objects_moved ();
 			DrawingTools.resize_tool.signal_objects_rotated ();
 			
-			foreach (Object o in glyph.active_paths) {
+			foreach (SvgBird.Object o in glyph.active_paths) {
 				if (o is PathObject) {
 					PathObject path = (PathObject) o;
 					path.get_path ().create_full_stroke ();
@@ -186,9 +187,9 @@ public class MoveTool : Tool {
 		
 	public void press (int b, int x, int y) {
 		Glyph glyph = MainWindow.get_current_glyph ();
-		Object object;
+		SvgBird.Object object;
 		bool selected = false;
-		Object? o;
+		SvgBird.Object? o;
 		
 		glyph.store_undo_state ();	
 		double px = Glyph.path_coordinate_x (x);
@@ -239,7 +240,7 @@ public class MoveTool : Tool {
 		
 		glyph.clear_active_paths ();
 		
-		foreach (Object p in glyph.get_objects_in_current_layer ()) {
+		foreach (SvgBird.Object p in glyph.get_objects_in_current_layer ()) {
 			if (p.xmin > x1 && p.xmax < x2 && p.ymin < y1 && p.ymax > y2) {
 				if (!p.is_empty ()) {
 					glyph.add_active_object (null, p);
@@ -263,7 +264,7 @@ public class MoveTool : Tool {
 		
 		get_selection_box_boundaries (out x, out y, out w, out h);
 		
-		foreach (Object path in glyph.active_paths) {
+		foreach (SvgBird.Object path in glyph.active_paths) {
 			path.move (glyph.left_limit - x + w / 2, font.base_line - y + h / 2);
 		}
 		
@@ -281,7 +282,7 @@ public class MoveTool : Tool {
 		px2 = -10000;
 		py2 = -10000;
 		
-		foreach (Object o in glyph.active_paths) {
+		foreach (SvgBird.Object o in glyph.active_paths) {
 			if (o is PathObject) {
 				Path p = ((PathObject) o).get_path ();
 				p.update_region_boundaries ();
@@ -334,7 +335,7 @@ public class MoveTool : Tool {
 				break;
 		}
 		
-		foreach (Object path in glyph.active_paths) {
+		foreach (SvgBird.Object path in glyph.active_paths) {
 			path.move (x * Glyph.ivz (), y * Glyph.ivz ());
 		}
 		
@@ -345,7 +346,7 @@ public class MoveTool : Tool {
 		glyph.redraw_area (0, 0, glyph.allocation.width, glyph.allocation.height);
 	}
 
-	static void tie_path_to_ttf_grid (Object p) {
+	static void tie_path_to_ttf_grid (SvgBird.Object p) {
 		double sx, sy, qx, qy;	
 
 		sx = p.xmax;
@@ -395,7 +396,7 @@ public class MoveTool : Tool {
 		dx_min = Math.fabs (qx - minx);
 		dx_max = Math.fabs (sx - maxx);
 		
-		foreach (Object p in g.active_paths) {
+		foreach (SvgBird.Object p in g.active_paths) {
 			if (dy_min < dy_max) {
 				p.move (0, qy - miny);
 			} else {
@@ -414,7 +415,7 @@ public class MoveTool : Tool {
 	
 	public static void update_boundaries_for_selection () {
 		Glyph glyph = MainWindow.get_current_glyph ();
-		foreach (Object o in glyph.active_paths) {
+		foreach (SvgBird.Object o in glyph.active_paths) {
 			if (o is PathObject) {
 				((PathObject)o).get_path ().update_region_boundaries ();
 			}
@@ -439,7 +440,7 @@ public class MoveTool : Tool {
 		xc = selection_box_center_x;
 		yc = selection_box_center_y;
 
-		foreach (Object p in glyph.active_paths) {
+		foreach (SvgBird.Object p in glyph.active_paths) {
 			if (p is PathObject) {
 				Path path = ((PathObject) p).get_path ();
 				
@@ -459,7 +460,7 @@ public class MoveTool : Tool {
 		dx = -(xc2 - xc);
 		dy = -(yc2 - yc);
 		
-		foreach (Object p in glyph.active_paths) {
+		foreach (SvgBird.Object p in glyph.active_paths) {
 			p.move (dx, dy);
 		}
 		
@@ -473,7 +474,7 @@ public class MoveTool : Tool {
 		Glyph g = MainWindow.get_current_glyph ();
 		
 		g.clear_active_paths ();
-		foreach (Object p in g.get_objects_in_current_layer ()) {
+		foreach (SvgBird.Object p in g.get_objects_in_current_layer ()) {
 			if (!p.is_empty ()) {
 				g.add_active_object (null, p);
 			}

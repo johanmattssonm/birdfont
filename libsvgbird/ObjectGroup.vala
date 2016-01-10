@@ -12,7 +12,7 @@
 	Lesser General Public License for more details.
 */
 
-namespace BirdFont {
+namespace SvgBird {
 
 public class ObjectGroup : GLib.Object {
 	public Gee.ArrayList<Object> objects;

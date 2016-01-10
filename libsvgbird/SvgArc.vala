@@ -39,7 +39,7 @@
 
 using Math;
 
-namespace BirdFont {
+namespace SvgBird {
 
 /** Convert an SVG arc instruction to a Beziér path. */
 static void add_arc_points (BezierPoints[] bezier_points, ref int bi, double x0, double y0, double rx, double ry, double angle, bool largeArcFlag, bool sweepFlag, double x, double y) {

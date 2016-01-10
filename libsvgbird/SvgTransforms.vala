@@ -14,7 +14,7 @@
 
 using Cairo;
 
-namespace BirdFont {
+namespace SvgBird {
 
 public class SvgTransforms : GLib.Object {
 	public Gee.ArrayList<SvgTransform> transforms;

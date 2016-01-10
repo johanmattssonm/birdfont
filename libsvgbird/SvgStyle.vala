@@ -15,7 +15,7 @@
 using B;
 using Math;
 
-namespace BirdFont {
+namespace SvgBird {
 
 public class SvgStyle {
 	
@@ -140,20 +140,6 @@ public class SvgStyle {
 			v = pair[1];
 			
 			style.set (k, v);
-		}
-	}
-	
-	public void apply (PathList path_list) {
-		foreach (Path p in path_list.paths) {
-			if (has_stroke ()) {
-				p.stroke = get_stroke_width ();
-			} else {
-				p.stroke = 0;
-			}
-			
-			p.line_cap = get_line_cap ();
-			p.reset_stroke ();
-			p.update_region_boundaries ();		
 		}
 	}
 }

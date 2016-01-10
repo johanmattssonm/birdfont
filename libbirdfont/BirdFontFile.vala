@@ -11,7 +11,9 @@
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
 	Lesser General Public License for more details.
 */
+
 using B;
+using SvgBird;
 
 namespace BirdFont {
 
@@ -504,7 +506,7 @@ class BirdFontFile : GLib.Object {
 	void write_layer (Layer layer, DataOutputStream os) throws GLib.Error {
 		os.put_string (@"\t\t<layer name= \"$(layer.name)\" visible=\"$(layer.visible)\">\n");
 		
-		foreach (Object o in layer.get_all_objects ().objects) {
+		foreach (SvgBird.Object o in layer.get_all_objects ().objects) {
 			
 			if (o is EmbeddedSvg) {
 				write_embedded_svg ((EmbeddedSvg) o, os);
@@ -1486,8 +1488,7 @@ class BirdFontFile : GLib.Object {
 		}
 		
 		if (type == "svg") {
-			SvgFile svg_file = new SvgFile ();
-			EmbeddedSvg svg = svg_file.parse_data (tag.get_content ());
+			EmbeddedSvg svg = SvgParser.parse_embedded_svg_data (tag.get_content ());
 			svg.x = x;
 			svg.y = y;
 			layer.add_object (svg);
@@ -1511,7 +1512,7 @@ class BirdFontFile : GLib.Object {
 		foreach (Tag t in tag) {
 			if (t.get_name () == "path") {
 				path = parse_path (t);
-				layer.add_path (path);
+				LayerUtils.add_path (layer, path);
 			}
 			
 			if (t.get_name () == "embedded") {
@@ -1956,6 +1957,7 @@ class BirdFontFile : GLib.Object {
 		ligatures = font.get_ligatures ();
 		ligatures.add_ligature (sequence, ligature);
 	}
+
 }
 
 }

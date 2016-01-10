@@ -16,6 +16,7 @@ using Cairo;
 using Math;
 using Gee;
 using B;
+using SvgBird;
 
 namespace BirdFont {
 
@@ -132,7 +133,7 @@ public class Glyph : FontDisplay {
 
 	public Layer layers = new Layer ();
 	public int current_layer = 0;
-	public Gee.ArrayList<Object> active_paths = new Gee.ArrayList<Object> ();
+	public Gee.ArrayList<SvgBird.Object> active_paths = new Gee.ArrayList<SvgBird.Object> ();
 
 	// used if this glyph originates from a fallback font
 	public double top_limit = 0;
@@ -178,28 +179,28 @@ public class Glyph : FontDisplay {
 		warning ("Layer is not added to glyph.");
 	}
 
-	public Gee.ArrayList<Object> get_visible_objects () {
+	public Gee.ArrayList<SvgBird.Object> get_visible_objects () {
 		return layers.get_visible_objects ().objects;
 	}
 
 	public Gee.ArrayList<Path> get_visible_paths () {
-		return layers.get_visible_paths ().paths;
+		return LayerUtils.get_visible_paths (layers).paths;
 	}
 
 	public PathList get_visible_path_list () {
-		return layers.get_visible_paths ();
+		return LayerUtils.get_visible_paths (layers);
 	}
 
-	public Gee.ArrayList<Object> get_objects_in_current_layer () {
+	public Gee.ArrayList<SvgBird.Object> get_objects_in_current_layer () {
 		return get_current_layer ().get_all_objects ().objects;
 	}
 
 	public Gee.ArrayList<Path> get_paths_in_current_layer () {
-		return get_current_layer ().get_all_paths ().paths;
+		return LayerUtils.get_all_paths (get_current_layer ()).paths;
 	}
 
 	public Gee.ArrayList<Path> get_all_paths () {
-		return layers.get_all_paths ().paths;
+		return LayerUtils.get_all_paths (layers).paths;
 	}
 
 	public void add_new_layer () {
@@ -275,8 +276,8 @@ public class Glyph : FontDisplay {
 	}
 	
 	// FIXME: delete group
-	public void add_active_object (Layer? group, Object? o) {
-		Object object;
+	public void add_active_object (Layer? group, SvgBird.Object? o) {
+		SvgBird.Object object;
 		Layer g;
 
 		if (o != null) {
@@ -299,7 +300,7 @@ public class Glyph : FontDisplay {
 		}
 	}
 
-	public bool active_paths_contains (Object object) {
+	public bool active_paths_contains (SvgBird.Object object) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 
 		if (glyph.active_paths.contains (object)) {
@@ -309,7 +310,7 @@ public class Glyph : FontDisplay {
 		if (object is PathObject) {
 			PathObject path = (PathObject) object;
 			
-			foreach (Object active in glyph.active_paths) {
+			foreach (SvgBird.Object active in glyph.active_paths) {
 				if (active is PathObject) {
 					PathObject path_active = (PathObject) active;
 					if (path_active.get_path () == path.get_path ()) {
@@ -377,7 +378,7 @@ public class Glyph : FontDisplay {
 		px2 = -10000;
 		py2 = -10000;
 
-		foreach (Object p in active_paths) {
+		foreach (SvgBird.Object p in active_paths) {
 			if (p.xmin < px) {
 				px = p.xmin;
 			}
@@ -486,10 +487,10 @@ public class Glyph : FontDisplay {
 			layers.add_layer (new Layer ());
 		}
 
-		get_current_layer ().add_path (p);
+		LayerUtils.add_path (get_current_layer (), p);
 	}
 
-	public void add_object (Object object) {
+	public void add_object (SvgBird.Object object) {
 		if (layers.subgroups.size == 0) {
 			layers.add_layer (new Layer ());
 		}
@@ -785,12 +786,12 @@ public class Glyph : FontDisplay {
 		}
 	}
 
-	public void delete_object (Object o) {
+	public void delete_object (SvgBird.Object o) {
 		layers.remove (o);
 	}
 
 	public void delete_path (Path p) {
-		layers.remove_path(p);
+		LayerUtils.remove_path(layers, p);
 	}
 
 	public string get_svg_data () {
@@ -1199,8 +1200,8 @@ public class Glyph : FontDisplay {
 		return -y;
 	}
 
-	public Object? get_object_at (double x, double y) {
-		foreach (Object o in get_current_layer ().objects) {
+	public SvgBird.Object? get_object_at (double x, double y) {
+		foreach (SvgBird.Object o in get_current_layer ().objects) {
 			if (o.is_over (x, y)) {
 				return o;
 			}
@@ -1275,7 +1276,7 @@ public class Glyph : FontDisplay {
 			return;
 		}
 
-		foreach (Object object in active_paths) {
+		foreach (SvgBird.Object object in active_paths) {
 			EditPoint p;
 			Path path = ((PathObject) object).get_path ();
 			EditPoint pl = path.get_last_point ();
@@ -1581,7 +1582,7 @@ public class Glyph : FontDisplay {
 		cr.save ();
 		cr.new_path ();
 		
-		foreach (Object o in get_visible_objects ()) {
+		foreach (SvgBird.Object o in get_visible_objects ()) {
 			if (o is PathObject) {
 				((PathObject) o).draw_path (cr, c);
 			} else {
@@ -1598,7 +1599,7 @@ public class Glyph : FontDisplay {
 		Color color;
 
 		// FIXME: layer transforms
-		foreach (Object o in get_visible_objects ()) {
+		foreach (SvgBird.Object o in get_visible_objects ()) {
 			if (!(o is PathObject)) {
 				o.draw (cr);
 			}
@@ -1629,12 +1630,12 @@ public class Glyph : FontDisplay {
 			&& !(MainWindow.get_toolbox ().get_current_tool () is BezierTool)) {
 			cr.save ();
 			cr.new_path ();
-			foreach (Object o in active_paths) {
+			foreach (SvgBird.Object o in active_paths) {
 				if (o is PathObject) {
 					Path p = ((PathObject) o).get_path ();
 					if (p.stroke > 0) {
 						stroke = p.get_stroke_fast ();
-						color = Theme.get_color ("Selected Objects");
+						color = Theme.get_color ("Selected SvgBird.Objects");
 						PathObject.draw_path_list (stroke, cr, color);
 					}
 				}
@@ -1674,7 +1675,7 @@ public class Glyph : FontDisplay {
 			cr.new_path ();
 			
 			// FIXME: layer transforms
-			foreach (Object o in get_visible_objects ()) {
+			foreach (SvgBird.Object o in get_visible_objects ()) {
 				if (o is PathObject) {
 					Path p = ((PathObject) o).get_path ();
 
@@ -1689,7 +1690,7 @@ public class Glyph : FontDisplay {
 			cr.fill ();
 			cr.restore ();
 
-			foreach (Object o in active_paths) {
+			foreach (SvgBird.Object o in active_paths) {
 				if (o is PathObject) {
 					Path p = ((PathObject) o).get_path ();
 					cr.save ();
@@ -1758,7 +1759,7 @@ public class Glyph : FontDisplay {
 		}
 
 		if (unlikely (Preferences.draw_boundaries)) {
-			foreach (Object o in get_visible_objects ()) {
+			foreach (SvgBird.Object o in get_visible_objects ()) {
 				draw_boundaries (o, cmp);
 			}
 		}
@@ -1859,7 +1860,7 @@ public class Glyph : FontDisplay {
 
 		g.layers = layers.copy ();
 
-		foreach (Object o in active_paths) {
+		foreach (SvgBird.Object o in active_paths) {
 			g.active_paths.add (o);
 		}
 
@@ -1947,7 +1948,7 @@ public class Glyph : FontDisplay {
 		}
 
 		clear_active_paths ();
-		foreach (Object p in g.active_paths) {
+		foreach (SvgBird.Object p in g.active_paths) {
 			add_active_object (null, p);
 		}
 
@@ -2442,11 +2443,11 @@ public class Glyph : FontDisplay {
 		return g2;
 	}
 	
-	// FIXME: convert everything to the new Object code
+	// FIXME: convert everything to the new SvgBird.Object code
 	public Gee.ArrayList<Path> get_active_paths () {
 		Gee.ArrayList<Path> paths = new Gee.ArrayList<Path> ();
 		
-		foreach (Object object in active_paths) {
+		foreach (SvgBird.Object object in active_paths) {
 			if (object is PathObject) {
 				paths.add (((PathObject) object).get_path ());
 			}
@@ -2455,7 +2456,7 @@ public class Glyph : FontDisplay {
 		return paths;
 	}
 	
-	public void draw_boundaries  (Object object, Context cr) {
+	public void draw_boundaries  (SvgBird.Object object, Context cr) {
 		double x = Glyph.reverse_path_coordinate_x (object.xmin); 
 		double y = Glyph.reverse_path_coordinate_y (object.ymin);
 		double x2 = Glyph.reverse_path_coordinate_x (object.xmax);

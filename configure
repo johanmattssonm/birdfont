@@ -11,7 +11,8 @@ import re
 from scripts.run import run
 
 TARGETS = ['libbirdfont', 
-           'libbirdgems', 
+           'libbirdgems',
+           'libsvgbird',
            'birdfont', 
            'birdfont-autotrace',
            'birdfont-export',
@@ -206,12 +207,12 @@ configure(options.gtk, options.gee)
 
 configfile.write_config(options.prefix)
 configfile.write_compile_parameters(options.prefix,
-									 options.dest,
-									 options.cc,
-									 gee,
-									 options.valac,
-									 options.nonnull,
-									 valacflags,
-									 cflags,
-									 ldflags,
-									 options.gtk)
+									options.dest,
+									options.cc,
+									gee,
+									options.valac,
+									options.nonnull,
+									valacflags,
+									cflags,
+									ldflags,
+									options.gtk)

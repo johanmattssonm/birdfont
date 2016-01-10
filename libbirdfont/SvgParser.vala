@@ -14,6 +14,7 @@
 
 using B;
 using Math;
+using SvgBird;
 
 namespace BirdFont {
 
@@ -63,8 +64,7 @@ public class SvgParser {
 	}
 		
 	public static void import_color_svg (Glyph glyph, string path) {
-		SvgFile svg_file = new SvgFile ();
-		EmbeddedSvg drawing = svg_file.parse (path);
+		EmbeddedSvg drawing = SvgParser.parse_embedded_svg_file (path);
 		
 		Layer layer = new Layer ();
 		layer.name = "SVG";
@@ -231,7 +231,7 @@ public class SvgParser {
 			}			
 		}
 		
-		return pl.get_all_paths ();
+		return LayerUtils.get_all_paths (pl);
 	}
 	
 	private void parse_layer (Tag tag, Layer pl) {
@@ -300,7 +300,7 @@ public class SvgParser {
 	private void transform (string transform_functions, Layer layer) {
 		PathList path_list = new PathList ();
 		
-		foreach (Object o in layer.objects) {
+		foreach (SvgBird.Object o in layer.objects) {
 			if (o is PathObject) {
 				path_list.add (((PathObject) o).get_path ());
 			}
@@ -541,8 +541,8 @@ public class SvgParser {
 			}
 		}
 		
-		style.apply (npl);
-		pl.append_paths (npl);
+		npl.apply_style (style);
+		append_paths (pl, npl);
 	}
 
 	private void parse_ellipse (Tag tag, Layer pl) {
@@ -609,8 +609,8 @@ public class SvgParser {
 			}
 		}
 		
-		style.apply (npl);
-		pl.append_paths (npl);
+		npl.apply_style (style);
+		append_paths (pl, npl);
 	}
 
 	private void parse_line (Tag tag, Layer pl) {
@@ -686,8 +686,8 @@ public class SvgParser {
 			}
 		}
 		
-		style.apply (npl);
-		pl.append_paths (npl);
+		npl.apply_style (style);
+		append_paths (pl, npl);
 	}
 		
 	private void parse_rect (Tag tag, Layer layer) {
@@ -787,8 +787,8 @@ public class SvgParser {
 			}
 		}
 		
-		style.apply (npl);
-		layer.append_paths (npl);
+		npl.apply_style (style);
+		append_paths (layer, npl);
 	}
 	
 	private void parse_polygon (Tag tag, Layer layer) {
@@ -798,12 +798,15 @@ public class SvgParser {
 			p.close ();
 		}
 		
-		layer.append_paths (path_list);
+		append_paths (layer, path_list);
 	}
 
+	static void append_paths (Layer layer, PathList pl) {
+		LayerUtils.append_paths (layer, pl);
+	}
 	
 	private void parse_polyline (Tag tag, Layer layer) {	
-		layer.append_paths (get_polyline (tag));
+		append_paths (layer, get_polyline (tag));
 	}
 	
 	private PathList get_polyline (Tag tag) {
@@ -829,7 +832,7 @@ public class SvgParser {
 		}
 		
 		path_list.add (p);
-		style.apply (path_list);
+		path_list.apply_style (style);
 		
 		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "transform") {
@@ -869,21 +872,21 @@ public class SvgParser {
 		}
 		
 		foreach (Path path in path_list.paths) {
-			layer.add_path (path);
+			LayerUtils.add_path (layer, path);
 		}
 		
-		style.apply (path_list);
+		path_list.apply_style (style);
 
 		// assume the even odd rule is applied and convert the path
 		// to a path using the non-zero rule
 		int inside_count;
 		bool inside;
-		foreach (Object o1 in layer.objects) {
+		foreach (SvgBird.Object o1 in layer.objects) {
 			if (o1 is PathObject) {
 				Path p1 = ((PathObject) o1).get_path ();
 				inside_count = 0;
 				
-				foreach (Object o2 in layer.objects) {
+				foreach (SvgBird.Object o2 in layer.objects) {
 					if (o2 is PathObject) {
 						Path p2 = ((PathObject) o2).get_path ();
 					
@@ -1011,596 +1014,12 @@ public class SvgParser {
 		
 		return inside;
 	}
-
-	/** Add space as separator to svg data. 
-	 * @param d svg data
-	 */
-	public static string add_separators (string d) {
-		string data = d;
-		
-		data = data.replace (",", " ");
-		data = data.replace ("a", " a ");
-		data = data.replace ("A", " A ");
-		data = data.replace ("m", " m ");
-		data = data.replace ("M", " M ");
-		data = data.replace ("h", " h ");
-		data = data.replace ("H", " H ");
-		data = data.replace ("v", " v ");
-		data = data.replace ("V", " V ");
-		data = data.replace ("l", " l ");
-		data = data.replace ("L", " L ");
-		data = data.replace ("q", " q ");
-		data = data.replace ("Q", " Q ");		
-		data = data.replace ("c", " c ");
-		data = data.replace ("C", " C ");
-		data = data.replace ("t", " t ");
-		data = data.replace ("T", " T ");
-		data = data.replace ("s", " s ");
-		data = data.replace ("S", " S ");
-		data = data.replace ("zM", " z M ");
-		data = data.replace ("zm", " z m ");
-		data = data.replace ("z", " z ");
-		data = data.replace ("Z", " Z ");
-		data = data.replace ("-", " -");
-		data = data.replace ("e -", "e-"); // minus can be either separator or a negative exponent
-		data = data.replace ("\t", " ");
-		data = data.replace ("\r\n", " ");
-		data = data.replace ("\n", " ");
-		
-		// use only a single space as separator
-		while (data.index_of ("  ") > -1) {
-			data = data.replace ("  ", " ");
-		}
-		
-		return data;
-	}
 	
 	public void add_path_to_glyph (string d, Glyph g, bool svg_glyph = false, double units = 1) {
 		PathList p = parse_svg_data (d, g, svg_glyph, units);
 		foreach (Path path in p.paths) {
 			g.add_path (path);
 		}
-	}
-
-	public static void get_bezier_points (string point_data, out BezierPoints[] bezier_points, out int points, bool svg_glyph) {
-		double px = 0;
-		double py = 0;
-		double px2 = 0;
-		double py2 = 0;
-		double cx = 0;
-		double cy = 0;
-		string[] c;
-		double arc_rx, arc_ry;
-		double arc_rotation;
-		int large_arc;
-		int arc_sweep;
-		double arc_dest_x, arc_dest_y;
-		
-		int bi = 0;
-
-		string data = add_separators (point_data);
-		c = data.split (" ");
-
-		// the arc instruction can use up to eight points
-		int bezier_points_length = 8 * c.length + 1;
-		bezier_points = new BezierPoints[bezier_points_length]; 
-		
-		for (int i = 0; i < bezier_points_length; i++) {
-			bezier_points[i] = new BezierPoints ();
-		}
-
-		// parse path
-		int i = -1;
-		while (++i < c.length && bi < bezier_points.length) {	
-			if (c[i] == "m") {
-				while (i + 2 < c.length && is_point (c[i + 1])) {
-					bezier_points[bi].type = 'M';
-					bezier_points[bi].svg_type = 'm';
-					
-					px += parse_double (c[++i]);
-					
-					if (svg_glyph) {
-						py += parse_double (c[++i]);
-					} else {
-						py += -parse_double (c[++i]);
-					}
-					
-					bezier_points[bi].x0 = px;
-					bezier_points[bi].y0 = py;
-					bi++;
-				}
-			} else if (c[i] == "M") {
-				while (i + 2 < c.length && is_point (c[i + 1])) {
-					bezier_points[bi].type = 'M';
-					bezier_points[bi].svg_type = 'M';
-					
-					px = parse_double (c[++i]);
-					
-					if (svg_glyph) {
-						py = parse_double (c[++i]);
-					} else {
-						py = -parse_double (c[++i]);
-					}
-					
-					bezier_points[bi].x0 = px;
-					bezier_points[bi].y0 = py;
-					bi++;
-				}
-			} else if (c[i] == "h") {
-				while (i + 1 < c.length && is_point (c[i + 1])) {
-					bezier_points[bi].type = 'L';
-					bezier_points[bi].svg_type = 'h';
-					
-					px += parse_double (c[++i]);
-
-					bezier_points[bi].x0 = px;
-					bezier_points[bi].y0 = py;
-					bi++;
-				}
-			} else if (i + 1 < c.length && c[i] == "H") {
-				while (is_point (c[i + 1])) {
-					bezier_points[bi].type = 'L';
-					bezier_points[bi].svg_type = 'H';
-					
-					px = parse_double (c[++i]);
-
-					bezier_points[bi].x0 = px;
-					bezier_points[bi].y0 = py;
-					bi++;
-				}
-			} else if (c[i] == "v") {
-				while (i + 1 < c.length && is_point (c[i + 1])) {
-					bezier_points[bi].type = 'L';
-					bezier_points[bi].svg_type = 'v';
-										
-					if (svg_glyph) {
-						py = py + parse_double (c[++i]);
-					} else {
-						py = py - parse_double (c[++i]);
-					}
-					
-					bezier_points[bi].x0 = px;
-					bezier_points[bi].y0 = py;
-					bi++;
-				}				
-			} else if (i + 1 < c.length && c[i] == "V") {
-				while (is_point (c[i + 1])) {
-					bezier_points[bi].type = 'L';
-					bezier_points[bi].svg_type = 'V';
-										
-					if (svg_glyph) {
-						py = parse_double (c[++i]);
-					} else {
-						py = -parse_double (c[++i]);
-					}
-					
-					bezier_points[bi].x0 = px;
-					bezier_points[bi].y0 = py;
-					bi++;
-				}
-			} else if (c[i] == "l") {
-				while (i + 2 < c.length && is_point (c[i + 1])) {
-					bezier_points[bi].type = 'L';
-					bezier_points[bi].svg_type = 'l';
-										
-					cx = px + parse_double (c[++i]);
-					
-					if (svg_glyph) {
-						cy = py + parse_double (c[++i]);
-					} else {
-						cy = py - parse_double (c[++i]);
-					}
-					
-					px = cx;
-					py = cy;
-
-					bezier_points[bi].x0 = cx;
-					bezier_points[bi].y0 = cy;
-					bi++;
-				}
-			} else if (c[i] == "L") {
-				while (i + 2 < c.length && is_point (c[i + 1])) {
-					bezier_points[bi].type = 'L';
-					bezier_points[bi].svg_type = 'L';
-										
-					cx = parse_double (c[++i]);
-					
-					if (svg_glyph) {
-						cy = parse_double (c[++i]);
-					} else {
-						cy = -parse_double (c[++i]);
-					}
-					
-					px = cx;
-					py = cy;
-					
-					bezier_points[bi].x0 = cx;
-					bezier_points[bi].y0 = cy;
-					bi++;				
-				}	
-			} else if (c[i] == "c") {
-				while (i + 6 < c.length && is_point (c[i + 1])) {
-					bezier_points[bi].type = 'C';
-					bezier_points[bi].svg_type = 'C';
-										
-					cx = px + parse_double (c[++i]);
-					
-					if (svg_glyph) {
-						cy = py + parse_double (c[++i]);
-					} else {
-						cy = py - parse_double (c[++i]);
-					}
-					
-					bezier_points[bi].x0 = cx;
-					bezier_points[bi].y0 = cy;
-										
-					cx = px + parse_double (c[++i]);
-					
-					if (svg_glyph) {
-						cy = py + parse_double (c[++i]);
-					} else {
-						cy = py - parse_double (c[++i]);
-					}
-					
-					px2 = cx;
-					py2 = cy;
-										
-					bezier_points[bi].x1 = px2;
-					bezier_points[bi].y1 = py2;
-										
-					cx = px + parse_double (c[++i]);
-					
-					if (svg_glyph) {
-						cy = py + parse_double (c[++i]);
-					} else {
-						cy = py + -parse_double (c[++i]);
-					}
-					
-					bezier_points[bi].x2 = cx;
-					bezier_points[bi].y2 = cy;
-										
-					px = cx;
-					py = cy;
-					
-					bi++;
-				}
-			} else if (c[i] == "C") {
-				while (i + 6 < c.length && is_point (c[i + 1])) {
-					bezier_points[bi].type = 'C';
-					bezier_points[bi].svg_type = 'C';
-										
-					cx = parse_double (c[++i]);
-					
-					if (svg_glyph) {
-						cy = parse_double (c[++i]);
-					} else {
-						cy = -parse_double (c[++i]);
-					}
-									
-					bezier_points[bi].x0 = cx;
-					bezier_points[bi].y0 = cy;
-					
-					cx = parse_double (c[++i]);
-					
-					if (svg_glyph) {
-						cy = parse_double (c[++i]);
-					} else {
-						cy = -parse_double (c[++i]);
-					}
-					
-					px2 = cx;
-					py2 = cy;
-					
-					bezier_points[bi].x1 = cx;
-					bezier_points[bi].y1 = cy;
-										
-					cx = parse_double (c[++i]);
-					
-					if (svg_glyph) {
-						cy = parse_double (c[++i]);
-					} else {
-						cy = -parse_double (c[++i]);
-					}
-					
-					bezier_points[bi].x2 = cx;
-					bezier_points[bi].y2 = cy;
-										
-					px = cx;
-					py = cy;
-					
-					bi++;				
-				}	
-			} else if (c[i] == "q") {
-				while (i + 4 < c.length && is_point (c[i + 1])) {
-					bezier_points[bi].type = 'Q';
-					bezier_points[bi].svg_type = 'q';
-										
-					cx = px + parse_double (c[++i]);
-					
-					if (svg_glyph) {
-						cy = py + parse_double (c[++i]);
-					} else {
-						cy = py - parse_double (c[++i]);
-					}
-					
-					bezier_points[bi].x0 = cx;
-					bezier_points[bi].y0 = cy;
-										
-					px2 = cx;
-					py2 = cy;
-										
-					cx = px + parse_double (c[++i]);
-					
-					if (svg_glyph) {
-						cy = py + parse_double (c[++i]);
-					} else {
-						cy = py - parse_double (c[++i]);
-					}
-					
-					bezier_points[bi].x1 = cx;
-					bezier_points[bi].y1 = cy;
-										
-					px = cx;
-					py = cy;
-					
-					bi++;
-				}
-			} else if (c[i] == "Q") {
-				while (i + 4 < c.length && is_point (c[i + 1])) {
-					bezier_points[bi].type = 'Q';
-					bezier_points[bi].svg_type = 'Q';
-										
-					cx = parse_double (c[++i]);
-					
-					if (svg_glyph) {
-						cy = parse_double (c[++i]);
-					} else {
-						cy = -parse_double (c[++i]);
-					}
-					
-					bezier_points[bi].x0 = cx;
-					bezier_points[bi].y0 = cy;
-					
-					px2 = cx;
-					py2 = cy;
-										
-					cx = parse_double (c[++i]);
-					
-					if (svg_glyph) {
-						cy = parse_double (c[++i]);
-					} else {
-						cy = -parse_double (c[++i]);
-					}
-					
-					px = cx;
-					py = cy;
-
-					bezier_points[bi].x1 = cx;
-					bezier_points[bi].y1 = cy;
-										
-					bi++;					
-				}	
-			} else if (c[i] == "t") {
-				while (i + 2 < c.length && is_point (c[i + 1])) {
-					bezier_points[bi].type = 'Q';
-					bezier_points[bi].svg_type = 't';
-										
-					// the first point is the reflection
-					cx = 2 * px - px2;
-					cy = 2 * py - py2; // if (svg_glyph) ?
-					
-					bezier_points[bi].x0 = cx;
-					bezier_points[bi].y0 = cy;
-					
-					px2 = cx;
-					py2 = cy;
-										
-					cx = px + parse_double (c[++i]);
-					
-					if (svg_glyph) {
-						cy = py + parse_double (c[++i]);
-					} else {
-						cy = py - parse_double (c[++i]);
-					}
-					
-					px = cx;
-					py = cy;
-					
-					bezier_points[bi].x1 = px;
-					bezier_points[bi].y1 = py;
-										
-					bi++;
-				}
-			} else if (c[i] == "T") {
-				while (i + 2 < c.length && is_point (c[i + 1])) {
-					bezier_points[bi].type = 'Q';
-					bezier_points[bi].svg_type = 'T';
-										
-					// the reflection
-					cx = 2 * px - px2;
-					cy = 2 * py - py2;
-					
-					bezier_points[bi].x0 = cx;
-					bezier_points[bi].y0 = cy;
-										
-					px2 = cx;
-					py2 = cy;
-					
-					cx = parse_double (c[++i]);
-					
-					if (svg_glyph) {
-						cy = parse_double (c[++i]);
-					} else {
-						cy = -parse_double (c[++i]);
-					}
-					
-					px = cx;
-					py = cy;
-					
-					bezier_points[bi].x1 = px;
-					bezier_points[bi].y1 = py;
-										
-					bi++;				
-				}
-			} else if (c[i] == "s") {
-				while (i + 4 < c.length && is_point (c[i + 1])) {
-					bezier_points[bi].type = 'C';
-					bezier_points[bi].svg_type = 's';
-										
-					// the first point is the reflection
-					cx = 2 * px - px2;
-					cy = 2 * py - py2; // if (svg_glyph) ?
-
-					bezier_points[bi].x0 = cx;
-					bezier_points[bi].y0 = cy;
-															
-					cx = px + parse_double (c[++i]);
-					
-					if (svg_glyph) {
-						cy = py + parse_double (c[++i]);
-					} else {
-						cy = py - parse_double (c[++i]);
-					}
-					
-					px2 = cx;
-					py2 = cy;
-					
-					bezier_points[bi].x1 = px2;
-					bezier_points[bi].y1 = py2;
-					
-					cx = px + parse_double (c[++i]);
-					
-					if (svg_glyph) {
-						cy = py + parse_double (c[++i]);
-					} else {
-						cy = py - parse_double (c[++i]);
-					}
-					
-					bezier_points[bi].x2 = cx;
-					bezier_points[bi].y2 = cy;
-												
-					px = cx;
-					py = cy;
-					
-					bi++;
-				}
-			} else if (c[i] == "S") {
-				while (i + 4 < c.length && is_point (c[i + 1])) {
-					bezier_points[bi].type = 'C';
-					bezier_points[bi].svg_type = 'S';
-										
-					// the reflection
-					cx = 2 * px - px2;
-					cy = 2 * py - py2; // if (svg_glyph) ?			
-
-					bezier_points[bi].x0 = cx;
-					bezier_points[bi].y0 = cy;
-					
-					// the other two are regular cubic points
-					cx = parse_double (c[++i]);
-					
-					if (svg_glyph) {
-						cy = parse_double (c[++i]);
-					} else {
-						cy = -parse_double (c[++i]);
-					}
-					
-					px2 = cx;
-					py2 = cy;
-					
-					bezier_points[bi].x1 = px2;
-					bezier_points[bi].y1 = py2;
-					
-					cx = parse_double (c[++i]);
-					
-					if (svg_glyph) {
-						cy = parse_double (c[++i]);
-					} else {
-						cy = -parse_double (c[++i]);
-					}
-					
-					bezier_points[bi].x2 = cx;
-					bezier_points[bi].y2 = cy;
-					
-					px = cx;
-					py = cy;	
-					
-					bi++;
-				}
-			} else if (c[i] == "a") {
-				while (i + 7 < c.length && is_point (c[i + 1])) {					
-					arc_rx = parse_double (c[++i]);
-					arc_ry = parse_double (c[++i]);
-					
-					arc_rotation = parse_double (c[++i]);
-					large_arc = parse_int (c[++i]);
-					arc_sweep = parse_int (c[++i]);
-							
-					cx = px + parse_double (c[++i]);
-					
-					if (svg_glyph) {
-						cy = py + parse_double (c[++i]);
-					} else {
-						cy = py - parse_double (c[++i]);
-					}
-					
-					arc_dest_x = cx;
-					arc_dest_y = cy;
-					
-					add_arc_points (bezier_points, ref bi, px, py, arc_rx, arc_ry, arc_rotation, large_arc == 1, arc_sweep == 1, cx, cy);
-					
-					px = cx;
-					py = cy;
-				}
-			} else if (i + 7 < c.length && c[i] == "A") {
-				while (is_point (c[i + 1])) {					
-					arc_rx = parse_double (c[++i]);
-					arc_ry = parse_double (c[++i]);
-					
-					arc_rotation = parse_double (c[++i]);
-					large_arc = parse_int (c[++i]);
-					arc_sweep = parse_int (c[++i]);
-							
-					cx = parse_double (c[++i]);
-					
-					if (svg_glyph) {
-						cy = parse_double (c[++i]);
-					} else {
-						cy = -parse_double (c[++i]);
-					}
-					
-					arc_dest_x = cx;
-					arc_dest_y = cy;
-					
-					add_arc_points (bezier_points, ref bi, px, py, arc_rx, arc_ry, arc_rotation, large_arc == 1, arc_sweep == 1, cx, cy);
-
-					px = cx;
-					py = cy;
-					
-					
-				}
-			} else if (c[i] == "z") {
-				bezier_points[bi].type = 'z';
-				bezier_points[bi].svg_type = 'z';
-				
-				bi++;
-			} else if (c[i] == "Z") {
-				bezier_points[bi].type = 'z';
-				bezier_points[bi].svg_type = 'z';
-									
-				bi++;
-			} else if (c[i] == "") {
-			} else if (c[i] == " ") {
-			} else {
-				warning (@"Unknown instruction: $(c[i])");
-			}
-		}
-		
-		if (bi == 0) {
-			warning ("No points in path.");
-		}
-
-		points = bi;
 	}
 	
 	/** 
@@ -1617,7 +1036,7 @@ public class SvgParser {
 		int points;
 
 		font = BirdFont.get_current_font ();
-		get_bezier_points (d, out bezier_points, out points, svg_glyph);
+		SvgFile.get_bezier_points (d, out bezier_points, out points, svg_glyph);
 	
 		if (points == 0) {
 			warning ("No points in path.");
@@ -2036,22 +1455,6 @@ public class SvgParser {
 		return path_list;
 	}
 	
-	// TODO: implement a default svg parser
-
-	static int parse_int (string? s) {
-		if (is_null (s)) {
-			warning ("null instead of string");
-			return 0;
-		}
-		
-		if (!is_point ((!) s)) {
-			warning (@"Expecting an integer got: $((!) s)");
-			return 0;
-		}
-		
-		return int.parse ((!) s);
-	}
-	
 	public static double parse_double (string? s) {
 		if (unlikely (is_null (s))) {
 			warning ("Got null instead of expected string.");
@@ -2076,7 +1479,7 @@ public class SvgParser {
 	}
 	
 	Path parse_poly_data (string polygon_points) {
-		string data = add_separators (polygon_points);
+		string data = SvgFile.add_separators (polygon_points);
 		string[] c = data.split (" ");
 		Path path;
 		BezierPoints[] bezier_points = new BezierPoints[c.length + 1];
@@ -2117,6 +1520,40 @@ public class SvgParser {
 		
 		return path;
 	}
+
+	public static EmbeddedSvg parse_embedded_svg_file (string path) {
+		string xml_data;
+		SvgFile svg_file = new SvgFile (); 
+		
+		try {
+			FileUtils.get_contents (path, out xml_data);
+			return parse_embedded_svg_data (xml_data);
+		} catch (GLib.Error error) {
+			warning (error.message);
+		}
+		
+		SvgDrawing drawing = new SvgDrawing ();
+		return new EmbeddedSvg (drawing);
+	}
+
+	public static EmbeddedSvg parse_embedded_svg_data (string xml_data) {
+		XmlParser xmlparser = new XmlParser (xml_data);
+		SvgDrawing drawing = new SvgDrawing ();	
+		SvgFile svg_file = new SvgFile (); 
+		
+		if (xmlparser.validate ()) {
+			Tag root = xmlparser.get_root_tag ();
+			drawing = svg_file.parse_svg_file (root);
+			EmbeddedSvg svg = new EmbeddedSvg (drawing);
+			svg.svg_data = xml_data;
+			return svg;
+		} else {
+			warning ("Invalid xml file.");
+		}
+	
+		return new EmbeddedSvg (drawing);
+	}
+
 }
 
 }

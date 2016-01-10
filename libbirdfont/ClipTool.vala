@@ -12,6 +12,8 @@
 	Lesser General Public License for more details.
 */
 
+using SvgBird;
+
 namespace BirdFont {
 
 public class ClipTool : Tool {
@@ -95,7 +97,7 @@ public class ClipTool : Tool {
 			dx = g.motion_x - x - w / 2.0;
 			dy = g.motion_y - y + h / 2.0;
 			
-			foreach (Object path in g.active_paths) {
+			foreach (SvgBird.Object path in g.active_paths) {
 				path.move (dx, dy);
 			}
 		} else if (fd is KerningDisplay) {
@@ -405,9 +407,9 @@ public class ClipTool : Tool {
 				string cap = p.replace ("cap: ", "");
 				
 				if (cap == "round") {
-					path.line_cap = LineCap.ROUND;
+					path.line_cap = SvgBird.LineCap.ROUND;
 				} else if (cap == "square") {
-					path.line_cap = LineCap.SQUARE;
+					path.line_cap = SvgBird.LineCap.SQUARE;
 				}
 			}
 		}

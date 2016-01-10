@@ -13,83 +13,15 @@
 */
 
 using Cairo;
+using SvgBird;
 
 namespace BirdFont {
 
-public class PathObject : Object {
+public class PathObject : SvgBird.Object {
 
 	Path path;
-	
-	public override double stroke {
-		get {
-			return path.stroke;
-		}
 
-		set {
-			path.stroke = value;
-		}
-	}
-
-	public override double rotation {
-		get {
-			return path.rotation;
-		}
-
-		set {
-			path.rotation = value;
-		}
-	}
-
-	public override LineCap line_cap {
-		get {
-			return path.line_cap;
-		}
-
-		set {
-			path.line_cap = value;
-		}
-	}
-
-	public override bool fill {
-		get {
-			return path.fill;
-		}
-
-		set {
-			path.fill = value;
-		}
-	}
-
-	public override Color? color {
-		get {
-			return path.color;
-		}
-
-		set {
-			path.color = value;
-		}
-	}
-
-	public override Color? stroke_color {
-		get {
-			return path.stroke_color;
-		}
-
-		set {
-			path.stroke_color = value;
-		}
-	}
-
-	public override Gradient? gradient {
-		get {
-			return path.gradient;
-		}
-
-		set {
-			path.gradient = value;
-		}
-	}
-
+	// FIXME: flip y axis
 	public override double xmin {
 		get {
 			return path.xmin;
@@ -170,7 +102,7 @@ public class PathObject : Object {
 		if (c != null) {
 			path_color = (!) c;
 		} else if (color != null) {
-			path_color = (!) color;
+			path_color = new Color.create_copy ((!) color);
 		} else {
 			path_color = Color.black ();
 		}
@@ -228,7 +160,7 @@ public class PathObject : Object {
 		path.reset_stroke ();
 	}
 	
-	public override Object copy () {
+	public override SvgBird.Object copy () {
 		return new PathObject.create_copy (this);
 	}
 

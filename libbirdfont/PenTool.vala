@@ -1058,7 +1058,7 @@ public class PenTool : Tool {
 				
 				// don't use set point to reflective to on open ends
 				reflective = true;
-				foreach (Object path in MainWindow.get_current_glyph ().active_paths) {
+				foreach (SvgBird.Object path in MainWindow.get_current_glyph ().active_paths) {
 					if (path.is_open () && !path.is_empty () && path is PathObject) {
 						Path p = ((PathObject) path).get_path ();
 						if (selected_handle.parent == p.get_first_point ()	
@@ -1789,7 +1789,7 @@ public class PenTool : Tool {
 		active_edit_point = new_point.point;
 		
 		return_val_if_fail (glyph.active_paths.size > 0, new PointSelection.empty ());
-		Object object = glyph.active_paths.get (glyph.active_paths.size - 1);
+		SvgBird.Object object = glyph.active_paths.get (glyph.active_paths.size - 1);
 		
 		if (object is PathObject) {		
 			Path path = ((PathObject) object).get_path ();

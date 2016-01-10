@@ -13,6 +13,7 @@
 */
 
 using Cairo;
+using SvgBird;
 
 namespace BirdFont {
 

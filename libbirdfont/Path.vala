@@ -14,6 +14,7 @@
 
 using Cairo;
 using Math;
+using SvgBird;
 
 namespace BirdFont {
 
@@ -67,7 +68,7 @@ public class Path : GLib.Object {
 	
 	private double path_stroke_width = 0;
 	
-	public LineCap line_cap = LineCap.BUTT;
+	public SvgBird.LineCap line_cap = SvgBird.LineCap.BUTT;
 	public PathList? full_stroke = null;
 	PathList? fast_stroke = null;
 	StrokeTask? stroke_creator;

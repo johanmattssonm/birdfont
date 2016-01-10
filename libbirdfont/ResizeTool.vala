@@ -14,6 +14,7 @@
 
 using Math;
 using Cairo;
+using SvgBird;
 
 namespace BirdFont {
 
@@ -21,7 +22,7 @@ public class ResizeTool : Tool {
 	bool resize_path_proportional = false;
 	bool resize_width = false;
 
-	Object? resized_path = null;
+	SvgBird.Object? resized_path = null;
 	double last_resize_y;
 	double last_resize_x;
 
@@ -63,13 +64,13 @@ public class ResizeTool : Tool {
 		});
 				
 		press_action.connect((self, b, x, y) => {
-			Object last_path;
+			SvgBird.Object last_path;
 			Glyph glyph;
 			
 			glyph = MainWindow.get_current_glyph ();
 			glyph.store_undo_state ();
 			
-			foreach (Object p in glyph.active_paths) {
+			foreach (SvgBird.Object p in glyph.active_paths) {
 				if (is_over_resize_handle (p, x, y)) {
 					resize_path_proportional = true;
 					resized_path = p;
@@ -87,7 +88,7 @@ public class ResizeTool : Tool {
 				}
 			}
 
-			foreach (Object p in glyph.active_paths) {
+			foreach (SvgBird.Object p in glyph.active_paths) {
 				if (is_over_rotate_handle (p, x, y)) {
 					rotate_path = true;
 					return;
@@ -121,7 +122,7 @@ public class ResizeTool : Tool {
 			update_selection_box ();
 			GlyphCanvas.redraw ();
 			
-			foreach (Object p in MainWindow.get_current_glyph ().active_paths) {
+			foreach (SvgBird.Object p in MainWindow.get_current_glyph ().active_paths) {
 				if (p is PathObject) {
 					PathObject path = (PathObject) p;
 					path.get_path ().create_full_stroke ();
@@ -233,9 +234,9 @@ public class ResizeTool : Tool {
 	public void rotate_selected_paths (double angle, double cx, double cy) {
 		Glyph glyph = MainWindow.get_current_glyph ();  
 		double dx, dy, xc2, yc2, w, h;
-		Object last_path;
+		SvgBird.Object last_path;
 		
-		foreach (Object p in glyph.active_paths) {
+		foreach (SvgBird.Object p in glyph.active_paths) {
 			p.rotate (angle, cx, cy);
 		}
 
@@ -244,7 +245,7 @@ public class ResizeTool : Tool {
 		dx = -(xc2 - cx);
 		dy = -(yc2 - cy);
 		
-		foreach (Object p in glyph.active_paths) {
+		foreach (SvgBird.Object p in glyph.active_paths) {
 			p.move (dx, dy);
 		}
 		
@@ -286,7 +287,7 @@ public class ResizeTool : Tool {
 		rotate_selected_paths (rotation - last_rotate, selection_box_center_x, selection_box_center_y);
 	}
 
-	static bool is_over_rotate_handle (Object p, double x, double y) {
+	static bool is_over_rotate_handle (SvgBird.Object p, double x, double y) {
 		double cx, cy, hx, hy;
 		double size = 10;
 		bool inx, iny;
@@ -363,7 +364,7 @@ public class ResizeTool : Tool {
 		if (!selected) {
 			glyph.clear_active_paths ();
 			
-			foreach (Object path in glyph.get_visible_objects ()) {
+			foreach (SvgBird.Object path in glyph.get_visible_objects ()) {
 				glyph.add_active_object (null, path);
 			}
 		}
@@ -371,7 +372,7 @@ public class ResizeTool : Tool {
 		get_selection_min (out resize_pos_x, out resize_pos_y);
 		
 		// resize paths
-		foreach (Object selected_path in glyph.active_paths) {
+		foreach (SvgBird.Object selected_path in glyph.active_paths) {
 			selected_path.resize (ratio_x, ratio_y);
 		}
 		
@@ -380,7 +381,7 @@ public class ResizeTool : Tool {
 		dx = resize_pos_x - selection_minx;
 		dy = resize_pos_y - selection_miny;
 		
-		foreach (Object selected_path in glyph.active_paths) {
+		foreach (SvgBird.Object selected_path in glyph.active_paths) {
 			selected_path.move (dx, dy);			
 		}
 		
@@ -468,7 +469,7 @@ public class ResizeTool : Tool {
 		
 		DrawingTools.move_tool.move_to_baseline ();
 
-		foreach (Object path in glyph.active_paths) {
+		foreach (SvgBird.Object path in glyph.active_paths) {
 			path.move (0, -descender * scale);
 		}
 		
@@ -479,7 +480,7 @@ public class ResizeTool : Tool {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		x = double.MAX;
 		y = double.MAX;
-		foreach (Object p in glyph.active_paths) {
+		foreach (SvgBird.Object p in glyph.active_paths) {
 			if (p.xmin < x) {
 				x = p.xmin;
 			}
@@ -495,7 +496,7 @@ public class ResizeTool : Tool {
 		double h, w;
 		double ratio = get_resize_ratio (x, y);
 		
-		foreach (Object selected_path in glyph.active_paths) {
+		foreach (SvgBird.Object selected_path in glyph.active_paths) {
 			h = selected_path.ymax - selected_path.ymin;
 			w = selected_path.xmax - selected_path.xmin;
 			
@@ -511,13 +512,13 @@ public class ResizeTool : Tool {
 		return true;
 	}
 
-	bool is_over_resize_handle (Object p, double x, double y) {
+	bool is_over_resize_handle (SvgBird.Object p, double x, double y) {
 		double handle_x, handle_y;
 		get_resize_handle_position (out handle_x, out handle_y);
 		return Path.distance (handle_x, x, handle_y, y) < 12 * MainWindow.units;
 	}
 
-	bool is_over_horizontal_resize_handle (Object p, double x, double y) {
+	bool is_over_horizontal_resize_handle (SvgBird.Object p, double x, double y) {
 		double handle_x, handle_y;
 		get_horizontal_reseize_handle_position (out handle_x, out handle_y);
 		return Path.distance (handle_x, x, handle_y, y) < 12 * MainWindow.units;		
@@ -538,14 +539,14 @@ public class ResizeTool : Tool {
 		if (!selected_paths) {
 			glyph.clear_active_paths ();
 			
-			foreach (Object path in glyph.get_visible_objects ()) {
+			foreach (SvgBird.Object path in glyph.get_visible_objects ()) {
 				glyph.add_active_object (null, path);
 			}
 		}
 
 		glyph.selection_boundaries (out x, out y, out w, out h);
 	
-		foreach (Object path in glyph.active_paths) {
+		foreach (SvgBird.Object path in glyph.active_paths) {
 			if (path is PathObject) { // FIXME: other objects
 				Path p = ((PathObject) path).get_path ();
 				SvgParser.apply_matrix (p, 1, 0, s, 1, 0, 0);
@@ -558,7 +559,7 @@ public class ResizeTool : Tool {
 		
 		dx = -(nx - x);
 		
-		foreach (Object p in glyph.active_paths) {
+		foreach (SvgBird.Object p in glyph.active_paths) {
 			p.move (dx, 0);
 		}
 		

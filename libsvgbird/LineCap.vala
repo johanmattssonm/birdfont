@@ -12,28 +12,15 @@
 	Lesser General Public License for more details.
 */
 
-using Cairo;
+using B;
 using Math;
 
-namespace BirdFont {
+namespace SvgBird {
 
-public class Stop : GLib.Object {
-	public Color color = Color.black ();
-	public double offset = 0;
-	
-	public Stop () {
-	}
-	
-	public Stop copy () {
-		Stop s = new Stop ();
-		s.color = color.copy  ();
-		s.offset = offset;
-		return s;
-	}
-	
-	public string to_string () {
-		return @"Stop: $(offset), " + color.to_string ();
-	}
+public enum LineCap {
+	BUTT,
+	SQUARE,
+	ROUND
 }
 
 }

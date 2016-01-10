@@ -15,7 +15,7 @@
 using B;
 using Cairo;
 
-namespace BirdFont {
+namespace SvgBird {
 
 public enum TransformType {
 	NONE,

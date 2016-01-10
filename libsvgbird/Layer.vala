@@ -12,7 +12,7 @@
 	Lesser General Public License for more details.
 */
 
-namespace BirdFont {
+namespace SvgBird {
 
 public class Layer : GLib.Object {
 	public ObjectGroup objects;
@@ -20,10 +20,6 @@ public class Layer : GLib.Object {
 	public Gee.ArrayList<Layer> subgroups;
 	public bool visible = true;
 	public string name = "Layer";
-	
-	public bool is_counter = false;
-	public Gradient? gradient = null;
-	public bool single_path = false;
 	
 	public SvgTransforms transforms;
 	
@@ -49,23 +45,6 @@ public class Layer : GLib.Object {
 		return o;
 	}
 		
-	public PathList get_all_paths () {
-		PathList paths = new PathList ();
-		
-		foreach (Object o in objects) {
-			if (o is PathObject) {
-				PathObject p = (PathObject) o;
-				paths.add (p.get_path ());
-			}
-		}
-		
-		foreach (Layer sublayer in subgroups) {
-			paths.append (sublayer.get_all_paths ());
-		}
-		
-		return paths;
-	}
-
 	public ObjectGroup get_visible_objects () {
 		ObjectGroup object_group = new ObjectGroup ();
 		
@@ -83,70 +62,13 @@ public class Layer : GLib.Object {
 		
 		return object_group;		
 	}
-
-	public PathList get_visible_paths () {
-		PathList paths = new PathList ();
-		
-		if (visible) {
-			foreach (Object o in objects) {
-				if (o is PathObject) {
-					PathObject p = (PathObject) o;
-					paths.add (p.get_path ());
-				}
-			}
-		}
-		
-		foreach (Layer sublayer in subgroups) {
-			if (sublayer.visible) {
-				paths.append (sublayer.get_visible_paths ());
-			}
-		}
-		
-		return paths;
-	}
 		
 	public void add_layer (Layer layer) {
 		subgroups.add (layer);
 	}
-
-	public void add_path (Path path) {
-		PathObject p = new PathObject.for_path (path);
-		objects.add (p);
-	}
-
+	
 	public void add_object (Object object) {
 		objects.add (object);
-	}
-
-	public void append_paths (PathList path_list) {
-		foreach (Path p in path_list.paths) {
-			add_path (p);
-		}
-	}
-
-	private PathObject? get_fast_path (Path path) {
-		foreach (Object o in objects) {
-			if (o is PathObject) {
-				PathObject p = (PathObject) o;
-				if (p.get_path () == path) {
-					return p;
-				}
-			}
-		}
-		
-		return null;
-	}
-	
-	public void remove_path (Path path) {
-		PathObject? p = get_fast_path (path);
-		
-		if (p != null) {
-			objects.remove ((!) p);
-		}
-
-		foreach (Layer sublayer in subgroups) {
-			sublayer.remove_path (path);
-		}
 	}
 
 	public void remove (Object o) {
@@ -160,34 +82,30 @@ public class Layer : GLib.Object {
 			sublayer.remove_layer (layer);
 		}
 	}
+	
+	public static void copy_layer (Layer from, Layer to) {
+		to.name = from.name;
+		to.objects = from.objects.copy ();
+		to.visible = from.visible;
 		
+		foreach (Layer l in from.subgroups) {
+			to.subgroups.add (l.copy ());
+		}	
+	}
+	
 	public Layer copy () {
 		Layer layer = new Layer ();
-		
-		layer.name = name;
-		layer.objects = objects.copy ();
-		layer.visible = visible;
-		
-		foreach (Layer l in subgroups) {
-			layer.subgroups.add (l.copy ());
-		}
-
-		if (gradient != null) {
-			layer.gradient = ((!) gradient).copy ();
-		}
-		
-		layer.single_path = single_path;
-			
+		copy_layer (this, layer);
 		return layer;
 	}
 
 	public void get_boundaries (out double x, out double y, out double w, out double h) {
 		double px, py, px2, py2;
 		
-		px = Glyph.CANVAS_MAX;
-		py = Glyph.CANVAS_MAX;
-		px2 = Glyph.CANVAS_MIN;
-		py2 = Glyph.CANVAS_MIN;
+		px = double.MAX;
+		py = double.MAX;
+		px2 = -double.MAX;
+		py2 = -double.MAX;
 		
 		foreach (Object p in get_all_objects ().objects) {
 			if (px > p.xmin) {
@@ -246,18 +164,6 @@ public class Layer : GLib.Object {
 			stdout.printf ("%s\n", l.name);
 			l.print (indent + 1);
 		}
-	}
-
-	public PathList get_paths_in_layer () {
-		PathList paths = new PathList ();
-		
-		foreach (Object object in objects) {
-			if (object is PathObject) {
-				paths.add (((PathObject) object).get_path ());
-			}
-		}
-		
-		return paths;
 	}
 }
 

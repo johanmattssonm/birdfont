@@ -15,7 +15,7 @@
 using Cairo;
 using Math;
 
-namespace BirdFont {
+namespace SvgBird {
 
 public class Gradient : GLib.Object {
 	public double x1;

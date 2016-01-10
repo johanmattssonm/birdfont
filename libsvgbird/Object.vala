@@ -15,7 +15,7 @@
 using Cairo;
 using Math;
 
-namespace BirdFont {
+namespace SvgBird {
 
 public abstract class Object : GLib.Object {
 	bool open = false;

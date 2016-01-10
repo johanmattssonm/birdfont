@@ -14,14 +14,9 @@
 
 using Cairo;
 using Math;
+using SvgBird;
 
 namespace BirdFont {
-
-public enum LineCap {
-	BUTT,
-	SQUARE,
-	ROUND
-}
 
 public class StrokeTool : GLib.Object {
 	
@@ -31,7 +26,7 @@ public class StrokeTool : GLib.Object {
 	public static bool show_stroke_tools = false;
 	public static bool convert_stroke = false;
 	
-	public static LineCap line_cap = LineCap.BUTT;
+	public static SvgBird.LineCap line_cap = SvgBird.LineCap.BUTT;
 	
 	StrokeTask task;
 
@@ -51,7 +46,7 @@ public class StrokeTool : GLib.Object {
 		convert_stroke = true;	
 		g.store_undo_state ();
 		
-		foreach (Object o in g.active_paths) {
+		foreach (SvgBird.Object o in g.active_paths) {
 			if (o is PathObject) {
 				PathObject path = (PathObject) o;
 				Path p = path.get_path ();
@@ -63,7 +58,7 @@ public class StrokeTool : GLib.Object {
 		}
 
 		if (paths.paths.size > 0) {
-			foreach (Object o in g.active_paths) {
+			foreach (SvgBird.Object o in g.active_paths) {
 				g.layers.remove (o);
 			}
 			
@@ -139,7 +134,7 @@ public class StrokeTool : GLib.Object {
 		
 		g.store_undo_state ();
 
-		foreach (Object object in g.active_paths) {
+		foreach (SvgBird.Object object in g.active_paths) {
 			if (object is PathObject) {
 				Path p = ((PathObject) object).get_path ();
 				
@@ -226,7 +221,7 @@ public class StrokeTool : GLib.Object {
 			return;
 		}
 				
-		foreach (Object object in g.active_paths) {
+		foreach (SvgBird.Object object in g.active_paths) {
 			g.layers.remove (object);
 		}
 		
@@ -1151,9 +1146,9 @@ public class StrokeTool : GLib.Object {
 	}
 
 	void add_line_cap (Path path, Path stroke1, Path stroke2, bool last_cap) {
-		if (path.line_cap == LineCap.SQUARE) {
+		if (path.line_cap == SvgBird.LineCap.SQUARE) {
 			add_square_cap (path, stroke1, stroke2, last_cap);
-		} else if (path.line_cap == LineCap.ROUND) {
+		} else if (path.line_cap == SvgBird.LineCap.ROUND) {
 			add_round_cap (path, stroke1, stroke2, last_cap);
 		}
 	}

@@ -13,6 +13,7 @@
 */
 
 using B;
+using SvgBird;
 
 namespace BirdFont {
 
@@ -95,14 +96,14 @@ public class ExportTool : GLib.Object {
 		
 		name = glyph.get_name ();
 		
-		Gee.ArrayList<Object> pl;
+		Gee.ArrayList<SvgBird.Object> pl;
 		
 		s = new StringBuilder ();
 		glyph_svg = "";
 
 		pl = only_selected_paths ? glyph.active_paths : glyph.get_visible_objects ();
 		
-		foreach (Object o in pl) {
+		foreach (SvgBird.Object o in pl) {
 			
 			if (o is PathObject) {
 				Path p = ((PathObject) o).get_path ();
@@ -131,7 +132,7 @@ public class ExportTool : GLib.Object {
 		}
 		
 		if (only_selected_paths) {
-			foreach (Object p in glyph.active_paths) {
+			foreach (SvgBird.Object p in glyph.active_paths) {
 				if (p is PathObject) {
 					Path path = ((PathObject) p).get_path ();
 					if (path.stroke == 0) {
