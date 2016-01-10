@@ -49,12 +49,34 @@ def test_program_version (program, a, b, c):
 	version = [int(n) for n in v.split ('.')]
 	return [a,b,c] <= version	
 
-def test_library_version (lib):
+def test_library_version (lib, required=True, version=None):
 	print ('Looking for library: ' + lib + '\t\t')
 	process = subprocess.Popen ('pkg-config --modversion ' + lib, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+	v = process.stdout.readline().decode('utf-8')
 	process.communicate()[0]
-	return process.returncode == 0
-
+	
+	if not process.returncode == 0:
+		if required:
+			print (FAIL + lib + ' not found' + ENDC)
+			exit (1)
+		else:
+			return False
+	
+	if version == None:
+		return True
+	
+	installed_version = v.split ('.');
+	library_version = version.split ('.');
+	
+	if installed_version < library_version:
+		if required:
+			print (FAIL + lib + ' version >= ' + version + ' not found.' + ENDC)
+			exit (1)
+		else:
+			return False
+		
+	return True
+	
 def has_posixvala ():
 	posixvala = test_library_version ('posixvala')
 	if not posixvala:
@@ -82,7 +104,6 @@ def configure(gtk, libbgee):
 				'libsoup-2.4',
 				'libnotify',
 				'sqlite3',
-				'xmlbird'
 				]
 	else:
 		libs = [
@@ -90,25 +111,23 @@ def configure(gtk, libbgee):
 				'glib-2.0', 
 				'sqlite3',
 				'fontconfig',
-				'xmlbird'
 				]
 
+	test_library_version ('xmlbird', True, '1.1.0')
+
 	for lib in libs:
-		if not test_library_version (lib):
-			print (FAIL + 'Can not find ' + lib + ENDC)
-			exit (1)
+		test_library_version (lib)
 
 	if libbgee == 'Any':
-		if test_library_version ('gee-0.8'):
+		if test_library_version ('gee-0.8', False):
 			gee = 'gee-0.8'
-		elif test_library_version ('gee-1.0'):
+		elif test_library_version ('gee-1.0', False):
 			gee = 'gee-1.0'
 		else:
 			print (FAIL + 'Can not find libgee (version 0.8 or version 1.0).' + ENDC)
 			exit (1)
 	else:
 		if not test_library_version (libbgee):
-			print (FAIL + 'Can not find lib gee.' + ENDC)
 			exit (1)
 		gee = libbgee;
 
