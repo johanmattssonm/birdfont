@@ -1597,6 +1597,13 @@ public class Glyph : FontDisplay {
 		PathList stroke;
 		Color color;
 
+		// FIXME: layer transforms
+		foreach (Object o in get_visible_objects ()) {
+			if (!(o is PathObject)) {
+				o.draw (cr);
+			}
+		}
+
 		cr.save ();
 		cr.new_path ();
 		foreach (Path p in get_visible_paths ()) {
@@ -1657,13 +1664,6 @@ public class Glyph : FontDisplay {
 				p.draw_edit_points (cr);
 			}
 			cr.restore ();
-		}
-
-		// FIXME: layer transforms
-		foreach (Object o in get_visible_objects ()) {
-			if (!(o is PathObject)) {
-				o.draw (cr);
-			}
 		}
 
 		if (!is_open ()) {
