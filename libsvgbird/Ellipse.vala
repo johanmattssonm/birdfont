@@ -43,6 +43,9 @@ public class Ellipse : Object {
 		cr.translate (cx + rx, cy + ry);
 		cr.scale (rx, ry);
 		cr.arc (0, 0, 1, 0, 2 * Math.PI);
+		cr.restore ();
+		
+		cr.save ();
 		apply_transform (cr);		
 		paint (cr);
 		cr.restore ();

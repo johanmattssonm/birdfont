@@ -57,15 +57,11 @@ public class SvgStyle {
 			s = style.get ("stroke") != "none";
 		}
 				
-		return get_stroke_width () > 0 && s;
+		return stroke_width > 0 && s;
 	}
 		
 	public double get_stroke_width () {
-		if (!style.has_key ("stroke-width")) {
-			return 0;
-		}
-
-		return double.parse (style.get ("stroke-width"));
+		return stroke_width;
 	}
 	
 	public static SvgStyle parse (Defs? d, SvgStyle inherited, Attributes attributes) {
