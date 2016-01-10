@@ -315,15 +315,42 @@ public class SvgFile : GLib.Object {
 		circle.style = SvgStyle.parse (drawing.defs, tag.get_attributes ());
 		circle.visible = is_visible (tag);	
 		
-		layer.add_object (circle);		
+		layer.add_object (circle);
 	}
 	
-	// FIXME:
 	private void parse_ellipse (Layer layer, Tag tag) {
+		Ellipse ellipse = new Ellipse ();
+		
+		foreach (Attribute attr in tag.get_attributes ()) {
+			string name = attr.get_name ();
+			
+			if (name == "cx") {
+				ellipse.cx = parse_number (attr.get_content ());
+			}
+
+			if (name == "cy") {
+				ellipse.cy = parse_number (attr.get_content ());
+			}
+			
+			if (name == "rx") {
+				ellipse.rx = parse_number (attr.get_content ());
+			}
+			
+			if (name == "ry") {
+				ellipse.ry = parse_number (attr.get_content ());
+			}
+		}
+		
+		ellipse.transforms = get_transform (tag.get_attributes ());
+		ellipse.style = SvgStyle.parse (drawing.defs, tag.get_attributes ());
+		ellipse.visible = is_visible (tag);	
+		
+		layer.add_object (ellipse);
 	}
 	
 	// FIXME:
 	private void parse_line (Layer layer, Tag tag) {
+
 	}
 	
 	// FIXME: reverse order?
