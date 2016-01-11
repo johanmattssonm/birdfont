@@ -34,7 +34,6 @@ public class SvgTable : OtfTable {
 		Font font = OpenFontFormatWriter.get_current_font ();
 		GlyphCollection? glyph_collection;
 		GlyphCollection glyphs;
-		string? svg_data;
 		int gid;
 		Gee.ArrayList<EmbeddedSvg> embedded_svg;
 		

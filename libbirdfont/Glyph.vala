@@ -278,7 +278,6 @@ public class Glyph : FontDisplay {
 	// FIXME: delete group
 	public void add_active_object (Layer? group, SvgBird.Object? o) {
 		SvgBird.Object object;
-		Layer g;
 
 		if (o != null) {
 			object = (!) o;

@@ -24,7 +24,9 @@ public class SvgFile : GLib.Object {
 	public SvgFile () {		
 	}
 	
-	public SvgDrawing parse_svg_file (Tag tag) {
+	public SvgDrawing parse_svg_file (Tag svg_tag) {
+		XmlTree tree = new XmlTree.for_tag (svg_tag);
+		XmlElement tag = tree.get_root ();
 		drawing = new SvgDrawing ();
 
 		SvgStyle style = new SvgStyle ();
@@ -40,7 +42,7 @@ public class SvgFile : GLib.Object {
 			}
 		}
 				
-		foreach (Tag t in tag) {
+		foreach (XmlElement t in tag) {
 			string name = t.get_name ();
 			
 			if (name == "g") {
@@ -61,7 +63,7 @@ public class SvgFile : GLib.Object {
 		return drawing;
 	}
 
-	private void parse_layer (Layer layer, SvgStyle parent_style, Tag tag) {
+	private void parse_layer (Layer layer, SvgStyle parent_style, XmlElement tag) {
 		bool hidden = false;
 
 		foreach (Attribute attr in tag.get_attributes ()) {	
@@ -82,7 +84,7 @@ public class SvgFile : GLib.Object {
 		
 		SvgStyle style = SvgStyle.parse (drawing.defs, parent_style, tag.get_attributes ());
 		
-		foreach (Tag t in tag) {
+		foreach (XmlElement t in tag) {
 			string name = t.get_name ();
 
 			if (name == "g") {
@@ -105,8 +107,8 @@ public class SvgFile : GLib.Object {
 		}
 	}
 
-	void parse_defs (SvgDrawing drawing, Tag tag) {
-		foreach (Tag t in tag) {
+	void parse_defs (SvgDrawing drawing, XmlElement tag) {
+		foreach (XmlElement t in tag) {
 			// FIXME: radial
 			string name = t.get_name ();
 			
@@ -129,7 +131,7 @@ public class SvgFile : GLib.Object {
 		}
 	}
 
-	void parse_linear_gradient (SvgDrawing drawing, Tag tag) {
+	void parse_linear_gradient (SvgDrawing drawing, XmlElement tag) {
 		Gradient gradient = new Gradient ();
 		
 		drawing.defs.add (gradient);
@@ -168,7 +170,7 @@ public class SvgFile : GLib.Object {
 			}
 		}
 		
-		foreach (Tag t in tag) {
+		foreach (XmlElement t in tag) {
 			// FIXME: radial
 			string name = t.get_name ();
 			
@@ -178,7 +180,7 @@ public class SvgFile : GLib.Object {
 		}
 	}
 
-	void parse_stop (Gradient gradient, Tag tag) {
+	void parse_stop (Gradient gradient, XmlElement tag) {
 		SvgStyle parent_style = new SvgStyle (); // not inherited
 		SvgStyle style = SvgStyle.parse (drawing.defs, parent_style, tag.get_attributes ());
 		Stop stop = new Stop ();
@@ -218,11 +220,11 @@ public class SvgFile : GLib.Object {
 	}
 	
 	// links are ignored, add the content to the layer
-	void parse_link (Layer layer, SvgStyle parent_style, Tag tag) {
+	void parse_link (Layer layer, SvgStyle parent_style, XmlElement tag) {
 		parse_layer (layer, parent_style, tag);
 	}
 	
-	void parse_object (Layer layer, SvgStyle parent_style, Tag tag) {
+	void parse_object (Layer layer, SvgStyle parent_style, XmlElement tag) {
 		string name = tag.get_name ();
 		
 		if (name == "path") {
@@ -254,7 +256,7 @@ public class SvgFile : GLib.Object {
 		}
 	}
 
-	private void parse_polygon (Layer layer, SvgStyle parent_style, Tag tag) {
+	private void parse_polygon (Layer layer, SvgStyle parent_style, XmlElement tag) {
 		Polygon polygon = new Polygon ();
 
 		foreach (Attribute attr in tag.get_attributes ()) {
@@ -276,7 +278,7 @@ public class SvgFile : GLib.Object {
 
 	}
 	
-	private void parse_polyline (Layer layer, SvgStyle parent_style, Tag tag) {
+	private void parse_polyline (Layer layer, SvgStyle parent_style, XmlElement tag) {
 		Polyline polyline = new Polyline ();
 
 		foreach (Attribute attr in tag.get_attributes ()) {
@@ -297,7 +299,7 @@ public class SvgFile : GLib.Object {
 		layer.add_object (polyline);
 	}
 	
-	private void parse_rect (Layer layer, SvgStyle parent_style, Tag tag) {
+	private void parse_rect (Layer layer, SvgStyle parent_style, XmlElement tag) {
 		Rectangle rectangle = new Rectangle ();
 
 		foreach (Attribute attr in tag.get_attributes ()) {
@@ -335,7 +337,7 @@ public class SvgFile : GLib.Object {
 		layer.add_object (rectangle);
 	}
 	
-	private void parse_circle (Layer layer, SvgStyle parent_style, Tag tag) {
+	private void parse_circle (Layer layer, SvgStyle parent_style, XmlElement tag) {
 		Circle circle = new Circle ();
 		
 		foreach (Attribute attr in tag.get_attributes ()) {
@@ -361,7 +363,7 @@ public class SvgFile : GLib.Object {
 		layer.add_object (circle);
 	}
 	
-	private void parse_ellipse (Layer layer, SvgStyle parent_style, Tag tag) {
+	private void parse_ellipse (Layer layer, SvgStyle parent_style, XmlElement tag) {
 		Ellipse ellipse = new Ellipse ();
 		
 		foreach (Attribute attr in tag.get_attributes ()) {
@@ -391,7 +393,7 @@ public class SvgFile : GLib.Object {
 		layer.add_object (ellipse);
 	}
 	
-	private void parse_line (Layer layer, SvgStyle parent_style, Tag tag) {
+	private void parse_line (Layer layer, SvgStyle parent_style, XmlElement tag) {
 		Line line = new Line ();
 		
 		foreach (Attribute attr in tag.get_attributes ()) {
@@ -574,7 +576,7 @@ public class SvgFile : GLib.Object {
 		return param.strip();			
 	}
 
-	private bool is_visible (Tag tag) {
+	private bool is_visible (XmlElement tag) {
 		bool hidden = false;
 
 		foreach (Attribute attr in tag.get_attributes ()) {
@@ -602,7 +604,7 @@ public class SvgFile : GLib.Object {
 		return new SvgTransforms ();
 	}
 	
-	private void parse_path (Layer layer, SvgStyle parent_style, Tag tag) {
+	private void parse_path (Layer layer, SvgStyle parent_style, XmlElement tag) {
 		SvgPath path = new SvgPath ();
 
 		foreach (Attribute attr in tag.get_attributes ()) {

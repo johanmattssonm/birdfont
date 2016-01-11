@@ -32,7 +32,6 @@ public class Defs {
 		string tag_id = (!) url;
 
 		if (unlikely (!is_url (tag_id))) {
-			warning ("Not an URL: " + tag_id);
 			return null;
 		}
 

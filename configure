@@ -114,7 +114,7 @@ def configure(gtk, libbgee):
 				'fontconfig',
 				]
 
-	test_library_version ('xmlbird', True, '1.1.0')
+	test_library_version ('xmlbird', True, '1.2.0')
 
 	for lib in libs:
 		test_library_version (lib)

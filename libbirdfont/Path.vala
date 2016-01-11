@@ -967,6 +967,7 @@ public class Path : GLib.Object {
 			points.add (p);
 			p.prev = previous_point;
 			p.next = previous_point.next;
+			previous_point.next = p;
 		}
 		
 		last_point = p;

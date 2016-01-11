@@ -17,7 +17,7 @@ using Math;
 
 namespace SvgBird {
 
-public class SvgStyle {
+public class SvgStyle : GLib.Object {
 	
 	public Gee.HashMap<string, string> style;
 	
@@ -31,7 +31,12 @@ public class SvgStyle {
 	public SvgStyle () {
 		style = new Gee.HashMap<string, string> ();
 	}
-	
+
+	public SvgStyle.for_properties (Defs? defs, string style) {
+		parse_key_value_pairs (style);
+		set_style_properties (defs, this);
+	}
+
 	public LineCap get_line_cap () {
 		string l;
 		
@@ -66,8 +71,6 @@ public class SvgStyle {
 	
 	public static SvgStyle parse (Defs? d, SvgStyle inherited, Attributes attributes) {
 		SvgStyle s = new SvgStyle ();
-		double fill_opacity = 1;
-		double stroke_opacity = 1;
 
 		s.style.set ("fill", "#000000"); // default fill value
 				
@@ -102,6 +105,14 @@ public class SvgStyle {
 			}
 		}
 	
+		set_style_properties (d, s);
+		return s;
+	}
+	
+	static void set_style_properties (Defs? d, SvgStyle s) {
+		double fill_opacity = 1;
+		double stroke_opacity = 1;
+
 		s.stroke_width = SvgFile.parse_number (s.style.get ("stroke-width"));
 		s.stroke = Color.parse (s.style.get ("stroke"));
 		s.fill = Color.parse (s.style.get ("fill"));
@@ -131,9 +142,7 @@ public class SvgStyle {
 		if (s.stroke != null) {
 			Color color = (!) s.stroke;
 			color.a = stroke_opacity;
-		}
-		
-		return s;
+		}		
 	}
 	
 	void parse_key_value_pairs (string svg_style) {
