@@ -255,6 +255,25 @@ public class SvgFile : GLib.Object {
 	}
 
 	private void parse_polygon (Layer layer, SvgStyle parent_style, Tag tag) {
+		Polygon polygon = new Polygon ();
+
+		foreach (Attribute attr in tag.get_attributes ()) {
+			if (attr.get_name () == "points") {
+				string data = add_separators (attr.get_content ());
+				string[] point_data = data.split (" ");
+				
+				foreach (string number in point_data) {
+					polygon.points.add (parse_number (number));
+				}
+			}
+		}
+		
+		polygon.transforms = get_transform (tag.get_attributes ());
+		polygon.style = SvgStyle.parse (drawing.defs, parent_style, tag.get_attributes ());
+		polygon.visible = is_visible (tag);	
+		
+		layer.add_object (polygon);
+
 	}
 	
 	private void parse_polyline (Layer layer, SvgStyle parent_style, Tag tag) {
