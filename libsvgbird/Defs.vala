@@ -19,6 +19,7 @@ namespace SvgBird {
 
 public class Defs {
 	public Gee.ArrayList<Gradient> gradients = new Gee.ArrayList<Gradient> ();
+	public StyleSheet style_sheet = new StyleSheet ();
 
 	public void add (Gradient g) {
 		gradients.add (g);

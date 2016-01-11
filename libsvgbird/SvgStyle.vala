@@ -19,7 +19,7 @@ namespace SvgBird {
 
 public class SvgStyle : GLib.Object {
 	
-	public Gee.HashMap<string, string> style;
+	public Gee.HashMap<string, string> style = new Gee.HashMap<string, string> ();
 	
 	public Color? stroke = null;
 	public Color? fill = null;
@@ -29,7 +29,6 @@ public class SvgStyle : GLib.Object {
 	public double stroke_width = 0;
 	
 	public SvgStyle () {
-		style = new Gee.HashMap<string, string> ();
 	}
 
 	public SvgStyle.for_properties (Defs? defs, string style) {
@@ -69,14 +68,22 @@ public class SvgStyle : GLib.Object {
 		return stroke_width;
 	}
 	
-	public static SvgStyle parse (Defs? d, SvgStyle inherited, Attributes attributes) {
-		SvgStyle s = new SvgStyle ();
-
-		s.style.set ("fill", "#000000"); // default fill value
-				
-		// inherit
+	public void inherit (SvgStyle inherited) {
 		foreach (string key in inherited.style.keys) {
-			s.style.set (key, inherited.style.get (key));
+			style.set (key, inherited.style.get (key));
+		}
+	}
+	
+	public static SvgStyle parse (Defs? d, SvgStyle inherited, XmlElement tag) {
+		SvgStyle s = new SvgStyle ();
+		Attributes attributes = tag.get_attributes ();
+
+		s.style.set ("fill", "#000000"); // default fill value		
+		s.inherit (inherited);
+		
+		if (d != null) {
+			StyleSheet style_sheet = ((!) d).style_sheet;
+			style_sheet.inherit_style (tag, s);
 		}
 
 		foreach (Attribute a in attributes) {
@@ -146,7 +153,7 @@ public class SvgStyle : GLib.Object {
 	}
 	
 	void parse_key_value_pairs (string svg_style) {
-		string[] p = svg_style.split (";");
+		string[] p = svg_style.strip ().split (";");
 		string[] pair;
 		string k, v;
 		
@@ -154,7 +161,7 @@ public class SvgStyle : GLib.Object {
 			pair = kv.split (":");
 			
 			if (pair.length != 2) {
-				warning ("pair.length != 2");
+				warning ("pair.length != 2 in " + svg_style);
 				continue;
 			}
 			

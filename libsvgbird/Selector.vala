@@ -33,7 +33,13 @@ public class Selector : GLib.Object {
 		this.style = style;
 	}
 	
-	public bool match (string tag, string? id, string? css_class) {
+	public bool match (XmlElement tag, string? id, string? css_class) {
+		foreach (SelectorPattern pattern in patterns) {
+			if (pattern.match (tag, id, css_class)) {
+				return true;
+			}
+		}
+		
 		return false;
 	}
 }

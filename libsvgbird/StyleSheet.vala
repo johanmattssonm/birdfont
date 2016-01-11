@@ -25,7 +25,28 @@ public class StyleSheet : GLib.Object {
 		styles = new Gee.ArrayList<Selector> ();
 	}
 	
-	public static StyleSheet parse (Defs defs, Tag style_tag) {
+	public void inherit_style (XmlElement tag, SvgStyle style) {
+		string? id = null;
+		string? css_class = null;
+		
+		foreach (Attribute attribute in tag.get_attributes ()) {
+			string name = attribute.get_name ();
+			
+			if (name == "id") {
+				id = attribute.get_content ();
+			} else if (name == "class") {
+				css_class = attribute.get_content ();
+			}
+		}
+		
+		foreach (Selector selector in styles) {
+			if (selector.match (tag, id, css_class)) {
+				style.inherit (selector.style);
+			}
+		}
+	}
+	
+	public static StyleSheet parse (Defs defs, XmlElement style_tag) {
 		StyleSheet style_sheet = new StyleSheet ();
 		string css = style_tag.get_content ();
 		css = get_cdata (css);

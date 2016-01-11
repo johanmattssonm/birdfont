@@ -125,7 +125,6 @@ public class SvgParser {
 		string[] lines = xml_data.split ("\n");
 		bool has_format = false;
 		SvgParser parser = new SvgParser ();
-		XmlParser xmlparser;
 
 		foreach (string l in lines) {
 			if (l.index_of ("Illustrator") > -1 || l.index_of ("illustrator") > -1) {
@@ -148,13 +147,8 @@ public class SvgParser {
 			warn_if_test ("No format identifier found in SVG parser.\n");
 		}
 
-		xmlparser = new XmlParser (xml_data);
-		
-		if (!xmlparser.validate()) {
-			warning("Invalid XML in SVG parser."); 
-		}
-		
-		path_list = parser.parse_svg_file (xmlparser.get_root_tag ());
+		XmlTree xml_tree = new XmlTree (xml_data);
+		path_list = parser.parse_svg_file (xml_tree.get_root ());
 	
 		glyph = MainWindow.get_current_glyph ();
 		foreach (Path p in path_list.paths) {
@@ -193,10 +187,10 @@ public class SvgParser {
 		import_svg_data (svg_data);
 	}
 	
-	private PathList parse_svg_file (Tag tag) {
+	private PathList parse_svg_file (XmlElement tag) {
 		Layer pl = new Layer ();
 	
-		foreach (Tag t in tag) {
+		foreach (XmlElement t in tag) {
 			
 			if (t.get_name () == "g") {
 				parse_layer (t, pl);
@@ -234,7 +228,7 @@ public class SvgParser {
 		return LayerUtils.get_all_paths (pl);
 	}
 	
-	private void parse_layer (Tag tag, Layer pl) {
+	private void parse_layer (XmlElement tag, Layer pl) {
 		Layer layer;
 		bool hidden = false;
 
@@ -254,7 +248,7 @@ public class SvgParser {
 			return;
 		}
 					
-		foreach (Tag t in tag) {
+		foreach (XmlElement t in tag) {
 			if (t.get_name () == "path") {
 				parse_path (t, pl);
 			}
@@ -482,7 +476,7 @@ public class SvgParser {
 		return param.strip();			
 	}
 	
-	private void parse_circle (Tag tag, Layer pl) {
+	private void parse_circle (XmlElement tag, Layer pl) {
 		Path p;
 		double x, y, r;
 		Glyph g;
@@ -515,7 +509,7 @@ public class SvgParser {
 			}
 		}
 		
-		style = SvgStyle.parse (null, style, tag.get_attributes ());
+		style = SvgStyle.parse (null, style, tag);
 		
 		if (hidden) {
 			return;
@@ -545,7 +539,7 @@ public class SvgParser {
 		append_paths (pl, npl);
 	}
 
-	private void parse_ellipse (Tag tag, Layer pl) {
+	private void parse_ellipse (XmlElement tag, Layer pl) {
 		Path p;
 		double x, y, rx, ry;
 		Glyph g;
@@ -583,7 +577,7 @@ public class SvgParser {
 			}
 		}
 		
-		style = SvgStyle.parse (null, style, tag.get_attributes ());
+		style = SvgStyle.parse (null, style, tag);
 		
 		if (hidden) {
 			return;
@@ -613,7 +607,7 @@ public class SvgParser {
 		append_paths (pl, npl);
 	}
 
-	private void parse_line (Tag tag, Layer pl) {
+	private void parse_line (XmlElement tag, Layer pl) {
 		Path p;
 		double x1, y1, x2, y2;
 		BezierPoints[] bezier_points;
@@ -649,7 +643,7 @@ public class SvgParser {
 			}
 		}
 		
-		style = SvgStyle.parse (null, style, tag.get_attributes ());
+		style = SvgStyle.parse (null, style, tag);
 		
 		if (hidden) {
 			return;
@@ -690,7 +684,7 @@ public class SvgParser {
 		append_paths (pl, npl);
 	}
 		
-	private void parse_rect (Tag tag, Layer layer) {
+	private void parse_rect (XmlElement tag, Layer layer) {
 		Path p;
 		double x, y, x2, y2;
 		BezierPoints[] bezier_points;
@@ -727,7 +721,7 @@ public class SvgParser {
 			}
 		}
 		
-		style = SvgStyle.parse (null, style, tag.get_attributes ());
+		style = SvgStyle.parse (null, style, tag);
 		
 		if (hidden) {
 			return;
@@ -791,7 +785,7 @@ public class SvgParser {
 		append_paths (layer, npl);
 	}
 	
-	private void parse_polygon (Tag tag, Layer layer) {
+	private void parse_polygon (XmlElement tag, Layer layer) {
 		PathList path_list = get_polyline (tag);
 		
 		foreach (Path p in path_list.paths) {
@@ -805,11 +799,11 @@ public class SvgParser {
 		LayerUtils.append_paths (layer, pl);
 	}
 	
-	private void parse_polyline (Tag tag, Layer layer) {	
+	private void parse_polyline (XmlElement tag, Layer layer) {	
 		append_paths (layer, get_polyline (tag));
 	}
 	
-	private PathList get_polyline (Tag tag) {
+	private PathList get_polyline (XmlElement tag) {
 		Path p = new Path ();
 		bool hidden = false;
 		PathList path_list = new PathList ();
@@ -825,7 +819,7 @@ public class SvgParser {
 			}
 		}
 
-		style = SvgStyle.parse (null, style, tag.get_attributes ());
+		style = SvgStyle.parse (null, style, tag);
 		
 		if (hidden) {
 			return path_list;
@@ -843,7 +837,7 @@ public class SvgParser {
 		return path_list;
 	}
 	
-	private void parse_path (Tag tag, Layer layer) {
+	private void parse_path (XmlElement tag, Layer layer) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		PathList path_list = new PathList ();
 		SvgStyle style = new SvgStyle ();
@@ -865,7 +859,7 @@ public class SvgParser {
 			}
 		}
 		
-		style = SvgStyle.parse (null, style, tag.get_attributes ());
+		style = SvgStyle.parse (null, style, tag);
 		
 		if (hidden) {
 			return;
@@ -1537,21 +1531,16 @@ public class SvgParser {
 	}
 
 	public static EmbeddedSvg parse_embedded_svg_data (string xml_data) {
-		XmlParser xmlparser = new XmlParser (xml_data);
+		XmlTree tree = new XmlTree (xml_data);
+		XmlElement tag = tree.get_root ();
 		SvgDrawing drawing = new SvgDrawing ();	
 		SvgFile svg_file = new SvgFile (); 
-		
-		if (xmlparser.validate ()) {
-			Tag root = xmlparser.get_root_tag ();
-			drawing = svg_file.parse_svg_file (root);
-			EmbeddedSvg svg = new EmbeddedSvg (drawing);
-			svg.svg_data = xml_data;
-			return svg;
-		} else {
-			warning ("Invalid xml file.");
-		}
-	
-		return new EmbeddedSvg (drawing);
+
+		XmlElement root = tree.get_root ();
+		drawing = svg_file.parse_svg_file (root);
+		EmbeddedSvg svg = new EmbeddedSvg (drawing);
+		svg.svg_data = xml_data;
+		return svg;
 	}
 
 }
