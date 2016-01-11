@@ -49,6 +49,16 @@ public class Doubles : GLib.Object {
 		size++;
 	}
 	
+	public Doubles copy () {
+		Doubles d = new Doubles ();
+		delete d.data;
+		d.data = new double[capacity];
+		d.capacity = capacity;
+		d.size = size;
+		Posix.memcpy (d.data, data, sizeof (double) * size);
+		return d;
+	}
+	
 	public double get_double (int index) {
 		if (unlikely (index < 0)) {
 			warning ("index < 0");

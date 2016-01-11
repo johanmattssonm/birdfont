@@ -258,6 +258,24 @@ public class SvgFile : GLib.Object {
 	}
 	
 	private void parse_polyline (Layer layer, SvgStyle parent_style, Tag tag) {
+		Polyline polyline = new Polyline ();
+
+		foreach (Attribute attr in tag.get_attributes ()) {
+			if (attr.get_name () == "points") {
+				string data = add_separators (attr.get_content ());
+				string[] point_data = data.split (" ");
+				
+				foreach (string number in point_data) {
+					polyline.points.add (parse_number (number));
+				}
+			}
+		}
+		
+		polyline.transforms = get_transform (tag.get_attributes ());
+		polyline.style = SvgStyle.parse (drawing.defs, parent_style, tag.get_attributes ());
+		polyline.visible = is_visible (tag);	
+		
+		layer.add_object (polyline);
 	}
 	
 	private void parse_rect (Layer layer, SvgStyle parent_style, Tag tag) {
