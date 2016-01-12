@@ -70,6 +70,7 @@ public class SvgStyle : GLib.Object {
 	
 	public void inherit (SvgStyle inherited) {
 		foreach (string key in inherited.style.keys) {
+			print (@"inherit $key: " + inherited.style.get (key) + "\n");
 			style.set (key, inherited.style.get (key));
 		}
 	}
@@ -158,17 +159,19 @@ public class SvgStyle : GLib.Object {
 		string k, v;
 		
 		foreach (string kv in p) {
-			pair = kv.split (":");
-			
-			if (pair.length != 2) {
-				warning ("pair.length != 2 in " + svg_style);
-				continue;
+			if (kv.index_of (":") != -1) {
+				pair = kv.split (":");
+				
+				if (pair.length != 2) {
+					warning ("pair.length != 2 in " + svg_style);
+					continue;
+				}
+				
+				k = pair[0].strip ();
+				v = pair[1].strip ();
+				
+				style.set (k, v);
 			}
-			
-			k = pair[0];
-			v = pair[1];
-			
-			style.set (k, v);
 		}
 	}
 }

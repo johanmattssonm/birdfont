@@ -29,17 +29,35 @@ public class SelectorTag : GLib.Object {
 		int id_separator = tag_pattern.index_of ("#");
 		int class_separator = tag_pattern.index_of (".");
 		int attribute_separator = tag_pattern.index_of ("[");
-		
+
+		if (attribute_separator != -1) {
+			parse_attributes (tag_pattern.substring (attribute_separator));
+		}
+				
 		if (id_separator != -1) {
 			name = tag_pattern.substring (0, id_separator);
-			id = tag_pattern.substring (id_separator + "#".length);
+			
+			id_separator += "#".length;
+			if (attribute_separator == -1) {
+				id = tag_pattern.substring (id_separator);
+			} else {
+				id = tag_pattern.substring (id_separator, attribute_separator - id_separator);
+			}
 		} else if (class_separator != -1) {
 			name = tag_pattern.substring (0, class_separator);
-			css_class = tag_pattern.substring (class_separator + ".".length);
-		} else if (attribute_separator != -1) {
-			parse_attributes (tag_pattern.substring (attribute_separator));
+			
+			class_separator += ".".length;
+			if (attribute_separator == -1) {
+				css_class = tag_pattern.substring (class_separator);
+			} else {
+				css_class = tag_pattern.substring (class_separator, attribute_separator - class_separator);
+			}
 		} else {
-			name = tag_pattern;
+			if (attribute_separator == -1) {
+				name = tag_pattern;
+			} else {
+				css_class = tag_pattern.substring (0, attribute_separator);
+			}
 		}
 	}
 
@@ -99,8 +117,10 @@ public class SelectorTag : GLib.Object {
 	public bool match (XmlElement tag, string? id, string? css_class) {
 		string tag_name = tag.get_name ();
 		
-		if (this.name != "*" && this.name != "" && this.name != tag_name) {
-			return false;
+		if (this.name != "*" && this.name != "" && tag_name != "") {
+			if (this.name != tag_name) {
+				return false;
+			}
 		}
 		
 		if (this.id != null) {
@@ -108,7 +128,7 @@ public class SelectorTag : GLib.Object {
 				return false;
 			} 
 			
-			if (this.id != id) {
+			if (((!) this.id) != ((!) id)) {
 				return false;
 			}
 		}
@@ -118,7 +138,8 @@ public class SelectorTag : GLib.Object {
 				return false;
 			} 
 			
-			if (this.css_class != css_class) {
+			if (((!) this.css_class) != ((!) css_class)) {
+				print(@"class \"$((!)this.css_class)\"=\"$((!)css_class)\"\n");
 				return false;
 			}
 		}
@@ -132,6 +153,29 @@ public class SelectorTag : GLib.Object {
 		}
 		
 		return true;
+	}
+
+	public string to_string () {
+		StringBuilder s = new StringBuilder ();
+		s.append ((!) name);
+		
+		if (id != null) {
+			s.append ("#");
+			s.append ((!) id);
+		}
+
+		if (css_class != null) {
+			s.append (".");
+			s.append ((!) css_class);
+		}
+		
+		if (attribute_patterns != null) {
+			foreach (AttributePattern a in (!) attribute_patterns) {
+				s.append (a.to_string ());
+			}
+		}
+		
+		return s.str;
 	}
 }
 

@@ -58,7 +58,7 @@ public class AttributePattern : GLib.Object {
 	bool attribute_start_with (Attributes attributes) {
 		foreach (Attribute attribute in attributes) {
 			if (attribute.get_name () == name 
-				&& remove_hypen (attribute.get_content ()) == content) {
+				&& remove_hypen (attribute.get_content ()) == ((!) content)) {
 				return true;
 			}
 		}
@@ -69,7 +69,7 @@ public class AttributePattern : GLib.Object {
 	bool attribute_equals (Attributes attributes) {
 		foreach (Attribute attribute in attributes) {
 			if (attribute.get_name () == name 
-				&& attribute.get_content () == content) {
+				&& attribute.get_content () == ((!) content)) {
 				return true;
 			}
 		}
@@ -106,6 +106,29 @@ public class AttributePattern : GLib.Object {
 		}
 		
 		return false;
+	}
+
+	public string to_string () {
+		string c;
+		
+		if (content == null) {
+			c = "null";
+		} else {
+			c = (!) content;
+		}
+		
+		switch (type) {
+		case AttributePatternType.ANYTHING:
+			return "[" + name + "]";
+		case AttributePatternType.LIST:
+			return "[" + name + "~=" + c + "]";
+		case AttributePatternType.EQUALS:
+			return "[" + name + "=" + c + "]";
+		case AttributePatternType.STARTS_WITH:
+			return "[" + name + "|=" + c + "]";
+		}
+		
+		return "No attributes.";
 	}
 }
 

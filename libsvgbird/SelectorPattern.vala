@@ -36,7 +36,7 @@ public class SelectorPattern : GLib.Object {
 	public bool match (XmlElement tag, string? id, string? css_class) {
 		for (int i = tags.size - 1; i >= 0; i--) {
 			SelectorTag pattern = tags.get (i);
-			
+						
 			if (pattern.name == ">") {
 				if (i - 1 < 0) {
 					return false;

@@ -12,9 +12,6 @@
 	Lesser General Public License for more details.
 */
 
-using B;
-using Math;
-
 namespace SvgBird {
 
 public enum LineCap {
