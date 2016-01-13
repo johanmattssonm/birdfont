@@ -637,7 +637,7 @@ public class SvgFile : GLib.Object {
 	
 		get_bezier_points (data, out bezier_points, out points_size, true);
 
-		// instructions are padded
+		// all instructions are padded
 
 		for (int i = 0; i < points_size; i++) {
 			// FIXME: add more types
@@ -654,13 +654,13 @@ public class SvgFile : GLib.Object {
 				points.add (bezier_points[i].y2);
 				points.add (0);
 			} else if (bezier_points[i].type == 'L') {
-				points.add_type (CUBIC); // FIXME: use cairo line
+				points.add_type (LINE);
 				points.add (bezier_points[i].x0);
 				points.add (bezier_points[i].y0);
-				points.add (bezier_points[i].x0);
-				points.add (bezier_points[i].y0);
-				points.add (bezier_points[i].x0);
-				points.add (bezier_points[i].y0);
+				points.add (0);
+				points.add (0);
+				points.add (0);
+				points.add (0);
 				points.add (0);
 			} else if (bezier_points[i].type == 'A') {
 				BezierPoints b = bezier_points[i];
@@ -1213,8 +1213,6 @@ public class SvgFile : GLib.Object {
 					bezier_points[bi].large_arc = large_arc == 1;
 					bezier_points[bi].sweep = arc_sweep == 1;
 					bi++;
-					
-					// FIXME: Delete add_arc_points (bezier_points, ref bi, px, py, arc_rx, arc_ry, arc_rotation, large_arc == 1, arc_sweep == 1, cx, cy);
 					
 					px = cx;
 					py = cy;

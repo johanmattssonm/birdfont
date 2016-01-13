@@ -109,7 +109,7 @@ public static void get_arc_arguments (double x0, double y0,
 	
 	sx2 = (x0 + x) / 2.0;
 	sy2 = (y0 + y) / 2.0;
-	cx = sx2 + (cosAngle * cx1 - sinAngle * cy1); // FIXME: + delete this
+	cx = sx2 + (cosAngle * cx1 - sinAngle * cy1);
 	cy = sy2 + (sinAngle * cx1 + cosAngle * cy1);
 
 	//

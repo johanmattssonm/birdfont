@@ -67,6 +67,10 @@ public class SvgPath : Object {
 					points[i + 3].value, points[i + 4].value,
 					points[i + 5].value, points[i + 6].value);
 				break;
+			case LINE:
+				cr.line_to (points[i + 1].value, points[i + 2].value);
+				break;
+
 			}
 		}		
 	}
