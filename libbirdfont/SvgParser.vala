@@ -1016,6 +1016,36 @@ public class SvgParser {
 		}
 	}
 	
+	public void get_bezier_points (string svg_data, out BezierPoints[] instructions, out int points, bool svg_glyph) {
+		SvgFile.get_bezier_points (svg_data, out instructions, out points, svg_glyph);
+		Gee.ArrayList<BezierPoints> bezier_points = new Gee.ArrayList<BezierPoints> ();
+		BezierPoints[] arc_data = new BezierPoints[8];
+		
+		for (int i = 0; i < points; i++) {
+			if (instructions[i].type == 'A') {
+				int arc_index = 0;
+				
+				add_arc_points (arc_data, ref arc_index, 
+					instructions[i].x0, instructions[i].y0,
+					instructions[i].rx, instructions[i].ry,
+					instructions[i].angle,
+					instructions[i].large_arc,
+					instructions[i].sweep,
+					instructions[i].x1, instructions[i].y1);
+					
+				for (int j = 0; j < arc_index; j++) {
+					bezier_points.add (instructions[j]);
+				}
+			}
+			
+			bezier_points.add (instructions[i]);
+		}
+	
+		instructions = new BezierPoints[bezier_points.size];
+		for (int i = 0; i < bezier_points.size; i++) {
+			instructions[i] = bezier_points.get (i);
+		}
+	}
 	/** 
 	 * @param d svg data
 	 * @param glyph use lines from this glyph but don't add the generated paths
@@ -1517,7 +1547,6 @@ public class SvgParser {
 
 	public static EmbeddedSvg parse_embedded_svg_file (string path) {
 		string xml_data;
-		SvgFile svg_file = new SvgFile (); 
 		
 		try {
 			FileUtils.get_contents (path, out xml_data);
@@ -1532,7 +1561,6 @@ public class SvgParser {
 
 	public static EmbeddedSvg parse_embedded_svg_data (string xml_data) {
 		XmlTree tree = new XmlTree (xml_data);
-		XmlElement tag = tree.get_root ();
 		SvgDrawing drawing = new SvgDrawing ();	
 		SvgFile svg_file = new SvgFile (); 
 
@@ -1543,6 +1571,55 @@ public class SvgParser {
 		return svg;
 	}
 
+	/** Convert an SVG arc instruction to a Beziér path. */
+	public static void add_arc_points (BezierPoints[] bezier_points, ref int bi, 
+		double x0, double y0, double rx, double ry, double angle,
+		bool largeArcFlag, bool sweepFlag, double x, double y) {
+		
+		double angleStart, angleExtent;
+		double s, step, theta;
+		double cx, cy;
+		
+		cx = 0;
+		cy = 0;
+		
+		// Approximate the path with Beziér points
+		SvgBird.get_arc_arguments (x0, y0, rx, ry, angle, largeArcFlag, sweepFlag, x, y,
+			out angleStart, out angleExtent, out cx, out cx);
+		
+		s = (angleExtent > 0) ? 1 : -1;
+		step = fabs (angleExtent) / (2 * fabs (angleExtent));
+
+		theta = PI - angleStart - angleExtent;
+		
+		bezier_points[bi].type = 'C';
+		bezier_points[bi].svg_type = 'a';
+
+		bezier_points[bi].x0 = cx + rx * cos (theta);
+		bezier_points[bi].y0 = cy + ry * sin (theta);
+		
+		bi++;
+						
+		for (double a = 0; a < fabs (angleExtent); a += step) {
+			theta = PI - angleStart - angleExtent + s * a;
+
+			return_if_fail (0 <= bi < bezier_points.length);
+
+			bezier_points[bi].type = 'S';
+			bezier_points[bi].svg_type = 'a';
+
+			bezier_points[bi].x0 = cx + rx * cos (theta);
+			bezier_points[bi].y0 = cy + ry * sin (theta);
+
+			bezier_points[bi].x1 = cx + rx * cos (theta + 1 * step / 4);
+			bezier_points[bi].y1 = cy + ry * sin (theta + 1 * step / 4);
+			
+			bezier_points[bi].x2 = cx + rx * cos (theta + 2 * step / 4);
+			bezier_points[bi].y2 = cy + ry * sin (theta + 2 * step / 4);
+							
+			bi++;
+		}
+	}
 }
 
 }

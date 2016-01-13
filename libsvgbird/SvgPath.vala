@@ -48,16 +48,47 @@ public class SvgPath : Object {
 		cr.restore ();
 	}
 
-	public void draw_points (Context cr, Points points) {
-		Doubles p = points.point_data;
+	public void draw_points (Context cr, Points path) {
+		PointValue* points = path.point_data.data;
+		int size = path.point_data.size;
 		
-		return_if_fail (p.size % 6 == 0);
+		return_if_fail (size % 8 == 0);
 		
-		for (int i = 0; i < p.size; i += 6) {
-			cr.curve_to (p.data[i], p.data[i + 1], 
-				p.data[i + 2], p.data[i + 3],
-				p.data[i + 4], p.data[i + 5]);
+		for (int i = 0; i < size; i += 8) {
+			switch (points[i].type) {
+			case ARC:		
+				draw_arc (cr, points[i + 1].value, points[i + 2].value,
+					points[i + 3].value, points[i + 4].value,
+					points[i + 5].value, points[i + 6].value,
+					points[i + 7].value);
+				break;
+			case CUBIC:
+				cr.curve_to (points[i + 1].value, points[i + 2].value, 
+					points[i + 3].value, points[i + 4].value,
+					points[i + 5].value, points[i + 6].value);
+				break;
+			}
 		}		
+	}
+
+	static void draw_arc (Context cr,
+		double x, double y,
+		double rx, double ry,
+		double angle_start, double angle_extent,
+		double rotation) {
+			
+		cr.save ();
+		cr.translate (x, y);
+		cr.rotate (rotation);
+		cr.scale (rx, ry);
+
+		if (angle_extent > 0) {
+			cr.arc_negative (0, 0, 1, -angle_start, -angle_start - angle_extent);
+		} else {
+			cr.arc (0, 0, 1, -angle_start, -angle_start - angle_extent);
+		}
+				
+		cr.restore ();
 	}
 
 	public override void move (double dx, double dy) {

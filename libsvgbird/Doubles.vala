@@ -17,12 +17,12 @@ using Cairo;
 namespace SvgBird {
 
 public class Doubles : GLib.Object {
-	public double* data;
+	public PointValue* data;
 	public int size = 0;
 	int capacity = 10;
 	
 	public Doubles () {
-		data = new double[capacity];
+		data = new PointValue[capacity];
 	}
 
 	~Doubles () {
@@ -31,21 +31,34 @@ public class Doubles : GLib.Object {
 	}
 	
 	public Doubles.for_capacity (int capacity) {
-		data = new double[capacity];
+		data = new PointValue[capacity];
 		this.capacity = capacity;
 	}
-		
-	public void add(double d) {
+	
+	void increase_capacity () {
+		int new_capacity = 2 * capacity;
+		PointValue* new_data = new PointValue[new_capacity];
+		Posix.memcpy (new_data, data, sizeof (PointValue) * size);
+		delete data;
+		data = new_data;
+		capacity = new_capacity;		
+	}
+
+	public void add_type (uchar type) {
 		if (size >= capacity) {
-			int new_capacity = 2 * capacity;
-			double* new_data = new double[new_capacity];
-			Posix.memcpy (new_data, data, sizeof (double) * size);
-			delete data;
-			data = new_data;
-			capacity = new_capacity;
+			increase_capacity ();
+		}
+
+		data[size].type = type;
+		size++;
+	}
+
+	public void add (double d) {
+		if (size >= capacity) {
+			increase_capacity ();
 		}
 		
-		data[size] = d;
+		data[size].value = d;
 		size++;
 	}
 	
@@ -55,7 +68,7 @@ public class Doubles : GLib.Object {
 		d.data = new double[capacity];
 		d.capacity = capacity;
 		d.size = size;
-		Posix.memcpy (d.data, data, sizeof (double) * size);
+		Posix.memcpy (d.data, data, sizeof (PointValue) * size);
 		return d;
 	}
 	
@@ -70,7 +83,7 @@ public class Doubles : GLib.Object {
 			return 0;
 		}
 		
-		return data[index];
+		return data[index].value;
 	}
 }
 

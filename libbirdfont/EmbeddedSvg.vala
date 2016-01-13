@@ -71,11 +71,7 @@ public class EmbeddedSvg : SvgBird.Object {
 		drawing.update_region_boundaries ();
 	}
 
-	// FIXME: handle this in SVG library instead
 	public override bool is_over (double x, double y) {
-		print (@" $(this.x) <= $(x) <= $(this.x) + $(drawing.width)");
-		print (@" $(this.y) <= $(y) <= $(this.y) + $(drawing.height)");
-			
 		return (this.x <= x <= this.x + drawing.width) 
 			&& (this.y - drawing.height <= y <= this.y);
 	}

@@ -99,7 +99,6 @@ public class OverViewItem : GLib.Object {
 		}
 		
 		Glyph g;
-		Font font;
 		double gx, gy;
 		double x1, x2, y1, y2;
 		double scale_box;

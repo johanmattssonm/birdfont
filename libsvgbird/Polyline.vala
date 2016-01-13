@@ -33,10 +33,10 @@ public class Polyline : Object {
 		apply_transform (cr);
 		
 		if (points.size > 2) {
-			cr.move_to (points.data[0], points.data[1]);
+			cr.move_to (points.data[0].value, points.data[1].value);
 			
 			for (int i = 2; i < points.size - 1; i += 2) {
-				cr.line_to (points.data[i], points.data[i + 1]);
+				cr.line_to (points.data[i].value, points.data[i + 1].value);
 			}
 		}
 		

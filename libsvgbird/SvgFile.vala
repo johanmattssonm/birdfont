@@ -14,6 +14,7 @@
 
 using B;
 using Cairo;
+using Math;
 
 namespace SvgBird {
 
@@ -636,25 +637,53 @@ public class SvgFile : GLib.Object {
 	
 		get_bezier_points (data, out bezier_points, out points_size, true);
 
+		// instructions are padded
+
 		for (int i = 0; i < points_size; i++) {
 			// FIXME: add more types
 			if (bezier_points[i].type == 'M') {
 				points.x = bezier_points[i].x0;
 				points.y = bezier_points[i].y0;
 			} else if (bezier_points[i].type == 'C') {
+				points.add_type (CUBIC);
 				points.add (bezier_points[i].x0);
 				points.add (bezier_points[i].y0);
 				points.add (bezier_points[i].x1);
 				points.add (bezier_points[i].y1);
 				points.add (bezier_points[i].x2);
 				points.add (bezier_points[i].y2);
+				points.add (0);
 			} else if (bezier_points[i].type == 'L') {
+				points.add_type (CUBIC); // FIXME: use cairo line
 				points.add (bezier_points[i].x0);
 				points.add (bezier_points[i].y0);
 				points.add (bezier_points[i].x0);
 				points.add (bezier_points[i].y0);
 				points.add (bezier_points[i].x0);
 				points.add (bezier_points[i].y0);
+				points.add (0);
+			} else if (bezier_points[i].type == 'A') {
+				BezierPoints b = bezier_points[i];
+				double angle_start;
+				double angle_extent;
+				double center_x;
+				double center_y;
+				//double rotation = Math.PI * (b.angle / 180.0);
+				double rotation = b.angle;
+								
+				get_arc_arguments (b.x0, b.y0, b.rx, b.ry,
+					b.angle, b.large_arc, b.sweep, b.x1, b.y1,
+					out angle_start, out angle_extent,
+					out center_x, out center_y);
+				
+				points.add_type (ARC);
+				points.add (center_x);
+				points.add (center_y);
+				points.add (b.rx);
+				points.add (b.ry);
+				points.add (angle_start);
+				points.add (angle_extent); 
+				points.add (rotation);
 			} else if (bezier_points[i].type == 'z') {
 				points.closed = true;
 				path_data.add (points);
@@ -686,7 +715,7 @@ public class SvgFile : GLib.Object {
 		return double.parse ((!) s);
 	}
 	
-
+	// FIXME: rename to instructions
 	public static void get_bezier_points (string point_data, out BezierPoints[] bezier_points, out int points, bool svg_glyph) {
 		double px = 0;
 		double py = 0;
@@ -1157,7 +1186,7 @@ public class SvgFile : GLib.Object {
 					arc_rx = parse_double (c[++i]);
 					arc_ry = parse_double (c[++i]);
 					
-					arc_rotation = parse_double (c[++i]);
+					arc_rotation = PI * (parse_double (c[++i]) / 180.0);
 					large_arc = parse_int (c[++i]);
 					arc_sweep = parse_int (c[++i]);
 							
@@ -1172,7 +1201,20 @@ public class SvgFile : GLib.Object {
 					arc_dest_x = cx;
 					arc_dest_y = cy;
 					
-					add_arc_points (bezier_points, ref bi, px, py, arc_rx, arc_ry, arc_rotation, large_arc == 1, arc_sweep == 1, cx, cy);
+					bezier_points[bi].type = 'A';
+					bezier_points[bi].svg_type = 'a';
+					bezier_points[bi].x0 = px;
+					bezier_points[bi].y0 = py;
+					bezier_points[bi].x1 = cx;
+					bezier_points[bi].y1 = cy;
+					bezier_points[bi].rx = arc_rx;
+					bezier_points[bi].ry = arc_ry;
+					bezier_points[bi].angle = arc_rotation;
+					bezier_points[bi].large_arc = large_arc == 1;
+					bezier_points[bi].sweep = arc_sweep == 1;
+					bi++;
+					
+					// FIXME: Delete add_arc_points (bezier_points, ref bi, px, py, arc_rx, arc_ry, arc_rotation, large_arc == 1, arc_sweep == 1, cx, cy);
 					
 					px = cx;
 					py = cy;
@@ -1182,7 +1224,7 @@ public class SvgFile : GLib.Object {
 					arc_rx = parse_double (c[++i]);
 					arc_ry = parse_double (c[++i]);
 					
-					arc_rotation = parse_double (c[++i]);
+					arc_rotation = PI * (parse_double (c[++i]) / 180.0);
 					large_arc = parse_int (c[++i]);
 					arc_sweep = parse_int (c[++i]);
 							
@@ -1197,12 +1239,21 @@ public class SvgFile : GLib.Object {
 					arc_dest_x = cx;
 					arc_dest_y = cy;
 					
-					add_arc_points (bezier_points, ref bi, px, py, arc_rx, arc_ry, arc_rotation, large_arc == 1, arc_sweep == 1, cx, cy);
-
+					bezier_points[bi].type = 'A';
+					bezier_points[bi].svg_type = 'A';
+					bezier_points[bi].x0 = px;
+					bezier_points[bi].y0 = py;
+					bezier_points[bi].x1 = cx;
+					bezier_points[bi].y1 = cy;
+					bezier_points[bi].rx = arc_rx;
+					bezier_points[bi].ry = arc_ry;
+					bezier_points[bi].angle = arc_rotation;
+					bezier_points[bi].large_arc = large_arc == 1;
+					bezier_points[bi].sweep = arc_sweep == 1;
+					bi++;
+					
 					px = cx;
 					py = cy;
-					
-					
 				}
 			} else if (c[i] == "z") {
 				bezier_points[bi].type = 'z';

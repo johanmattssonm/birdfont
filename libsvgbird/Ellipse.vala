@@ -13,6 +13,7 @@
 */
 
 using Cairo;
+using Math;
 
 namespace SvgBird {
 
@@ -40,10 +41,10 @@ public class Ellipse : Object {
 			
 	public override void draw (Context cr) {
 		cr.save ();
-		cr.translate (cx + rx, cy + ry);
+		cr.translate (cx, cy);
 		cr.scale (rx, ry);
-		cr.arc (0, 0, 1, 0, 2 * Math.PI);
-		cr.restore ();
+		cr.arc (0, 0, 1, 0, 2 * PI);
+		cr.restore ();	
 		
 		cr.save ();
 		apply_transform (cr);		

@@ -493,8 +493,6 @@ public class MoveTool : Tool {
 		double w = Math.fabs (selection_x - last_x);
 		double h = Math.fabs (selection_y - last_y);
 		
-		Glyph glyph = MainWindow.get_current_glyph ();
-		
 		cr.save ();			
 		Theme.color (cr, "Foreground 1");
 		cr.set_line_width (2);

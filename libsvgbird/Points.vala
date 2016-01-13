@@ -25,6 +25,10 @@ public class Points : GLib.Object {
 	public void add (double p) {
 		point_data.add (p);
 	}
+	
+	public void add_type (uchar type) {
+		point_data.add_type (type);
+	}
 }
 
 }
