@@ -12,29 +12,24 @@
 	Lesser General Public License for more details.
 */
 
-using Cairo;
+using Gee;
+using SvgBird;
+using B;
 
-namespace SvgBird {
+namespace Bird {
 
-public class Points : GLib.Object {
-	public Doubles point_data = new Doubles.for_capacity (100);
-	public double x = 0;
-	public double y = 0;
-	public bool closed = false;
-	public int size {
-		get {
-			return point_data.size;
-		}
+class AbsoluteLayout : Component {
+
+	public AbsoluteLayout () {
 	}
-	
-	public void add (double p) {
-		point_data.add (p);
+
+	public AbsoluteLayout.for_tag (XmlElement layout_tag) {
+		parse (layout_tag);
 	}
-	
-	public void add_type (uchar type) {
-		point_data.add_type (type);
+
+	public override string to_string () {
+		return "AbsoluteLayout";
 	}
 }
 
 }
-

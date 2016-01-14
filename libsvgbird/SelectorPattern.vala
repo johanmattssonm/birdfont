@@ -19,18 +19,30 @@ namespace SvgBird {
 
 /** A CSS selector pattern. */
 public class SelectorPattern : GLib.Object {
-	Gee.ArrayList<SelectorTag> tags;
+	Gee.ArrayList<SelectorTag> tags = new Gee.ArrayList<SelectorTag> ();
 
+	public SelectorPattern.empty () {
+	}
+	
 	public SelectorPattern (string pattern) {
 		string p = pattern.strip ();
 		string[] elements = p.split (" ");
-		tags = new Gee.ArrayList<SelectorTag> ();
-		
+
 		foreach (string element in elements) {
 			if (element != "") {
 				tags.add (new SelectorTag (element));
 			}
 		}
+	}
+	
+	public SelectorPattern copy () {
+		SelectorPattern pattern = new SelectorPattern.empty ();
+		
+		foreach (SelectorTag tag in tags) {
+			pattern.tags.add (tag.copy ());
+		}
+		
+		return pattern;
 	}
 	
 	public bool match (XmlElement tag, string? id, string? css_class) {
@@ -39,6 +51,7 @@ public class SelectorPattern : GLib.Object {
 						
 			if (pattern.name == ">") {
 				if (i - 1 < 0) {
+					
 					return false;
 				}
 				

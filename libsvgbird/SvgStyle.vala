@@ -36,6 +36,16 @@ public class SvgStyle : GLib.Object {
 		set_style_properties (defs, this);
 	}
 
+	public string? get_css_property (string key) {
+		return style.get (key);
+	}
+
+	public SvgStyle copy () {
+		SvgStyle style = new SvgStyle ();
+		style.inherit (this);
+		return style;
+	}
+
 	public LineCap get_line_cap () {
 		string l;
 		
@@ -169,8 +179,32 @@ public class SvgStyle : GLib.Object {
 				k = pair[0].strip ();
 				v = pair[1].strip ();
 				
-				style.set (k, v);
+				if (k == "padding") {
+					parse_padding_shorthand (v);
+				} else {
+					style.set (k, v);
+				}
 			}
+		}
+	}
+	
+	void parse_padding_shorthand (string arguments) {
+		string[] args = StyleSheet.replace_whitespace (arguments).split (" ");
+		
+		if (args.length > 0) {
+			style.set ("padding-top", args[0]);
+		}
+		
+		if (args.length > 1) {
+			style.set ("padding-right", args[1]);
+		}
+
+		if (args.length > 2) {
+			style.set ("padding-bottom", args[2]);
+		}
+
+		if (args.length > 3) {
+			style.set ("padding-left", args[3]);
 		}
 	}
 }

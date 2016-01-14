@@ -81,16 +81,29 @@ public class Defs {
 		return ((!) attribute).has_prefix ("url");
 	}
 
-	public Defs copy () {
+	public Defs shallow_copy () {
 		Defs d = new Defs ();
 		
 		foreach (Gradient g in gradients) {
 			d.add (g);
 		}
 		
+		d.style_sheet = style_sheet.shallow_copy ();
+		
 		return d;
 	}
 
+	public Defs copy () {
+		Defs d = new Defs ();
+		
+		foreach (Gradient g in gradients) {
+			d.add (g.copy ());
+		}
+		
+		d.style_sheet = style_sheet.copy ();
+		
+		return d;
+	}
 }
 
 }

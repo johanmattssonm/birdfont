@@ -70,7 +70,6 @@ public class SvgPath : Object {
 			case LINE:
 				cr.line_to (points[i + 1].value, points[i + 2].value);
 				break;
-
 			}
 		}		
 	}

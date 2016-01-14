@@ -559,4 +559,55 @@ def make_birdfont_test(target_binary, deps):
 def task_birdfont_test():
     yield make_birdfont_test('birdfont-test', ['libbirdgems.so', 'libbirdfont.so'])
 
+def make_birdui(target_binary, deps):
+    valac_command = config.VALAC + """\
+		-C \
+		--pkg posix \
+		--pkg """ + config.GEE + """ \
+		--pkg gtk+-3.0 \
+		--pkg libsvgbird \
+		--pkg xmlbird \
+		--vapidir=./ \
+		--basedir=build/birdui/ \
+		""" + config.NON_NULL + """ \
+		--enable-experimental \
+		birdui/*.vala \
+        """
 
+    cc_command = config.CC + """ \
+			-fPIC \
+			$(pkg-config --cflags gtk+-3.0) \
+			$(pkg-config --cflags glib-2.0) \
+			$(pkg-config --cflags xmlbird) \
+			$(pkg-config --cflags """ + config.GEE + """) \
+			-g \
+			-I ./build/libsvgbird \
+			-c C_SOURCE \
+            -o OBJECT_FILE \
+			"""
+
+    linker_command = config.CC + """ \
+			""" + soname(target_binary) + """ \
+			-fPIC \
+			-g \
+			build/birdui/*.o \
+			$(pkg-config --libs gtk+-3.0) \
+			$(pkg-config --libs glib-2.0) \
+			$(pkg-config --libs gobject-2.0) \
+			$(pkg-config --libs xmlbird) \
+			$(pkg-config --libs """ + config.GEE + """) \
+			-L ./build/bin -l svgbird \
+			-o build/bin/""" + target_binary
+
+    libbirdgems = Builder('birdui',
+                          valac_command, 
+                          cc_command,
+                          linker_command,
+                          target_binary,
+						  None,
+                          deps)
+			
+    yield libbirdgems.build()
+
+def task_birdui():
+    yield make_birdui('birdui', []) 

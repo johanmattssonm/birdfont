@@ -12,29 +12,23 @@
 	Lesser General Public License for more details.
 */
 
+using B;
+using SvgBird;
+using Gee;
 using Cairo;
 
-namespace SvgBird {
+namespace Bird {
 
-public class Points : GLib.Object {
-	public Doubles point_data = new Doubles.for_capacity (100);
-	public double x = 0;
-	public double y = 0;
-	public bool closed = false;
-	public int size {
-		get {
-			return point_data.size;
-		}
+public class Style : GLib.Object {
+	public SvgStyle svg_style;
+	
+	public Style () {
+		svg_style = new SvgStyle ();
 	}
 	
-	public void add (double p) {
-		point_data.add (p);
-	}
-	
-	public void add_type (uchar type) {
-		point_data.add_type (type);
+	public Style.for_svg (SvgStyle svg_style) {
+		this.svg_style = svg_style;
 	}
 }
 
 }
-

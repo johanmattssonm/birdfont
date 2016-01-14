@@ -29,6 +29,14 @@ public class AttributePattern : GLib.Object {
 	public string name = "";
 	public string? content = null;
 	public AttributePatternType type = AttributePatternType.NONE;
+
+	public AttributePattern copy () {
+		AttributePattern a = new AttributePattern ();
+		a.name = name;
+		a.content = content;
+		a.type = type;
+		return a;
+	}
 	
 	public bool match (Attributes attributes) {
 		switch (type) {

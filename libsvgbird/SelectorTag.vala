@@ -24,6 +24,9 @@ public class SelectorTag : GLib.Object {
 	string? css_class = null;
 	Gee.ArrayList<AttributePattern>? attribute_patterns = null;
 
+	public SelectorTag.empty () {
+	}
+	
 	public SelectorTag (string pattern) {
 		string tag_pattern = pattern.strip ();
 		int id_separator = tag_pattern.index_of ("#");
@@ -61,6 +64,22 @@ public class SelectorTag : GLib.Object {
 		}
 	}
 
+	public SelectorTag copy () {
+		SelectorTag tag = new SelectorTag.empty();
+		
+		tag.name = name;
+		tag.id = id;
+		tag.css_class = css_class;
+		
+		if (attribute_patterns != null) { 
+			foreach (AttributePattern p in (!) attribute_patterns) {
+				((!) attribute_patterns).add (p.copy ());
+			}
+		}
+		
+		return tag;
+	}
+	
 	void parse_attributes (string attributes) {
 		int index = 0;
 		Gee.ArrayList<AttributePattern> patterns = new Gee.ArrayList<AttributePattern> ();
@@ -139,7 +158,6 @@ public class SelectorTag : GLib.Object {
 			} 
 			
 			if (((!) this.css_class) != ((!) css_class)) {
-				print(@"class \"$((!)this.css_class)\"=\"$((!)css_class)\"\n");
 				return false;
 			}
 		}

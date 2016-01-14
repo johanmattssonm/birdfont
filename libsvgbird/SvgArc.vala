@@ -138,9 +138,6 @@ public static void get_arc_arguments (double x0, double y0,
 	} else if (sweepFlag && angleExtent < 0) {
 		angleExtent += 2 * PI;
 	}
-		
-	//center_x = cx - rx;
-	//center_y = cy - ry;
 
 	center_x = cx;
 	center_y = cy;
@@ -150,8 +147,6 @@ public static void get_arc_arguments (double x0, double y0,
 
 	angle_start = angleStart;
 	angle_extent = angleExtent;
-
-	print (@"angleStart: $angle_start  angleExtent $angle_extent\n");
 }
 
 

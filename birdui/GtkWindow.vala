@@ -12,29 +12,27 @@
 	Lesser General Public License for more details.
 */
 
-using Cairo;
+using Bird;
+using Gtk;
 
-namespace SvgBird {
-
-public class Points : GLib.Object {
-	public Doubles point_data = new Doubles.for_capacity (100);
-	public double x = 0;
-	public double y = 0;
-	public bool closed = false;
-	public int size {
-		get {
-			return point_data.size;
-		}
-	}
+int main (string[] args) {
+	Gtk.init (ref args);
 	
-	public void add (double p) {
-		point_data.add (p);
-	}
+	Window window = new Window ();
+	window.set_title ("UI Bird");
+	window.destroy.connect (Gtk.main_quit);
 	
-	public void add_type (uchar type) {
-		point_data.add_type (type);
-	}
-}
+	Component layout = new Component ();
+	layout.load ("test.ui");
+	
+	Bird.Widget primary_layout = new Bird.Widget (layout);
 
+	Box vbox = new Box (Orientation.VERTICAL, 0);
+	vbox.pack_start(primary_layout, true, true, 0);
+	window.add (vbox);
+	
+	window.show_all ();
+	
+	Gtk.main ();
+	return 0;
 }
-

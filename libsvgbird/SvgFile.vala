@@ -24,6 +24,11 @@ public class SvgFile : GLib.Object {
 
 	public SvgFile () {		
 	}
+
+	public SvgDrawing parse_svg_data (string xml_data) {
+		XmlTree tree = new XmlTree (xml_data);
+		return parse_svg_file (tree.get_root ());
+	}
 	
 	public SvgDrawing parse_svg_file (XmlElement svg_tag) {
 		drawing = new SvgDrawing ();
@@ -43,7 +48,7 @@ public class SvgFile : GLib.Object {
 				
 		foreach (XmlElement t in svg_tag) {
 			string name = t.get_name ();
-			
+
 			if (name == "g") {
 				parse_layer (drawing.root_layer, style, t);
 			}
@@ -642,8 +647,19 @@ public class SvgFile : GLib.Object {
 		for (int i = 0; i < points_size; i++) {
 			// FIXME: add more types
 			if (bezier_points[i].type == 'M') {
-				points.x = bezier_points[i].x0;
-				points.y = bezier_points[i].y0;
+				if (i == 0) {
+					points.x = bezier_points[i].x0;
+					points.y = bezier_points[i].y0;
+				} else {
+					points.add_type (LINE);
+					points.add (bezier_points[i].x0);
+					points.add (bezier_points[i].y0);
+					points.add (0);
+					points.add (0);
+					points.add (0);
+					points.add (0);
+					points.add (0);
+				}
 			} else if (bezier_points[i].type == 'C') {
 				points.add_type (CUBIC);
 				points.add (bezier_points[i].x0);
@@ -694,10 +710,10 @@ public class SvgFile : GLib.Object {
 			}
 		}
 
-		if (points.point_data.size > 0) {
+		if (points.size > 0) {
 			path_data.add (points);
 		}
-
+		
 		return path_data;
 	}
 

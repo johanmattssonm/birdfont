@@ -17,12 +17,34 @@ using Math;
 
 namespace SvgBird {
 
+
 public class StyleSheet : GLib.Object {
 	
 	public Gee.ArrayList<Selector> styles;
 	
 	public StyleSheet () {
 		styles = new Gee.ArrayList<Selector> ();
+	}
+	
+	/** Copy references to all selectors in this style sheet. */
+	public StyleSheet shallow_copy () {
+		StyleSheet style_sheet = new StyleSheet ();
+		
+		foreach (Selector selector in styles) {
+			style_sheet.styles.add (selector);
+		}
+		
+		return style_sheet;
+	}
+
+	public StyleSheet copy () {
+		StyleSheet style_sheet = new StyleSheet ();
+		
+		foreach (Selector selector in styles) {
+			style_sheet.styles.add (selector.copy ());
+		}
+		
+		return style_sheet;
 	}
 	
 	public void inherit_style (XmlElement tag, SvgStyle style) {
@@ -43,6 +65,12 @@ public class StyleSheet : GLib.Object {
 			if (selector.match (tag, id, css_class)) {
 				style.inherit (selector.style);
 			}
+		}
+	}
+	
+	public void merge (StyleSheet style_sheet) {
+		foreach (Selector selector in style_sheet.styles) {
+			styles.add (selector);
 		}
 	}
 	

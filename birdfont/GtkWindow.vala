@@ -52,8 +52,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	Box text_box;
 	Gtk.Button submit_text_button;
 	
-	Gtk.Window tooltip_window = new Gtk.Window ();
-	
 	ToolboxCanvas toolbox;
 	
 	Task background_task = new Task(idle);
@@ -112,12 +110,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 				uri = Preview.get_uri ();
 				html = Preview.get_html_with_absolute_paths ();
 										
-				try {	
-					html_canvas.load_html_string (html, uri);
-				} catch (Error e) {
-					warning (e.message);
-					warning ("Failed to load html into canvas.");
-				}
+				html_canvas.load_html_string (html, uri);
 				
 				// show the webview when loading has finished 
 				html_box.set_visible (true); 

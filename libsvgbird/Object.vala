@@ -91,7 +91,7 @@ public abstract class Object : GLib.Object {
 		bool need_stroke = style.stroke_gradient != null || style.stroke != null;
 
 		cr.set_line_width (style.stroke_width);
-	
+		
 		if (style.fill_gradient != null) {
 			apply_gradient (cr, (!) style.fill_gradient);
 		} else if (style.fill != null) {

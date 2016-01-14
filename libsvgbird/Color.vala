@@ -95,9 +95,9 @@ public class Color {
 	public string to_rgb_hex () {
 		StringBuilder rgb = new StringBuilder ();
 		rgb.append ("#");
-		rgb.append_printf ("%x", (int) Math.rint (r  * 254));
-		rgb.append_printf ("%x", (int) Math.rint (g  * 254));
-		rgb.append_printf ("%x", (int) Math.rint (b  * 254));
+		rgb.append_printf ("%02x", (int) Math.rint (r  * 254));
+		rgb.append_printf ("%02x", (int) Math.rint (g  * 254));
+		rgb.append_printf ("%02x", (int) Math.rint (b  * 254));
 		return rgb.str;
 	}
 
@@ -107,7 +107,6 @@ public class Color {
 		rgba.append_printf ("%x", (int) Math.rint (a  * 254));
 		return rgba.str;
 	}
-
 
 	public Color copy () {
 		return new Color (r, g, b, a);
