@@ -50,6 +50,19 @@ public class SvgStyle : GLib.Object {
 		}
 	}
 
+	/** Specify inheritance for a CSS property. */
+	public static bool set_inheritance (string property, bool inherit) {
+		lock (inheritace) {
+			if (unlikely (inheritance == null)) {
+				create_inheritance_table ();
+			}
+			
+			Gee.HashMap<string, string> inheritance = (!) inheritance;
+			string inherit_property = inherit ? "yes" : "no";
+			inheritance.set (property, inherit_property);
+		}
+	}
+
 	public SvgStyle.for_properties (Defs? defs, string style) {
 		parse_key_value_pairs (style);
 		set_style_properties (defs, this);
