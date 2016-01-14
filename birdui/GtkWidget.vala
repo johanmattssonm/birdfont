@@ -15,6 +15,7 @@
 using Gtk;
 using Gdk;
 using Cairo;
+using Math;
 
 namespace Bird {
 
@@ -44,6 +45,10 @@ class Widget : DrawingArea {
 			component.draw (cairo_context);
 			return true;
 		});
+		
+		int width = (int) rint (component.padded_width);
+		int height = (int) rint (component.padded_height);
+		set_size_request (width, height);
 	}
 	
 }

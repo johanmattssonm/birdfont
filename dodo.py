@@ -596,7 +596,7 @@ def make_birdui(target_binary, deps):
 			$(pkg-config --libs gobject-2.0) \
 			$(pkg-config --libs xmlbird) \
 			$(pkg-config --libs """ + config.GEE + """) \
-			-L ./build/bin -l svgbird \
+			-L ./build/bin -l m -l svgbird \
 			-o build/bin/""" + target_binary
 
     libbirdgems = Builder('birdui',

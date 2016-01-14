@@ -37,7 +37,7 @@ public class SvgStyle : GLib.Object {
 	}
 
 	public string? get_css_property (string key) {
-		return style.get (key);
+		return style.get (key.down ());
 	}
 
 	public SvgStyle copy () {
@@ -176,8 +176,8 @@ public class SvgStyle : GLib.Object {
 					continue;
 				}
 				
-				k = pair[0].strip ();
-				v = pair[1].strip ();
+				k = pair[0].strip ().down ();
+				v = pair[1].strip ().down ();
 				
 				if (k == "padding") {
 					parse_padding_shorthand (v);

@@ -224,8 +224,9 @@ class Component : GLib.Object {
 		
 		foreach (Component component in components) {
 			component.layout ();
-			width = component.width;
-			height = component.height;
+			component.apply_padding ();
+			width = component.padded_width;
+			height = component.padded_height;
 		}
 	}
 	

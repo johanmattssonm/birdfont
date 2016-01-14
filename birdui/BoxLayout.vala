@@ -56,6 +56,8 @@ class BoxLayout : Component {
 			component.x = child_x;
 			component.y = child_y;
 			component.layout ();
+			component.apply_padding ();
+			
 			child_x += component.padded_width;
 			
 			if (component.height > height) {
