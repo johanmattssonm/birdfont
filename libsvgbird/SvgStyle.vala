@@ -18,7 +18,6 @@ using Math;
 namespace SvgBird {
 
 public class SvgStyle : GLib.Object {
-	
 	public Gee.HashMap<string, string> style = new Gee.HashMap<string, string> ();
 	
 	public Color? stroke = null;
@@ -27,8 +26,28 @@ public class SvgStyle : GLib.Object {
 	public Gradient? fill_gradient = null;
 
 	public double stroke_width = 0;
+
+	private static Gee.HashMap<string, string>? inheritance;
 	
 	public SvgStyle () {
+	}
+
+	public static bool is_inherited (string property) {
+		lock (inheritace) {
+			if (unlikely (inheritance == null)) {
+				create_inheritance_table ();
+			}
+			
+			Gee.HashMap<string, string> inheritance = (!) inheritance;
+			string? inherited = inherited.get (property);
+			
+			if (inherited == null) {
+				return true;
+			}
+
+			string inherited_property = (!) inherited;
+			return inherited_property == "yes";
+		}
 	}
 
 	public SvgStyle.for_properties (Defs? defs, string style) {
@@ -80,7 +99,9 @@ public class SvgStyle : GLib.Object {
 	
 	public void inherit (SvgStyle inherited) {
 		foreach (string key in inherited.style.keys) {
-			style.set (key, inherited.style.get (key));
+			if (is_inherited (key)) {
+				style.set (key, inherited.style.get (key));
+			}
 		}
 	}
 	
@@ -206,6 +227,128 @@ public class SvgStyle : GLib.Object {
 		if (args.length > 3) {
 			style.set ("padding-left", args[3]);
 		}
+	}
+
+	private static create_inheritance_table () {
+		inheritance = Gee.HashMap<string, string> ();
+		
+		Gee.HashMap<string, string> inherited = (!) inheritance;
+		
+		inherited.set ("azimuth", "yes");
+		inherited.set ("background-attachment", "no");
+		inherited.set ("background-color", "no");
+		inherited.set ("background-image", "no");
+		inherited.set ("background-position", "no");
+		inherited.set ("background-repeat", "no");
+		inherited.set ("background", "no");
+		inherited.set ("border-collapse", "yes");
+		inherited.set ("border-color", "no");
+		inherited.set ("border-spacing", "yes");
+		inherited.set ("border-style", "no");
+		inherited.set ("border-top", "no");
+		inherited.set ("border-right", "no");
+		inherited.set ("border-bottom", "no");
+		inherited.set ("border-left", "no");
+		inherited.set ("border-top-color", "no");
+		inherited.set ("border-right-color", "no");
+		inherited.set ("border-bottom-color", "no");
+		inherited.set ("border-left-color", "no");
+		inherited.set ("border-top-style", "no");
+		inherited.set ("border-right-style", "no");
+		inherited.set ("border-bottom-style", "no");
+		inherited.set ("border-left-style", "no");
+		inherited.set ("border-top-width", "no");
+		inherited.set ("border-right-width", "no");
+		inherited.set ("border-bottom-width", "no");
+		inherited.set ("border-left-width", "no");
+		inherited.set ("border-width", "no");
+		inherited.set ("border", "no");
+		inherited.set ("bottom", "no");
+		inherited.set ("caption-side", "yes");
+		inherited.set ("clear", "no");
+		inherited.set ("clip", "no");
+		inherited.set ("color", "yes");
+		inherited.set ("content", "no");
+		inherited.set ("counter-increment", "no");
+		inherited.set ("counter-reset", "no");
+		inherited.set ("cue-after", "no");
+		inherited.set ("cue-before", "no");
+		inherited.set ("cue", "no");
+		inherited.set ("cursor", "yes");
+		inherited.set ("direction", "yes");
+		inherited.set ("display", "no");
+		inherited.set ("elevation", "yes");
+		inherited.set ("empty-cells", "yes");
+		inherited.set ("float", "no");
+		inherited.set ("font-family", "yes");
+		inherited.set ("font-size", "yes");
+		inherited.set ("font-style", "yes");
+		inherited.set ("font-variant", "yes");
+		inherited.set ("font-weight", "yes");
+		inherited.set ("font", "yes");
+		inherited.set ("height", "no");
+		inherited.set ("left", "no");
+		inherited.set ("letter-spacing", "yes");
+		inherited.set ("line-height", "yes");
+		inherited.set ("list-style-image", "yes");
+		inherited.set ("list-style-position", "yes");
+		inherited.set ("list-style-type", "yes");
+		inherited.set ("list-style", "yes");
+		inherited.set ("margin-right", "no");
+		inherited.set ("margin-left", "no");
+		inherited.set ("margin-top", "no");
+		inherited.set ("margin-bottom", "no");
+		inherited.set ("margin", "no");
+		inherited.set ("max-height", "no");
+		inherited.set ("max-width", "no");
+		inherited.set ("min-height", "no");
+		inherited.set ("min-width", "no");
+		inherited.set ("orphans", "yes");
+		inherited.set ("outline-color", "no");
+		inherited.set ("outline-style", "no");
+		inherited.set ("outline-width", "no");
+		inherited.set ("outline", "no");
+		inherited.set ("overflow", "no");
+		inherited.set ("padding-top", "no");
+		inherited.set ("padding-right", "no");
+		inherited.set ("padding-bottom", "no");
+		inherited.set ("padding-left", "no");
+		inherited.set ("padding", "no");
+		inherited.set ("page-break-after", "no");
+		inherited.set ("page-break-before", "no");
+		inherited.set ("page-break-inside", "no");
+		inherited.set ("pause-after", "no");
+		inherited.set ("pause-before", "no");
+		inherited.set ("pause", "no");
+		inherited.set ("pitch-range", "yes");
+		inherited.set ("pitch", "yes");
+		inherited.set ("play-during", "no");
+		inherited.set ("position", "no");
+		inherited.set ("quotes", "yes");
+		inherited.set ("richness", "yes");
+		inherited.set ("right", "no");
+		inherited.set ("speak-header", "yes");
+		inherited.set ("speak-numeral", "yes");
+		inherited.set ("speak-punctuation", "yes");
+		inherited.set ("speak", "yes");
+		inherited.set ("speech-rate", "yes");
+		inherited.set ("stress", "yes");
+		inherited.set ("table-layout", "no");
+		inherited.set ("text-align", "yes");
+		inherited.set ("text-decoration", "no");
+		inherited.set ("text-indent", "yes");
+		inherited.set ("text-transform", "yes");
+		inherited.set ("top", "no");
+		inherited.set ("unicode-bidi", "no");
+		inherited.set ("vertical-align", "no");
+		inherited.set ("visibility", "yes");
+		inherited.set ("voice-family", "yes");
+		inherited.set ("volume", "yes");
+		inherited.set ("white-space", "yes");
+		inherited.set ("widows", "yes");
+		inherited.set ("width", "no");
+		inherited.set ("word-spacing", "yes");
+		inherited.set ("z-index", "no");
 	}
 }
 
