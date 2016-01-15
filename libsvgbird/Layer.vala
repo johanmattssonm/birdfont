@@ -12,17 +12,16 @@
 	Lesser General Public License for more details.
 */
 
+using Cairo;
+
 namespace SvgBird {
 
-public class Layer : GLib.Object {
+public class Layer : Object {
 	public ObjectGroup objects;
 	
-	public Gee.ArrayList<Layer> subgroups;
-	public bool visible = true;
+	public Gee.ArrayList<Layer> subgroups; // FIXME: delete
 	public string name = "Layer";
-	
-	public SvgTransforms transforms;
-	
+
 	public Layer () {
 		objects = new ObjectGroup ();
 		subgroups = new Gee.ArrayList<Layer> ();
@@ -86,16 +85,17 @@ public class Layer : GLib.Object {
 	public static void copy_layer (Layer from, Layer to) {
 		to.name = from.name;
 		to.objects = from.objects.copy ();
-		to.visible = from.visible;
 		
 		foreach (Layer l in from.subgroups) {
-			to.subgroups.add (l.copy ());
+			Layer layer = (Layer) l.copy ();
+			to.subgroups.add (layer);
 		}	
 	}
-	
-	public Layer copy () {
+
+	public override Object copy () {
 		Layer layer = new Layer ();
 		copy_layer (this, layer);
+		Object.copy_attributes (this, layer);
 		return layer;
 	}
 
@@ -164,6 +164,37 @@ public class Layer : GLib.Object {
 			stdout.printf ("%s\n", l.name);
 			l.print (indent + 1);
 		}
+	}
+
+
+	public override bool is_over (double x, double y) {
+		return false;
+	}
+	
+	public override void draw_outline (Context cr) {
+		foreach (Object object in objects) {
+			object.draw_outline (cr);
+		}
+	}
+	
+	public override void move (double dx, double dy) {
+	}
+	
+	public override void update_region_boundaries () {
+	}
+
+	public override void rotate (double theta, double xc, double yc) {
+	}
+	
+	public override bool is_empty () {
+		return false;
+	}
+	
+	public override void resize (double ratio_x, double ratio_y) {
+	}
+	
+	public override string to_string () {
+		return "Layer: " + name;
 	}
 }
 

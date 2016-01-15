@@ -24,7 +24,7 @@ public class SvgFile : GLib.Object {
 
 	public SvgFile () {		
 	}
-
+	
 	public SvgDrawing parse_svg_data (string xml_data) {
 		XmlTree tree = new XmlTree (xml_data);
 		return parse_svg_file (tree.get_root ());
@@ -63,31 +63,13 @@ public class SvgFile : GLib.Object {
 			
 			parse_object (drawing.root_layer, style, t);
 		}
+
+		set_object_properties (drawing, new SvgStyle (), svg_tag);
 		
 		return drawing;
 	}
 
-	private void parse_layer (Layer layer, SvgStyle parent_style, XmlElement tag) {
-		bool hidden = false;
-
-		foreach (Attribute attr in tag.get_attributes ()) {	
-			if (attr.get_name () == "display" && attr.get_content () == "none") {
-				hidden = true;
-			}
-			
-			if (attr.get_name () == "visibility"
-				&& (attr.get_content () == "hidden" 
-					|| attr.get_content () == "collapse")) {
-				hidden = true;
-			}
-		}
-		
-		if (hidden) {
-			layer.visible = !hidden;
-		}
-		
-		SvgStyle style = SvgStyle.parse (drawing.defs, parent_style, tag);
-		
+	private void parse_layer (Layer layer, SvgStyle parent_style, XmlElement tag) {		
 		foreach (XmlElement t in tag) {
 			string name = t.get_name ();
 
@@ -98,17 +80,23 @@ public class SvgFile : GLib.Object {
 			}
 
 			if (name == "a") {
-				parse_link (layer, style, t);
+				parse_link (layer, parent_style, t);
 			}
 			
-			parse_object (layer, style, t);
+			parse_object (layer, parent_style, t);
 		}
 
-		foreach (Attribute attr in tag.get_attributes ()) {	
-			if (attr.get_name () == "transform") {
-				layer.transforms = parse_transform (attr.get_content ());
-			}
-		}
+		set_object_properties (layer, parent_style, tag);
+	}
+
+	void parse_clip_path (SvgDrawing drawing, XmlElement tag) {
+		ClipPath clip_path;
+		
+		Layer layer = new Layer ();
+		parse_layer (layer, new SvgStyle (), tag);
+		clip_path = new ClipPath (layer);
+		
+		drawing.defs.clip_paths.add (clip_path);
 	}
 
 	void parse_defs (SvgDrawing drawing, XmlElement tag) {
@@ -118,6 +106,8 @@ public class SvgFile : GLib.Object {
 			
 			if (name == "linearGradient") {
 				parse_linear_gradient (drawing, t);
+			} else if (name == "clipPath") {
+				parse_clip_path (drawing, t);
 			}
 		}
 		
@@ -284,12 +274,37 @@ public class SvgFile : GLib.Object {
 			}
 		}
 		
-		polygon.transforms = get_transform (tag.get_attributes ());
-		polygon.style = SvgStyle.parse (drawing.defs, parent_style, tag);
-		polygon.visible = is_visible (tag);	
-		
+		set_object_properties (polygon, parent_style, tag);
 		layer.add_object (polygon);
-
+	}
+	
+	void set_object_properties (Object object, SvgStyle parent_style, XmlElement tag) {
+		Attributes attributes = tag.get_attributes ();
+		
+		foreach (Attribute attribute in attributes) {
+			string name = attribute.get_name ();
+			
+			if (name == "id") {
+				object.id = attribute.get_content ();
+			} else if (name == "class") {
+				object.css_class = attribute.get_content ();
+			}
+		}
+		
+		object.clip_path = get_clip_path (attributes);
+		object.transforms = get_transform (attributes);
+		object.style = SvgStyle.parse (drawing.defs, parent_style, tag);
+		object.visible = is_visible (tag);
+	}
+		
+	ClipPath? get_clip_path (Attributes attributes) {
+		foreach (Attribute attribute in attributes) {
+			if (attribute.get_name () == "clip-path") {
+				return drawing.defs.get_clip_path_for_url (attribute.get_content ());
+			}
+		}
+		
+		return null;
 	}
 	
 	private void parse_polyline (Layer layer, SvgStyle parent_style, XmlElement tag) {
@@ -306,10 +321,7 @@ public class SvgFile : GLib.Object {
 			}
 		}
 		
-		polyline.transforms = get_transform (tag.get_attributes ());
-		polyline.style = SvgStyle.parse (drawing.defs, parent_style, tag);
-		polyline.visible = is_visible (tag);	
-		
+		set_object_properties (polyline, parent_style, tag);
 		layer.add_object (polyline);
 	}
 	
@@ -344,10 +356,7 @@ public class SvgFile : GLib.Object {
 			}
 		}
 		
-		rectangle.transforms = get_transform (tag.get_attributes ());
-		rectangle.style = SvgStyle.parse (drawing.defs, parent_style, tag);
-		rectangle.visible = is_visible (tag);	
-		
+		set_object_properties (rectangle, parent_style, tag);
 		layer.add_object (rectangle);
 	}
 	
@@ -370,10 +379,7 @@ public class SvgFile : GLib.Object {
 			}
 		}
 		
-		circle.transforms = get_transform (tag.get_attributes ());
-		circle.style = SvgStyle.parse (drawing.defs, parent_style, tag);
-		circle.visible = is_visible (tag);	
-		
+		set_object_properties (circle, parent_style, tag);
 		layer.add_object (circle);
 	}
 	
@@ -400,10 +406,7 @@ public class SvgFile : GLib.Object {
 			}
 		}
 		
-		ellipse.transforms = get_transform (tag.get_attributes ());
-		ellipse.style = SvgStyle.parse (drawing.defs, parent_style, tag);
-		ellipse.visible = is_visible (tag);	
-		
+		set_object_properties (ellipse, parent_style, tag);
 		layer.add_object (ellipse);
 	}
 	
@@ -430,10 +433,7 @@ public class SvgFile : GLib.Object {
 			}
 		}
 		
-		line.transforms = get_transform (tag.get_attributes ());
-		line.style = SvgStyle.parse (drawing.defs, parent_style, tag);
-		line.visible = is_visible (tag);	
-		
+		set_object_properties (line, parent_style, tag);
 		layer.add_object (line);
 	}
 	
@@ -627,10 +627,7 @@ public class SvgFile : GLib.Object {
 			}
 		}
 		
-		path.transforms = get_transform (tag.get_attributes ());
-		path.style = SvgStyle.parse (drawing.defs, parent_style, tag);
-		path.visible = is_visible (tag);	
-		
+		set_object_properties (path, parent_style, tag);
 		layer.add_object (path);
 	}
 
@@ -684,7 +681,6 @@ public class SvgFile : GLib.Object {
 				double angle_extent;
 				double center_x;
 				double center_y;
-				//double rotation = Math.PI * (b.angle / 180.0);
 				double rotation = b.angle;
 								
 				get_arc_arguments (b.x0, b.y0, b.rx, b.ry,

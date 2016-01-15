@@ -39,17 +39,12 @@ public class Ellipse : Object {
 		return false;
 	}
 			
-	public override void draw (Context cr) {
+	public override void draw_outline (Context cr) {
 		cr.save ();
 		cr.translate (cx, cy);
 		cr.scale (rx, ry);
 		cr.arc (0, 0, 1, 0, 2 * PI);
-		cr.restore ();	
-		
-		cr.save ();
-		apply_transform (cr);		
-		paint (cr);
-		cr.restore ();
+		cr.restore ();		
 	}
 
 	public override void move (double dx, double dy) {

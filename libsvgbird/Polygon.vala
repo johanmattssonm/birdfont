@@ -27,11 +27,8 @@ public class Polygon : Object {
 	public override bool is_over (double x, double y) {
 		return false;
 	}
-			
-	public override void draw (Context cr) {
-		cr.save ();
-		apply_transform (cr);
-		
+	
+	public override void draw_outline (Context cr) {
 		if (points.size > 2) {
 			cr.move_to (points.data[0].value, points.data[1].value);
 			
@@ -40,10 +37,7 @@ public class Polygon : Object {
 			}
 			
 			cr.close_path ();
-		}
-		
-		paint (cr);
-		cr.restore ();
+		}		
 	}
 	
 	public override void move (double dx, double dy) {

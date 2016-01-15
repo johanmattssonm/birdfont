@@ -23,7 +23,7 @@ public class SelectorPattern : GLib.Object {
 
 	public SelectorPattern.empty () {
 	}
-	
+
 	public SelectorPattern (string pattern) {
 		string p = pattern.strip ();
 		string[] elements = p.split (" ");
@@ -34,7 +34,20 @@ public class SelectorPattern : GLib.Object {
 			}
 		}
 	}
-	
+
+	public string to_string () {
+		StringBuilder s = new StringBuilder ();
+		
+		foreach (SelectorTag tag in tags) {
+			if (s.str != "") {
+				s.append (" ");
+			}
+			
+			s.append (tag.to_string ());
+		}
+		
+		return s.str;
+	}	
 	public SelectorPattern copy () {
 		SelectorPattern pattern = new SelectorPattern.empty ();
 		

@@ -33,6 +33,17 @@ public class SvgStyle : GLib.Object {
 	public SvgStyle () {
 	}
 
+	public bool property_equals (string property, string value) {
+		string? p = get_css_property (property);
+		
+		if (p == null) {
+			return false;
+		}
+		
+		string css_property = (!) p;
+		return css_property == value;
+	}
+
 	public bool has_css_property (string property) {
 		return style.has_key (property);
 	}
@@ -85,7 +96,7 @@ public class SvgStyle : GLib.Object {
 
 	public SvgStyle copy () {
 		SvgStyle style = new SvgStyle ();
-		style.inherit (this);
+		style.apply (this);
 		return style;
 	}
 

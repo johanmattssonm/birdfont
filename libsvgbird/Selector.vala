@@ -36,8 +36,22 @@ public class Selector : GLib.Object {
 		style = selector.style.copy ();
 		
 		foreach (SelectorPattern pattern in selector.patterns) {
-			selector.patterns.add (pattern.copy ());
+			patterns.add (pattern.copy ());
 		}
+	}
+	
+	public string to_string () {
+		StringBuilder s = new StringBuilder ();
+		
+		foreach (SelectorPattern pattern in patterns) {
+			if (s.str != "") {
+				s.append (", ");
+			}
+			
+			s.append (pattern.to_string ());
+		}
+		
+		return s.str;
 	}
 	
 	public Selector copy () {

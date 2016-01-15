@@ -88,7 +88,7 @@ public class PathObject : SvgBird.Object {
 		return path.is_over_coordinate (x, y);
 	}
 
-	public override void draw (Context cr) {
+	public override void draw_outline (Context cr) {
 		draw_path (cr);
 	}
 	

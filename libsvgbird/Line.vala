@@ -38,14 +38,10 @@ public class Line : Object {
 		return false;
 	}
 			
-	public override void draw (Context cr) {
-		cr.save ();
+	public override void draw_outline (Context cr) {
 		cr.move_to (x1, y1);
 		cr.line_to (x1, y1);
 		cr.line_to (x2, y2);
-		apply_transform (cr);		
-		paint (cr);
-		cr.restore ();
 	}
 
 	public override void move (double dx, double dy) {

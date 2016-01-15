@@ -25,7 +25,19 @@ public class SvgDrawing : Object {
 
 	public double x = 0;
 	public double y = 0;
-	public double width = 0;
+	
+	public double width {
+		get {			
+			return svg_width;
+		}
+		
+		set {
+			svg_width = value;
+		}
+	}
+	public double svg_width = 0;
+	
+	
 	public double height = 0;
 		
 	public override void update_region_boundaries () {
@@ -36,21 +48,27 @@ public class SvgDrawing : Object {
 			&& (this.y <= y <= this.y + height);
 	}
 	
-	public override void draw (Context cr) {
+	public override void draw_outline (Context cr) {
 		cr.save ();
 		cr.translate (x, y);
-
+		root_layer.draw_outline (cr);
+		
+		// FIXME: update layer structure
 		foreach (Object o in root_layer.get_visible_objects ().objects) {
 			o.draw (cr);
 		}
-
+		
 		cr.restore ();
 	}
 	
 	public override Object copy () {
 		SvgDrawing drawing = new SvgDrawing ();
-		drawing.root_layer = root_layer.copy ();
+		drawing.root_layer = (Layer) root_layer.copy ();
 		drawing.defs = defs.copy ();
+		drawing.x = x;
+		drawing.y = y;
+		drawing.width = width;
+		drawing.height = height;
 		return drawing;
 	}
 	
@@ -67,6 +85,10 @@ public class SvgDrawing : Object {
 	}
 	
 	public override void resize (double ratio_x, double ratio_y) {
+	}
+
+	public override string to_string () {
+		return @"SvgDrawing x: $x, y: $y, width: $width, height: $height";
 	}
 }
 

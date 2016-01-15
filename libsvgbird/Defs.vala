@@ -18,11 +18,61 @@ using Math;
 namespace SvgBird {
 
 public class Defs {
+	public Gee.ArrayList<ClipPath> clip_paths = new Gee.ArrayList<ClipPath> ();
 	public Gee.ArrayList<Gradient> gradients = new Gee.ArrayList<Gradient> ();
 	public StyleSheet style_sheet = new StyleSheet ();
 
 	public void add (Gradient g) {
 		gradients.add (g);
+	}
+
+	public ClipPath? get_clip_path_for_url (string? url) {
+		if (url == null) {
+			return null;
+		}
+		
+		string tag_id = get_id_from_url ((!) url);
+		return get_clip_path_for_id (tag_id);
+	} 
+	
+	public ClipPath? get_clip_path_for_id (string id) {
+		string tag_id;
+		
+		if (id.has_prefix ("#")) {
+			tag_id = id.substring ("#".length);
+		} else {
+			tag_id = id;
+		}
+		
+		foreach (ClipPath clip_path in clip_paths) {
+			if (clip_path.id == tag_id) {
+				return clip_path;
+			}
+		}
+		
+		return null;		
+	}
+	
+	public static string get_id_from_url (string url) {
+		if (unlikely (!is_url (url))) {
+			return "";
+		}
+
+		int p1 = url.index_of ("(");
+		if (unlikely (p1 == -1)) {
+			warning ("Not an URL: " + url);
+			return "";
+		}
+
+		int p2 = url.index_of (")");
+		if (unlikely (p2 == -1 || p2 < p1)) {
+			warning ("Not an URL: " +  url);
+			return "";
+		}
+	
+		p1 += "(".length;
+		int length = p2 - p1;
+		return url.substring (p1, length);
 	}
 	
 	public Gradient? get_gradient_for_url (string? url) {
@@ -30,30 +80,9 @@ public class Defs {
 			return null;
 		}
 		
-		string tag_id = (!) url;
-
-		if (unlikely (!is_url (tag_id))) {
-			return null;
-		}
-
-		int p1 = tag_id.index_of ("(");
-		if (unlikely (p1 == -1)) {
-			warning ("Not an URL: " + tag_id);
-			return null;
-		}
-
-		int p2 = tag_id.index_of (")");
-		if (unlikely (p2 == -1 || p2 < p1)) {
-			warning ("Not an URL: " +  tag_id);
-			return null;
-		}
-	
-		p1 += "(".length;
-		int length = p2 - p1;
-		tag_id = tag_id.substring (p1, length);
-		
+		string tag_id = get_id_from_url ((!) url);
 		return get_gradient_for_id (tag_id);
-	} 
+	}
 
 	public Gradient? get_gradient_for_id (string id) {
 		string tag_id;

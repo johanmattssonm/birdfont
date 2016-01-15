@@ -53,22 +53,38 @@ class Component : GLib.Object {
 	string? css_class = null;
 	string? id = null;
 
+	Overflow overflow = Overflow.VISIBLE;
+
 	public Component (XmlElement component_tag, Defs defs) {
 		this.defs = defs;
 		this.component_tag = component_tag;
+		set_identification ();
 		parse (component_tag);
 	}
 
 	public Component.embedded (XmlElement component_tag, Defs defs) {
 		this.defs = defs;
 		this.component_tag = component_tag;
+		set_identification ();
+	}
+
+	void set_identification () {
+		foreach (Attribute attribute in component_tag.get_attributes ()) {
+			string attribute_name = attribute.get_name ();
+			
+			if (attribute_name == "id") {
+				id = attribute.get_content ();
+			} else if (attribute_name == "class") {
+				css_class = attribute.get_content ();
+			}
+		}
 	}
 	
 	public Component.load (string file_name) {
 		load_file (file_name);
 	}
 
-	private void inherit_style (Defs defs) {
+	private void inherit_styles_sheet (Defs defs) {
 		this.defs = defs;
 	}
 
@@ -76,12 +92,9 @@ class Component : GLib.Object {
 	}
 
 	protected void parse_style (XmlElement style_tag) {
-		Defs definitions = new Defs ();		
-		definitions.style_sheet = StyleSheet.parse (definitions, style_tag);
-
-		Defs subscope_definitions = defs.shallow_copy ();
-		subscope_definitions.style_sheet.merge (definitions.style_sheet);
-		defs = subscope_definitions;
+		defs = defs.shallow_copy ();
+		StyleSheet style_sheet = StyleSheet.parse (defs, style_tag);
+		defs.style_sheet.merge (style_sheet);
 	}
 	
 	protected void parse_svg (XmlElement svg_tag) {
@@ -90,7 +103,7 @@ class Component : GLib.Object {
 			
 			if (attribute_name == "file") {
 				string file_name = attribute.get_content ();
-				SvgComponent svg = new SvgComponent (component_tag, defs, file_name);
+				SvgComponent svg = new SvgComponent (svg_tag, defs, file_name);
 				add_component (svg);	
 			}
 		}
@@ -98,36 +111,47 @@ class Component : GLib.Object {
 
 	protected void add_component (Component component) {
 		components.add (component);
-		component.inherit_style (defs);
-		component.style = SvgStyle.parse (defs, style, (!) component.component_tag);
+		component.inherit_styles_sheet (defs);
+		component.style = SvgStyle.parse (defs, style, component.component_tag);
+		
+		component.set_overflow_property_from_css ();
+		component.set_identification ();
+	}
+
+	protected void set_overflow_property_from_css () {
+		string? css_overflow = style.get_css_property ("overflow");
+		
+		if (css_overflow != null) {
+			string overflow_property = (!) css_overflow;
+			
+			if (overflow_property == "hidden") {
+				overflow = Overflow.HIDDEN;
+			} else if (overflow_property == "visible") {
+				overflow = Overflow.VISIBLE;
+			}
+		}
 	}
 
 	protected void parse_layout (XmlElement layout_tag) {
-		bool parse_style = false;
+		string type = "";
 		
 		foreach (Attribute attribute in layout_tag.get_attributes ()) {
 			string attribute_name = attribute.get_name ();
 			
 			if (attribute_name == "type") {
-				if (attribute.get_content () == "hbox") {
-					HBox hbox = new HBox (layout_tag, defs);
-					add_component (hbox);
-				} else if (attribute.get_content () == "vbox") {
-					VBox hbox = new VBox (layout_tag, defs);
-					add_component (hbox);
-				} else {
-					warning ("Layout of type " + attribute.get_content ()
-						+ " is not implemented in this verison.");
-				}
-			} else if (attribute_name == "id") {
-				id = attribute.get_content ();
-			} else if (attribute_name == "class") {
-				css_class = attribute.get_content ();
-			} else if (attribute_name == "style") {
-				// style will be parsed later in add_component
-			} else {
-				unused_attribute (attribute_name);
+				type = attribute.get_content ();				
 			}
+		}
+		
+		if (type == "hbox") {
+			HBox hbox = new HBox (layout_tag, defs);
+			add_component (hbox);
+		} else if (type == "vbox") {
+			VBox vbox = new VBox (layout_tag, defs);
+			add_component (vbox);
+		} else {
+			warning ("Layout of type " + type
+				+ " is supported in this verison.");
 		}
 	}
 
@@ -237,6 +261,12 @@ class Component : GLib.Object {
 		foreach (Component component in components) {
 			cairo.save ();
 			cairo.translate (component.x, component.y);
+			
+			if (component.overflow == Overflow.HIDDEN) {
+				cairo.rectangle (0, 0, component.width, component.height);
+				cairo.clip ();
+			}
+			
 			component.draw (cairo);
 			cairo.restore ();
 		}

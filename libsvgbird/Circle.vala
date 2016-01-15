@@ -36,12 +36,8 @@ public class Circle : Object {
 		return false;
 	}
 			
-	public override void draw (Context cr) {
-		cr.save ();
+	public override void draw_outline (Context cr) {
 		cr.arc (cx, cy, r, 0, 2 * Math.PI);
-		apply_transform (cr);		
-		paint (cr);
-		cr.restore ();
 	}
 
 	public override void move (double dx, double dy) {

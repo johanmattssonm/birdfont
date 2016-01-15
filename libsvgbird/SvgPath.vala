@@ -30,10 +30,7 @@ public class SvgPath : Object {
 		return false;
 	}
 			
-	public override void draw (Context cr) {
-		cr.save ();
-		cr.new_path ();
-		
+	public override void draw_outline (Context cr) {
 		foreach (Points p in points) {
 			cr.move_to (p.x, p.y);
 			draw_points (cr, p);
@@ -42,10 +39,6 @@ public class SvgPath : Object {
 				cr.close_path ();
 			}
 		}
-			
-		apply_transform (cr);		
-		paint (cr);
-		cr.restore ();
 	}
 
 	public void draw_points (Context cr, Points path) {

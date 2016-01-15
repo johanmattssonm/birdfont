@@ -20,10 +20,9 @@ namespace SvgBird {
 
 public class StyleSheet : GLib.Object {
 	
-	public Gee.ArrayList<Selector> styles;
+	public Gee.ArrayList<Selector> styles = new Gee.ArrayList<Selector> ();
 	
 	public StyleSheet () {
-		styles = new Gee.ArrayList<Selector> ();
 	}
 	
 	/** Copy references to all selectors in this style sheet. */
@@ -70,7 +69,7 @@ public class StyleSheet : GLib.Object {
 	
 	public void merge (StyleSheet style_sheet) {
 		foreach (Selector selector in style_sheet.styles) {
-			styles.add (selector);
+			styles.add (selector.copy ());
 		}
 	}
 	

@@ -1857,7 +1857,7 @@ public class Glyph : FontDisplay {
 			g.add_line (line.copy ());
 		}
 
-		g.layers = layers.copy ();
+		g.layers = (Layer) layers.copy ();
 
 		foreach (SvgBird.Object o in active_paths) {
 			g.active_paths.add (o);
@@ -1930,7 +1930,7 @@ public class Glyph : FontDisplay {
 
 	void set_glyph_data (Glyph g) {
 		current_layer = g.current_layer;
-		layers = g.layers.copy ();
+		layers = (Layer) g.layers.copy ();
 
 		left_limit = g.left_limit;
 		right_limit = g.right_limit;

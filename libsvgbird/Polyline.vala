@@ -28,10 +28,7 @@ public class Polyline : Object {
 		return false;
 	}
 			
-	public override void draw (Context cr) {
-		cr.save ();
-		apply_transform (cr);
-		
+	public override void draw_outline (Context cr) {
 		if (points.size > 2) {
 			cr.move_to (points.data[0].value, points.data[1].value);
 			
@@ -39,9 +36,6 @@ public class Polyline : Object {
 				cr.line_to (points.data[i].value, points.data[i + 1].value);
 			}
 		}
-		
-		paint (cr);
-		cr.restore ();
 	}
 	
 	public override void move (double dx, double dy) {

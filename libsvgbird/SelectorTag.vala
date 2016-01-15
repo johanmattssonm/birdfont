@@ -63,7 +63,7 @@ public class SelectorTag : GLib.Object {
 			}
 		}
 	}
-
+	
 	public SelectorTag copy () {
 		SelectorTag tag = new SelectorTag.empty();
 		

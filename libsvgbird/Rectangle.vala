@@ -33,18 +33,12 @@ public class Rectangle : Object {
 		return false;
 	}
 			
-	public override void draw (Context cr) {
-		cr.save ();
-		apply_transform (cr);
-		
+	public override void draw_outline (Context cr) {
 		if (rx == 0 && ry == 0) {
 			cr.rectangle (x, y, width, height);
 		} else {
 			draw_rounded_corners (cr);
 		}
-		
-		paint (cr);
-		cr.restore ();
 	}
 	
 	public void draw_rounded_corners (Context cr) {
