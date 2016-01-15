@@ -44,45 +44,44 @@ class Component : GLib.Object {
 	/** The parts this component is made of. */
 	protected ArrayList<Component> components = new ArrayList<Component> ();
 
-	XmlElement? component_tag = null;
+	XmlElement component_tag;
 	
 	/** Style sheet and other SVG definitions. */
-	Defs? defs = null;
-	SvgStyle style = new SvgStyle ();
+	Defs defs = new Defs ();
+	protected SvgStyle style = new SvgStyle ();
 
 	string? css_class = null;
 	string? id = null;
 
-	public Component () {
-	}
-
-	public Component.for_tag (XmlElement component_tag) {
+	public Component (XmlElement component_tag, Defs defs) {
+		this.defs = defs;
 		this.component_tag = component_tag;
 		parse (component_tag);
 	}
 
-	private void inherit_style (Defs? defs) {
+	public Component.embedded (XmlElement component_tag, Defs defs) {
+		this.defs = defs;
+		this.component_tag = component_tag;
+	}
+	
+	public Component.load (string file_name) {
+		load_file (file_name);
+	}
+
+	private void inherit_style (Defs defs) {
 		this.defs = defs;
 	}
 
 	protected void apply_padding () {	
 	}
 
-	protected void load_svg_file (string file_name) {
-		SvgComponent svg = new SvgComponent.for_file (file_name);
-		add_component (svg);		
-	}
-
 	protected void parse_style (XmlElement style_tag) {
 		Defs definitions = new Defs ();		
-		StyleSheet style_sheet = StyleSheet.parse (definitions, style_tag);
-		
-		if (defs != null) {
-			Defs subscope_definitions = ((!) defs).shallow_copy ();
-			subscope_definitions.style_sheet.merge (style_sheet);
-		} else {
-			defs = definitions;
-		}
+		definitions.style_sheet = StyleSheet.parse (definitions, style_tag);
+
+		Defs subscope_definitions = defs.shallow_copy ();
+		subscope_definitions.style_sheet.merge (definitions.style_sheet);
+		defs = subscope_definitions;
 	}
 	
 	protected void parse_svg (XmlElement svg_tag) {
@@ -90,7 +89,9 @@ class Component : GLib.Object {
 			string attribute_name = attribute.get_name ();
 			
 			if (attribute_name == "file") {
-				load_svg_file (attribute.get_content ());
+				string file_name = attribute.get_content ();
+				SvgComponent svg = new SvgComponent (component_tag, defs, file_name);
+				add_component (svg);	
 			}
 		}
 	}
@@ -98,22 +99,21 @@ class Component : GLib.Object {
 	protected void add_component (Component component) {
 		components.add (component);
 		component.inherit_style (defs);
-		
-		if (component.component_tag != null) {
-			style = SvgStyle.parse (defs, style, (!) component.component_tag);
-		}
+		component.style = SvgStyle.parse (defs, style, (!) component.component_tag);
 	}
 
 	protected void parse_layout (XmlElement layout_tag) {
+		bool parse_style = false;
+		
 		foreach (Attribute attribute in layout_tag.get_attributes ()) {
 			string attribute_name = attribute.get_name ();
 			
 			if (attribute_name == "type") {
 				if (attribute.get_content () == "hbox") {
-					HBox hbox = new HBox.for_tag (layout_tag);
+					HBox hbox = new HBox (layout_tag, defs);
 					add_component (hbox);
 				} else if (attribute.get_content () == "vbox") {
-					VBox hbox = new VBox.for_tag (layout_tag);
+					VBox hbox = new VBox (layout_tag, defs);
 					add_component (hbox);
 				} else {
 					warning ("Layout of type " + attribute.get_content ()
@@ -124,7 +124,7 @@ class Component : GLib.Object {
 			} else if (attribute_name == "class") {
 				css_class = attribute.get_content ();
 			} else if (attribute_name == "style") {
-				// style will be parsed later
+				// style will be parsed later in add_component
 			} else {
 				unused_attribute (attribute_name);
 			}
@@ -136,8 +136,7 @@ class Component : GLib.Object {
 			string attribute_name = attribute.get_name ();
 			
 			if (attribute_name == "file") {
-				Component component = new Component ();
-				component.load (attribute.get_content ());
+				Component component = new Component (component_tag, defs);
 				add_component (component);
 			} else {
 				unused_attribute (attribute_name);
@@ -173,11 +172,12 @@ class Component : GLib.Object {
 		warning ("The tag " + tag_name + " is not known in this version.");
 	}
 
-	public void load (string file_name) {
+	public void load_file (string file_name) {
 		if (file_name.has_suffix (".ui")) {
 			load_layout (file_name);
 		} else if (file_name.has_suffix (".svg")) {
-			load_svg_file (file_name);
+			SvgComponent svg = new SvgComponent.for_file (file_name);
+			add_component (svg);	
 		} else {
 			warning (file_name + " is not a ui file or svg file.");
 		}
@@ -202,8 +202,11 @@ class Component : GLib.Object {
 		}
 
 		XmlTree xml_parser = new XmlTree (xml_data);
-		Component component = new Component.for_tag (xml_parser.get_root ());
-		add_component (component);
+		
+		component_tag = xml_parser.get_root ();
+		defs = new Defs ();
+		parse (component_tag);
+		
 		layout ();
 	}
 	
@@ -246,13 +249,7 @@ class Component : GLib.Object {
 	}
 	
 	public virtual string to_string () {
-		if (component_tag != null) {
-			XmlElement tag = (!) component_tag;
-			return @"Component $(tag.get_name ())";
-		} else {
-			
-			return "Component";
-		}
+		return @"Component $(component_tag.get_name ())";
 	}
 	
 	public void print_tree () {

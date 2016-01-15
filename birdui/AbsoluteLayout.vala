@@ -20,11 +20,8 @@ namespace Bird {
 
 class AbsoluteLayout : Component {
 
-	public AbsoluteLayout () {
-	}
-
-	public AbsoluteLayout.for_tag (XmlElement layout_tag) {
-		parse (layout_tag);
+	public AbsoluteLayout (XmlElement layout_tag, Defs defs) {
+		base (layout_tag, defs);
 	}
 
 	public override string to_string () {

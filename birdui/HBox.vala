@@ -14,16 +14,13 @@
 
 using Gee;
 using B;
+using SvgBird;
 
 namespace Bird {
 
 class HBox : BoxLayout {
-	public HBox () {
-		base (BoxOrientation.HORIZONTAL);
-	}
-
-	public HBox.for_tag (XmlElement layout) {
-		base.for_tag (layout, BoxOrientation.HORIZONTAL);
+	public HBox (XmlElement layout, Defs defs) {
+		base (layout, BoxOrientation.HORIZONTAL, defs);
 	}
 	
 	public override string to_string () {

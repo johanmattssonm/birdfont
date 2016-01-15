@@ -14,16 +14,13 @@
 
 using Gee;
 using B;
+using SvgBird;
 
 namespace Bird {
 	
 class VBox : BoxLayout {
-	public VBox () {
-		base (BoxOrientation.VERTICAL);
-	}
-
-	public VBox.for_tag (XmlElement layout) {
-		base.for_tag (layout, BoxOrientation.VERTICAL);
+	public VBox (XmlElement layout, Defs defs) {
+		base (layout, BoxOrientation.VERTICAL, defs);
 	}
 	
 	public override string to_string () {

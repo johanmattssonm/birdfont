@@ -51,7 +51,6 @@ public class SelectorPattern : GLib.Object {
 						
 			if (pattern.name == ">") {
 				if (i - 1 < 0) {
-					
 					return false;
 				}
 				

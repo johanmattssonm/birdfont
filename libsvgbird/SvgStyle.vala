@@ -28,48 +28,59 @@ public class SvgStyle : GLib.Object {
 	public double stroke_width = 0;
 
 	private static Gee.HashMap<string, string>? inheritance;
+	private static Mutex inheritance_mutex = new Mutex ();
 	
 	public SvgStyle () {
 	}
 
-	public static bool is_inherited (string property) {
-		lock (inheritace) {
-			if (unlikely (inheritance == null)) {
-				create_inheritance_table ();
-			}
-			
-			Gee.HashMap<string, string> inheritance = (!) inheritance;
-			string? inherited = inherited.get (property);
-			
-			if (inherited == null) {
-				return true;
-			}
+	public bool has_css_property (string property) {
+		return style.has_key (property);
+	}
 
-			string inherited_property = (!) inherited;
-			return inherited_property == "yes";
+	public string? get_css_property (string property) {
+		string p = property.down ();
+		
+		if (!has_css_property (p)) {
+			return null;
 		}
+		
+		return style.get (p);
+	}
+	
+	public static bool is_inherited (string property) {
+		inheritance_mutex.lock ();
+		if (unlikely (inheritance == null)) {
+			create_inheritance_table ();
+		}
+		
+		Gee.HashMap<string, string> inheritance = (!) inheritance;
+		string? inherited = inheritance.get (property);
+		inheritance_mutex.unlock ();
+
+		if (inherited == null) {
+			return false;
+		}
+		
+		string inherited_property = (!) inherited;
+		return inherited_property == "yes";
 	}
 
 	/** Specify inheritance for a CSS property. */
-	public static bool set_inheritance (string property, bool inherit) {
-		lock (inheritace) {
-			if (unlikely (inheritance == null)) {
-				create_inheritance_table ();
-			}
-			
-			Gee.HashMap<string, string> inheritance = (!) inheritance;
-			string inherit_property = inherit ? "yes" : "no";
-			inheritance.set (property, inherit_property);
+	public static void set_inheritance (string property, bool inherit) {
+		inheritance_mutex.lock ();
+		if (unlikely (inheritance == null)) {
+			create_inheritance_table ();
 		}
+		
+		Gee.HashMap<string, string> inheritance = (!) inheritance;
+		string inherit_property = inherit ? "yes" : "no";
+		inheritance.set (property, inherit_property);
+		inheritance_mutex.unlock ();
 	}
 
 	public SvgStyle.for_properties (Defs? defs, string style) {
 		parse_key_value_pairs (style);
 		set_style_properties (defs, this);
-	}
-
-	public string? get_css_property (string key) {
-		return style.get (key.down ());
 	}
 
 	public SvgStyle copy () {
@@ -110,11 +121,32 @@ public class SvgStyle : GLib.Object {
 		return stroke_width;
 	}
 	
+	public string to_string () {
+		StringBuilder description = new StringBuilder ();
+		
+		description.append ("SvgStyle: ");
+		
+		foreach (string key in style.keys) {
+			description.append (key);
+			description.append (": ");
+			description.append (style.get (key));
+			description.append ("; ");
+		}
+		
+		return description.str.strip ();
+	}
+	
 	public void inherit (SvgStyle inherited) {
 		foreach (string key in inherited.style.keys) {
 			if (is_inherited (key)) {
 				style.set (key, inherited.style.get (key));
 			}
+		}
+	}
+
+	public void apply (SvgStyle inherited) {
+		foreach (string key in inherited.style.keys) {
+			style.set (key, inherited.style.get (key));
 		}
 	}
 	
@@ -127,7 +159,7 @@ public class SvgStyle : GLib.Object {
 		
 		if (d != null) {
 			StyleSheet style_sheet = ((!) d).style_sheet;
-			style_sheet.inherit_style (tag, s);
+			style_sheet.apply_style (tag, s);
 		}
 
 		foreach (Attribute a in attributes) {
@@ -242,8 +274,8 @@ public class SvgStyle : GLib.Object {
 		}
 	}
 
-	private static create_inheritance_table () {
-		inheritance = Gee.HashMap<string, string> ();
+	private static void create_inheritance_table () {
+		inheritance = new Gee.HashMap<string, string> ();
 		
 		Gee.HashMap<string, string> inherited = (!) inheritance;
 		

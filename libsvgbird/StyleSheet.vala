@@ -47,7 +47,7 @@ public class StyleSheet : GLib.Object {
 		return style_sheet;
 	}
 	
-	public void inherit_style (XmlElement tag, SvgStyle style) {
+	public void apply_style (XmlElement tag, SvgStyle style) {
 		string? id = null;
 		string? css_class = null;
 		
@@ -63,7 +63,7 @@ public class StyleSheet : GLib.Object {
 		
 		foreach (Selector selector in styles) {
 			if (selector.match (tag, id, css_class)) {
-				style.inherit (selector.style);
+				style.apply (selector.style);
 			}
 		}
 	}

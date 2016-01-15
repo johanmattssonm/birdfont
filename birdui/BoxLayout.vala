@@ -27,28 +27,32 @@ class BoxLayout : Component {
 
 	public BoxOrientation orientation { get; private set; }
 	
-	public BoxLayout (BoxOrientation orientation) {
-		base ();
+	public BoxLayout (XmlElement layout_tag, BoxOrientation orientation, Defs defs) {
+		base (layout_tag, defs);
 		this.orientation = orientation;
 	}
+	
+	void set_max_size (Component component) {
+		string? max_width = style.get_css_property ("max-width");
+		if (max_width != null) {
+			double w = SvgFile.parse_number (max_width);
+			
+			if (component.width > w) {
+				component.width = w;
+			}
+		}
 
-	public BoxLayout.for_tag (XmlElement layout_tag, BoxOrientation orientation) {
-		base.for_tag (layout_tag);
-		this.orientation = orientation;
+		string? max_height = style.get_css_property ("max-height");
+		if (max_height != null) {
+			double h = SvgFile.parse_number (max_height);
+			
+			if (component.height > h) {
+				component.height = h;
+			}
+		}	
 	}
-		
+	
 	public override void layout () {
-		switch (orientation) {
-		case BoxOrientation.HORIZONTAL:
-			layout_horizontal ();
-			break;
-		case BoxOrientation.VERTICAL:
-			layout_vertical ();
-			break;
-		}
-	}
-
-	void layout_horizontal () {
 		double child_x = 0;
 		double child_y = 0;
 		
@@ -57,35 +61,28 @@ class BoxLayout : Component {
 			component.y = child_y;
 			component.layout ();
 			component.apply_padding ();
-			
-			child_x += component.padded_width;
-			
-			if (component.height > height) {
-				height = component.height;
+			set_max_size (component);
+
+			if (orientation == BoxOrientation.HORIZONTAL) {
+				child_x += component.padded_width;
+				
+				if (component.height > height) {
+					height = component.height;
+				}
+			} else {
+				child_y += component.padded_height;
+							
+				if (component.width > width) {
+					width = component.width;
+				}				
 			}
 		}
 		
-		width = child_x;
-	}
-
-	void layout_vertical () {
-		double child_x = 0;
-		double child_y = 0;
-		
-		foreach (Component component in components) {
-			component.x = child_x;
-			component.y = child_y;
-			component.layout ();
-			component.apply_padding ();
-
-			child_y += component.padded_height;
-						
-			if (component.width > width) {
-				width = component.width;
-			}
+		if (orientation == BoxOrientation.HORIZONTAL) {
+			width = child_x;
+		} else {
+			height = child_y;
 		}
-		
-		height = child_y;
 	}
 
 	public override string to_string () {

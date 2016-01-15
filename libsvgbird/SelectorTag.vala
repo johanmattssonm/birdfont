@@ -146,7 +146,7 @@ public class SelectorTag : GLib.Object {
 			if (id == null) {
 				return false;
 			} 
-			
+
 			if (((!) this.id) != ((!) id)) {
 				return false;
 			}

@@ -24,16 +24,13 @@ class SvgComponent : Component {
 	string file_name = "";
 	SvgDrawing? drawing = null;
 	
-	public SvgComponent () {
-		base ();
-	}
-
-	public SvgComponent.for_tag (XmlElement svg_component_tag) {
-		base ();
+	public SvgComponent (XmlElement svg_component_tag, Defs defs, string svg_file) {
+		base.embedded (svg_component_tag, defs);
+		load_svg (svg_file);
 	}
 
 	public SvgComponent.for_file (string svg_file) {
-		base ();
+		base.embedded (new XmlElement.empty (), new Defs ());
 		load_svg (svg_file);
 	}
 
