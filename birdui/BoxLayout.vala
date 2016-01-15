@@ -32,7 +32,25 @@ class BoxLayout : Component {
 		this.orientation = orientation;
 	}
 	
-	void set_max_size (Component component) {
+	void set_size_limits (Component component) {
+		string? min_width = style.get_css_property ("min-width");
+		if (min_width != null) {
+			double w = SvgFile.parse_number (min_width);
+			
+			if (component.width < w) {
+				component.width = w;
+			}
+		}
+
+		string? min_height = style.get_css_property ("min-height");
+		if (min_height != null) {
+			double h = SvgFile.parse_number (min_height);
+			
+			if (component.height < h) {
+				component.height = h;
+			}
+		}
+		
 		string? max_width = style.get_css_property ("max-width");
 		if (max_width != null) {
 			double w = SvgFile.parse_number (max_width);
@@ -49,7 +67,7 @@ class BoxLayout : Component {
 			if (component.height > h) {
 				component.height = h;
 			}
-		}	
+		}
 	}
 	
 	public override void layout () {
@@ -61,8 +79,9 @@ class BoxLayout : Component {
 			component.y = child_y;
 			component.layout ();
 			component.apply_padding ();
-			set_max_size (component);
+			set_size_limits (component);
 
+			print (@"$(component), $(component.style)\n");
 			if (orientation == BoxOrientation.HORIZONTAL) {
 				child_x += component.padded_width;
 				
