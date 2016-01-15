@@ -112,8 +112,7 @@ class Component : GLib.Object {
 	protected void add_component (Component component) {
 		components.add (component);
 		component.inherit_styles_sheet (defs);
-		component.style = SvgStyle.parse (defs, style, component.component_tag);
-		
+		component.style = SvgStyle.parse (defs, style, component.component_tag);		
 		component.set_overflow_property_from_css ();
 		component.set_identification ();
 	}
@@ -162,6 +161,7 @@ class Component : GLib.Object {
 			if (attribute_name == "file") {
 				Component component = new Component (component_tag, defs);
 				add_component (component);
+				component.load_layout (attribute.get_content ());
 			} else {
 				unused_attribute (attribute_name);
 			}
@@ -228,6 +228,7 @@ class Component : GLib.Object {
 		XmlTree xml_parser = new XmlTree (xml_data);
 		
 		component_tag = xml_parser.get_root ();
+		
 		defs = new Defs ();
 		parse (component_tag);
 		
@@ -279,7 +280,7 @@ class Component : GLib.Object {
 	}
 	
 	public virtual string to_string () {
-		return @"Component $(component_tag.get_name ())";
+		return @"$(component_tag.get_name ())";
 	}
 	
 	public void print_tree () {

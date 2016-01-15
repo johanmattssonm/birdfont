@@ -33,16 +33,15 @@ class BoxLayout : Component {
 	}
 	
 	void set_size_limits (Component component) {
-		string? min_width = style.get_css_property ("min-width");
+		string? min_width = component.style.get_css_property ("min-width");
 		if (min_width != null) {
 			double w = SvgFile.parse_number (min_width);
-			
 			if (component.width < w) {
 				component.width = w;
 			}
 		}
 
-		string? min_height = style.get_css_property ("min-height");
+		string? min_height = component.style.get_css_property ("min-height");
 		if (min_height != null) {
 			double h = SvgFile.parse_number (min_height);
 			
@@ -51,7 +50,7 @@ class BoxLayout : Component {
 			}
 		}
 		
-		string? max_width = style.get_css_property ("max-width");
+		string? max_width = component.style.get_css_property ("max-width");
 		if (max_width != null) {
 			double w = SvgFile.parse_number (max_width);
 			
@@ -60,7 +59,7 @@ class BoxLayout : Component {
 			}
 		}
 
-		string? max_height = style.get_css_property ("max-height");
+		string? max_height = component.style.get_css_property ("max-height");
 		if (max_height != null) {
 			double h = SvgFile.parse_number (max_height);
 			
@@ -81,7 +80,6 @@ class BoxLayout : Component {
 			component.apply_padding ();
 			set_size_limits (component);
 
-			print (@"$(component), $(component.style)\n");
 			if (orientation == BoxOrientation.HORIZONTAL) {
 				child_x += component.padded_width;
 				
