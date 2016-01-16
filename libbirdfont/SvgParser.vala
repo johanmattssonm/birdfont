@@ -256,7 +256,7 @@ public class SvgParser {
 			if (t.get_name () == "g") {
 				layer = new Layer ();
 				parse_layer (t, layer);
-				pl.subgroups.add (layer);
+				pl.objects.add (layer);
 			}
 			
 			if (t.get_name () == "polygon") {
@@ -305,7 +305,7 @@ public class SvgParser {
 	}
 	
 	private void transform_subgroups (string transform_functions, Layer layer) {
-		foreach (Layer subgroup in layer.subgroups) {
+		foreach (Layer subgroup in layer.get_sublayers ()) {
 			transform (transform_functions, subgroup);
 		}
 	}

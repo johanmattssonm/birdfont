@@ -22,7 +22,9 @@ int main (string[] args) {
 	window.set_title ("UI Bird");
 	window.destroy.connect (Gtk.main_quit);
 	
-	Component layout = new Component.load ("test.ui");
+	UI layout = new UI ("test.ui", 700, 200);
+	
+	layout.print_tree ();
 	
 	Bird.Widget primary_layout = new Bird.Widget (layout);
 

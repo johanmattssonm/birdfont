@@ -49,18 +49,18 @@ public class SvgPath : Object {
 		
 		for (int i = 0; i < size; i += 8) {
 			switch (points[i].type) {
-			case ARC:		
+			case POINT_ARC:		
 				draw_arc (cr, points[i + 1].value, points[i + 2].value,
 					points[i + 3].value, points[i + 4].value,
 					points[i + 5].value, points[i + 6].value,
 					points[i + 7].value);
 				break;
-			case CUBIC:
+			case POINT_CUBIC:
 				cr.curve_to (points[i + 1].value, points[i + 2].value, 
 					points[i + 3].value, points[i + 4].value,
 					points[i + 5].value, points[i + 6].value);
 				break;
-			case LINE:
+			case POINT_LINE:
 				cr.line_to (points[i + 1].value, points[i + 2].value);
 				break;
 			}

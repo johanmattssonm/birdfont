@@ -76,7 +76,7 @@ public class SvgFile : GLib.Object {
 			if (name == "g") {
 				Layer sublayer = new Layer ();
 				parse_layer (layer, parent_style, t);
-				layer.subgroups.add (sublayer);
+				layer.objects.add (sublayer);
 			}
 
 			if (name == "a") {
@@ -648,7 +648,7 @@ public class SvgFile : GLib.Object {
 					points.x = bezier_points[i].x0;
 					points.y = bezier_points[i].y0;
 				} else {
-					points.add_type (LINE);
+					points.add_type (POINT_LINE);
 					points.add (bezier_points[i].x0);
 					points.add (bezier_points[i].y0);
 					points.add (0);
@@ -658,7 +658,7 @@ public class SvgFile : GLib.Object {
 					points.add (0);
 				}
 			} else if (bezier_points[i].type == 'C') {
-				points.add_type (CUBIC);
+				points.add_type (POINT_CUBIC);
 				points.add (bezier_points[i].x0);
 				points.add (bezier_points[i].y0);
 				points.add (bezier_points[i].x1);
@@ -667,7 +667,7 @@ public class SvgFile : GLib.Object {
 				points.add (bezier_points[i].y2);
 				points.add (0);
 			} else if (bezier_points[i].type == 'L') {
-				points.add_type (LINE);
+				points.add_type (POINT_LINE);
 				points.add (bezier_points[i].x0);
 				points.add (bezier_points[i].y0);
 				points.add (0);
@@ -688,7 +688,7 @@ public class SvgFile : GLib.Object {
 					out angle_start, out angle_extent,
 					out center_x, out center_y);
 				
-				points.add_type (ARC);
+				points.add_type (POINT_ARC);
 				points.add (center_x);
 				points.add (center_y);
 				points.add (b.rx);

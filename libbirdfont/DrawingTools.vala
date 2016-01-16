@@ -1626,7 +1626,7 @@ public class DrawingTools : ToolCollection  {
 		int i = 0;
 		
 		layer_tools.tool.clear ();
-		foreach (Layer layer in g.layers.subgroups) { 
+		foreach (Layer layer in g.layers.get_sublayers ()) { 
 			LayerLabel label = new LayerLabel (layer);
 			layer_tools.add_tool (label, 0);
 			

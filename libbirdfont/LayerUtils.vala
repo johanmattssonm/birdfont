@@ -77,7 +77,7 @@ public class LayerUtils {
 			layer.objects.remove ((!) p);
 		}
 
-		foreach (SvgBird.Layer sublayer in layer.subgroups) {
+		foreach (SvgBird.Layer sublayer in layer.get_sublayers ()) {
 			remove_path (sublayer, path);
 		}
 	}

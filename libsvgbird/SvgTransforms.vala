@@ -42,6 +42,17 @@ public class SvgTransforms : GLib.Object {
 		
 		return matrix;
 	}
+	
+	public string to_string () {
+		StringBuilder sb = new StringBuilder ();
+		
+		foreach (SvgTransform t in transforms) {
+			sb.append (t.to_string ());
+			sb.append (" ");
+		}
+		
+		return sb.str;
+	}
 }
 
 }

@@ -47,18 +47,13 @@ public class SvgDrawing : Object {
 		return (this.x <= x <= this.x + width) 
 			&& (this.y <= y <= this.y + height);
 	}
-	
+
+	public void draw (Context cr) {
+		root_layer.draw (cr);
+	}
+		
 	public override void draw_outline (Context cr) {
-		cr.save ();
-		cr.translate (x, y);
 		root_layer.draw_outline (cr);
-		
-		// FIXME: update layer structure
-		foreach (Object o in root_layer.get_visible_objects ().objects) {
-			o.draw (cr);
-		}
-		
-		cr.restore ();
 	}
 	
 	public override Object copy () {

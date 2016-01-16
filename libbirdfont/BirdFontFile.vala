@@ -434,7 +434,7 @@ class BirdFontFile : GLib.Object {
 	public void write_glyph (Glyph g, DataOutputStream os) throws GLib.Error {
 		os.put_string (@"\t<glyph id=\"$(g.version_id)\" left=\"$(double_to_string (g.left_limit))\" right=\"$(double_to_string (g.right_limit))\">\n");
 		
-		foreach (Layer layer in g.layers.subgroups) {
+		foreach (Layer layer in g.layers.get_sublayers ()) {
 			write_layer (layer, os);
 		}
 

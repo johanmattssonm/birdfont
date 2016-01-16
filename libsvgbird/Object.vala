@@ -61,20 +61,6 @@ public abstract class Object : GLib.Object {
 	public abstract bool is_over (double x, double y);
 	public abstract void draw_outline (Context cr);
 
-	public void draw (Context cr) {
-		cr.save ();
-		apply_transform (cr);
-		
-		if (clip_path != null) {
-			ClipPath clipping = (!) clip_path;
-			clipping.apply (cr);
-		}
-		
-		draw_outline (cr);
-		paint (cr);
-		cr.restore ();
-	}
-
 	public abstract Object copy ();
 	public abstract void move (double dx, double dy);
 	public abstract void rotate (double theta, double xc, double yc);

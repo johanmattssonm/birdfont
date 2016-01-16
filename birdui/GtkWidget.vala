@@ -19,11 +19,11 @@ using Math;
 
 namespace Bird {
 
-class Widget : DrawingArea {
+public class Widget : DrawingArea {
 	
-	Component component;
+	UI component;
 	
-	public Widget (Component main_component) {		
+	public Widget (UI main_component) {		
 		component = main_component;
 
 		add_events (EventMask.BUTTON_PRESS_MASK 
@@ -49,8 +49,11 @@ class Widget : DrawingArea {
 		int width = (int) rint (component.padded_width);
 		int height = (int) rint (component.padded_height);
 		set_size_request (width, height);
+
+		size_allocate.connect((allocation) => {
+			component.resize (allocation.width, allocation.height);
+		});
 	}
-	
 }
 
 }

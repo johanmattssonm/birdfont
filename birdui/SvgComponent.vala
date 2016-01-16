@@ -34,7 +34,18 @@ class SvgComponent : Component {
 		load_svg (svg_file);
 	}
 
-	public override void layout () {
+	public override void get_min_size (out double min_width, out double min_height) {
+		min_width = 0;
+		min_height = 0;
+		
+		if (drawing != null) {
+			SvgDrawing svg = (!) drawing;
+			min_width = svg.width + get_padding_left () + get_padding_right ();
+			min_height = svg.height + get_padding_bottom () + get_padding_top ();
+		}
+	}
+	
+	public override void layout (double parent_width, double parent_height) {
 		if (unlikely (components.size > 0)) {
 			warning ("SVG files can not have subviews.");
 		}
@@ -73,10 +84,16 @@ class SvgComponent : Component {
 	}
 
 	public override void draw (Context cairo) {
+		cairo.save ();
+		cairo.translate (padded_x, padded_y);
+		clip (cairo);
+		
 		if (drawing != null) {
 			SvgDrawing svg = (!) drawing;
 			svg.draw (cairo);
 		}
+		
+		cairo.restore ();
 	}
 
 }

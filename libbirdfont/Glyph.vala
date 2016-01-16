@@ -158,17 +158,17 @@ public class Glyph : FontDisplay {
 	}
 
 	public Layer get_current_layer () {
-		if (unlikely (!(0 <= current_layer < layers.subgroups.size))) {
+		if (unlikely (!(0 <= current_layer < layers.objects.size))) {
 			warning ("Layer index out of bounds.");
 			return new Layer ();
 		}
 		
-		return layers.subgroups.get (current_layer);
+		return layers.get_sublayers ().get (current_layer);
 	}
 
 	public void set_current_layer (Layer layer) {
 		int i = 0;
-		foreach (Layer l in layers.subgroups) {
+		foreach (Layer l in layers.get_sublayers ()) {
 			if (likely (l == layer)) {
 				current_layer = i;
 				return;
@@ -205,12 +205,12 @@ public class Glyph : FontDisplay {
 
 	public void add_new_layer () {
 		layers.add_layer (new Layer ());
-		current_layer = layers.subgroups.size - 1;
+		current_layer = layers.objects.size - 1;
 	}
 
 	public void add_layer (Layer layer) {
 		layers.add_layer (layer);
-		current_layer = layers.subgroups.size - 1;
+		current_layer = layers.objects.size - 1;
 	}
 	
 	public int get_layer_index (Layer layer) {
@@ -482,7 +482,7 @@ public class Glyph : FontDisplay {
 	}
 
 	public virtual void add_path (Path p) {
-		if (layers.subgroups.size == 0) {
+		if (layers.objects.size == 0) {
 			layers.add_layer (new Layer ());
 		}
 
@@ -490,7 +490,7 @@ public class Glyph : FontDisplay {
 	}
 
 	public void add_object (SvgBird.Object object) {
-		if (layers.subgroups.size == 0) {
+		if (layers.objects.size == 0) {
 			layers.add_layer (new Layer ());
 		}
 
@@ -530,7 +530,7 @@ public class Glyph : FontDisplay {
 		if (index != "") {
 			int i = int.parse (index);
 			
-			if (0 <= i < layers.subgroups.size) {
+			if (0 <= i < layers.objects.size) {
 				current_layer = i;
 			}
 		}
@@ -1578,144 +1578,11 @@ public class Glyph : FontDisplay {
 
 	/** Draw filled paths. */
 	public void draw_paths (Context cr, Color? c = null) {
-		cr.save ();
-		cr.new_path ();
-		
-		foreach (SvgBird.Object o in get_visible_objects ()) {
-			if (o is PathObject) {
-				((PathObject) o).draw_path (cr, c);
-			} else {
-				o.draw (cr);
-			}
-		}
-		
-		cr.fill ();
-		cr.restore ();
+		layers.draw (cr);
 	}
 
 	public void draw_path (Context cr) {
-		PathList stroke;
-		Color color;
-
-		// FIXME: layer transforms
-		foreach (SvgBird.Object o in get_visible_objects ()) {
-			if (!(o is PathObject)) {
-				o.draw (cr);
-			}
-		}
-
-		cr.save ();
-		cr.new_path ();
-		foreach (Path p in get_visible_paths ()) {
-			if (p.stroke > 0) {
-				stroke = p.get_stroke_fast ();
-
-				if (p.is_editable ()) {
-					color = Theme.get_color ("Filled Stroke");
-					color.a = 0.8;
-				} else {
-					color = Color.black ();
-				}
-
-				PathObject.draw_path_list (stroke, cr, color);
-			}
-		}
-		cr.fill ();
-		cr.restore ();
-
-		if (!(MainWindow.get_toolbox ().get_current_tool () is PenTool)
-			&& !(MainWindow.get_toolbox ().get_current_tool () is PointTool)
-			&& !(MainWindow.get_toolbox ().get_current_tool () is TrackTool)
-			&& !(MainWindow.get_toolbox ().get_current_tool () is BezierTool)) {
-			cr.save ();
-			cr.new_path ();
-			foreach (SvgBird.Object o in active_paths) {
-				if (o is PathObject) {
-					Path p = ((PathObject) o).get_path ();
-					if (p.stroke > 0) {
-						stroke = p.get_stroke_fast ();
-						color = Theme.get_color ("Selected SvgBird.Objects");
-						PathObject.draw_path_list (stroke, cr, color);
-					}
-				}
-			}
-			cr.fill ();
-			cr.restore ();
-		}
-
-		if (is_open () && Path.fill_open_path) {
-			cr.save ();
-			cr.new_path ();
-			foreach (Path p in get_visible_paths ()) {
-				if (p.stroke == 0) {
-					color = p.color == null ? get_path_fill_color () : (!) p.color;
-					p.draw_path (cr, color);
-				}
-			}
-			cr.fill ();
-			cr.restore ();
-		}
-
-		if (is_open ()) {
-			cr.save ();
-			cr.new_path ();
-			foreach (Path p in get_visible_paths ()) {
-				p.draw_outline (cr);
-				p.draw_edit_points (cr);
-			}
-			cr.restore ();
-		}
-
-		if (!is_open ()) {
-			// This was good for testing but it is way too slow:
-			// Svg.draw_svg_path (cr, get_svg_data (), Glyph.xc () + left, Glyph.yc () - baseline);
-
-			cr.save ();
-			cr.new_path ();
-			
-			// FIXME: layer transforms
-			foreach (SvgBird.Object o in get_visible_objects ()) {
-				if (o is PathObject) {
-					Path p = ((PathObject) o).get_path ();
-
-					if (p.stroke == 0) {
-						color = p.color == null ? Color.black () : (!) p.color;
-						p.draw_path (cr, color);
-					}
-				}
-			}
-			
-			cr.close_path ();
-			cr.fill ();
-			cr.restore ();
-
-			foreach (SvgBird.Object o in active_paths) {
-				if (o is PathObject) {
-					Path p = ((PathObject) o).get_path ();
-					cr.save ();
-					cr.new_path ();
-					if (p.stroke == 0) {
-						p.draw_path (cr);
-					}
-					cr.close_path ();
-					cr.fill ();
-					cr.restore ();
-				}
-			}
-		}
-
-		if (show_orientation_arrow) {
-			foreach (Path p in get_visible_paths ()) {
-				if (p.stroke > 0) {
-					stroke = p.get_stroke_fast ();
-					foreach (Path ps in stroke.paths) {
-						ps.draw_orientation_arrow (cr, orientation_arrow_opacity);
-					}
-				} else {
-					p.draw_orientation_arrow (cr, orientation_arrow_opacity);
-				}
-			}
-		}
+		layers.draw (cr);
 	}
 
 	private Color get_path_fill_color () {
@@ -2348,12 +2215,12 @@ public class Glyph : FontDisplay {
 	public void move_layer_up () {
 		Layer layer = get_current_layer ();
 
-		if (current_layer + 2 <= layers.subgroups.size) {
-			return_if_fail (0 <= current_layer + 2 <= layers.subgroups.size);
-			layers.subgroups.insert (current_layer + 2, layer);
+		if (current_layer + 2 <= layers.objects.size) {
+			return_if_fail (0 <= current_layer + 2 <= layers.objects.size);
+			layers.objects.objects.insert (current_layer + 2, layer);
 
-			return_if_fail (0 <= current_layer + 1 < layers.subgroups.size);
-			layers.subgroups.remove_at (current_layer);
+			return_if_fail (0 <= current_layer + 1 < layers.objects.size);
+			layers.objects.objects.remove_at (current_layer);
 
 			set_current_layer (layer);
 		}
@@ -2363,11 +2230,11 @@ public class Glyph : FontDisplay {
 		Layer layer = get_current_layer ();
 
 		if (current_layer >= 1) {
-			return_if_fail (0 <= current_layer - 1 < layers.subgroups.size);
-			layers.subgroups.insert (current_layer - 1, layer);
+			return_if_fail (0 <= current_layer - 1 < layers.objects.size);
+			layers.objects.objects.insert (current_layer - 1, layer);
 
-			return_if_fail (0 <= current_layer + 1 < layers.subgroups.size);
-			layers.subgroups.remove_at (current_layer + 1);
+			return_if_fail (0 <= current_layer + 1 < layers.objects.size);
+			layers.objects.objects.remove_at (current_layer + 1);
 
 			set_current_layer (layer);
 		}

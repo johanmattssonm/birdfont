@@ -27,6 +27,10 @@ public class ObjectGroup : GLib.Object {
 		 objects = new Gee.ArrayList<Object> ();
 	}
 
+	public int index_of (Object o) {
+		return objects.index_of (o);
+	}
+
 	public Gee.Iterator<Object> iterator () {
 		return objects.iterator ();
 	}

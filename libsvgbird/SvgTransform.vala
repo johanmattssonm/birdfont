@@ -30,7 +30,20 @@ public class SvgTransform : GLib.Object {
 	
 	public SvgTransform () {
 	}
-	
+
+	public string to_string () {
+		StringBuilder sb = new StringBuilder ();
+		
+		sb.append (@"$type");
+		sb.append (" ");
+		
+		for (int i = 0; i < arguments.size; i++) {
+			sb.append (@"$(arguments.get_double (i)) ");
+		}
+
+		return sb.str;
+	}
+		
 	public Matrix get_matrix () {
 		Matrix matrix;
 		

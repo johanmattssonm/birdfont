@@ -20,9 +20,9 @@ public extern struct PointValue {
     double value;
 }
 
-public static const uchar NONE = 0;
-public static const uchar ARC = 1;
-public static const uchar CUBIC = 2;
-public static const uchar LINE = 3;
+public static const uchar POINT_NONE = 0;
+public static const uchar POINT_ARC = 1;
+public static const uchar POINT_CUBIC = 2;
+public static const uchar POINT_LINE = 3;
 
 }

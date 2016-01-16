@@ -18,52 +18,67 @@ namespace SvgBird {
 
 public class Layer : Object {
 	public ObjectGroup objects;
-	
-	public Gee.ArrayList<Layer> subgroups; // FIXME: delete
 	public string name = "Layer";
 
 	public Layer () {
 		objects = new ObjectGroup ();
-		subgroups = new Gee.ArrayList<Layer> ();
 		transforms = new SvgTransforms ();
 	}
 
+	public void draw (Context cr) {
+		cr.save ();
+		apply_transform (cr);
+		
+		if (clip_path != null) {
+			ClipPath clipping = (!) clip_path;
+			clipping.apply (cr);
+		}
+
+		foreach (Object object in objects) {
+			cr.save ();
+			object.apply_transform (cr);
+						
+			if (object.clip_path != null) {
+				ClipPath clipping = (!) object.clip_path;
+				clipping.apply (cr);
+			}
+
+			object.draw_outline (cr);
+			object.paint (cr);
+			cr.restore ();
+		}
+		
+		cr.restore ();
+	}
+
+	public override void draw_outline (Context cr) {
+		cr.save ();
+		apply_transform (cr);
+		
+		foreach (Object object in objects) {
+			cr.save ();
+			object.apply_transform (cr);
+			object.draw_outline (cr);
+			cr.restore ();
+		}
+		
+		cr.restore ();
+	}
+
 	public int index_of (Layer sublayer) {
-		return subgroups.index_of (sublayer);
+		return objects.index_of (sublayer);
 	}
 
 	public ObjectGroup get_all_objects () {
-		ObjectGroup o = new ObjectGroup ();
-		
-		o.append (objects);
-		
-		foreach (Layer sublayer in subgroups) {
-			o.append (sublayer.get_all_objects ());
-		}
-		
-		return o;
+		return objects;
 	}
 		
 	public ObjectGroup get_visible_objects () {
-		ObjectGroup object_group = new ObjectGroup ();
-		
-		if (visible) {
-			foreach (Object o in objects) {
-				object_group.add (o);
-			}
-		}
-		
-		foreach (Layer sublayer in subgroups) {
-			if (sublayer.visible) {
-				object_group.append (sublayer.get_visible_objects ());
-			}
-		}
-		
-		return object_group;		
+		return objects; // FIXME: remove this
 	}
 		
 	public void add_layer (Layer layer) {
-		subgroups.add (layer);
+		objects.add (layer);
 	}
 	
 	public void add_object (Object object) {
@@ -75,21 +90,19 @@ public class Layer : Object {
 	}
 	
 	public void remove_layer (Layer layer) {
-		subgroups.remove (layer);
+		objects.remove (layer);
 		
-		foreach (Layer sublayer in subgroups) {
-			sublayer.remove_layer (layer);
+		foreach (Object object in objects) {
+			if (object is Layer) {
+				Layer sublayer = (Layer) object;
+				sublayer.remove_layer (layer);
+			}
 		}
 	}
 	
 	public static void copy_layer (Layer from, Layer to) {
 		to.name = from.name;
 		to.objects = from.objects.copy ();
-		
-		foreach (Layer l in from.subgroups) {
-			Layer layer = (Layer) l.copy ();
-			to.subgroups.add (layer);
-		}	
 	}
 
 	public override Object copy () {
@@ -130,6 +143,21 @@ public class Layer : Object {
 		x = px;
 		y = py2;
 	}
+
+	public Gee.ArrayList<Layer> get_sublayers () {
+		Gee.ArrayList<Layer> sublayers = new Gee.ArrayList<Layer> ();
+		
+		foreach (Object object in objects) {
+			if (likely (object is Layer)) {
+				Layer sublayer = (Layer) object;
+				sublayers.add (sublayer);
+			} else {
+				warning ("An object in the group " + name + " is not a layer.");
+			}
+		}
+		
+		return sublayers;
+	}
 		
 	public void print (int indent = 0) {
 		stdout.printf (@"Layer: $(name)");
@@ -138,31 +166,27 @@ public class Layer : Object {
 			stdout.printf (" hidden");
 		}
 		
-		stdout.printf (@"\n");
+		stdout.printf (@" $(transforms) $(style)");
 		
-		foreach (Object o in objects) {
-			for (int i = 0; i < indent; i++) {
-				stdout.printf ("\t");
-			}
-			stdout.printf (@"Object $(o.to_string ())");
-			
-			if (o.color != null) {
-				stdout.printf (" %s", ((!) o.color).to_rgb_hex ());
-			}
+		stdout.printf (@"\n");
 
-			if (!o.visible) {
+		foreach (Object object in objects) {
+			stdout.printf (@"$(object.to_string ()) $(object.transforms) $(object.style)");
+			
+			if (!object.visible) {
 				stdout.printf (" hidden");
 			}
 			
 			stdout.printf ("\n");
-		}
-		
-		foreach (Layer l in subgroups) {
+
 			for (int i = 0; i < indent; i++) {
 				stdout.printf ("\t");
 			}
-			stdout.printf ("%s\n", l.name);
-			l.print (indent + 1);
+
+			if (object is Layer) {
+				Layer sublayer = (Layer) object;
+				sublayer.print (indent + 1);
+			}
 		}
 	}
 
@@ -170,13 +194,7 @@ public class Layer : Object {
 	public override bool is_over (double x, double y) {
 		return false;
 	}
-	
-	public override void draw_outline (Context cr) {
-		foreach (Object object in objects) {
-			object.draw_outline (cr);
-		}
-	}
-	
+		
 	public override void move (double dx, double dy) {
 	}
 	
