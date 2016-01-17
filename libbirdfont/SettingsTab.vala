@@ -43,13 +43,13 @@ public class SettingsTab : SettingsDisplay {
 
 		stroke_width.new_value_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
-			Path.stroke_width = stroke_width.get_value ();
+			CanvasSettings.stroke_width = stroke_width.get_value ();
 			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
 			Preferences.set ("stroke_width_for_open_paths", stroke_width.get_display_value ());
 			MainWindow.get_toolbox ().redraw ((int) stroke_width.x, (int) stroke_width.y, 70, 70);
 		});
 		
-		Path.stroke_width = stroke_width.get_value ();
+		CanvasSettings.stroke_width = stroke_width.get_value ();
 		
 		// adjust precision
 		string precision_value = Preferences.get ("precision");
@@ -81,7 +81,7 @@ public class SettingsTab : SettingsDisplay {
 
 		Tool show_all_line_handles = new Tool ("show_all_line_handles");
 		show_all_line_handles.select_action.connect((self) => {
-			Path.show_all_line_handles = !Path.show_all_line_handles;
+			CanvasSettings.show_all_line_handles = !CanvasSettings.show_all_line_handles;
 			Glyph g = MainWindow.get_current_glyph ();
 			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);			
 		});
@@ -89,11 +89,11 @@ public class SettingsTab : SettingsDisplay {
 
 		Tool fill_open_path = new Tool ("fill_open_path");
 		fill_open_path.select_action.connect((self) => {
-			Path.fill_open_path = true;	
+			CanvasSettings.fill_open_path = true;	
 		});
 		
 		fill_open_path.deselect_action.connect((self) => {
-			Path.fill_open_path = false;	
+			CanvasSettings.fill_open_path = false;	
 		});
 		tools.add (new SettingsItem (fill_open_path, t_("Fill open paths.")));
 

@@ -180,7 +180,7 @@ public class Glyph : FontDisplay {
 	}
 
 	public Gee.ArrayList<SvgBird.Object> get_visible_objects () {
-		return layers.get_visible_objects ().objects;
+		return LayerUtils.get_visible_objects (layers);
 	}
 
 	public Gee.ArrayList<Path> get_visible_paths () {
@@ -192,7 +192,7 @@ public class Glyph : FontDisplay {
 	}
 
 	public Gee.ArrayList<SvgBird.Object> get_objects_in_current_layer () {
-		return get_current_layer ().get_all_objects ().objects;
+		return get_current_layer ().objects.objects;
 	}
 
 	public Gee.ArrayList<Path> get_paths_in_current_layer () {
@@ -252,6 +252,10 @@ public class Glyph : FontDisplay {
 	public override void close () {
 		undo_list.clear ();
 		redo_list.clear ();
+		
+		foreach (Path path in get_all_paths ()) {
+			path.set_editable (false);
+		}
 	}
 
 	public void set_empty_ttf (bool e) {
@@ -1331,7 +1335,7 @@ public class Glyph : FontDisplay {
 	}
 
 	public void open_path () {
-		foreach (Path p in get_visible_paths ()) {
+		foreach (Path p in get_all_paths ()) {
 			p.set_editable (true);
 			p.recalculate_linear_handles ();
 
@@ -1576,17 +1580,74 @@ public class Glyph : FontDisplay {
 		cr.stroke ();
 	}
 
-	/** Draw filled paths. */
-	public void draw_paths (Context cr, Color? c = null) {
-		layers.draw (cr);
+	public void draw_layers (Context cr) {
+		foreach (SvgBird.Object object in layers.objects) {
+			if (object is Layer) {
+				draw_layer (cr, (Layer) object);
+			}
+		}
+		
+		draw_bird_font_paths (cr);
 	}
 
-	public void draw_path (Context cr) {
-		layers.draw (cr);
+	public void draw_layer (Context cr, Layer sublayers) {
+		foreach (SvgBird.Object object in sublayers.objects) {
+			if (object is EmbeddedSvg) {
+				EmbeddedSvg svg = (EmbeddedSvg) object;
+				svg.draw_embedded_svg (cr);
+			}
+		}
 	}
+		
+	public void draw_bird_font_paths (Context cr) {
+		Tool selected_tool = MainWindow.get_toolbox ().get_current_tool ();
+		
+		bool draw_control_points = (selected_tool is PenTool)
+			|| (selected_tool is PointTool)
+			|| (selected_tool is TrackTool)
+			|| (selected_tool is BezierTool);
 
-	private Color get_path_fill_color () {
-		return Theme.get_color ("Fill Color");
+		bool has_path = false;
+		foreach (SvgBird.Object object in get_visible_objects ()) {
+			if (object is PathObject && object.stroke > 0) {
+				has_path = true;
+				PathObject object_path = (PathObject) object;				
+				object_path.draw_path (cr);
+			}
+		}
+
+		if (has_path) {
+			cr.set_fill_rule (FillRule.WINDING);
+			cr.set_source_rgba (0, 0, 0, 1);
+			cr.fill ();
+		}
+
+		has_path = false;
+		foreach (SvgBird.Object object in get_visible_objects ()) {
+			if (object is PathObject && object.stroke == 0) {
+				has_path = true;
+				PathObject object_path = (PathObject) object;				
+				object_path.draw_path (cr);
+			}
+		}
+
+		if (has_path) {
+			cr.set_fill_rule (FillRule.EVEN_ODD);
+			cr.set_source_rgba (0, 0, 0, 1);
+			cr.fill ();
+		}
+		
+		if (draw_control_points) {
+			foreach (SvgBird.Object object in get_visible_objects ()) {
+				if (object is PathObject) {
+					PathObject object_path = (PathObject) object;
+					Glyph g = MainWindow.get_current_glyph ();
+					cr.set_line_width (CanvasSettings.stroke_width / g.view_zoom);
+					object_path.path.draw_outline (cr);
+					object_path.path.draw_control_points (cr);
+				}
+			}
+		}
 	}
 
 	public void draw_background_color (Context cr, double opacity) {
@@ -1647,7 +1708,7 @@ public class Glyph : FontDisplay {
 		cmp.save ();
 		cmp.scale (view_zoom, view_zoom);
 		cmp.translate (-view_offset_x, -view_offset_y);
-		draw_path (cmp);		
+		draw_layers (cmp);		
 		cmp.restore ();	
 				
 		cmp.save ();

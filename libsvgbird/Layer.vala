@@ -42,9 +42,14 @@ public class Layer : Object {
 				ClipPath clipping = (!) object.clip_path;
 				clipping.apply (cr);
 			}
-
-			object.draw_outline (cr);
-			object.paint (cr);
+			
+			if (object is Layer) {
+				Layer sublayer = (Layer) object;
+				sublayer.draw (cr);		
+			} else {
+				object.draw_outline (cr);
+				object.paint (cr);
+			}
 			cr.restore ();
 		}
 		
@@ -52,7 +57,6 @@ public class Layer : Object {
 	}
 
 	public override void draw_outline (Context cr) {
-		cr.save ();
 		apply_transform (cr);
 		
 		foreach (Object object in objects) {
@@ -67,14 +71,6 @@ public class Layer : Object {
 
 	public int index_of (Layer sublayer) {
 		return objects.index_of (sublayer);
-	}
-
-	public ObjectGroup get_all_objects () {
-		return objects;
-	}
-		
-	public ObjectGroup get_visible_objects () {
-		return objects; // FIXME: remove this
 	}
 		
 	public void add_layer (Layer layer) {
@@ -111,39 +107,7 @@ public class Layer : Object {
 		Object.copy_attributes (this, layer);
 		return layer;
 	}
-
-	public void get_boundaries (out double x, out double y, out double w, out double h) {
-		double px, py, px2, py2;
-		
-		px = double.MAX;
-		py = double.MAX;
-		px2 = -double.MAX;
-		py2 = -double.MAX;
-		
-		foreach (Object p in get_all_objects ().objects) {
-			if (px > p.xmin) {
-				px = p.xmin;
-			} 
-
-			if (py > p.ymin) {
-				py = p.ymin;
-			}
-
-			if (px2 < p.xmax) {
-				px2 = p.xmax;
-			}
-			
-			if (py2 < p.ymax) {
-				py2 = p.ymax;
-			}
-		}
-		
-		w = px2 - px;
-		h = py2 - py;
-		x = px;
-		y = py2;
-	}
-
+	
 	public Gee.ArrayList<Layer> get_sublayers () {
 		Gee.ArrayList<Layer> sublayers = new Gee.ArrayList<Layer> ();
 		

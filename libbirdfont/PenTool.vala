@@ -1924,7 +1924,7 @@ public class PenTool : Tool {
 		Glyph g = MainWindow.get_current_glyph (); 
 		double distance_to_edit_point = g.view_zoom * get_distance_to_closest_edit_point (event_x, event_y);
 		
-		if (!Path.show_all_line_handles) {
+		if (!CanvasSettings.show_all_line_handles) {
 			foreach (PointSelection selected_corner in selected_points) {
 				if (is_close_to_handle (selected_corner.point, event_x, event_y, distance_to_edit_point)) {
 					return true;
@@ -1994,7 +1994,7 @@ public class PenTool : Tool {
 		
 		foreach (Path p in g.get_paths_in_current_layer ()) {
 			foreach (EditPoint ep in p.points) {
-				if (ep.is_selected () || Path.show_all_line_handles) {
+				if (ep.is_selected () || CanvasSettings.show_all_line_handles) {
 					left = ep.get_left_handle ();
 					right = ep.get_right_handle ();
 

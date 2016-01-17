@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012 2013 2014 2015 Johan Mattsson
+	Copyright (C) 2012 - 2016 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -84,14 +84,8 @@ public class Path : GLib.Object {
 	bool clockwise_direction = true;
 
 	// Iterate over each pixel in a path
-	public delegate bool RasterIterator (double x, double y, double step);
-	
+	public delegate bool RasterIterator (double x, double y, double step);	
 	public delegate bool SegmentIterator (EditPoint start, EditPoint stop);
-	
-	/** The stroke of an outline when the path is not filled. */
-	public static double stroke_width = 0;
-	public static bool show_all_line_handles = true;
-	public static bool fill_open_path { get; set; }
 	
 	public double rotation = 0;
 	public double skew = 0;
@@ -108,18 +102,6 @@ public class Path : GLib.Object {
 	public Gradient? gradient = null;
 
 	public Path () {	
-		string width;
-		
-		if (unlikely (stroke_width < 1)) {
-			width = Preferences.get ("stroke_width");
-			if (width != "") {
-				stroke_width = double.parse (width);
-			}
-		}
-
-		if (stroke_width < 1) {
-			stroke_width = 1;
-		}
 	}
 
 	public bool is_filled () {
@@ -201,7 +183,7 @@ public class Path : GLib.Object {
 			i++;
 		}
 
-		// close path
+		// closed path
 		if (!is_open () && n != null) {
 			if (highlight_last_segment) {
 				cr.stroke ();
@@ -226,19 +208,20 @@ public class Path : GLib.Object {
 		}
 	}
 	
-	public void draw_edit_points (Context cr) {		
-		if (is_editable ()) {
-			// control points for curvature
-			foreach (EditPoint e in points) {
-				if (show_all_line_handles || e.selected_point || e.selected_handle > 0) {
-					draw_edit_point_handles (e, cr);
-				}
+	public void draw_control_points (Context cr) {		
+		// control points for curvature
+		foreach (EditPoint e in points) {
+			if (CanvasSettings.show_all_line_handles 
+				|| e.selected_point
+				|| e.selected_handle > 0) {
+					
+				draw_edit_point_handles (e, cr);
 			}
-						
-			// control points
-			foreach (EditPoint e in points) {
-				draw_edit_point (e, cr);
-			}
+		}
+					
+		// on curve control points
+		foreach (EditPoint e in points) {
+			draw_edit_point (e, cr);
 		}
 	}
 
@@ -334,12 +317,9 @@ public class Path : GLib.Object {
 			cr.translate (x, y);
 			double inverted_zoom = Glyph.ivz ();
 			cr.rotate (-angle);
-			cr.translate (-x, -y); 
-			
+			cr.translate (-x, -y);
 			cr.scale (inverted_zoom, inverted_zoom);
-			
 			arrow_icon.draw_at_baseline (cr, x, y);
-			
 			cr.restore ();
 		}
 	}
@@ -373,7 +353,6 @@ public class Path : GLib.Object {
 	}
 		
 	private static void draw_curve (EditPoint e, EditPoint en, Context cr, bool highlighted = false, double alpha = 1) {
-		Glyph g = MainWindow.get_current_glyph ();
 		double xa, ya, xb, yb, xc, yc, xd, yd;
 		PointType t = e.get_right_handle ().type;
 		PointType u = en.get_left_handle ().type;
@@ -385,8 +364,6 @@ public class Path : GLib.Object {
 		} else {
 			Theme.color (cr, "Highlighted Guide");
 		}
-		
-		cr.set_line_width (stroke_width / g.view_zoom);
 		
 		cr.line_to (xa, ya); // this point makes sense only if it is in the first or last position
 
@@ -453,7 +430,7 @@ public class Path : GLib.Object {
 		get_line_points (e, en, out ax, out ay, out bx, out by);
 		
 		Theme.color (cr, "Handle Color");
-		cr.set_line_width (1.7 * (stroke_width / g.view_zoom));
+		cr.set_line_width (1.7 * (CanvasSettings.stroke_width / g.view_zoom));
 
 		cr.line_to (ax, ay);
 		cr.line_to (bx, by);
@@ -583,7 +560,7 @@ public class Path : GLib.Object {
 	public static void draw_control_point (Context cr, double x, double y, Color color, double size = 3.5) {
 		Glyph g = MainWindow.get_current_glyph ();
 		double ivz = 1 / g.view_zoom;
-		double width = size * Math.sqrt (stroke_width) * ivz;
+		double width = size * Math.sqrt (CanvasSettings.stroke_width) * ivz;
 		double xc = g.allocation.width / 2.0;
 		double yc = g.allocation.height / 2.0;
 

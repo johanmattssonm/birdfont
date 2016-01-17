@@ -232,12 +232,17 @@ public class TrackTool : Tool {
 			}
 		}
 	}
-	
-	// FIXME: double check
+
 	void set_tie () {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		var paths = glyph.get_visible_paths ();
-		Path p = paths.get (paths.size - 1);
+		Path p;
+		
+		if (paths.size == 0) {
+			return;
+		}
+		
+		p = paths.get (paths.size - 1);
 		
 		foreach (EditPoint ep in p.points) {
 			if (ep.get_right_handle ().is_line () || ep.get_left_handle ().is_line ()) {

@@ -506,7 +506,7 @@ class BirdFontFile : GLib.Object {
 	void write_layer (Layer layer, DataOutputStream os) throws GLib.Error {
 		os.put_string (@"\t\t<layer name= \"$(layer.name)\" visible=\"$(layer.visible)\">\n");
 		
-		foreach (SvgBird.Object o in layer.get_all_objects ().objects) {
+		foreach (SvgBird.Object o in layer.objects.objects) {
 			
 			if (o is EmbeddedSvg) {
 				write_embedded_svg ((EmbeddedSvg) o, os);

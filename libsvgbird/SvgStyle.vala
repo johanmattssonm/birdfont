@@ -32,7 +32,16 @@ public class SvgStyle : GLib.Object {
 	
 	public SvgStyle () {
 	}
+	
+	public SvgStyle.for_properties (Defs? defs, string style) {
+		parse_key_value_pairs (style);
+		set_style_properties (defs, this);
+	}
 
+	public void set_style (string property, string style) {
+		this.style.set (property, style);
+	}
+	
 	public bool property_equals (string property, string value) {
 		string? p = get_css_property (property);
 		
@@ -87,11 +96,6 @@ public class SvgStyle : GLib.Object {
 		string inherit_property = inherit ? "yes" : "no";
 		inheritance.set (property, inherit_property);
 		inheritance_mutex.unlock ();
-	}
-
-	public SvgStyle.for_properties (Defs? defs, string style) {
-		parse_key_value_pairs (style);
-		set_style_properties (defs, this);
 	}
 
 	public SvgStyle copy () {

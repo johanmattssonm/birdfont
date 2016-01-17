@@ -106,7 +106,6 @@ public class OverViewItem : GLib.Object {
 		double glyph_width, glyph_height;
 		Surface s;
 		Context c;
-		Color color = Color.black ();
 		
 		g = ((!) glyphs).get_current ();
 		
@@ -137,7 +136,7 @@ public class OverViewItem : GLib.Object {
 		gx = ((w / glyph_scale) - glyph_width) / 2 - g.get_left_side_bearing ();
 		gy = (h / glyph_scale) - 25 / glyph_scale;
 		c.translate (gx - Glyph.xc () - g.get_lsb (), g.get_baseline () + gy - Glyph.yc ());
-		g.draw_paths (c, color);
+		g.draw_layers (c);
 		
 		c.restore ();
 		

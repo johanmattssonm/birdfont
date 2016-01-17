@@ -76,11 +76,14 @@ public class EmbeddedSvg : SvgBird.Object {
 			&& (this.y - drawing.height <= y <= this.y);
 	}
 	
-	public override void draw_outline (Context cr) {
+	public void draw_embedded_svg (Context cr) {
 		cr.save ();
 		cr.translate (Glyph.xc () + x, Glyph.yc () - y);
 		drawing.draw (cr);
 		cr.restore ();
+	}
+	
+	public override void draw_outline (Context cr) {
 	}
 	
 	public override SvgBird.Object copy () {

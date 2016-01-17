@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2015 Johan Mattsson
+	Copyright (C) 2015 2016 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -19,7 +19,18 @@ namespace BirdFont {
 
 public class PathObject : SvgBird.Object {
 
-	Path path;
+	public Path path;
+	
+	public override double stroke {
+		get {
+			return path.stroke;
+		}
+		
+		set {
+			path.stroke = value;
+		}
+	}
+
 
 	// FIXME: flip y axis
 	public override double xmin {
@@ -69,8 +80,9 @@ public class PathObject : SvgBird.Object {
 		
 		default = Glyph.CANVAS_MIN;
 	}
-			
+		
 	public PathObject () {
+		base ();
 		path = new Path ();
 		update_region_boundaries ();
 	}
@@ -81,36 +93,33 @@ public class PathObject : SvgBird.Object {
 	}
 
 	public PathObject.for_path (Path path) {
+		base ();
 		this.path = path;
 	}
 
 	public override bool is_over (double x, double y) {
 		return path.is_over_coordinate (x, y);
 	}
-
+	
 	public override void draw_outline (Context cr) {
 		draw_path (cr);
 	}
-	
-	public void draw_path (Context cr, Color? c = null) {
+
+	private SvgBird.Color get_path_fill_color () {
+		Color c = Theme.get_color ("Fill Color");
+		return new SvgBird.Color (c.r, c.g, c.b, c.a);
+	}
+
+	public void draw_path (Context cr) { // FIXME: delete
 		PathList path_stroke;
-		Color path_color;
 		bool open;
 		
-		cr.save ();
-		
-		if (c != null) {
-			path_color = (!) c;
-		} else if (color != null) {
-			path_color = new Color.create_copy ((!) color);
-		} else {
-			path_color = Color.black ();
-		}
-
 		if (path.stroke > 0) {
+			cr.set_fill_rule (FillRule.WINDING);
 			path_stroke = path.get_stroke_fast ();
-			draw_path_list (path_stroke, cr, path_color);
+			draw_path_list (path_stroke, cr);
 		} else {
+			cr.set_fill_rule (FillRule.EVEN_ODD);
 			open = path.is_open ();
 			
 			if (open) {
@@ -118,19 +127,17 @@ public class PathObject : SvgBird.Object {
 				path.recalculate_linear_handles ();
 			}
 			
-			path.draw_path (cr, path_color);
+			path.draw_path (cr);
 			
 			if (open) {
 				path.reopen ();
 			}
 		}
-
-		cr.restore ();
 	}
 
-	public static void draw_path_list (PathList pl, Context cr, Color? c = null) {
+	public static void draw_path_list (PathList pl, Context cr) {
 		foreach (Path p in pl.paths) {
-			p.draw_path (cr, c);
+			p.draw_path (cr);
 		}
 	}
 		

@@ -193,7 +193,7 @@ public class KerningDisplay : FontDisplay {
 					cr.save ();
 					glyph.add_help_lines ();
 					cr.translate (kern + x - glyph.get_lsb () - Glyph.xc (), glyph.get_baseline () + y  - Glyph.yc ());
-					glyph.draw_paths (cr);
+					glyph.draw_layers (cr);
 					cr.restore ();
 					
 					w = glyph.get_width ();
