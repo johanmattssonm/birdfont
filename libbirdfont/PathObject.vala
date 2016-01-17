@@ -102,9 +102,11 @@ public class PathObject : SvgBird.Object {
 	}
 	
 	public override void draw_outline (Context cr) {
-		PathList pl = new PathList ();
-		pl.add (path);
-		draw_path_list (pl, cr);
+		// drawing is handled in Glyph.draw_bird_font_paths
+	}
+	
+	public void draw_path (Context cr) {
+		path.draw_path (cr);
 	}
 
 	public static void draw_path_list (PathList pl, Context cr) {

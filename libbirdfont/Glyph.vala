@@ -1613,37 +1613,43 @@ public class Glyph : FontDisplay {
 			|| (selected_tool is BezierTool);
 
 		bool has_path = false;
-		foreach (SvgBird.Object object in get_visible_objects ()) {
-			if (object is PathObject
-				&& object.stroke > 0) {
-					
-				has_path = true;
-				PathObject object_path = (PathObject) object;				
-				object_path.draw_outline (cr);
+		
+		if (!draw_control_points) {
+			foreach (SvgBird.Object object in get_visible_objects ()) {
+				if (object is PathObject
+					&& object.stroke > 0) {
+						
+					has_path = true;
+					PathObject object_path = (PathObject) object;				
+					object_path.draw_path (cr);
+				}
+			}
+
+			if (has_path) {
+				cr.set_fill_rule (FillRule.WINDING);
+				cr.set_source_rgba (0, 0, 0, 1);
+				cr.fill ();
 			}
 		}
-
-		if (has_path) {
-			cr.set_fill_rule (FillRule.WINDING);
-			cr.set_source_rgba (0, 0, 0, 1);
-			cr.fill ();
-		}
-
+		
 		has_path = false;
-		foreach (SvgBird.Object object in get_visible_objects ()) {
-			if (object is PathObject
-				&& object.stroke == 0) {
-					
-				has_path = true;
-				PathObject object_path = (PathObject) object;				
-				object_path.draw_outline (cr);
+		
+		if (!draw_control_points) {
+			foreach (SvgBird.Object object in get_visible_objects ()) {
+				if (object is PathObject
+					&& object.stroke == 0) {
+						
+					has_path = true;
+					PathObject object_path = (PathObject) object;				
+					object_path.draw_path (cr);
+				}
 			}
-		}
 
-		if (has_path) {
-			cr.set_fill_rule (FillRule.EVEN_ODD);
-			Theme.color (cr, "Objects");
-			cr.fill ();
+			if (has_path) {
+				cr.set_fill_rule (FillRule.EVEN_ODD);
+				Theme.color (cr, "Objects");
+				cr.fill ();
+			}
 		}
 		
 		if (draw_control_points) {
@@ -1652,7 +1658,7 @@ public class Glyph : FontDisplay {
 					PathObject object_path = (PathObject) object;
 					Glyph g = MainWindow.get_current_glyph ();
 					cr.set_line_width (CanvasSettings.stroke_width / g.view_zoom);
-					object_path.path.draw_outline (cr);
+					object_path.path.draw_path (cr);
 					object_path.path.draw_control_points (cr);
 				}
 			}
@@ -1709,7 +1715,6 @@ public class Glyph : FontDisplay {
 		}
 
 		draw_background_glyph (allocation, cmp);
-
 		juxtapose (allocation, cmp);
 
 		if (BirdFont.show_coordinates) {
