@@ -142,6 +142,11 @@ public class Glyph : FontDisplay {
 
 	public Surface? overview_thumbnail = null;
 
+	public double selection_box_width = 0;
+	public double selection_box_height = 0;
+	public double selection_box_x = 0;
+	public double selection_box_y = 0;
+	
 	public Glyph (string name, unichar unichar_code = 0) {
 		this.name = name;
 		this.unichar_code = unichar_code;
@@ -1609,10 +1614,12 @@ public class Glyph : FontDisplay {
 
 		bool has_path = false;
 		foreach (SvgBird.Object object in get_visible_objects ()) {
-			if (object is PathObject && object.stroke > 0) {
+			if (object is PathObject
+				&& object.stroke > 0) {
+					
 				has_path = true;
 				PathObject object_path = (PathObject) object;				
-				object_path.draw_path (cr);
+				object_path.draw_outline (cr);
 			}
 		}
 
@@ -1624,16 +1631,18 @@ public class Glyph : FontDisplay {
 
 		has_path = false;
 		foreach (SvgBird.Object object in get_visible_objects ()) {
-			if (object is PathObject && object.stroke == 0) {
+			if (object is PathObject
+				&& object.stroke == 0) {
+					
 				has_path = true;
 				PathObject object_path = (PathObject) object;				
-				object_path.draw_path (cr);
+				object_path.draw_outline (cr);
 			}
 		}
 
 		if (has_path) {
 			cr.set_fill_rule (FillRule.EVEN_ODD);
-			cr.set_source_rgba (0, 0, 0, 1);
+			Theme.color (cr, "Objects");
 			cr.fill ();
 		}
 		
@@ -1645,6 +1654,14 @@ public class Glyph : FontDisplay {
 					cr.set_line_width (CanvasSettings.stroke_width / g.view_zoom);
 					object_path.path.draw_outline (cr);
 					object_path.path.draw_control_points (cr);
+				}
+			}
+		}
+
+		if (show_orientation_arrow) {
+			foreach (Path p in get_visible_paths ()) {
+				if (p.stroke == 0) {
+					p.draw_orientation_arrow (cr, orientation_arrow_opacity);
 				}
 			}
 		}
@@ -1708,17 +1725,26 @@ public class Glyph : FontDisplay {
 		cmp.save ();
 		cmp.scale (view_zoom, view_zoom);
 		cmp.translate (-view_offset_x, -view_offset_y);
-		draw_layers (cmp);		
+		draw_layers (cmp);
 		cmp.restore ();	
-				
+		
+		Tool selected_tool = MainWindow.get_toolbox ().get_current_tool ();
+		bool draw_selection = active_paths.size > 0
+			&& (selected_tool is MoveTool || selected_tool is ResizeTool);
+		
+		if (draw_selection) {
+			update_selection_boundaries ();
+			draw_selection_box (cmp);
+		}
+		
 		cmp.save ();
 		tool = MainWindow.get_toolbox ().get_current_tool ();
 		tool.draw_action (tool, cmp, this);
 		cmp.restore ();
 	}
 
-	private void zoom_in_at_point (double x, double y, double amount = 15) {
-		int n = (int) (-amount);
+	private void zoom_in_at_point (double x, double y, double zoom = 15) {
+		int n = (int) (-zoom);
 		zoom_at_point (x, y, n);
 	}
 
@@ -2397,6 +2423,109 @@ public class Glyph : FontDisplay {
 		cr.stroke ();
 		
 		cr.restore ();
+	}
+	
+	void draw_selection_box (Context cr) {
+		double x, y, w, h;
+		double hook_width;
+		
+		x = reverse_path_coordinate_x (selection_box_x);
+		y = reverse_path_coordinate_y (selection_box_y);
+		w = selection_box_width / ivz ();
+		h = selection_box_height / ivz ();
+		
+		hook_width = w > 20 ? 10 : w * 0.2;
+
+		update_selection_boundaries ();
+		cr.save ();
+		
+		// FIXME: use color theme
+		cr.set_source_rgba (0, 0, 0, 1); 
+		
+		cr.set_line_width (1);
+		cr.move_to (x, y + hook_width);
+		cr.line_to (x, y);
+		cr.line_to (x + hook_width, y);
+		cr.stroke ();
+
+		cr.move_to (x + w - hook_width, y);
+		cr.line_to (x + w, y);
+		cr.line_to (x + w, y + hook_width);
+		cr.stroke ();
+
+		cr.move_to (x + w, y + h - hook_width);
+		cr.line_to (x + w, y + h);
+		cr.line_to (x + w - hook_width, y + h);
+
+		cr.move_to (x + hook_width, y + h);
+		cr.line_to (x, y + h);
+		cr.line_to (x, y + h - hook_width);
+		
+		cr.stroke ();					
+		cr.restore ();
+
+		cr.save ();
+		cr.set_source_rgba (1, 1, 1, 1); 
+		
+		cr.set_line_width (1);
+		cr.move_to (x + 1, y + hook_width);
+		cr.line_to (x + 1, y + 1);
+		cr.line_to (x + hook_width, y + 1);
+		cr.stroke ();
+
+		cr.move_to (x + w - hook_width, y + 1);
+		cr.line_to (x + w - 1, y + 1);
+		cr.line_to (x + w - 1, y + hook_width);
+		cr.stroke ();
+
+		cr.move_to (x + w - 1, y + h - hook_width);
+		cr.line_to (x + w - 1, y + h - 1);
+		cr.line_to (x + w - hook_width, y + h - 1);
+
+		cr.move_to (x + hook_width, y + h - 1);
+		cr.line_to (x + 1, y + h - 1);
+		cr.line_to (x + 1, y + h - hook_width);
+		
+		cr.stroke ();					
+		cr.restore ();
+	}
+
+	public void update_selection_boundaries () {
+		get_selection_box_boundaries (out selection_box_x,
+			out selection_box_y, out selection_box_width,
+			out selection_box_height);	
+	}
+
+	public void get_selection_box_boundaries (out double x, out double y, out double w, out double h) {
+		double px, py, px2, py2;
+		
+		px = CANVAS_MAX;
+		py = CANVAS_MAX;
+		px2 = CANVAS_MIN;
+		py2 = CANVAS_MIN;
+		
+		foreach (Path p in get_active_paths ()) {
+			if (px > p.xmin) {
+				px = p.xmin;
+			} 
+
+			if (py > p.ymin) {
+				py = p.ymin;
+			}
+
+			if (px2 < p.xmax) {
+				px2 = p.xmax;
+			}
+			
+			if (py2 < p.ymax) {
+				py2 = p.ymax;
+			}
+		}
+		
+		w = px2 - px;
+		h = py2 - py;
+		x = px;
+		y = py2;
 	}
 }
 

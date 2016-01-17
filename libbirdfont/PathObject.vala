@@ -102,37 +102,9 @@ public class PathObject : SvgBird.Object {
 	}
 	
 	public override void draw_outline (Context cr) {
-		draw_path (cr);
-	}
-
-	private SvgBird.Color get_path_fill_color () {
-		Color c = Theme.get_color ("Fill Color");
-		return new SvgBird.Color (c.r, c.g, c.b, c.a);
-	}
-
-	public void draw_path (Context cr) { // FIXME: delete
-		PathList path_stroke;
-		bool open;
-		
-		if (path.stroke > 0) {
-			cr.set_fill_rule (FillRule.WINDING);
-			path_stroke = path.get_stroke_fast ();
-			draw_path_list (path_stroke, cr);
-		} else {
-			cr.set_fill_rule (FillRule.EVEN_ODD);
-			open = path.is_open ();
-			
-			if (open) {
-				path.close ();
-				path.recalculate_linear_handles ();
-			}
-			
-			path.draw_path (cr);
-			
-			if (open) {
-				path.reopen ();
-			}
-		}
+		PathList pl = new PathList ();
+		pl.add (path);
+		draw_path_list (pl, cr);
 	}
 
 	public static void draw_path_list (PathList pl, Context cr) {
