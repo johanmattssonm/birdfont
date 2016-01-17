@@ -275,12 +275,6 @@ public class Path : GLib.Object {
 		} else if (color != null) {
 			c = (!) color;
 			cr.set_source_rgba (c.r, c.g, c.b, c.a);
-		} else {
-			if (is_clockwise ()) {
-				Theme.color_opacity (cr, "Selected Objects", 0.4);
-			} else {
-				Theme.color_opacity (cr, "Selected Objects", 0.8);
-			}	
 		}
 	}
 

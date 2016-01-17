@@ -41,17 +41,20 @@ public class LayerUtils {
 	}
 	
 	public static PathList get_all_paths (Layer layer) {
-		ObjectGroup objects = layer.objects;
 		PathList paths = new PathList ();
-		
-		foreach (SvgBird.Object o in objects) {
+		add_paths_to_group (layer, paths);
+		return paths;
+	}
+
+	public static void add_paths_to_group (Layer layer, PathList paths) {
+		foreach (SvgBird.Object o in layer.objects) {
 			if (o is PathObject) {
 				PathObject p = (PathObject) o;
 				paths.add (p.get_path ());
+			} else if (o is Layer) {
+				add_visible_paths_to_group ((Layer) o, paths);
 			}
 		}
-		
-		return paths;
 	}
 
 	public static PathList get_visible_paths (Layer layer) {
@@ -62,11 +65,13 @@ public class LayerUtils {
 
 	public static void add_visible_paths_to_group (Layer layer, PathList paths) {
 		foreach (SvgBird.Object o in layer.objects) {
-			if (o is PathObject) {
-				PathObject p = (PathObject) o;
-				paths.add (p.get_path ());
-			} else if (o is Layer) {
-				add_visible_paths_to_group ((Layer) o, paths);
+			if (o.visible) {
+				if (o is PathObject) {
+					PathObject p = (PathObject) o;
+					paths.add (p.get_path ());
+				} else if (o is Layer) {
+					add_visible_paths_to_group ((Layer) o, paths);
+				}
 			}
 		}
 	}
