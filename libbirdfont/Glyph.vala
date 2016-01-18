@@ -1209,7 +1209,10 @@ public class Glyph : FontDisplay {
 	}
 
 	public SvgBird.Object? get_object_at (double x, double y) {
-		foreach (SvgBird.Object o in get_current_layer ().objects) {
+		Layer layer = get_current_layer ();
+		for (int i = layer.objects.size - 1; i >= 0; i--) {
+			SvgBird.Object o = layer.objects.get_object (i);
+			
 			if (o.is_over (x, y)) {
 				return o;
 			}

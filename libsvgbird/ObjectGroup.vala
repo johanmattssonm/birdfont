@@ -27,6 +27,15 @@ public class ObjectGroup : GLib.Object {
 		 objects = new Gee.ArrayList<Object> ();
 	}
 
+	public Object get_object (int index) {
+		if (unlikely (index < 0 || index >= size)) {
+			warning ("Index out of bounds.");
+			return new EmptyObject ();
+		}
+		
+		return objects.get (index);
+	}
+
 	public int index_of (Object o) {
 		return objects.index_of (o);
 	}
