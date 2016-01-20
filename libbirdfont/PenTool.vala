@@ -765,8 +765,11 @@ public class PenTool : Tool {
 			p.path.reset_stroke ();
 		}
 		
-		foreach (Path path in g.active_paths) {
-			path.reset_stroke ();
+		foreach (Object path in g.active_paths) {
+			if (path is PathObject) {
+				PathObject p = (PathObject) path;
+				p.get_path ().reset_stroke ();
+			}
 		}
 	}
 	
@@ -1055,10 +1058,11 @@ public class PenTool : Tool {
 				
 				// don't use set point to reflective to on open ends
 				reflective = true;
-				foreach (Path path in MainWindow.get_current_glyph ().active_paths) {
-					if (path.is_open () && path.points.size > 0) {
-						if (selected_handle.parent == path.get_first_point ()	
-							|| selected_handle.parent == path.get_last_point ()) {
+				foreach (SvgBird.Object path in MainWindow.get_current_glyph ().active_paths) {
+					if (path.is_open () && !path.is_empty () && path is PathObject) {
+						Path p = ((PathObject) path).get_path ();
+						if (selected_handle.parent == p.get_first_point ()	
+							|| selected_handle.parent == p.get_last_point ()) {
 							reflective = false;
 						}
 					}
@@ -1229,7 +1233,10 @@ public class PenTool : Tool {
 		
 		if (active_edit_point != null) {
 			glyph.clear_active_paths ();
-			glyph.add_active_path (null, active_path);
+			
+			PathObject path = new PathObject.for_path (active_path);
+			glyph.add_active_object (null, path);
+			
 			DrawingTools.update_stroke_settings ();
 			
 			if (KeyBindings.modifier != SHIFT) {
@@ -1408,8 +1415,10 @@ public class PenTool : Tool {
 
 			foreach (Path merge in paths) {
 				if (merge.points.size > 0) {
-					if (is_close_to_point (merge.points.get (merge.points.size - 1), px, py)) {
-						glyph.add_active_path (null, merge);
+					PathObject merged_path = new PathObject.for_path (merge);
+					
+					if (is_close_to_point (merge.points.get (merge.points.size - 1), px, py)) {	
+						glyph.add_active_object (null, merged_path);
 						active_path = merge;
 						merge.reopen ();
 						glyph.open_path ();
@@ -1417,7 +1426,7 @@ public class PenTool : Tool {
 					}
 					
 					if (is_close_to_point (merge.points.get (0), px, py)) {
-						glyph.add_active_path (null, merge);
+						glyph.add_active_object (null, merged_path);
 						active_path = merge;
 						clear_directions ();
 						merge.reopen ();
@@ -1453,7 +1462,9 @@ public class PenTool : Tool {
 			force_direction ();
 			
 			glyph.clear_active_paths ();
-			glyph.add_active_path (null, path);
+			
+			PathObject closed_path = new PathObject.for_path (path);
+			glyph.add_active_object (null, closed_path);
 			
 			if (direction_changed) {
 				path.reverse ();
@@ -1492,11 +1503,12 @@ public class PenTool : Tool {
 				} else {
 					union = merge_open_paths (path, merge); 
 
+					PathObject union_path = new PathObject.for_path (union);
 					glyph.add_path (union);
 					glyph.delete_path (path);
 					glyph.delete_path (merge);
 					glyph.clear_active_paths ();
-					glyph.add_active_path (null, union);
+					glyph.add_active_object (null, union_path);
 					
 					union.reopen ();
 					union.create_list ();
@@ -1777,13 +1789,19 @@ public class PenTool : Tool {
 		active_edit_point = new_point.point;
 		
 		return_val_if_fail (glyph.active_paths.size > 0, new PointSelection.empty ());
-		add_selected_point (selected_point, glyph.active_paths.get (glyph.active_paths.size - 1));
+		SvgBird.Object object = glyph.active_paths.get (glyph.active_paths.size - 1);
+		
+		if (object is PathObject) {		
+			Path path = ((PathObject) object).get_path ();
+			
+			add_selected_point (selected_point, path);
 
-		active_path = new_point.path;
-		glyph.clear_active_paths ();
-		glyph.add_active_path (null, new_point.path);
-
-		move_selected = true;
+			active_path = new_point.path;
+			glyph.clear_active_paths ();
+			glyph.add_active_object (null, object);
+		
+			move_selected = true;
+		}
 		
 		return new_point;
 	}
@@ -1819,6 +1837,7 @@ public class PenTool : Tool {
 		EditPoint inserted;
 		bool stroke = StrokeTool.add_stroke;
 		Glyph g = MainWindow.get_current_glyph ();
+		PathObject path;
 		
 		if (g.active_paths.size == 0) {
 			np = new Path ();
@@ -1826,7 +1845,8 @@ public class PenTool : Tool {
 			np.stroke = stroke ? StrokeTool.stroke_width : 0;
 			np.line_cap = StrokeTool.line_cap;
 			
-			g.add_active_path (null, np);
+			path = new PathObject.for_path (np);
+			g.add_active_object (null, path);
 			
 			active_path = np;
 			selected_path = np;
@@ -1852,7 +1872,8 @@ public class PenTool : Tool {
 		}
 
 		g.clear_active_paths ();
-		g.add_active_path (null, np);
+		path = new PathObject.for_path (np);
+		g.add_active_object (null, path);
 		active_path = np;
 		selected_path = np;
 
@@ -1903,7 +1924,7 @@ public class PenTool : Tool {
 		Glyph g = MainWindow.get_current_glyph (); 
 		double distance_to_edit_point = g.view_zoom * get_distance_to_closest_edit_point (event_x, event_y);
 		
-		if (!Path.show_all_line_handles) {
+		if (!CanvasSettings.show_all_line_handles) {
 			foreach (PointSelection selected_corner in selected_points) {
 				if (is_close_to_handle (selected_corner.point, event_x, event_y, distance_to_edit_point)) {
 					return true;
@@ -1973,7 +1994,7 @@ public class PenTool : Tool {
 		
 		foreach (Path p in g.get_paths_in_current_layer ()) {
 			foreach (EditPoint ep in p.points) {
-				if (ep.is_selected () || Path.show_all_line_handles) {
+				if (ep.is_selected () || CanvasSettings.show_all_line_handles) {
 					left = ep.get_left_handle ();
 					right = ep.get_right_handle ();
 
@@ -2062,7 +2083,8 @@ public class PenTool : Tool {
 		selected_handle.selected = true;
 		
 		active_path = p.path;
-		g.add_active_path (null, active_path);
+		PathObject path = new PathObject.for_path (active_path);
+		g.add_active_object (null, path);
 	}
 
 	public static void add_selected_point (EditPoint p, Path path) {

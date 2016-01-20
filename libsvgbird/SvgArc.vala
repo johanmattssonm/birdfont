@@ -39,29 +39,32 @@
 
 using Math;
 
-namespace BirdFont {
+namespace SvgBird {
 
-/** Convert an SVG arc instruction to a Beziér path. */
-static void add_arc_points (BezierPoints[] bezier_points, ref int bi, double x0, double y0, double rx, double ry, double angle, bool largeArcFlag, bool sweepFlag, double x, double y) {
+public static void get_arc_arguments (double x0, double y0,
+	double rx, double ry, double angle, bool largeArcFlag,
+	bool sweepFlag, double x, double y,
+	out double angle_start, out double angle_extent,
+	out double center_x, out double center_y) {
 
 	//
 	// Elliptical arc implementation based on the SVG specification notes
 	//
 
+	double cx, cy;
 	double dx2, dy2, cosAngle, sinAngle;
 	double x1, y1, Prx, Pry, Px1, Py1, radiiCheck;
 	double sign, sq, coef, cx1, cy1;
-	double sx2, sy2, cx, cy;
+	double sx2, sy2;
 	double ux, uy, vx, vy, p, n;
 	double angleStart, angleExtent;
-	double s, step, theta;
 	
 	// Compute the half distance between the current and the final point
 	dx2 = (x0 - x) / 2.0;
 	dy2 = (y0 - y) / 2.0;
 	
 	// Convert angle from degrees to radians
-	angle = 2 * PI * ((angle % 360.0) / 360.0);
+	angle = angle % (2 * Math.PI);
 	
 	cosAngle = cos (angle);
 	sinAngle = sin (angle);
@@ -71,7 +74,7 @@ static void add_arc_points (BezierPoints[] bezier_points, ref int bi, double x0,
 	//
 	x1 = cosAngle * dx2 + sinAngle * dy2;
 	y1 = -sinAngle * dx2 + cosAngle * dy2;
-	
+
 	// Ensure radii are large enough
 	rx = fabs(rx);
 	ry = fabs(ry);
@@ -80,7 +83,6 @@ static void add_arc_points (BezierPoints[] bezier_points, ref int bi, double x0,
 	Px1 = x1 * x1;
 	Py1 = y1 * y1;
 
-	
 	// Check that radii are large enough
 	radiiCheck = Px1 / Prx + Py1 / Pry;
 	
@@ -107,13 +109,13 @@ static void add_arc_points (BezierPoints[] bezier_points, ref int bi, double x0,
 	
 	sx2 = (x0 + x) / 2.0;
 	sy2 = (y0 + y) / 2.0;
-	cx = sx2 - (cosAngle * cx1 - sinAngle * cy1);
-	cy = sy2 - (sinAngle * cx1 + cosAngle * cy1);
+	cx = sx2 + (cosAngle * cx1 - sinAngle * cy1);
+	cy = sy2 + (sinAngle * cx1 + cosAngle * cy1);
 
 	//
 	// Step 4 : Compute the angleStart (angle1) and the angleExtent (dangle)
 	//
-	
+
 	ux = (x1 - cx1) / rx;
 	uy = (y1 - cy1) / ry;
 	vx = (-x1 - cx1) / rx;
@@ -132,50 +134,21 @@ static void add_arc_points (BezierPoints[] bezier_points, ref int bi, double x0,
 	angleExtent = sign * Math.acos(p / n);
 	
 	if(!sweepFlag && angleExtent > 0) {
-		angleExtent -= 2 *PI;
+		angleExtent -= 2 * PI;
 	} else if (sweepFlag && angleExtent < 0) {
-		angleExtent += 2 *PI;
+		angleExtent += 2 * PI;
 	}
-	angleExtent %= 2 * PI;
-	angleStart %= 2 * PI;
 
-	angleExtent *= -1;
-	angleStart *= -1;
-	
-	// Approximate the path with Beziér points
-	s = (angleExtent > 0) ? 1 : -1;
-	step = fabs (angleExtent) / (2 * fabs (angleExtent));
-
-	theta = PI - angleStart - angleExtent;
-	
-	bezier_points[bi].type = 'L';
-	bezier_points[bi].svg_type = 'a';
-
-	bezier_points[bi].x0 = cx + rx * cos (theta);
-	bezier_points[bi].y0 = cy + ry * sin (theta);
-									
-	bi++;
-					
-	for (double a = 0; a < fabs (angleExtent); a += step) {
-		theta = PI - angleStart - angleExtent + s * a;
-
-		return_if_fail (0 <= bi < bezier_points.length);
-
-		bezier_points[bi].type = 'S';
-		bezier_points[bi].svg_type = 'a';
-
-		bezier_points[bi].x0 = cx + rx * cos (theta);
-		bezier_points[bi].y0 = cy + ry * sin (theta);
-
-		bezier_points[bi].x1 = cx + rx * cos (theta + 1 * step / 4);
-		bezier_points[bi].y1 = cy + ry * sin (theta + 1 * step / 4);
+	center_x = cx;
+	center_y = cy;
 		
-		bezier_points[bi].x2 = cx + rx * cos (theta + 2 * step / 4);
-		bezier_points[bi].y2 = cy + ry * sin (theta + 2 * step / 4);
-						
-		bi++;
-	}
+	angleExtent = -angleExtent;
+	angleStart = -angleStart;
+
+	angle_start = angleStart;
+	angle_extent = angleExtent;
 }
 
+
 }
-	
+

@@ -111,7 +111,7 @@ public class GlyphSequence : GLib.Object {
 				
 				g = font.get_glyph_by_name (name);
 
-				if (g != null) {
+				if (likely (g != null)) {
 					old.add (g);
 						
 					if (a.alternates.size > 0) {
@@ -119,7 +119,7 @@ public class GlyphSequence : GLib.Object {
 						string alt_name = a.alternates.get (0);
 						Glyph? alt = font.get_glyph_by_name (alt_name);
 						
-						if (alt != null) {
+						if (likely (alt != null)) {
 							GlyphSequence replacement = new GlyphSequence ();
 							replacement.add (alt);
 							ligature_sequence.replace (old, replacement);

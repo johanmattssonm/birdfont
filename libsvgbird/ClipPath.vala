@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2015 Johan Mattsson
+	Copyright (C) 2016 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -13,40 +13,25 @@
 */
 
 using Cairo;
-using Math;
 
-namespace BirdFont {
+namespace SvgBird {
 
-public class Gradient : GLib.Object {
-	public double x1;
-	public double y1;
-	public double x2;
-	public double y2;
-
-	public Gee.ArrayList<Stop> stops;
+public class ClipPath : GLib.Object {
+	Layer layer = new Layer ();
 	
-	public int id = -1;
-
-	public Gradient () {
-		x1 = 0;
-		y1 = 0;
-		x2 = 0;
-		y2 = 0;
-		stops = new Gee.ArrayList<Stop> ();
+	public string id {
+		get {
+			return layer.id;
+		}
 	}
 	
-	public Gradient copy () {
-		Gradient g = new Gradient ();
-		g.x1 = x1;
-		g.y1 = y1;
-		g.x2 = x2;
-		g.y2 = y2;
-		
-		foreach (Stop s in stops) {
-			g.stops.add (s.copy ());
-		}
-		
-		return g;
+	public ClipPath (Layer layer) {
+		this.layer = layer;
+	}
+	
+	public void apply (Context cr) {
+		layer.draw_outline (cr);
+		cr.clip ();
 	}
 }
 

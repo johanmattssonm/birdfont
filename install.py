@@ -130,7 +130,7 @@ elif not options.libdir:
 	if platform.dist()[0] == 'Ubuntu' or platform.dist()[0] == 'Debian':
 		process = subprocess.Popen(['dpkg-architecture', '-qDEB_HOST_MULTIARCH'], stdout=subprocess.PIPE)
 		out, err = process.communicate()
-		libdir = '/lib/' + out.rstrip ('\n')
+		libdir = '/lib/' + out.decode('UTF-8').rstrip ('\n')
 	else:
 		p = platform.machine()
 		if p == 'i386' or p == 's390' or p == 'ppc' or p == 'armv7hl':

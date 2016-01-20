@@ -28,11 +28,11 @@ public class LicenseDialog : Dialog {
 	static const double margin = 20;
 	
 	public LicenseDialog () {
-		agreement = new TextArea (font_size);
+		Color color = Theme.get_color ("Text Tool Box");
+		agreement = new TextArea (font_size, color);
 		agreement.min_width = 300;
 		agreement.set_editable (false);
 		agreement.draw_border = false;
-		agreement.text_color = Theme.get_color ("Text Tool Box");
 		agreement.set_text ("BirdFont is developed with donations, please consider donating to the project.\n\nThis is the freeware version of BirdFont. You may use it for creating fonts under the SIL Open Font License.\n\nWhich license do you want to use for your font?");
 		
 		decline = new Button ("Commercial License");

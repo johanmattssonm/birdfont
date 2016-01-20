@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-public class OpenFontFormatWriter : Object  {
+public class OpenFontFormatWriter : GLib.Object  {
 
 	DataOutputStream os;
 	DataOutputStream os_mac;

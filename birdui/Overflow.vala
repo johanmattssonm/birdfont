@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2015 Johan Mattsson
+	Copyright (C) 2016 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -12,24 +12,11 @@
 	Lesser General Public License for more details.
 */
 
-using Cairo;
-using Math;
+namespace Bird {
 
-namespace BirdFont {
-
-public class Stop : GLib.Object {
-	public Color color = Color.black ();
-	public double offset = 0;
-	
-	public Stop () {
-	}
-	
-	public Stop copy () {
-		Stop s = new Stop ();
-		s.color = color.copy  ();
-		s.offset = offset;
-		return s;
-	}
+public enum Overflow {
+	HIDDEN,
+	VISIBLE
 }
 
 }

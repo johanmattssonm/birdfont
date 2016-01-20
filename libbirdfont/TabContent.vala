@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2014 2015 Johan Mattsson
+	Copyright (C) 2014 - 2016 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as
@@ -72,7 +72,7 @@ public class TabContent : GLib.Object {
 	public static void draw (WidgetAllocation allocation, Context cr) {
 		AbstractMenu menu;
 		Dialog dialog;
-
+		
 		if (unlikely (MenuTab.has_suppress_event ())) {
 			cr.save ();
 			Theme.color (cr, "Background 1");
@@ -110,6 +110,12 @@ public class TabContent : GLib.Object {
 			if (text_input_visible) {
 				draw_text_input (allocation, cr);
 			}
+		}
+
+		Help help = MainWindow.get_help ();
+		
+		if (help.is_visible ()) {
+			help.draw (cr, allocation);
 		}
 	}
 
@@ -212,6 +218,12 @@ public class TabContent : GLib.Object {
 		}
 
 		last_press_time = GLib.get_real_time ();
+
+		Help help = MainWindow.get_help ();
+		
+		if (help.button_press (button, x, y)) {
+			return; // event consumed by help text
+		}
 
 		if (MainWindow.get_dialog ().visible) {
 			MainWindow.get_dialog ().button_press (button, x, y);

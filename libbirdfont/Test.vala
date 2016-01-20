@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-public class Test : Object {
+public class Test : GLib.Object {
 	public Callback callback;
 	public string name;
 	double time_stamp;

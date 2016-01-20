@@ -121,8 +121,11 @@ public class TrackTool : Tool {
 				start_update_timer ();
 				drawing = true;
 				
-				foreach (Path path in glyph.active_paths) {
-					path.create_full_stroke (); // cache merged stroke parts
+				foreach (Object path in glyph.active_paths) {
+					if (path is PathObject) {
+						// cache merged stroke parts
+						((PathObject) path).get_path ().create_full_stroke ();
+					}
 				}
 			}
 		});
@@ -146,8 +149,9 @@ public class TrackTool : Tool {
 				g = MainWindow.get_current_glyph ();
 				
 				if (g.active_paths.size > 0) { // set type for last point
-					p = g.active_paths.get (g.active_paths.size - 1);
-					
+					Object o = g.active_paths.get (g.active_paths.size - 1);
+					p = ((PathObject) o).get_path ();
+									
 					if (p.points.size > 1) {
 						previous = p.points.get (p.points.size - 1);
 						previous.type = DrawingTools.point_type;
@@ -164,8 +168,10 @@ public class TrackTool : Tool {
 					add_endpoint_and_merge (x, y);
 				}
 							
-				foreach (Path path in g.active_paths) {
-					convert_hidden_points (path);
+				foreach (Object path in g.active_paths) {
+					if (path is PathObject) {
+						convert_hidden_points (((PathObject) path).get_path ());
+					}
 				}
 				
 				g.clear_active_paths ();
@@ -226,12 +232,17 @@ public class TrackTool : Tool {
 			}
 		}
 	}
-	
-	// FIXME: double check
+
 	void set_tie () {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		var paths = glyph.get_visible_paths ();
-		Path p = paths.get (paths.size - 1);
+		Path p;
+		
+		if (paths.size == 0) {
+			return;
+		}
+		
+		p = paths.get (paths.size - 1);
 		
 		foreach (EditPoint ep in p.points) {
 			if (ep.get_right_handle ().is_line () || ep.get_left_handle ().is_line ()) {
@@ -403,7 +414,14 @@ public class TrackTool : Tool {
 			return;
 		}
 		
-		p = glyph.active_paths.get (glyph.active_paths.size - 1);
+		Object o = glyph.active_paths.get (glyph.active_paths.size - 1);
+		
+		if (unlikely (!(o is PathObject))) {
+			warning ("Object is not a path");
+			return;
+		}
+		
+		p = ((PathObject) o).get_path ();
 		p.reopen ();
 		px = Glyph.path_coordinate_x (x);
 		py = Glyph.path_coordinate_y (y);
@@ -411,7 +429,8 @@ public class TrackTool : Tool {
 		added_points++;
 
 		PenTool.convert_point_to_line (new_point, false);
-		new_point.set_point_type (PointType.HIDDEN);
+		new_point.set_point_type (PointType.HIDDEN);		
+		p.recalculate_linear_handles_for_point (new_point);
 		
 		if (p.points.size > 1) {
 			glyph.redraw_segment (new_point, new_point.get_prev ());
@@ -488,7 +507,15 @@ public class TrackTool : Tool {
 			return new Path ();
 		}
 			
-		return glyph.active_paths.get (glyph.active_paths.size - 1);		
+		Object o = glyph.active_paths.get (glyph.active_paths.size - 1);
+		
+		if (likely (o is PathObject)) {
+			return ((PathObject) o).get_path ();
+		}
+		
+		warning ("Active object is a path.");
+		
+		return new Path ();
 	}
 	
 	/** Delete all points close to the pixel at x,y. */

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012 2013 2014 2015 Johan Mattsson
+	Copyright (C) 2012 - 2016 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -14,6 +14,7 @@
 
 using Cairo;
 using Math;
+using SvgBird;
 
 namespace BirdFont {
 
@@ -67,7 +68,7 @@ public class Path : GLib.Object {
 	
 	private double path_stroke_width = 0;
 	
-	public LineCap line_cap = LineCap.BUTT;
+	public SvgBird.LineCap line_cap = SvgBird.LineCap.BUTT;
 	public PathList? full_stroke = null;
 	PathList? fast_stroke = null;
 	StrokeTask? stroke_creator;
@@ -83,14 +84,8 @@ public class Path : GLib.Object {
 	bool clockwise_direction = true;
 
 	// Iterate over each pixel in a path
-	public delegate bool RasterIterator (double x, double y, double step);
-	
+	public delegate bool RasterIterator (double x, double y, double step);	
 	public delegate bool SegmentIterator (EditPoint start, EditPoint stop);
-	
-	/** The stroke of an outline when the path is not filled. */
-	public static double stroke_width = 0;
-	public static bool show_all_line_handles = true;
-	public static bool fill_open_path {get; set;}
 	
 	public double rotation = 0;
 	public double skew = 0;
@@ -99,27 +94,14 @@ public class Path : GLib.Object {
 	public bool highlight_last_segment = false;
 	
 	public string point_data = "";
-
-	public Color? color = null;
-	public Color? stroke_color = null;
-
-	public Gradient? gradient = null;
 	
 	private static Text? arrow = null;
 
-	public Path () {	
-		string width;
-		
-		if (unlikely (stroke_width < 1)) {
-			width = Preferences.get ("stroke_width");
-			if (width != "") {
-				stroke_width = double.parse (width);
-			}
-		}
+	public Color? color = null;
+	public Color? stroke_color = null;
+	public Gradient? gradient = null;
 
-		if (stroke_width < 1) {
-			stroke_width = 1;
-		}
+	public Path () {	
 	}
 
 	public bool is_filled () {
@@ -175,22 +157,6 @@ public class Path : GLib.Object {
 		return points.size == 0;
 	}
 
-	public void draw_boundaries  (Context cr) {
-		double x = Glyph.reverse_path_coordinate_x (xmin); 
-		double y = Glyph.reverse_path_coordinate_y (ymin);
-		double x2 = Glyph.reverse_path_coordinate_x (xmax);
-		double y2 = Glyph.reverse_path_coordinate_y (ymax);
-		
-		cr.save ();
-		
-		Theme.color (cr, "Default Background");
-		cr.set_line_width (2);
-		cr.rectangle (x, y, x2 - x, y2 - y);
-		cr.stroke ();
-		
-		cr.restore ();
-	}
-
 	public void draw_outline (Context cr) {
 		unowned EditPoint? n = null;
 		unowned EditPoint en;
@@ -217,7 +183,7 @@ public class Path : GLib.Object {
 			i++;
 		}
 
-		// close path
+		// closed path
 		if (!is_open () && n != null) {
 			if (highlight_last_segment) {
 				cr.stroke ();
@@ -242,19 +208,20 @@ public class Path : GLib.Object {
 		}
 	}
 	
-	public void draw_edit_points (Context cr) {		
-		if (is_editable ()) {
-			// control points for curvature
-			foreach (EditPoint e in points) {
-				if (show_all_line_handles || e.selected_point || e.selected_handle > 0) {
-					draw_edit_point_handles (e, cr);
-				}
+	public void draw_control_points (Context cr) {		
+		// control points for curvature
+		foreach (EditPoint e in points) {
+			if (CanvasSettings.show_all_line_handles 
+				|| e.selected_point
+				|| e.selected_handle > 0) {
+					
+				draw_edit_point_handles (e, cr);
 			}
-						
-			// control points
-			foreach (EditPoint e in points) {
-				draw_edit_point (e, cr);
-			}
+		}
+					
+		// on curve control points
+		foreach (EditPoint e in points) {
+			draw_edit_point (e, cr);
 		}
 	}
 
@@ -262,7 +229,7 @@ public class Path : GLib.Object {
 	 * Call Context.new_path (); before this method and Context.fill ()
 	 * to show the path.
 	 */
-	public void draw_path (Context cr, Glyph glyph, Color? color = null) {
+	public void draw_path (Context cr, Color? color = null) {
 		unowned EditPoint? n = null;
 		unowned EditPoint en;
 		unowned EditPoint em;
@@ -274,8 +241,8 @@ public class Path : GLib.Object {
 			return;
 		}
 
-		center_x = glyph.allocation.width / 2.0;
-		center_y = glyph.allocation.height / 2.0;
+		center_x = Glyph.xc ();
+		center_y = Glyph.yc ();
 
 		ex = center_x + points.get (0).x;
 		ey = center_y - points.get (0).y;
@@ -308,12 +275,6 @@ public class Path : GLib.Object {
 		} else if (color != null) {
 			c = (!) color;
 			cr.set_source_rgba (c.r, c.g, c.b, c.a);
-		} else {
-			if (is_clockwise ()) {
-				Theme.color_opacity (cr, "Selected Objects", 0.4);
-			} else {
-				Theme.color_opacity (cr, "Selected Objects", 0.8);
-			}	
 		}
 	}
 
@@ -350,12 +311,9 @@ public class Path : GLib.Object {
 			cr.translate (x, y);
 			double inverted_zoom = Glyph.ivz ();
 			cr.rotate (-angle);
-			cr.translate (-x, -y); 
-			
+			cr.translate (-x, -y);
 			cr.scale (inverted_zoom, inverted_zoom);
-			
 			arrow_icon.draw_at_baseline (cr, x, y);
-			
 			cr.restore ();
 		}
 	}
@@ -389,7 +347,6 @@ public class Path : GLib.Object {
 	}
 		
 	private static void draw_curve (EditPoint e, EditPoint en, Context cr, bool highlighted = false, double alpha = 1) {
-		Glyph g = MainWindow.get_current_glyph ();
 		double xa, ya, xb, yb, xc, yc, xd, yd;
 		PointType t = e.get_right_handle ().type;
 		PointType u = en.get_left_handle ().type;
@@ -401,8 +358,6 @@ public class Path : GLib.Object {
 		} else {
 			Theme.color (cr, "Highlighted Guide");
 		}
-		
-		cr.set_line_width (stroke_width / g.view_zoom);
 		
 		cr.line_to (xa, ya); // this point makes sense only if it is in the first or last position
 
@@ -469,7 +424,7 @@ public class Path : GLib.Object {
 		get_line_points (e, en, out ax, out ay, out bx, out by);
 		
 		Theme.color (cr, "Handle Color");
-		cr.set_line_width (1.7 * (stroke_width / g.view_zoom));
+		cr.set_line_width (1.7 * (CanvasSettings.stroke_width / g.view_zoom));
 
 		cr.line_to (ax, ay);
 		cr.line_to (bx, by);
@@ -599,7 +554,7 @@ public class Path : GLib.Object {
 	public static void draw_control_point (Context cr, double x, double y, Color color, double size = 3.5) {
 		Glyph g = MainWindow.get_current_glyph ();
 		double ivz = 1 / g.view_zoom;
-		double width = size * Math.sqrt (stroke_width) * ivz;
+		double width = size * Math.sqrt (CanvasSettings.stroke_width) * ivz;
 		double xc = g.allocation.width / 2.0;
 		double yc = g.allocation.height / 2.0;
 
@@ -822,17 +777,6 @@ public class Path : GLib.Object {
 		new_path.highlight_last_segment = highlight_last_segment;
 		
 		return new_path;
-	}	
-	
-	public bool is_over (double x, double y) {
-		Glyph g = MainWindow.get_current_glyph ();
-		
-		x = x * Glyph.ivz () + g.view_offset_x - Glyph.xc ();
-		y = y * Glyph.ivz () + g.view_offset_y - Glyph.yc ();
-
-		y *= -1;
-		
-		return is_over_coordinate (x, y);
 	}
 	
 	public bool is_over_coordinate (double x, double y) {
@@ -994,6 +938,7 @@ public class Path : GLib.Object {
 			points.add (p);
 			p.prev = previous_point;
 			p.next = previous_point.next;
+			previous_point.next = p;
 		}
 		
 		last_point = p;
@@ -2265,12 +2210,6 @@ public class Path : GLib.Object {
 		PathList lines = new PathList ();
 		
 		lines = pl;
-		
-		/** // FIXME: Check automatic orientation.
-		foreach (Path p in pl.paths) {
-			lines.add (SvgParser.get_lines (p));
-		}
-		*/
 		
 		foreach (Path p in lines.paths) {
 			if (p.points.size > 1 && p != path 

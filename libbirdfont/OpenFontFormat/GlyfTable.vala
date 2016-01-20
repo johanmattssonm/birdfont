@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012, 2013, 2014 Johan Mattsson
+	Copyright (C) 2012 2013 2014 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -163,7 +163,7 @@ public class GlyfTable : OtfTable {
 			g.remove_empty_paths ();
 			unassigned = gc.is_unassigned ();
 
-			if (unassigned) {
+			if (unassigned && gc.get_name () != ".notdef") {
 				unassigned_glyphs.add (gc);
 			}
 			
@@ -266,7 +266,6 @@ public class GlyfTable : OtfTable {
 		// flags		
 		nflags = glyf_data.get_nflags ();
 		if (unlikely (nflags != npoints)) {
-			print ("glyf table data:\n");
 			fd.dump ();
 			warning (@"(nflags != npoints)  ($nflags != $npoints) in glyph $(g.name). ncontours: $ncontours");
 		}
@@ -478,7 +477,7 @@ public class GlyfTable : OtfTable {
 
 		end_points = new uint16[ncontours + 1];
 		for (int i = 0; i < ncontours; i++) {
-			end_points[i] = dis.read_ushort (); // FIXA: mind shot vector is negative
+			end_points[i] = dis.read_ushort (); // FIXME: mind shot vector is negative
 			
 			if (i > 0 && end_points[i] < end_points[i -1]) {
 				warning (@"Next endpoint has bad value in $(name.str). (end_points[i] > end_points[i -1])  ($(end_points[i]) > $(end_points[i -1])) i: $i ncontours: $ncontours");

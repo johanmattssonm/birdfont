@@ -14,6 +14,7 @@
 
 using Cairo;
 using Math;
+using SvgBird;
 
 namespace BirdFont {
 
@@ -191,7 +192,9 @@ public class DrawingTools : ToolCollection  {
 		});	
 		draw_tools.add_tool (move_background);
 
-		move_canvas = new Tool ("move_canvas", t_("Move canvas"));
+		move_canvas = new Tool ("move_canvas",
+			t_("Move canvas"),
+			t_("Press space and click to move the canvas."));
 		move_canvas.select_action.connect ((self) => {
 			update_drawing_and_background_tools (self);
 		});	
@@ -238,7 +241,10 @@ public class DrawingTools : ToolCollection  {
 		key_tools.add_tool (insert_point_on_path_tool);		
 		
 		// quadratic Bézier points
-		quadratic_points = new Tool ("quadratic_points", t_("Create quadratic Bézier curves"));
+		quadratic_points = new Tool ("quadratic_points", 
+			t_("Create quadratic Bézier curves"),
+			t_("All control points will be converted to quadratic points in the TTF format."));
+			
 		quadratic_points.select_action.connect ((self) => {
 			point_type = PointType.QUADRATIC;
 			Preferences.set ("point_type", "quadratic_points");
@@ -292,7 +298,7 @@ public class DrawingTools : ToolCollection  {
 			glyph.selection_boundaries (out x, out y, out w, out h);
 			delta = x_coordinate.get_value () - x + glyph.left_limit;
 			
-			foreach (Path path in glyph.active_paths) {
+			foreach (SvgBird.Object path in glyph.active_paths) {
 				path.move (delta, 0);
 			}
 			
@@ -335,7 +341,7 @@ public class DrawingTools : ToolCollection  {
 			
 			glyph.selection_boundaries (out x, out y, out w, out h);
 			
-			foreach (Path path in glyph.active_paths) {
+			foreach (Path path in glyph.get_active_paths ()) {
 				path.move (0, y_coordinate.get_value () - (y - h) - font.base_line);
 			}
 			
@@ -375,7 +381,7 @@ public class DrawingTools : ToolCollection  {
 			double x, y, w, h;
 			Glyph glyph = MainWindow.get_current_glyph ();
 			double angle = (self.get_value () / 360) * 2 * PI;
-			Path last_path;
+			SvgBird.Object last_path;
 			glyph.selection_boundaries (out x, out y, out w, out h);
 			
 			x += w / 2;
@@ -480,7 +486,7 @@ public class DrawingTools : ToolCollection  {
 				tie = !p.tie_handles;
 				
 				// don't tie end points
-				foreach (Path path in MainWindow.get_current_glyph ().active_paths) {
+				foreach (Path path in MainWindow.get_current_glyph ().get_active_paths ()) {
 					if (path.is_open ()) {
 						if (p == path.get_first_point () || p == path.get_last_point ()) {
 							tie = false;
@@ -598,9 +604,9 @@ public class DrawingTools : ToolCollection  {
 			Glyph g = MainWindow.get_current_glyph ();
 			Layer layer = g.get_current_layer ();
 			
-			foreach (Path p in g.active_paths) {
-				layer.paths.remove (p);
-				layer.paths.paths.insert (0, p);
+			foreach (SvgBird.Object p in g.active_paths) {
+				layer.remove (p);
+				layer.objects.objects.insert (0, p);
 			}
 			
 			GlyphCanvas.redraw ();
@@ -798,12 +804,12 @@ public class DrawingTools : ToolCollection  {
 			g.store_undo_state ();
 		
 			if (StrokeTool.add_stroke) {
-				foreach (Path p in g.active_paths) {
+				foreach (SvgBird.Object p in g.active_paths) {
 					p.stroke = StrokeTool.stroke_width;
 					p.line_cap = StrokeTool.line_cap;
 				}
 			} else {
-				foreach (Path p in g.active_paths) {
+				foreach (SvgBird.Object p in g.active_paths) {
 					p.stroke = 0;
 				}	
 			}
@@ -838,9 +844,13 @@ public class DrawingTools : ToolCollection  {
 			StrokeTool.stroke_width = object_stroke.get_value ();
 					
 			if (tool && StrokeTool.add_stroke) {
-				foreach (Path p in g.active_paths) {
+				foreach (SvgBird.Object p in g.active_paths) {
 					p.stroke = StrokeTool.stroke_width;
-					p.reset_stroke ();
+					
+					if (p is PathObject) {
+						Path path = ((PathObject) p).get_path ();
+						path.reset_stroke ();
+					}
 				}
 			}
 			
@@ -876,12 +886,15 @@ public class DrawingTools : ToolCollection  {
 			g = MainWindow.get_current_glyph ();
 			g.store_undo_state ();
 			
-			foreach (Path p in g.active_paths) {
-				p.line_cap = LineCap.BUTT;
-				p.reset_stroke ();
+			foreach (SvgBird.Object p in g.active_paths) {
+				p.line_cap = SvgBird.LineCap.BUTT;
+				
+				if (p is PathObject) {
+					((PathObject) p).get_path ().reset_stroke ();
+				}
 			}
 			
-			StrokeTool.line_cap = LineCap.BUTT;
+			StrokeTool.line_cap = SvgBird.LineCap.BUTT;
 			Font f = BirdFont.get_current_font ();
 			f.settings.set_setting ("line_cap", @"butt");
 
@@ -900,12 +913,15 @@ public class DrawingTools : ToolCollection  {
 			g = MainWindow.get_current_glyph ();
 			g.store_undo_state ();
 			
-			foreach (Path p in g.active_paths) {
-				p.line_cap = LineCap.ROUND;
-				p.reset_stroke ();
+			foreach (SvgBird.Object p in g.active_paths) {
+				p.line_cap = SvgBird.LineCap.ROUND;
+				
+				if (p is PathObject) {
+					((PathObject) p).get_path ().reset_stroke ();
+				}
 			}
 			
-			StrokeTool.line_cap = LineCap.ROUND;
+			StrokeTool.line_cap = SvgBird.LineCap.ROUND;
 
 			Font f = BirdFont.get_current_font ();
 			f.settings.set_setting ("line_cap", @"round");
@@ -925,12 +941,15 @@ public class DrawingTools : ToolCollection  {
 			g = MainWindow.get_current_glyph ();
 			g.store_undo_state ();
 			
-			foreach (Path p in g.active_paths) {
-				p.line_cap = LineCap.SQUARE;
-				p.reset_stroke ();
+			foreach (SvgBird.Object p in g.active_paths) {
+				p.line_cap = SvgBird.LineCap.SQUARE;
+
+				if (p is PathObject) {
+					((PathObject) p).get_path ().reset_stroke ();
+				}
 			}
 			
-			StrokeTool.line_cap = LineCap.SQUARE;
+			StrokeTool.line_cap = SvgBird.LineCap.SQUARE;
 
 			Font f = BirdFont.get_current_font ();
 			f.settings.set_setting ("line_cap", @"square");
@@ -1249,7 +1268,7 @@ public class DrawingTools : ToolCollection  {
 		bool stroke = false;
 		Glyph g = MainWindow.get_current_glyph ();
 		
-		foreach (Path p in g.active_paths) {
+		foreach (SvgBird.Object p in g.active_paths) {
 			if (p.stroke > 0) {
 				stroke = true;
 			}
@@ -1607,7 +1626,7 @@ public class DrawingTools : ToolCollection  {
 		int i = 0;
 		
 		layer_tools.tool.clear ();
-		foreach (Layer layer in g.layers.subgroups) { 
+		foreach (Layer layer in g.layers.get_sublayers ()) { 
 			LayerLabel label = new LayerLabel (layer);
 			layer_tools.add_tool (label, 0);
 			

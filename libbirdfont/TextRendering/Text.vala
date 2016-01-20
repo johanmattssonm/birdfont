@@ -53,10 +53,18 @@ public class Text : Widget {
 	
 	double margin_left = 0;
 	
-	public Text (string text = "", double size = 17, double margin_bottom = 0) {
+	public Text (string text = "", double size = 17, double margin_bottom = 0, Color? color = null) {
 		this.margin_bottom = margin_bottom;
 		font_cache = FontCache.get_default_cache ();
 		cached_font = font_cache.get_fallback ();
+
+		if (color != null) {
+			Color c = (!) color;
+			r = c.r;
+			g = c.g;
+			b = c.b;
+			a = c.a;
+		}
 		
 		set_text (text);
 		set_font_size (size);

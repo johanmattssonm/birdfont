@@ -13,6 +13,7 @@
 */
 
 using Cairo;
+using SvgBird;
 
 namespace BirdFont {
 
@@ -27,8 +28,14 @@ public class LayerLabel : Tool {
 	/** Add margin when layer is moves. */
 	bool active_layer = false;
 	
+	static TextArea? help_text_hide = null;
+	
 	public LayerLabel (Layer layer) {
 		base ();
+
+		if (help_text_hide == null) {
+			update_description ();
+		}
 
 		this.layer = layer;
 		this.label = layer.name;
@@ -39,10 +46,10 @@ public class LayerLabel : Tool {
 
 		panel_press_action.connect ((selected, button, tx, ty) => {	
 			if (y <= ty <= y + h) {
-				if (tx >= w - 30 * Toolbox.get_scale ()) {
+				if (tx >= w - 30) {
 					DrawingTools.deselect_layers ();
 					remove_layer ();
-				} if (tx < 25 * Toolbox.get_scale ()) {
+				} else if (tx < 25) {
 					layer.visible = !layer.visible;
 					GlyphCanvas.redraw ();
 					BirdFont.get_current_font ().touch ();
@@ -76,6 +83,13 @@ public class LayerLabel : Tool {
 				redraw ();
 			}
 			
+			if (y <= ty <= y + h) {
+				if (tx < 25 && help_text_hide != null) {
+					Help help = MainWindow.get_help ();
+					help.set_help_text ((!) help_text_hide);
+				}
+			}
+			
 			return false;
 		});
 
@@ -83,7 +97,16 @@ public class LayerLabel : Tool {
 			active_layer = false;
 		});
 	}
-	
+
+	void update_description () {
+		help_text_hide = Help.create_help_text (t_("Hide the layer."));	
+	}
+
+	public override void clear_cache () {
+		base.clear_cache ();
+		update_description ();
+	}
+		
 	void move_layer_up () {
 		int i;
 		Glyph g = MainWindow.get_current_glyph ();

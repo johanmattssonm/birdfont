@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012s 2013 2014 Johan Mattsson
+	Copyright (C) 2012 2013 2014 2015 Johan Mattsson
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -51,8 +51,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	Entry text_entry;
 	Box text_box;
 	Gtk.Button submit_text_button;
-	
-	Gtk.Window tooltip_window = new Gtk.Window ();
 	
 	ToolboxCanvas toolbox;
 	
@@ -112,12 +110,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 				uri = Preview.get_uri ();
 				html = Preview.get_html_with_absolute_paths ();
 										
-				try {	
-					html_canvas.load_html_string (html, uri);
-				} catch (Error e) {
-					warning (e.message);
-					warning ("Failed to load html into canvas.");
-				}
+				html_canvas.load_html_string (html, uri);
 				
 				// show the webview when loading has finished 
 				html_box.set_visible (true); 
@@ -488,8 +481,8 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		} catch (GLib.Error e) {
 			warning (e.message);
 		}
-	}
-
+	} 
+	
 	public void run_non_blocking_background_thread (Task t) {
 		unowned Thread<void*> bg;
 		

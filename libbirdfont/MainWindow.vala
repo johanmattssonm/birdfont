@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012 2014 Johan Mattsson
+	Copyright (C) 2012 2014 2016 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -32,6 +32,7 @@ public class MainWindow : GLib.Object {
 	public static Dialog dialog;
 	public static SpacingTab spacing_tab;
 	public static Task blocking_background_task;
+	public static Help help;
 	
 	/** Number of pixels per mm */
 	public static double units = 1;
@@ -55,8 +56,13 @@ public class MainWindow : GLib.Object {
 		dialog = new Dialog ();
 		spacing_tab = new SpacingTab ();
 		blocking_background_task = new Task (null);
+		help = new Help ();
 		
 		tools.select_tool (DrawingTools.bezier_tool);
+	}
+	
+	public static Help get_help () {
+		return help;
 	}
 
 	public static void abort_task () {

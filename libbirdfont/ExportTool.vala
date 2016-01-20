@@ -13,6 +13,7 @@
 */
 
 using B;
+using SvgBird;
 
 namespace BirdFont {
 
@@ -95,37 +96,50 @@ public class ExportTool : GLib.Object {
 		
 		name = glyph.get_name ();
 		
-		Gee.ArrayList<Path> pl;
+		Gee.ArrayList<SvgBird.Object> pl;
 		
 		s = new StringBuilder ();
 		glyph_svg = "";
 
-		pl = only_selected_paths ? glyph.active_paths : glyph.get_visible_paths ();
-		foreach (Path p in pl) {
-			if (p.stroke > 0) {
-				s.append (@"<path ");
-				s.append (@"style=\"");
-				s.append (@"fill:none;");
-				s.append (@"stroke:#000000;");
-				s.append (@"stroke-width:$(p.stroke)px;");
-				
-				if (p.line_cap == LineCap.ROUND) {
-					s.append (@"stroke-linecap:round;");
-				} else if (p.line_cap == LineCap.SQUARE) {
-					s.append (@"stroke-linecap:square;");
+		pl = only_selected_paths ? glyph.active_paths : glyph.get_visible_objects ();
+		
+		foreach (SvgBird.Object o in pl) {
+			
+			if (o is PathObject) {
+				Path p = ((PathObject) o).get_path ();
+
+				if (p.stroke > 0) {
+					s.append (@"<path ");
+					s.append (@"style=\"");
+					s.append (@"fill:none;");
+					s.append (@"stroke:#000000;");
+					s.append (@"stroke-width:$(p.stroke)px;");
+					
+					if (p.line_cap == LineCap.ROUND) {
+						s.append (@"stroke-linecap:round;");
+					} else if (p.line_cap == LineCap.SQUARE) {
+						s.append (@"stroke-linecap:square;");
+					}
+					
+					s.append (@"\" ");
+					
+					s.append (@"d=\"$(Svg.to_svg_path (p, glyph))\" id=\"path_$(name)_$(id)\" />\n");
+					id++;
 				}
-				
-				s.append (@"\" ");
-				
-				s.append (@"d=\"$(Svg.to_svg_path (p, glyph))\" id=\"path_$(name)_$(id)\" />\n");
-				id++;
+			} else {
+				warning ("Copy and paste for other objects not implemented.");
 			}
 		}
 		
 		if (only_selected_paths) {
-			foreach (Path p in glyph.active_paths) {
-				if (p.stroke == 0) {
-					glyph_svg += Svg.to_svg_path (p, glyph);
+			foreach (SvgBird.Object p in glyph.active_paths) {
+				if (p is PathObject) {
+					Path path = ((PathObject) p).get_path ();
+					if (path.stroke == 0) {
+						glyph_svg += Svg.to_svg_path (path, glyph);
+					}
+				} else {
+					warning ("Not implemented");
 				}
 			}	
 		} else {

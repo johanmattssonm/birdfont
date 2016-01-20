@@ -90,7 +90,6 @@ public class BirdFont {
 
 	public static Font current_font;
 	public static GlyphCollection current_glyph_collection;
-
 	public static Drawing? drawing = null;
 
 	public static string? settings_subdirectory = null;
@@ -166,6 +165,8 @@ public class BirdFont {
 			Process.exit (0);
 		}
 #endif
+		
+		CanvasSettings.init ();
 		Preferences.load ();
 
 		// always load default theme when names in theme does change

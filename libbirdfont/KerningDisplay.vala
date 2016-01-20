@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012 2014 2015 Johan Mattsson
+	Copyright (C) 2012 2014 2015 2016 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -46,6 +46,8 @@ public class KerningDisplay : FontDisplay {
 	public bool adjust_side_bearings = false;
 	public bool right_side_bearing = true;
 	
+	TextArea description; 
+	
 	public KerningDisplay () {
 		GlyphSequence w = new GlyphSequence ();
 		rows = new Gee.ArrayList <GlyphSequence> ();
@@ -54,6 +56,8 @@ public class KerningDisplay : FontDisplay {
 		redo_items = new Gee.ArrayList <UndoItem> ();
 		w.set_otf_tags (KerningTools.get_otf_tags ());
 		first_row.add (w);
+		
+		description = Help.create_help_text (t_("Kerning is the process of adjusting the space between two letters. You can cahnge the space between one letter and all other letters in the spacing tab."));
 	}
 
 	public GlyphSequence get_first_row () {
@@ -189,7 +193,7 @@ public class KerningDisplay : FontDisplay {
 					cr.save ();
 					glyph.add_help_lines ();
 					cr.translate (kern + x - glyph.get_lsb () - Glyph.xc (), glyph.get_baseline () + y  - Glyph.yc ());
-					glyph.draw_paths (cr);
+					glyph.draw_layers (cr);
 					cr.restore ();
 					
 					w = glyph.get_width ();
@@ -487,7 +491,8 @@ public class KerningDisplay : FontDisplay {
 	}
 	
 	public override void selected_canvas () {
-		KeyBindings.set_require_modifier (true);		
+		KeyBindings.set_require_modifier (true);
+		MainWindow.get_help ().set_help_text (description);
 	}
 	
 	public void add_kerning_class (int index) {

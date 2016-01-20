@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-class SvgFontFormatWriter : Object  {
+class SvgFontFormatWriter : GLib.Object  {
 
 	DataOutputStream os;
 

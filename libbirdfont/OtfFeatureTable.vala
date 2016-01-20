@@ -45,7 +45,7 @@ public class OtfFeatureTable : Table {
 
 	public override void selected_row (Row row, int column, bool delete_button) {
 		int row_index = row.get_index ();
-		Object o;
+		GLib.Object o;
 		String s;
 		AlternateItem a;
 		

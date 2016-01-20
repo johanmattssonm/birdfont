@@ -103,8 +103,8 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Stroke Color", 141 / 255.0, 141 / 255.0, 141 / 255.0, 1);
 		Theme.set_default_color ("Handle Color", 141 / 255.0, 141 / 255.0, 141 / 255.0, 1);
 		Theme.set_default_color ("Fill Color", 0.5, 0.5, 0.5, 1);
-		Theme.set_default_color ("Selected Objects", 35 / 255.0, 131 / 255.0, 194 / 255.0, 1);
-		
+		Theme.set_default_color ("Objects", 0, 0, 0, 1);
+
 		Theme.set_default_color ("Background 1", 1, 1, 1, 1);
 		Theme.set_default_color ("Dialog Background", 238 / 255.0, 239 / 255.0, 243 / 255.0, 1);
 		Theme.set_default_color ("Menu Background", 222 / 255.0, 221 / 255.0, 226 / 255.0, 1);
@@ -210,7 +210,7 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Stroke Color", 141 / 255.0, 141 / 255.0, 141 / 255.0, 1);
 		Theme.set_default_color ("Handle Color", 141 / 255.0, 141 / 255.0, 141 / 255.0, 1);
 		Theme.set_default_color ("Fill Color", 0.5, 0.5, 0.5, 1);
-		Theme.set_default_color ("Selected Objects", 35 / 255.0, 131 / 255.0, 194 / 255.0, 1);
+		Theme.set_default_color ("Objects", 0, 0, 0, 1);
 		
 		Theme.set_default_color ("Background 1", 1, 1, 1, 1);
 		Theme.set_default_color ("Dialog Background", 55 / 255.0, 56 / 255.0, 62 / 255.0, 1);
@@ -315,7 +315,7 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Stroke Color", 141 / 255.0, 141 / 255.0, 141 / 255.0, 1);
 		Theme.set_default_color ("Handle Color", 141 / 255.0, 141 / 255.0, 141 / 255.0, 1);
 		Theme.set_default_color ("Fill Color", 0, 0, 0, 1);
-		Theme.set_default_color ("Selected Objects", 0, 0, 0, 1);
+		Theme.set_default_color ("Objects", 0, 0, 0, 1);
 		
 		Theme.set_default_color ("Background 1", 1, 1, 1, 1);
 		Theme.set_default_color ("Dialog Background", 1, 1, 1, 1);
@@ -424,6 +424,7 @@ public class Theme : GLib.Object {
 			t_("Handle Color");
 			t_("Fill Color");
 			t_("Selected Objects");
+			t_("Objects");
 			
 			t_("Background 1");
 			t_("Dialog Background");

@@ -13,6 +13,7 @@
 */
 
 using Cairo;
+using SvgBird;
 
 namespace BirdFont {
 
@@ -102,6 +103,13 @@ public class OverView : FontDisplay {
 					canvas.set_current_glyph_collection (glyph_collection);
 					set_initial_zoom ();
 					PenTool.update_orientation ();
+				}
+				
+				if (glyph_collection.get_name () == ".notdef") {
+					Font font = BirdFont.get_current_font ();
+					if (!font.has_glyph (".notdef")) {
+						font.add_glyph_collection (glyph_collection);
+					}
 				}
 			});
 
@@ -519,7 +527,7 @@ public class OverView : FontDisplay {
 	
 	public void process_item_list_update () {
 		string character_string;
-		Font f = BirdFont.get_current_font ();
+		Font font = BirdFont.get_current_font ();
 		GlyphCollection? glyphs = null;
 		uint32 index;
 		OverViewItem item;
@@ -543,10 +551,11 @@ public class OverView : FontDisplay {
 		y = OverViewItem.margin;
 		
 		if (all_available) {
-			uint font_length = f.length ();
+			uint font_length = font.length ();
+			int i;
 			
-			for (int i = 0; i < item_list_length && index < font_length; i++) {
-				glyphs = f.get_glyph_collection_index ((uint32) index);
+			for (i = 0; i < item_list_length && index < font_length; i++) {
+				glyphs = font.get_glyph_collection_index ((uint32) index);
 				return_if_fail (glyphs != null);
 				
 				glyph = ((!) glyphs).get_current ();
@@ -557,15 +566,19 @@ public class OverView : FontDisplay {
 				item.set_character (character);
 				item.set_glyphs (glyphs);
 				item.generate_graphics ();
-				item.x = x;
-				item.y = y;
-				
-				if (glyphs != null) {
-					item.selected = (selected_items.index_of ((!) glyphs) != -1);
-				}
+				item.selected = (selected_items.index_of ((!) glyphs) != -1);
 				
 				visible_items.add (item);
 				index++;
+			}
+			
+			if (i < item_list_length && !font.has_glyph (".notdef")) {
+				item = new OverViewItem ();
+				item.set_glyphs (font.get_not_def_character ());
+				item.generate_graphics (false);
+				item.version_menu = null;
+				item.selected = (selected_items.index_of ((!) glyphs) != -1);
+				visible_items.add (item);
 			}
 		} else {
 			uint32 glyph_range_size = glyph_range.get_length ();
@@ -593,7 +606,7 @@ public class OverView : FontDisplay {
 			visible_size = visible_items.size;
 			for (int i = 0; i < visible_size; i++) {
 				item = visible_items.get (i);
-				glyphs = f.get_glyph_collection_by_name ((!) item.character.to_string ());
+				glyphs = font.get_glyph_collection_by_name ((!) item.character.to_string ());
 				item.set_glyphs (glyphs);
 				
 				if (glyphs != null) {
@@ -669,9 +682,8 @@ public class OverView : FontDisplay {
 		
 	void draw_empty_canvas (WidgetAllocation allocation, Context cr) {
 		Text t;
-		
 		cr.save ();
-		t = new Text (t_("No glyphs in this view."), 24);
+		t = new Text ("No glyphs in this view.", 24);
 		Theme.text_color (t, "Text Foreground");
 		t.widget_x = 40;
 		t.widget_y = 30;
@@ -1315,7 +1327,8 @@ public class OverView : FontDisplay {
 				if (is_null(i.version_menu)) {
 					update = true;
 				} else {
-					update = !i.version_menu.menu_visible;
+					VersionList v = (!) i.version_menu;
+					update = !v.menu_visible;
 				}
 			}
 			index++;
