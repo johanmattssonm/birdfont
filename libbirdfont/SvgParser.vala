@@ -1940,6 +1940,8 @@ public class SvgParser {
 
 				if (b[i -1].type == 'L' || first_point) {
 					// ep.get_left_handle ().set_point_type (PointType.LINE_CUBIC);
+				} else {
+					ep.get_left_handle ().set_point_type (PointType.CUBIC);
 				}
 				
 				if (b[i + 1].type == 'C' || b[i + 1].type == 'S') {
@@ -1985,9 +1987,9 @@ public class SvgParser {
 		}
 		
 		foreach (EditPoint e in smooth_points) {
-			e.set_point_type (PointType.LINE_DOUBLE_CURVE);
-			e.get_right_handle ().set_point_type (PointType.LINE_DOUBLE_CURVE);
-			e.get_left_handle ().set_point_type (PointType.LINE_DOUBLE_CURVE);
+			e.set_point_type (PointType.LINE_CUBIC);
+			e.get_right_handle ().set_point_type (PointType.LINE_CUBIC);
+			e.get_left_handle ().set_point_type (PointType.LINE_CUBIC);
 		}
 
 		foreach (EditPoint e in smooth_points) {
@@ -1997,6 +1999,8 @@ public class SvgParser {
 		for (int i = 0; i < 3; i++) {
 			foreach (EditPoint e in smooth_points) {
 				e.set_tie_handle (true);
+				e.get_right_handle ().set_point_type (PointType.CUBIC);
+				e.get_left_handle ().set_point_type (PointType.CUBIC);
 				e.process_tied_handle ();
 			}
 		}
