@@ -1861,8 +1861,10 @@ public class SvgParser {
 		first_left_x = 0;
 		first_left_y = 0;
 
-		// FIXME: array boundaries
-		for (int i = 0; i < num_b; i++) {			
+		ep = new EditPoint ();
+		
+		for (int i = 0; i < num_b; i++) {
+			warning (@"$(b[i])\n");
 			if (b[i].type == '\0') {
 				warning ("Parser error.");
 				return path_list;
@@ -1900,8 +1902,7 @@ public class SvgParser {
 				
 				path = new Path ();
 				first_point = true;				
-			} else if (b[i].type == 'M') {
-			} else if (b[i].type == 'L') {
+			} else if (b[i].type == 'L' || b[i].type == 'M') {
 
 				if (first_point) {
 					first_left_x = b[i].x0;
@@ -1909,14 +1910,11 @@ public class SvgParser {
 				}
 				
 				ep = path.add (b[i].x0, b[i].y0);
-				ep.set_point_type (PointType.LINE_CUBIC); // TODO: quadratic
+				ep.set_point_type (PointType.CUBIC); // TODO: quadratic
 				ep.get_right_handle ().set_point_type (PointType.LINE_CUBIC);
 
-				if (b[i -1].type == 'L' || first_point) {
-					// ep.get_left_handle ().set_point_type (PointType.LINE_CUBIC);
-				} else {
-					ep.get_left_handle ().set_point_type (PointType.CUBIC);
-				}
+				ep.get_left_handle ().set_point_type (PointType.CUBIC);
+				ep.get_left_handle ().move_to_coordinate (b[i].x0 - 0.00001, b[i].y0 - 0.00001);
 				
 				if (b[i + 1].type == 'C' || b[i + 1].type == 'S') {
 					return_val_if_fail (i + 1 < num_b, path_list);
@@ -1934,25 +1932,25 @@ public class SvgParser {
 					first_left_x = b[i].x0;
 					first_left_y = b[i].y0;
 				}
-				
+
 				ep = path.add (b[i].x2, b[i].y2);
 				ep.set_point_type (PointType.CUBIC);
 
 				ep.get_right_handle ().set_point_type (PointType.CUBIC);
 				ep.get_left_handle ().set_point_type (PointType.CUBIC);
-				
+
 				ep.get_left_handle ().move_to_coordinate (b[i].x1, b[i].y1);
 
 				if (b[i].type == 'S') {
 					smooth_points.add (ep);
 				}		
 
-				if (b[i + 1].type != 'z') {
+				if (b[i + 1].type != 'z' && i != num_b - 1) {
 					ep.get_right_handle ().move_to_coordinate (b[i + 1].x0, b[i + 1].y0);
 				} else {
 					ep.get_right_handle ().move_to_coordinate (first_left_x, first_left_y);
 				}
-								
+				
 				first_point = false;
 			} else {
 				warning ("Unknown control point type.");
