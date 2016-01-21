@@ -1864,7 +1864,6 @@ public class SvgParser {
 		ep = new EditPoint ();
 		
 		for (int i = 0; i < num_b; i++) {
-			warning (@"$(b[i])\n");
 			if (b[i].type == '\0') {
 				warning ("Parser error.");
 				return path_list;
