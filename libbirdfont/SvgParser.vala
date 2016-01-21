@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012 2013 2014 2015 Johan Mattsson
+	Copyright (C) 2012 - 2016 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -1357,7 +1357,6 @@ public class SvgParser {
 		ep = new EditPoint ();
 		
 		for (int i = 0; i < num_b; i++) {
-			warning (@"$(b[i])\n");
 			if (b[i].type == '\0') {
 				warning ("Parser error.");
 				return path_list;

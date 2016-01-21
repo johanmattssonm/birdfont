@@ -2252,10 +2252,11 @@ public class Path : GLib.Object {
 		if (points.size == 0) {
 			return;
 		}
-
+		
 		for (int i = 0; i < points.size + 1; i++) {
 			EditPoint ep = points.get (i % points.size);
-			if (ep.get_right_handle ().length < t3
+			if ((ep.flags & EditPoint.STROKE_OFFSET) > 0
+				&& ep.get_right_handle ().length < t3
 				&& ep.get_left_handle ().length < t3
 				&& !is_endpoint (ep)
 				&& (ep.flags & EditPoint.CURVE_KEEP) == 0
