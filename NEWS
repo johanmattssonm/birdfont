@@ -1,3 +1,10 @@
+birdfont (2.15.6) stable;
+
+  * Editable .notdef character
+  * Bug fixes in the SVG parser
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com  Fri Jan 22 13:10:07 CET 2016
+
 birdfont (2.15.0) stable;
 
   * Speed optimizations
