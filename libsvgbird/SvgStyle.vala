@@ -228,8 +228,10 @@ public class SvgStyle : GLib.Object {
 		if (d != null) {
 			Defs defs = (!) d;
 
+			print (s.style.get ("fill") + "\n");
+			
 			s.stroke_gradient = defs.get_gradient_for_url (s.style.get ("stroke"));
-			s.fill_gradient = defs.get_gradient_for_url (s.style.get ("fill"));
+			s.fill_gradient = defs.get_gradient_for_url (s.style.get ("fill"));			
 		}
 		
 		if (s.fill != null) {

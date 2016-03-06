@@ -286,22 +286,22 @@ public class MoveTool : Tool {
 			if (o is PathObject) {
 				Path p = ((PathObject) o).get_path ();
 				p.update_region_boundaries ();
-				
-				if (px > p.xmin) {
-					px = p.xmin;
-				} 
+			}
+			
+			if (px > o.xmin) {
+				px = o.xmin;
+			} 
 
-				if (py > p.ymin) {
-					py = p.ymin;
-				}
+			if (py > o.ymin) {
+				py = o.ymin;
+			}
 
-				if (px2 < p.xmax) {
-					px2 = p.xmax;
-				}
-				
-				if (py2 < p.ymax) {
-					py2 = p.ymax;
-				}
+			if (px2 < o.xmax) {
+				px2 = o.xmax;
+			}
+			
+			if (py2 < o.ymax) {
+				py2 = o.ymax;
 			}
 		}
 		

@@ -93,10 +93,12 @@ public class Defs {
 			tag_id = id;
 		}
 		
+		tag_id = tag_id.down ();
+		
 		foreach (Gradient gradient in gradients) {
-			if (gradient.id == tag_id) {
+			if (gradient.id.down () == tag_id) {
 				return gradient;
-			}
+			}			
 		}
 		
 		return null;		

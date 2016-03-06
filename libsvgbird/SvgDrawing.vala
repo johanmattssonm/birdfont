@@ -35,11 +35,47 @@ public class SvgDrawing : Object {
 			svg_width = value;
 		}
 	}
+	
 	public double svg_width = 0;
 	
-	
 	public double height = 0;
+
+	public override double xmin {
+		get {
+			return x;
+		}
+
+		set {
+		}
+	}
+
+	public override double xmax {
+		get {
+			return x + width;
+		}
 		
+		set {
+		}
+	}
+
+	public override double ymin {
+		get {
+			return y;
+		}
+		
+		set {
+		}
+	}
+
+	public override double ymax {
+		get {
+			return y + height;
+		}
+		
+		set {
+		}
+	}
+
 	public override void update_region_boundaries () {
 	}
 	
