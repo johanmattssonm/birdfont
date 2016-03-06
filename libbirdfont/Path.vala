@@ -781,10 +781,6 @@ public class Path : GLib.Object {
 		return new_path;
 	}
 	
-	public bool is_over_coordinate (double x, double y) {
-		return is_over_coordinate_var (x, y);
-	}
-	
 	public static double point_distance (EditPoint p1, EditPoint p2) {
 		return distance (p1.x, p2.x, p1.y, p2.y);
 	}
@@ -839,9 +835,11 @@ public class Path : GLib.Object {
 	}
 	
 	/** Variable precision */
-	public bool is_over_coordinate_var (double x, double y) {
+	public bool is_over_coordinate (double x, double y) {
 		int insides = 0;
 		Path path;
+		
+		print (@"is_over_coordinate_var  stroke: $stroke\n");
 		
 		if (stroke > 0) {
 			foreach (Path p in get_stroke_fast ().paths) {
@@ -867,11 +865,6 @@ public class Path : GLib.Object {
 	}
 	
 	public bool is_over_boundry (double x, double y) {
-		if (unlikely (ymin == double.MAX || ymin == 10000)) {
-			warning ("bounding box is not calculated, run update_region_boundaries first.");
-			update_region_boundaries ();
-		}
-
 		return (ymin <= y <= ymax) && (xmin <= x <= xmax);
 	}
 

@@ -1653,7 +1653,7 @@ public class Glyph : FontDisplay {
 			}
 
 			if (has_path) {
-				cr.set_fill_rule (FillRule.EVEN_ODD);
+				cr.set_fill_rule (FillRule.WINDING);
 				Theme.color (cr, "Objects");
 				cr.fill ();
 			}
@@ -1664,6 +1664,14 @@ public class Glyph : FontDisplay {
 				if (object is PathObject) {
 					PathObject object_path = (PathObject) object;
 					Glyph g = MainWindow.get_current_glyph ();
+
+					if (object_path.path.stroke > 0) {
+						cr.set_line_width (CanvasSettings.stroke_width / g.view_zoom);
+						PathObject.draw_path_list (object_path.path.get_stroke_fast (), cr);
+						Theme.color (cr, "Objects");
+						cr.fill ();
+					}
+
 					cr.set_line_width (CanvasSettings.stroke_width / g.view_zoom);
 					object_path.path.draw_path (cr);
 					object_path.path.draw_control_points (cr);

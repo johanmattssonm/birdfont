@@ -31,7 +31,6 @@ public class PathObject : SvgBird.Object {
 		}
 	}
 
-
 	// FIXME: flip y axis
 	public override double xmin {
 		get {
@@ -106,7 +105,11 @@ public class PathObject : SvgBird.Object {
 	}
 	
 	public void draw_path (Context cr) {
-		path.draw_path (cr);
+		if (path.stroke > 0) {
+			draw_path_list (path.get_completed_stroke (), cr);
+		} else {
+			path.draw_path (cr);
+		}
 	}
 
 	public static void draw_path_list (PathList pl, Context cr) {
