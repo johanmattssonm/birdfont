@@ -255,13 +255,15 @@ public class ResizeTool : Tool {
 		
 		if (glyph.active_paths.size > 0) {
 			last_path = glyph.active_paths.get (glyph.active_paths.size - 1);
-			rotation = last_path.rotation;
 			
 			if (rotation > PI) {
 				rotation -= 2 * PI;
 			}
 			
-			last_rotate = rotation;
+			if (last_rotate > PI) {
+				last_rotate -= 2 * PI;
+			}
+			
 			signal_objects_rotated ();
 		}
 	}
@@ -315,8 +317,8 @@ public class ResizeTool : Tool {
 		cr.rectangle (cx - 2.5, cy - 2.5, 5, 5);
 		cr.fill ();
 
-		hx = cos (rotation) * get_rotated_handle_length ();
-		hy = sin (rotation) * get_rotated_handle_length ();
+		hx = cos (last_rotate) * get_rotated_handle_length ();
+		hy = sin (last_rotate) * get_rotated_handle_length ();
 	
 		cr.set_line_width (1);
 		cr.move_to (cx, cy);
