@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012 2013 2014 2015 Johan Mattsson
+	Copyright (C) 2012 - 2016 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as
@@ -1614,6 +1614,10 @@ public class Glyph : FontDisplay {
 			|| (selected_tool is PointTool)
 			|| (selected_tool is TrackTool)
 			|| (selected_tool is BezierTool);
+		
+		if (!is_open ()) {
+			draw_control_points = false;
+		}
 
 		bool has_path = false;
 		
