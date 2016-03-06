@@ -403,7 +403,7 @@ public class ResizeTool : Tool {
 		}
 	}
 
-	void update_selection_box () {
+	public static void update_selection_box () {
 		MoveTool.update_boundaries_for_selection ();
 		MoveTool.get_selection_box_boundaries (out selection_box_center_x,
 				out selection_box_center_y, out selection_box_width,

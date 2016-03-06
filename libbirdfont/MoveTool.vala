@@ -484,6 +484,8 @@ public class MoveTool : Tool {
 		
 		update_selection_boundaries ();
 		objects_moved ();
+		
+		ResizeTool.update_selection_box ();
 	}
 
 	static void draw_selection_box (Context cr) {
