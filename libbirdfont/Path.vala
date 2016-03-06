@@ -267,7 +267,9 @@ public class Path : GLib.Object {
 		}
 
 		// fill path
-		cr.close_path ();
+		if (!is_open ()) {
+			cr.close_path ();
+		}
 		
 		if (this.color != null) {
 			c = (!) this.color;
