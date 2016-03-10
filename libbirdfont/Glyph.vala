@@ -1386,7 +1386,7 @@ public class Glyph : FontDisplay {
 		}
 
 		warning (@"No line with label $name found");
-		return new Line ("Err");
+		return new Line ("Error");
 	}
 
 	public override void zoom_in () {
@@ -1591,7 +1591,11 @@ public class Glyph : FontDisplay {
 	public void draw_layers (Context cr) {
 		foreach (SvgBird.Object object in layers.objects) {
 			if (object is Layer) {
-				draw_layer (cr, (Layer) object);
+				Layer layer = (Layer) object;
+				
+				if (layer.visible) {
+					draw_layer (cr, layer);
+				}
 			}
 		}
 		
@@ -1602,7 +1606,10 @@ public class Glyph : FontDisplay {
 		foreach (SvgBird.Object object in sublayers.objects) {
 			if (object is EmbeddedSvg) {
 				EmbeddedSvg svg = (EmbeddedSvg) object;
-				svg.draw_embedded_svg (cr);
+				
+				if (svg.visible) {
+					svg.draw_embedded_svg (cr);
+				}
 			}
 		}
 	}

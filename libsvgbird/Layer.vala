@@ -131,7 +131,6 @@ public class Layer : Object {
 		}
 		
 		stdout.printf (@" $(transforms) $(style)");
-		
 		stdout.printf (@"\n");
 
 		foreach (Object object in objects) {
