@@ -5,9 +5,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-18 20:16+0100\n"
-"PO-Revision-Date: 2015-11-03 22:37+0000\n"
-"Last-Translator: fri <pavelfric@yahoo.com>\n"
+"POT-Creation-Date: 2016-05-14 19:44+0200\n"
+"PO-Revision-Date: 2016-04-14 09:55+0000\n"
+"Last-Translator: Anonymous Pootle User\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1446590271.000000\n"
+"X-POOTLE-MTIME: 1460627703.000000\n"
 
 #: libbirdfont/Argument.vala:277
 msgid "Usage"
@@ -31,7 +31,7 @@ msgstr "SOUBOR"
 #: libbirdfont/Argument.vala:279 libbirdfont/ExportUtils.vala:19
 #: birdfont-autotrace/AutoTrace.vala:68
 msgid "OPTION"
-msgstr "PŘEPÍNAČ"
+msgstr "VOLBA"
 
 #: libbirdfont/Argument.vala:281
 msgid "enable Android customizations"
@@ -47,7 +47,7 @@ msgstr "Ukončit, pokud zkouška selže"
 
 #: libbirdfont/Argument.vala:284
 msgid "treat warnings as fatal"
-msgstr "Upozornění budou považována za chyby"
+msgstr "Varování, úprava je osudná "
 
 #: libbirdfont/Argument.vala:285
 msgid "show this message"
@@ -85,11 +85,16 @@ msgstr "Vybrat pozadí"
 msgid "Background Image"
 msgstr "Obrázek pozadí"
 
-#: libbirdfont/BackgroundTool.vala:44
+#: libbirdfont/BackgroundTool.vala:163
 msgid "Move, resize and rotate background image"
 msgstr "Posunout, změnit velikost a otočit obrázek pozadí"
 
-#: libbirdfont/BackgroundTool.vala:246
+#: libbirdfont/BackgroundTool.vala:166 libbirdfont/BezierTool.vala:103
+#: libbirdfont/PointTool.vala:88
+msgid "on axis"
+msgstr "na ose"
+
+#: libbirdfont/BackgroundTool.vala:294
 msgid "Select background image"
 msgstr "Vybrat obrázek pozadí"
 
@@ -106,7 +111,7 @@ msgstr "Soubory"
 msgid "Parts"
 msgstr "Části"
 
-#: libbirdfont/BackgroundTools.vala:53 libbirdfont/Glyph.vala:2364
+#: libbirdfont/BackgroundTools.vala:53 libbirdfont/Glyph.vala:2367
 #: libbirdfont/LigatureList.vala:106 libbirdfont/OtfFeatureTable.vala:181
 msgid "Add"
 msgstr "Přidat"
@@ -132,10 +137,6 @@ msgstr "čára"
 msgid "corner"
 msgstr "Roh"
 
-#: libbirdfont/BezierTool.vala:103
-msgid "on axis"
-msgstr "na ose"
-
 #: libbirdfont/CircleTool.vala:36
 msgid "Circle"
 msgstr "Kruh"
@@ -150,7 +151,7 @@ msgstr "Výchozí jazyk"
 
 #: libbirdfont/DefaultCharactersSet.vala:26
 msgid "Private Use Area"
-msgstr "Rozsah pro vlasní znaky"
+msgstr "Uživatelská oblast"
 
 #: libbirdfont/DefaultCharactersSet.vala:28
 msgid "Chinese"
@@ -289,7 +290,7 @@ msgstr "Nástroje pro práci s pozadím"
 
 #: libbirdfont/DrawingTools.vala:113
 msgid "Control Points"
-msgstr "Ovládací body"
+msgstr "Kontrolní body"
 
 #: libbirdfont/DrawingTools.vala:114
 msgid "Object Tools"
@@ -357,7 +358,7 @@ msgstr "Vytvářet kubické Bézierovy křivky"
 
 #: libbirdfont/DrawingTools.vala:259
 msgid "Quadratic path with two line handles"
-msgstr "Kvadratická cesta se dvěma úchopy"
+msgstr "Kvadratická cesta s dvouřádkovými identifikátory"
 
 #: libbirdfont/DrawingTools.vala:268
 msgid "Convert selected points"
@@ -401,7 +402,7 @@ msgstr "Obrátit cestu"
 
 #: libbirdfont/DrawingTools.vala:565
 msgid "Scale object to font top/baseline"
-msgstr ""
+msgstr "Změnit velikost předmětu k horní/základní čáře"
 
 #: libbirdfont/DrawingTools.vala:574
 msgid "Close path"
@@ -554,7 +555,7 @@ msgstr "Formáty"
 
 #: libbirdfont/ExportSettings.vala:139
 msgid "Export"
-msgstr "Vyvést"
+msgstr "Exportovat"
 
 #: libbirdfont/ExportTool.vala:209 libbirdfont/Menu.vala:64
 #: libbirdfont/MenuTab.vala:354 libbirdfont/SaveCallback.vala:68
@@ -622,39 +623,39 @@ msgstr "Nastavení"
 msgid "Themes"
 msgstr "Motivy"
 
-#: libbirdfont/Glyph.vala:512
+#: libbirdfont/Glyph.vala:515
 msgid "top margin"
 msgstr "Horní okraj"
 
-#: libbirdfont/Glyph.vala:519
+#: libbirdfont/Glyph.vala:522
 msgid "top"
 msgstr "nahoře"
 
-#: libbirdfont/Glyph.vala:526
+#: libbirdfont/Glyph.vala:529
 msgid "x-height"
 msgstr "výška x"
 
-#: libbirdfont/Glyph.vala:535
+#: libbirdfont/Glyph.vala:538
 msgid "baseline"
 msgstr "účaří"
 
-#: libbirdfont/Glyph.vala:542
+#: libbirdfont/Glyph.vala:545
 msgid "bottom"
 msgstr "dole"
 
-#: libbirdfont/Glyph.vala:548
+#: libbirdfont/Glyph.vala:551
 msgid "bottom margin"
 msgstr "dolní okraj"
 
-#: libbirdfont/Glyph.vala:554
+#: libbirdfont/Glyph.vala:557
 msgid "left"
 msgstr "vlevo"
 
-#: libbirdfont/Glyph.vala:563
+#: libbirdfont/Glyph.vala:566
 msgid "right"
 msgstr "vpravo"
 
-#: libbirdfont/Glyph.vala:2364
+#: libbirdfont/Glyph.vala:2367
 msgid "Guide"
 msgstr "Vodítko"
 
@@ -1221,7 +1222,7 @@ msgstr "Všechny znaky musí mít jedinečné názvy."
 
 #: libbirdfont/OtfLabel.vala:47
 msgid "Stylistic Alternate"
-msgstr ""
+msgstr "Stylistická alternativa"
 
 #: libbirdfont/OtfLabel.vala:49
 msgid "Small Caps"
@@ -1239,11 +1240,11 @@ msgstr "Ozdobná písmena"
 msgid "Filter"
 msgstr "Filtr"
 
-#: libbirdfont/OverView.vala:671
+#: libbirdfont/OverView.vala:675
 msgid "No glyphs in this view."
 msgstr "Žádné znaky v tomto zobrazení."
 
-#: libbirdfont/OverView.vala:1478
+#: libbirdfont/OverView.vala:1486
 msgid "See also:"
 msgstr "Další podrobnosti:"
 
@@ -1297,28 +1298,28 @@ msgid "Set curve orientation"
 msgstr "Nastavit natočení křivky"
 
 #: libbirdfont/OverviewTools.vala:160
-#, fuzzy
 msgid "Master Size"
-msgstr "Velikost mřížky"
+msgstr "Hlavní velikost"
 
 #: libbirdfont/OverviewTools.vala:175
-#, fuzzy
 msgid "Create new master font"
-msgstr "Criar uma nova fonte"
+msgstr "Vytvořit nové hlavní písmo"
 
 #: libbirdfont/OverwriteBfFile.vala:25
 msgid "This file already exists. Do you want to replace it?"
 msgstr ""
+"Tento soubor již existuje.\n"
+"Přejete si jej nahradit?"
 
 #: libbirdfont/OverwriteBfFile.vala:27
 msgid "Replace"
-msgstr ""
+msgstr "Nahradit"
 
 #: libbirdfont/PenTool.vala:82
 msgid "Add new points"
 msgstr "Přidat nové body"
 
-#: libbirdfont/PointTool.vala:24
+#: libbirdfont/PointTool.vala:84
 msgid "Move control points"
 msgstr "Posunout ovládací body"
 
@@ -1753,6 +1754,9 @@ msgstr "Neznámý formát souboru."
 #: birdfont-autotrace/AutoTrace.vala:114
 msgid "Writing"
 msgstr "Zapisuje se"
+
+#~ msgid "color"
+#~ msgstr "Barva"
 
 #~ msgid "Full name (name and style)"
 #~ msgstr "Celý název (název a styl)"
@@ -2199,6 +2203,9 @@ msgstr "Zapisuje se"
 
 #~ msgid "Update name & description"
 #~ msgstr "Atualizar nome e descrição"
+
+#~ msgid "Create a new font"
+#~ msgstr "Criar uma nova fonte"
 
 #~ msgid "Add name and description to this font."
 #~ msgstr "Adicionar nome e descrição para esta fonte."
