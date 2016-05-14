@@ -181,8 +181,6 @@ public class Font : GLib.Object {
 		kerning_strings = new KerningStrings ();
 		
 		alternates = new AlternateSets ();
-		
-		add_default_characters ();
 	}
 
 	~Font () {
