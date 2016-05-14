@@ -45,7 +45,7 @@ public class ExportTool : GLib.Object {
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
 <svg version="1.0" 
 	id="glyph_""" + name + """" 
-	mlns="http://www.w3.org/2000/svg" 
+	xmlns="http://www.w3.org/2000/svg" 
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	x="0px"
 	y="0px"
