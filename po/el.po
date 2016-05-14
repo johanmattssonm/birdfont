@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-15 18:17+0100\n"
-"PO-Revision-Date: 2014-08-28 18:37+0000\n"
+"POT-Creation-Date: 2016-05-14 20:03+0200\n"
+"PO-Revision-Date: 2016-02-17 09:38+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: el\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1409251048.000000\n"
+"X-POOTLE-MTIME: 1455701913.000000\n"
 
 #: libbirdfont/Argument.vala:277
 msgid "Usage"
@@ -61,8 +61,9 @@ msgid "enable Machintosh customizations"
 msgstr "ενεργοποίηση προσαρμογών Macintosh"
 
 #: libbirdfont/Argument.vala:288
+#, fuzzy
 msgid "enable Windows customizations"
-msgstr ""
+msgstr "ενεργοποίηση παραμετροποιήσεων για Android"
 
 #: libbirdfont/Argument.vala:289
 msgid "don't translate"
@@ -84,11 +85,16 @@ msgstr ""
 msgid "Background Image"
 msgstr ""
 
-#: libbirdfont/BackgroundTool.vala:44
+#: libbirdfont/BackgroundTool.vala:163
 msgid "Move, resize and rotate background image"
 msgstr "Μετακίνηση, αλλαγή μεγέθους και περιστροφή εικόνας φόντου"
 
-#: libbirdfont/BackgroundTool.vala:246
+#: libbirdfont/BackgroundTool.vala:166 libbirdfont/BezierTool.vala:103
+#: libbirdfont/PointTool.vala:88
+msgid "on axis"
+msgstr ""
+
+#: libbirdfont/BackgroundTool.vala:294
 msgid "Select background image"
 msgstr ""
 
@@ -105,7 +111,7 @@ msgstr "Αρχεία"
 msgid "Parts"
 msgstr ""
 
-#: libbirdfont/BackgroundTools.vala:53 libbirdfont/Glyph.vala:2281
+#: libbirdfont/BackgroundTools.vala:53 libbirdfont/Glyph.vala:2344
 #: libbirdfont/LigatureList.vala:106 libbirdfont/OtfFeatureTable.vala:181
 msgid "Add"
 msgstr ""
@@ -131,10 +137,6 @@ msgstr ""
 msgid "corner"
 msgstr ""
 
-#: libbirdfont/BezierTool.vala:103
-msgid "on axis"
-msgstr ""
-
 #: libbirdfont/CircleTool.vala:36
 msgid "Circle"
 msgstr "Κύκλος"
@@ -145,12 +147,14 @@ msgid "Crop background image"
 msgstr "Περικοπή εικόνας φόντου"
 
 #: libbirdfont/DefaultCharactersSet.vala:25
+#, fuzzy
 msgid "Default Language"
-msgstr ""
+msgstr "Προκαθορισμένη γλώσσα"
 
 #: libbirdfont/DefaultCharactersSet.vala:26
+#, fuzzy
 msgid "Private Use Area"
-msgstr ""
+msgstr "Τομέας ιδιωτικής χρήσης"
 
 #: libbirdfont/DefaultCharactersSet.vala:28
 msgid "Chinese"
@@ -231,12 +235,14 @@ msgid "Weight"
 msgstr "Βάρος"
 
 #: libbirdfont/DescriptionDisplay.vala:129 libbirdfont/MenuTab.vala:115
+#, fuzzy
 msgid "Full Name (Name and Style)"
-msgstr ""
+msgstr "Πλήρης ονομασία (όνομα και στυλ)"
 
 #: libbirdfont/DescriptionDisplay.vala:140 libbirdfont/MenuTab.vala:120
+#, fuzzy
 msgid "Unique Identifier"
-msgstr ""
+msgstr "Μοναδικό αναγνωριστικό"
 
 #: libbirdfont/DescriptionDisplay.vala:150 libbirdfont/ImportUtils.vala:161
 #: libbirdfont/Menu.vala:506 libbirdfont/Menu.vala:508
@@ -314,7 +320,7 @@ msgstr ""
 
 #: libbirdfont/DrawingTools.vala:130 libbirdfont/OverviewTools.vala:40
 msgid "Zoom"
-msgstr ""
+msgstr "Εστίαση"
 
 #: libbirdfont/DrawingTools.vala:131
 msgid "Guidelines & Grid"
@@ -418,8 +424,9 @@ msgid "Close path"
 msgstr ""
 
 #: libbirdfont/DrawingTools.vala:602
+#, fuzzy
 msgid "Move to path to the bottom of the layer"
-msgstr ""
+msgstr "Μετακίνηση μονοπατιού στο κατώτατο στρώμα [επίπεδο]"
 
 #: libbirdfont/DrawingTools.vala:616
 msgid "Flip path vertically"
@@ -502,8 +509,9 @@ msgid "Show guidelines"
 msgstr "Εμφάνιση οδηγών"
 
 #: libbirdfont/DrawingTools.vala:1021
+#, fuzzy
 msgid "Show more guidelines"
-msgstr ""
+msgstr "Εμφάνιση οδηγών"
 
 #: libbirdfont/DrawingTools.vala:1037
 msgid "Show guidelines at top and bottom margin"
@@ -583,20 +591,24 @@ msgid "Usage:"
 msgstr "Χρήση:"
 
 #: libbirdfont/ExportUtils.vala:20 birdfont-autotrace/AutoTrace.vala:71
+#, fuzzy
 msgid "print this message"
-msgstr ""
+msgstr "εκτύπωση μηνύματος\n"
 
 #: libbirdfont/ExportUtils.vala:21
+#, fuzzy
 msgid "write files to this directory"
-msgstr ""
+msgstr "εγγραφή αρχείων στον κατάλογο\n"
 
 #: libbirdfont/ExportUtils.vala:22
+#, fuzzy
 msgid "write svg file"
-msgstr ""
+msgstr "εγγραφή svg αρχείου\n"
 
 #: libbirdfont/ExportUtils.vala:23
+#, fuzzy
 msgid "write ttf and eot file"
-msgstr ""
+msgstr "εγγραφή ttf και eot αρχείων\n"
 
 #: libbirdfont/ExportUtils.vala:130
 #, fuzzy
@@ -634,39 +646,39 @@ msgstr ""
 msgid "Themes"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:569
+#: libbirdfont/Glyph.vala:575
 msgid "top margin"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:576
+#: libbirdfont/Glyph.vala:582
 msgid "top"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:583
+#: libbirdfont/Glyph.vala:589
 msgid "x-height"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:592
+#: libbirdfont/Glyph.vala:598
 msgid "baseline"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:599
+#: libbirdfont/Glyph.vala:605
 msgid "bottom"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:605
+#: libbirdfont/Glyph.vala:611
 msgid "bottom margin"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:611
+#: libbirdfont/Glyph.vala:617
 msgid "left"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:620
+#: libbirdfont/Glyph.vala:626
 msgid "right"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:2281
+#: libbirdfont/Glyph.vala:2344
 msgid "Guide"
 msgstr ""
 
@@ -795,7 +807,7 @@ msgstr ""
 msgid "Kerning class"
 msgstr ""
 
-#: libbirdfont/KerningRange.vala:113 libbirdfont/LayerLabel.vala:167
+#: libbirdfont/KerningRange.vala:113 libbirdfont/LayerLabel.vala:171
 #: libbirdfont/Ligatures.vala:118 libbirdfont/Ligatures.vala:141
 #: libbirdfont/Ligatures.vala:164 libbirdfont/Ligatures.vala:196
 #: libbirdfont/SpacingClass.vala:45 libbirdfont/SpacingTab.vala:232
@@ -864,11 +876,11 @@ msgstr ""
 msgid "Character Set"
 msgstr ""
 
-#: libbirdfont/LayerLabel.vala:102
+#: libbirdfont/LayerLabel.vala:106
 msgid "Hide the layer."
 msgstr ""
 
-#: libbirdfont/LayerLabel.vala:167
+#: libbirdfont/LayerLabel.vala:171
 msgid "Layer"
 msgstr ""
 
@@ -934,8 +946,9 @@ msgid "Position"
 msgstr ""
 
 #: libbirdfont/Line.vala:157
+#, fuzzy
 msgid "Move"
-msgstr ""
+msgstr "_Μετακίνηση"
 
 #: libbirdfont/LoadCallback.vala:29
 msgid "This font was made with a newer version of Birdfont."
@@ -958,16 +971,19 @@ msgid "Glyph sequence"
 msgstr "Ακολουθία γλύφων"
 
 #: libbirdfont/Menu.vala:37
+#, fuzzy
 msgid "File"
-msgstr ""
+msgstr "Αρχεία"
 
 #: libbirdfont/Menu.vala:43
+#, fuzzy
 msgid "New"
-msgstr ""
+msgstr "_Νέο"
 
 #: libbirdfont/Menu.vala:57 libbirdfont/RecentFiles.vala:81
+#, fuzzy
 msgid "Recent Files"
-msgstr ""
+msgstr "Πρόσφατα αρχεία"
 
 #: libbirdfont/Menu.vala:71
 msgid "Save As"
@@ -978,36 +994,43 @@ msgid "Select Character Set"
 msgstr ""
 
 #: libbirdfont/Menu.vala:85
+#, fuzzy
 msgid "Quit"
-msgstr ""
+msgstr "_Έξοδος"
 
 #: libbirdfont/Menu.vala:93
+#, fuzzy
 msgid "Edit"
-msgstr ""
+msgstr "_Επεξεργασία"
 
 #: libbirdfont/Menu.vala:106
 msgid "Redo"
 msgstr ""
 
 #: libbirdfont/Menu.vala:113
+#, fuzzy
 msgid "Copy"
-msgstr ""
+msgstr "_Αντιγραφή"
 
 #: libbirdfont/Menu.vala:120
+#, fuzzy
 msgid "Paste"
-msgstr ""
+msgstr "_Επικόλληση"
 
 #: libbirdfont/Menu.vala:127
+#, fuzzy
 msgid "Paste In Place"
-msgstr ""
+msgstr "Επικόλληση _επί τόπου"
 
 #: libbirdfont/Menu.vala:134
+#, fuzzy
 msgid "Select All Paths"
-msgstr ""
+msgstr "Επιλογή όλων των μονοπατιών"
 
 #: libbirdfont/Menu.vala:141
+#, fuzzy
 msgid "Select All Glyphs"
-msgstr ""
+msgstr "Επιλογή όλων των μονοπατιών"
 
 #: libbirdfont/Menu.vala:148
 msgid "Move To Baseline"
@@ -1031,8 +1054,9 @@ msgid "Close Path"
 msgstr ""
 
 #: libbirdfont/Menu.vala:183
+#, fuzzy
 msgid "Glyph Sequence"
-msgstr ""
+msgstr "Ακολουθία γλύφων"
 
 #: libbirdfont/Menu.vala:190
 msgid "Set Background Glyph"
@@ -1083,8 +1107,9 @@ msgid "Export Fonts"
 msgstr ""
 
 #: libbirdfont/Menu.vala:281
+#, fuzzy
 msgid "Export Glyph as SVG"
-msgstr ""
+msgstr "_Εξαγωγή Γλύφου ως SVG"
 
 #: libbirdfont/Menu.vala:288 libbirdfont/Menu.vala:304
 msgid "Import SVG file"
@@ -1107,24 +1132,28 @@ msgid "Preview"
 msgstr ""
 
 #: libbirdfont/Menu.vala:344
+#, fuzzy
 msgid "Tab"
-msgstr ""
+msgstr "_Καρτέλα"
 
 #: libbirdfont/Menu.vala:350
 msgid "Next Tab"
 msgstr ""
 
 #: libbirdfont/Menu.vala:357
+#, fuzzy
 msgid "Previous Tab"
-msgstr ""
+msgstr "_Προηγούμενη καρτέλα"
 
 #: libbirdfont/Menu.vala:364
+#, fuzzy
 msgid "Close Tab"
-msgstr ""
+msgstr "_Κλείσιμο καρτέλας"
 
 #: libbirdfont/Menu.vala:371
+#, fuzzy
 msgid "Close All Tabs"
-msgstr ""
+msgstr "Κλείσιμο όλων των καρτελών"
 
 #: libbirdfont/Menu.vala:379
 msgid "Spacing and Kerning"
@@ -1147,12 +1176,14 @@ msgid "Spacing Classes"
 msgstr ""
 
 #: libbirdfont/Menu.vala:413
+#, fuzzy
 msgid "Select Next Kerning Pair"
-msgstr ""
+msgstr "Επιλογή _Επόμενου ζεύγους διαστοιχείωσης"
 
 #: libbirdfont/Menu.vala:422
+#, fuzzy
 msgid "Select Previous Kerning Pair"
-msgstr ""
+msgstr "Επιλογή _Προηγούμενο ζεύγους διαστοιχείωσης"
 
 #: libbirdfont/Menu.vala:431
 msgid "Load Kerning Strings"
@@ -1272,7 +1303,7 @@ msgstr ""
 msgid "Filter"
 msgstr "Φίλτρο"
 
-#: libbirdfont/OverView.vala:1499
+#: libbirdfont/OverView.vala:1518
 msgid "See also:"
 msgstr ""
 
@@ -1345,7 +1376,7 @@ msgstr ""
 msgid "Add new points"
 msgstr ""
 
-#: libbirdfont/PointTool.vala:24
+#: libbirdfont/PointTool.vala:84
 msgid "Move control points"
 msgstr ""
 
@@ -1374,8 +1405,9 @@ msgid "Glyphs"
 msgstr ""
 
 #: libbirdfont/RecentFiles.vala:92
+#, fuzzy
 msgid "Backups"
-msgstr ""
+msgstr "Αντίγραφο ασφαλείας"
 
 #: libbirdfont/RectangleTool.vala:30
 msgid "Rectangle"
@@ -1462,8 +1494,9 @@ msgid "Filled Stroke"
 msgstr ""
 
 #: libbirdfont/Theme.vala:423
+#, fuzzy
 msgid "Stroke Color"
-msgstr ""
+msgstr "Χρώμα πινελιάς"
 
 #: libbirdfont/Theme.vala:424
 msgid "Handle Color"

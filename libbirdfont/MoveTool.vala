@@ -38,8 +38,8 @@ public class MoveTool : Tool {
 	public signal void objects_moved ();
 	public signal void objects_deselected ();
 	
-	public MoveTool (string n) {
-		base (n, t_("Move paths"));
+	public MoveTool (string name) {
+		base (name, t_("Move paths"));
 
 		selection_changed.connect (() => {
 			update_selection_boundaries ();

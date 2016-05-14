@@ -628,9 +628,18 @@ public class OverView : FontDisplay {
 		
 		for (int i = 0; i < visible_size; i++) {
 			item = visible_items.get (i);
+			selected_item = false;
 
-			if (item.glyphs == null) {
-				item.selected |= (i == selected);
+			if (all_available) {
+				glyphs = f.get_glyph_collection_index ((uint32) i);
+			} else {
+				item = visible_items.get (i);
+				glyphs = f.get_glyph_collection_by_name ((!) item.character.to_string ());
+			}
+			
+			if (glyphs != null) {
+				selected_index = selected_items.index_of ((!) glyphs);
+				selected_item = (selected_index != -1);
 			}
 			
 			item.adjust_scale ();
@@ -1294,6 +1303,10 @@ public class OverView : FontDisplay {
 			character_info = null;
 			GlyphCanvas.redraw ();
 			return;
+		}
+		
+		if (!KeyBindings.has_shift ()) {
+			selected_items.clear ();
 		}
 		
 		for (int j = 0; j < visible_items.size; j++) {

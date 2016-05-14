@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-15 18:17+0100\n"
+"POT-Creation-Date: 2016-05-14 20:03+0200\n"
 "PO-Revision-Date: 2015-12-22 19:35+0000\n"
 "Last-Translator: Johan <johan.mattsson.m@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -84,11 +84,16 @@ msgstr "Välj bakgrund"
 msgid "Background Image"
 msgstr "Bakgrundsbild"
 
-#: libbirdfont/BackgroundTool.vala:44
+#: libbirdfont/BackgroundTool.vala:163
 msgid "Move, resize and rotate background image"
 msgstr "Flytta, ändra storlek på och rotera bakgrundsbilden"
 
-#: libbirdfont/BackgroundTool.vala:246
+#: libbirdfont/BackgroundTool.vala:166 libbirdfont/BezierTool.vala:103
+#: libbirdfont/PointTool.vala:88
+msgid "on axis"
+msgstr "på axel"
+
+#: libbirdfont/BackgroundTool.vala:294
 msgid "Select background image"
 msgstr "Välj bakgrundsbild"
 
@@ -105,7 +110,7 @@ msgstr "Filer"
 msgid "Parts"
 msgstr "Delar"
 
-#: libbirdfont/BackgroundTools.vala:53 libbirdfont/Glyph.vala:2281
+#: libbirdfont/BackgroundTools.vala:53 libbirdfont/Glyph.vala:2344
 #: libbirdfont/LigatureList.vala:106 libbirdfont/OtfFeatureTable.vala:181
 msgid "Add"
 msgstr "Lägg till"
@@ -130,10 +135,6 @@ msgstr "linje"
 #: libbirdfont/BezierTool.vala:99
 msgid "corner"
 msgstr "hörn"
-
-#: libbirdfont/BezierTool.vala:103
-msgid "on axis"
-msgstr "på axel"
 
 #: libbirdfont/CircleTool.vala:36
 msgid "Circle"
@@ -626,39 +627,39 @@ msgstr "Inställningar"
 msgid "Themes"
 msgstr "Temata"
 
-#: libbirdfont/Glyph.vala:569
+#: libbirdfont/Glyph.vala:575
 msgid "top margin"
 msgstr "övre marginal"
 
-#: libbirdfont/Glyph.vala:576
+#: libbirdfont/Glyph.vala:582
 msgid "top"
 msgstr "överkant"
 
-#: libbirdfont/Glyph.vala:583
+#: libbirdfont/Glyph.vala:589
 msgid "x-height"
 msgstr "x-höjd"
 
-#: libbirdfont/Glyph.vala:592
+#: libbirdfont/Glyph.vala:598
 msgid "baseline"
 msgstr "baslinje"
 
-#: libbirdfont/Glyph.vala:599
+#: libbirdfont/Glyph.vala:605
 msgid "bottom"
 msgstr "nederkant"
 
-#: libbirdfont/Glyph.vala:605
+#: libbirdfont/Glyph.vala:611
 msgid "bottom margin"
 msgstr "undre marginal"
 
-#: libbirdfont/Glyph.vala:611
+#: libbirdfont/Glyph.vala:617
 msgid "left"
 msgstr "vänster"
 
-#: libbirdfont/Glyph.vala:620
+#: libbirdfont/Glyph.vala:626
 msgid "right"
 msgstr "höger"
 
-#: libbirdfont/Glyph.vala:2281
+#: libbirdfont/Glyph.vala:2344
 msgid "Guide"
 msgstr "Hjälplinje"
 
@@ -790,7 +791,7 @@ msgstr "Inga kerningpar är skapade."
 msgid "Kerning class"
 msgstr "Kerning klass"
 
-#: libbirdfont/KerningRange.vala:113 libbirdfont/LayerLabel.vala:167
+#: libbirdfont/KerningRange.vala:113 libbirdfont/LayerLabel.vala:171
 #: libbirdfont/Ligatures.vala:118 libbirdfont/Ligatures.vala:141
 #: libbirdfont/Ligatures.vala:164 libbirdfont/Ligatures.vala:196
 #: libbirdfont/SpacingClass.vala:45 libbirdfont/SpacingTab.vala:232
@@ -859,11 +860,11 @@ msgstr "Teckenuppsättning"
 msgid "Character Set"
 msgstr "Teckenuppsättning"
 
-#: libbirdfont/LayerLabel.vala:102
+#: libbirdfont/LayerLabel.vala:106
 msgid "Hide the layer."
 msgstr ""
 
-#: libbirdfont/LayerLabel.vala:167
+#: libbirdfont/LayerLabel.vala:171
 msgid "Layer"
 msgstr "Lager"
 
@@ -1266,7 +1267,7 @@ msgstr "Swashes"
 msgid "Filter"
 msgstr "Filtrera"
 
-#: libbirdfont/OverView.vala:1499
+#: libbirdfont/OverView.vala:1518
 msgid "See also:"
 msgstr "Se även:"
 
@@ -1339,7 +1340,7 @@ msgstr "Ersätt"
 msgid "Add new points"
 msgstr "Lägg till nya punkter"
 
-#: libbirdfont/PointTool.vala:24
+#: libbirdfont/PointTool.vala:84
 msgid "Move control points"
 msgstr "Flytta kontrollpunkter"
 

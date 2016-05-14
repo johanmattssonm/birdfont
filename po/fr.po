@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-15 18:17+0100\n"
-"PO-Revision-Date: 2016-01-23 17:36+0000\n"
+"POT-Creation-Date: 2016-05-14 20:03+0200\n"
+"PO-Revision-Date: 2016-03-09 17:08+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: fr\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1453570612.000000\n"
+"X-POOTLE-MTIME: 1457543328.000000\n"
 
 #: libbirdfont/Argument.vala:277
 msgid "Usage"
@@ -84,11 +84,16 @@ msgstr "Sélectionner un arrière-plan"
 msgid "Background Image"
 msgstr "Image d'arrière-plan"
 
-#: libbirdfont/BackgroundTool.vala:44
+#: libbirdfont/BackgroundTool.vala:163
 msgid "Move, resize and rotate background image"
 msgstr "Déplacer, redimensionner et pivoter l'image d’arrière-plan"
 
-#: libbirdfont/BackgroundTool.vala:246
+#: libbirdfont/BackgroundTool.vala:166 libbirdfont/BezierTool.vala:103
+#: libbirdfont/PointTool.vala:88
+msgid "on axis"
+msgstr "sur l’axe"
+
+#: libbirdfont/BackgroundTool.vala:294
 msgid "Select background image"
 msgstr "Sélectionner une image d'arrière-plan"
 
@@ -105,7 +110,7 @@ msgstr "Fichiers"
 msgid "Parts"
 msgstr "Parties"
 
-#: libbirdfont/BackgroundTools.vala:53 libbirdfont/Glyph.vala:2281
+#: libbirdfont/BackgroundTools.vala:53 libbirdfont/Glyph.vala:2344
 #: libbirdfont/LigatureList.vala:106 libbirdfont/OtfFeatureTable.vala:181
 msgid "Add"
 msgstr "Ajouter"
@@ -130,10 +135,6 @@ msgstr "ligne"
 #: libbirdfont/BezierTool.vala:99
 msgid "corner"
 msgstr "coin"
-
-#: libbirdfont/BezierTool.vala:103
-msgid "on axis"
-msgstr "sur l’axe"
 
 #: libbirdfont/CircleTool.vala:36
 msgid "Circle"
@@ -221,7 +222,6 @@ msgid "Bold"
 msgstr "Gras"
 
 #: libbirdfont/DescriptionDisplay.vala:109
-#, fuzzy
 msgid "Italic"
 msgstr "Italique"
 
@@ -261,7 +261,7 @@ msgstr "Adresse de la licence"
 
 #: libbirdfont/DescriptionDisplay.vala:207
 msgid "Trademark"
-msgstr ""
+msgstr "Marque déposée"
 
 #: libbirdfont/DescriptionDisplay.vala:219
 msgid "Manufacturer"
@@ -631,39 +631,39 @@ msgstr "Paramètres"
 msgid "Themes"
 msgstr "Thèmes"
 
-#: libbirdfont/Glyph.vala:569
+#: libbirdfont/Glyph.vala:575
 msgid "top margin"
 msgstr "Marge supérieure"
 
-#: libbirdfont/Glyph.vala:576
+#: libbirdfont/Glyph.vala:582
 msgid "top"
 msgstr "haut"
 
-#: libbirdfont/Glyph.vala:583
+#: libbirdfont/Glyph.vala:589
 msgid "x-height"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:592
+#: libbirdfont/Glyph.vala:598
 msgid "baseline"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:599
+#: libbirdfont/Glyph.vala:605
 msgid "bottom"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:605
+#: libbirdfont/Glyph.vala:611
 msgid "bottom margin"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:611
+#: libbirdfont/Glyph.vala:617
 msgid "left"
 msgstr "gauche"
 
-#: libbirdfont/Glyph.vala:620
+#: libbirdfont/Glyph.vala:626
 msgid "right"
 msgstr "droite"
 
-#: libbirdfont/Glyph.vala:2281
+#: libbirdfont/Glyph.vala:2344
 msgid "Guide"
 msgstr "Repère"
 
@@ -794,7 +794,7 @@ msgstr "Aucune paire de crénage créée."
 msgid "Kerning class"
 msgstr "type d'approche"
 
-#: libbirdfont/KerningRange.vala:113 libbirdfont/LayerLabel.vala:167
+#: libbirdfont/KerningRange.vala:113 libbirdfont/LayerLabel.vala:171
 #: libbirdfont/Ligatures.vala:118 libbirdfont/Ligatures.vala:141
 #: libbirdfont/Ligatures.vala:164 libbirdfont/Ligatures.vala:196
 #: libbirdfont/SpacingClass.vala:45 libbirdfont/SpacingTab.vala:232
@@ -864,11 +864,11 @@ msgstr "Jeu de caractères"
 msgid "Character Set"
 msgstr "Jeu de caractères"
 
-#: libbirdfont/LayerLabel.vala:102
+#: libbirdfont/LayerLabel.vala:106
 msgid "Hide the layer."
 msgstr ""
 
-#: libbirdfont/LayerLabel.vala:167
+#: libbirdfont/LayerLabel.vala:171
 msgid "Layer"
 msgstr "Calque"
 
@@ -1294,7 +1294,7 @@ msgstr ""
 msgid "Filter"
 msgstr "Filtrer"
 
-#: libbirdfont/OverView.vala:1499
+#: libbirdfont/OverView.vala:1518
 msgid "See also:"
 msgstr "Voir également :"
 
@@ -1367,7 +1367,7 @@ msgstr ""
 msgid "Add new points"
 msgstr "Ajouter de nouveaux points"
 
-#: libbirdfont/PointTool.vala:24
+#: libbirdfont/PointTool.vala:84
 msgid "Move control points"
 msgstr "Déplacer les points de contrôle"
 

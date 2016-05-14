@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-15 18:17+0100\n"
+"POT-Creation-Date: 2016-05-14 20:03+0200\n"
 "PO-Revision-Date: 2016-02-05 18:53+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -84,11 +84,16 @@ msgstr "Valitse tausta"
 msgid "Background Image"
 msgstr "Taustakuva"
 
-#: libbirdfont/BackgroundTool.vala:44
+#: libbirdfont/BackgroundTool.vala:163
 msgid "Move, resize and rotate background image"
 msgstr "Siirrä tai kierrä taustakuvaa, tai muuta sen kokoa"
 
-#: libbirdfont/BackgroundTool.vala:246
+#: libbirdfont/BackgroundTool.vala:166 libbirdfont/BezierTool.vala:103
+#: libbirdfont/PointTool.vala:88
+msgid "on axis"
+msgstr "akselilla"
+
+#: libbirdfont/BackgroundTool.vala:294
 msgid "Select background image"
 msgstr "Valitse taustakuva"
 
@@ -105,7 +110,7 @@ msgstr "Tiedostot"
 msgid "Parts"
 msgstr "Osat"
 
-#: libbirdfont/BackgroundTools.vala:53 libbirdfont/Glyph.vala:2281
+#: libbirdfont/BackgroundTools.vala:53 libbirdfont/Glyph.vala:2344
 #: libbirdfont/LigatureList.vala:106 libbirdfont/OtfFeatureTable.vala:181
 msgid "Add"
 msgstr "Lisää"
@@ -130,10 +135,6 @@ msgstr "rivi"
 #: libbirdfont/BezierTool.vala:99
 msgid "corner"
 msgstr "kulma"
-
-#: libbirdfont/BezierTool.vala:103
-msgid "on axis"
-msgstr "akselilla"
 
 #: libbirdfont/CircleTool.vala:36
 msgid "Circle"
@@ -627,40 +628,40 @@ msgstr "Asetukset"
 msgid "Themes"
 msgstr "Teemat"
 
-#: libbirdfont/Glyph.vala:569
+#: libbirdfont/Glyph.vala:575
 msgid "top margin"
 msgstr "yläreunus"
 
-#: libbirdfont/Glyph.vala:576
+#: libbirdfont/Glyph.vala:582
 msgid "top"
 msgstr "ylhäällä"
 
-#: libbirdfont/Glyph.vala:583
+#: libbirdfont/Glyph.vala:589
 msgid "x-height"
 msgstr "x-korkeus"
 
-#: libbirdfont/Glyph.vala:592
+#: libbirdfont/Glyph.vala:598
 msgid "baseline"
 msgstr "perusta"
 
-#: libbirdfont/Glyph.vala:599
+#: libbirdfont/Glyph.vala:605
 msgid "bottom"
 msgstr "alhaalla"
 
-#: libbirdfont/Glyph.vala:605
+#: libbirdfont/Glyph.vala:611
 msgid "bottom margin"
 msgstr "alamarginaali"
 
-#: libbirdfont/Glyph.vala:611
+#: libbirdfont/Glyph.vala:617
 msgid "left"
 msgstr "vasen"
 
-#: libbirdfont/Glyph.vala:620
+#: libbirdfont/Glyph.vala:626
 #, fuzzy
 msgid "right"
 msgstr "oikea"
 
-#: libbirdfont/Glyph.vala:2281
+#: libbirdfont/Glyph.vala:2344
 msgid "Guide"
 msgstr "Opas"
 
@@ -789,7 +790,7 @@ msgstr "Parivälistyspareja ei ole luotu."
 msgid "Kerning class"
 msgstr "Parivälistysluokka"
 
-#: libbirdfont/KerningRange.vala:113 libbirdfont/LayerLabel.vala:167
+#: libbirdfont/KerningRange.vala:113 libbirdfont/LayerLabel.vala:171
 #: libbirdfont/Ligatures.vala:118 libbirdfont/Ligatures.vala:141
 #: libbirdfont/Ligatures.vala:164 libbirdfont/Ligatures.vala:196
 #: libbirdfont/SpacingClass.vala:45 libbirdfont/SpacingTab.vala:232
@@ -860,11 +861,11 @@ msgstr "Merkistökoodaus"
 msgid "Character Set"
 msgstr "Merkistökoodaus"
 
-#: libbirdfont/LayerLabel.vala:102
+#: libbirdfont/LayerLabel.vala:106
 msgid "Hide the layer."
 msgstr ""
 
-#: libbirdfont/LayerLabel.vala:167
+#: libbirdfont/LayerLabel.vala:171
 msgid "Layer"
 msgstr "Taso"
 
@@ -1275,7 +1276,7 @@ msgstr ""
 msgid "Filter"
 msgstr "Suodata"
 
-#: libbirdfont/OverView.vala:1499
+#: libbirdfont/OverView.vala:1518
 msgid "See also:"
 msgstr "Katso myös:"
 
@@ -1348,7 +1349,7 @@ msgstr ""
 msgid "Add new points"
 msgstr "Lisää uusia pisteitä"
 
-#: libbirdfont/PointTool.vala:24
+#: libbirdfont/PointTool.vala:84
 msgid "Move control points"
 msgstr "Siirrä hallintapisteitä"
 
