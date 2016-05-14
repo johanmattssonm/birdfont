@@ -144,7 +144,7 @@ public class GlyfTable : OtfTable {
 		bool unassigned;
 		
 		// add notdef character and other special characters first
-		glyphs.add (font.get_not_def_character ());
+		glyphs.add (font.get_notdef_character ());
 		glyphs.add (font.get_null_character ());
 		glyphs.add (font.get_nonmarking_return ());
 		glyphs.add (font.get_space ());
