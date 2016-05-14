@@ -17,7 +17,7 @@ using Math;
 
 namespace BirdFont {
 	
-public class BackgroundImage {
+public class BackgroundImage : GLib.Object {
 	
 	public string name = "";
 	public Gee.ArrayList<BackgroundSelection> selections;
@@ -733,9 +733,13 @@ public class BackgroundImage {
 		
 		cr.scale (g.view_zoom, g.view_zoom);
 		
-		if (selected_handle == 2) Theme.color (cr, "Highlighted 1");
-		else if (active_handle == 2) Theme.color (cr, "Default Background");
-		else Theme.color (cr, "Menu Background");
+		if (selected_handle == 2) {
+			Theme.color (cr, "Highlighted 1");
+		} else if (active_handle == 2) {
+			Theme.color (cr, "Default Background");
+		} else {
+			Theme.color (cr, "Menu Background");
+		}
 
 		x = img_offset_x - g.view_offset_x + (size_margin / 2) * img_scale_x;
 		y = img_offset_y - g.view_offset_y + (size_margin / 2) * img_scale_y;

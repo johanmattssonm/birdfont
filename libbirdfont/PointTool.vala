@@ -21,7 +21,7 @@ namespace BirdFont {
 public class PointTool : Tool {
 	
 	public PointTool (string name) {
-		base (name, t_ ("Move control points"));
+		base (name, "");
 
 		select_action.connect ((self) => {
 		});
@@ -78,6 +78,16 @@ public class PointTool : Tool {
 			Tool p = pen ();
 			p.draw_action (p, cairo_context, glyph);
 		});
+	}
+
+	public override string get_tip () {
+		string tip = t_ ("Move control points") + "\n";
+		
+		tip += HiddenTools.move_along_axis.get_key_binding ();
+		tip += " - ";
+		tip += t_ ("on axis") + "\n";
+				
+		return tip;
 	}
 	
 	public static Tool pen () {
