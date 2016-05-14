@@ -569,7 +569,7 @@ public class TabBar : GLib.Object {
 		
 		if (stop_button) {
 			MainWindow.abort_task ();
-		} else if (over_close_tab >= 0 && over == selected) {
+		} else if (over_close_tab >= 0) {
 			close_tab (over_close_tab);
 		} else {
 			select_tab (over);
