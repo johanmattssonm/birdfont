@@ -131,7 +131,7 @@ public class Glyph : FontDisplay {
 	public static bool show_orientation_arrow = false;
 	public static double orientation_arrow_opacity = 1;
 
-	public Layer layers = new Layer ();
+	public Layer layers = new Layer.with_name ("Root");
 	public int current_layer = 0;
 	public Gee.ArrayList<SvgBird.Object> active_paths = new Gee.ArrayList<SvgBird.Object> ();
 
@@ -546,6 +546,12 @@ public class Glyph : FontDisplay {
 		
 		DrawingTools.update_layers ();
 		MainWindow.get_toolbox ().update_expanders ();
+		
+		print(@"PRECOPY $(name)\n");
+		print_layers (layers);
+//		layers = (Layer) layers.copy (); // FIXME: DELETE
+		print("\n");
+		print_layers (layers);
 	}
 
 	void update_zoom_bar () {
@@ -1814,8 +1820,42 @@ public class Glyph : FontDisplay {
 		Glyph g = copy ();
 		undo_list.add (g);
 
+		print ("\n\n");
+		print_layers (g.layers);
+
 		if (clear_redo) {
 			redo_list.clear ();
+		}
+	}
+
+	public void print_layers (Layer layer, int indent = 0) {
+		stdout.printf (@"Layer ($indent): $(layer.name)");
+
+		if (!layer.visible) {
+			stdout.printf (" hidden");
+		}
+		
+		stdout.printf (@" $(layer.transforms) $(layer.style)");
+		stdout.printf (@"\n");
+
+		foreach (SvgBird.Object object in layer.objects) {
+			if (object is Layer) {
+				Layer sublayer = (Layer) object;
+				print_layers (sublayer, indent + 1);
+			} else {
+				stdout.printf (@"$(object.to_string ()) $(object.transforms) $(object.style)");
+			
+				if (!object.visible) {
+					stdout.printf (" hidden");
+				}
+				
+				stdout.printf ("\n");
+				
+				if (object is EmbeddedSvg) {
+					EmbeddedSvg embedded = (EmbeddedSvg) object;
+					print_layers (embedded.drawing.root_layer, indent + 1);
+				}
+			}
 		}
 	}
 
@@ -1911,7 +1951,11 @@ public class Glyph : FontDisplay {
 
 	void set_glyph_data (Glyph g) {
 		current_layer = g.current_layer;
+		
 		layers = (Layer) g.layers.copy ();
+
+		print ("\n\n");
+		print_layers (g.layers);
 
 		left_limit = g.left_limit;
 		right_limit = g.right_limit;

@@ -31,6 +31,13 @@ public class SvgTransform : GLib.Object {
 	public SvgTransform () {
 	}
 
+	public SvgTransform copy () {
+		SvgTransform transform = new SvgTransform ();
+		transform.type = type;
+		transform.arguments = arguments.copy ();
+		return transform;
+	}
+
 	public string to_string () {
 		StringBuilder sb = new StringBuilder ();
 		

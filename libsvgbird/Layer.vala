@@ -25,6 +25,12 @@ public class Layer : Object {
 		transforms = new SvgTransforms ();
 	}
 
+	public Layer.with_name (string name) {
+		this.name = name;
+		objects = new ObjectGroup ();
+		transforms = new SvgTransforms ();
+	}
+	
 	public void draw (Context cr) {
 		cr.save ();
 		apply_transform (cr);
@@ -105,6 +111,7 @@ public class Layer : Object {
 		Layer layer = new Layer ();
 		copy_layer (this, layer);
 		Object.copy_attributes (this, layer);
+		stdout.printf (@"Copy $name\n");
 		return layer;
 	}
 	
@@ -152,7 +159,6 @@ public class Layer : Object {
 			}
 		}
 	}
-
 
 	public override bool is_over (double x, double y) {
 		return false;

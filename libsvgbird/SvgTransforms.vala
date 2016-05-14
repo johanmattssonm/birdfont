@@ -23,6 +23,16 @@ public class SvgTransforms : GLib.Object {
 		transforms = new Gee.ArrayList<SvgTransform> ();
 	}
 
+	public SvgTransforms copy () {
+		SvgTransforms copy_transforms = new SvgTransforms ();
+		
+		foreach (SvgTransform t in transforms) {
+			copy_transforms.add (t.copy ());
+		}
+		
+		return copy_transforms;
+	}
+
 	public void add (SvgTransform transform) {
 		transforms.add (transform);
 	}

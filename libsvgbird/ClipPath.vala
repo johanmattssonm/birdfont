@@ -33,6 +33,11 @@ public class ClipPath : GLib.Object {
 		layer.draw_outline (cr);
 		cr.clip ();
 	}
+	
+	public ClipPath copy () {
+		ClipPath path = new ClipPath (layer);
+		return path;
+	}
 }
 
 }

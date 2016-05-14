@@ -54,6 +54,10 @@ public class LayerLabel : Tool {
 					GlyphCanvas.redraw ();
 					BirdFont.get_current_font ().touch ();
 					MainWindow.get_current_glyph ().clear_active_paths ();
+					
+					Glyph g = MainWindow.get_current_glyph ();
+					print ("\n\n");
+					g.print_layers (g.layers);
 				} else {
 					active_layer = true;
 					select_layer ();

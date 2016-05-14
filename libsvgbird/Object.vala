@@ -70,9 +70,23 @@ public abstract class Object : GLib.Object {
 	public static void copy_attributes (Object from, Object to) {
 		to.open = from.open;
 
-		to.color = from.color;
-		to.stroke_color = from.stroke_color;
-		to.gradient = from.gradient;
+		if (from.color != null) {
+			to.color = ((!) from.color).copy ();
+		} else {
+			to.color = null;
+		}
+		
+		if (from.stroke_color != null) {
+			to.stroke_color = ((!) from.stroke_color).copy ();
+		} else {
+			to.stroke_color = null;
+		}
+		
+		if (to.gradient != null) {
+			to.gradient = ((!) from.gradient).copy ();
+		} else {
+			to.gradient = null;
+		}
 		
 		to.xmax = from.xmax;
 		to.xmin = from.xmin;
@@ -82,7 +96,14 @@ public abstract class Object : GLib.Object {
 		to.rotation = from.rotation;
 		to.stroke = from.stroke;
 		to.line_cap = from.line_cap;
-		to.fill = from.fill;	
+		to.fill = from.fill;
+		
+		to.style = from.style.copy ();
+		to.transforms = from.transforms.copy ();
+		
+		if (from.clip_path != null) {
+			to.clip_path = ((!) from.clip_path).copy ();
+		}
 	}
 	
 	public virtual string to_string () {

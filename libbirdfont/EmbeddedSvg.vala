@@ -86,12 +86,6 @@ public class EmbeddedSvg : SvgBird.Object {
 	public override void draw_outline (Context cr) {
 	}
 	
-	public override SvgBird.Object copy () {
-		EmbeddedSvg svg = new EmbeddedSvg (drawing);
-		svg.svg_data = svg_data;
-		return svg;
-	}
-	
 	public override void move (double dx, double dy) {
 		x += dx;
 		y += dy;
@@ -109,6 +103,19 @@ public class EmbeddedSvg : SvgBird.Object {
 		drawing.resize (ratio_x, ratio_y);
 	}
 
+	public override SvgBird.Object copy () {
+		EmbeddedSvg svg = new EmbeddedSvg ((SvgDrawing) drawing.copy ());
+		
+		svg.svg_data = svg_data;
+		svg.x = x;
+		svg.y = y;
+		
+		return svg;
+	}
+	
+	public override string to_string () {
+		return "Embedded SVG";
+	}
 }
 
 }

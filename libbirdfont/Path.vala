@@ -839,8 +839,6 @@ public class Path : GLib.Object {
 		int insides = 0;
 		Path path;
 		
-		print (@"is_over_coordinate_var  stroke: $stroke\n");
-		
 		if (stroke > 0) {
 			foreach (Path p in get_stroke_fast ().paths) {
 				path = p.flatten ();
