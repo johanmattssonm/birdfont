@@ -1336,7 +1336,7 @@ public class OverView : FontDisplay {
 				}
 				
 				if (!is_null (selected_item.version_menu)) {
-					update = !selected_item.version_menu.menu_visible;
+					update = !((!) selected_item.version_menu).menu_visible;
 				} else {
 					update = true;
 				}
