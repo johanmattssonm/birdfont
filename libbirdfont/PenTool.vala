@@ -833,27 +833,14 @@ public class PenTool : Tool {
 				selected_handle.y = coordinate_y;
 				
 				if (on_axis) {
-					double length = fabs (Path.distance (selected_handle.parent.x, coordinate_x,
-						selected_handle.parent.y, coordinate_y));
-					
-					double min = double.MAX;
-					double circle_edge;
-					double circle_x;
-					double circle_y;
-					
-					for (double circle_angle = 0; circle_angle < 2 * PI; circle_angle += PI / 4) {
-						circle_x = selected_handle.parent.x + cos (circle_angle) * length;
-						circle_y = selected_handle.parent.y + sin (circle_angle) * length;
-						
-						circle_edge = fabs (Path.distance (coordinate_x, circle_x, 
-							coordinate_y, circle_y));
-						
-						if (circle_edge < min) {
-							selected_handle.x = circle_x;
-							selected_handle.y = circle_y;
-							min = circle_edge;
-						}
-					}
+					double tied_x = 0;
+					double tied_y = 0;
+					 
+					PointTool.tie_angle (selected_handle.parent.x, selected_handle.parent.y,
+							coordinate_x, coordinate_y, out tied_x, out tied_y);
+							
+					selected_handle.x = tied_x;
+					selected_handle.y = tied_y;
 				}
 			}
 
