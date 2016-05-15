@@ -50,7 +50,7 @@ public class OverView : FontDisplay {
 	
 	string search_query = "";
 	
-	Gee.ArrayList<OverViewItem> visible_items = new Gee.ArrayList<OverViewItem> ();
+	public Gee.ArrayList<OverViewItem> visible_items = new Gee.ArrayList<OverViewItem> ();
 	
 	/** List of undo commands. */
 	public Gee.ArrayList<OverViewUndoItem> undo_items = new Gee.ArrayList<OverViewUndoItem> ();
@@ -1315,7 +1315,11 @@ public class OverView : FontDisplay {
 					}
 				}
 				
-				update = !i.version_menu.menu_visible;
+				if (!is_null (i.version_menu)) {
+					update = !i.version_menu.menu_visible;
+				} else {
+					update = true;
+				}
 			}
 			index++;
 		}
