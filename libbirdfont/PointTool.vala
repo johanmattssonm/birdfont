@@ -93,6 +93,36 @@ public class PointTool : Tool {
 	public static Tool pen () {
 		return MainWindow.get_toolbox ().get_tool ("pen_tool");
 	}
+	
+	public static void tie_angle (double center_x, double center_y,
+			double coordinate_x, double coordinate_y,			
+			out double tied_x, out double tied_y) {
+			
+		double length = fabs (Path.distance (center_x, coordinate_x,
+			center_y, coordinate_y));
+		
+		tied_x = 0;
+		tied_y = 0;
+		
+		double min = double.MAX;
+		double circle_edge;
+		double circle_x;
+		double circle_y;
+		
+		for (double circle_angle = 0; circle_angle < 2 * PI; circle_angle += PI / 4) {
+			circle_x = center_x + cos (circle_angle) * length;
+			circle_y = center_y + sin (circle_angle) * length;
+			
+			circle_edge = fabs (Path.distance (coordinate_x, circle_x, 
+				coordinate_y, circle_y));
+			
+			if (circle_edge < min) {
+				tied_x = circle_x;
+				tied_y = circle_y;
+				min = circle_edge;
+			}
+		}
+	}
 }
 
 }

@@ -366,21 +366,21 @@ public class BezierTool : Tool {
 			GlyphCanvas.redraw ();
 		} else if (state == MOVE_HANDLE_ON_AXIS) {
 			EditPointHandle h = current_point.get_right_handle ();
-			double horizontal, vertical;
-			
-			vertical = Path.distance (px, h.parent.x, py, py);
-			horizontal = Path.distance (h.parent.y, py, py, py);
 
 			current_path.hide_end_handle = false;
 			current_point.set_reflective_handles (true);
 			current_point.convert_to_curve ();
-						
-			if (horizontal < vertical) {
-				h.move_to_coordinate (px, current_point.y);
-			} else {
-				h.move_to_coordinate (current_point.x, py);
-			}
-						
+			
+			double tied_x = 0;
+			double tied_y = 0;
+			 
+			PointTool.tie_angle (h.parent.x, h.parent.y,
+					px, py, out tied_x, out tied_y);
+					
+			h.x = tied_x;
+			h.y = tied_y;
+			
+			current_path.reset_stroke ();
 			GlyphCanvas.redraw ();
 		}
 		
