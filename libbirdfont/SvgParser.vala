@@ -446,7 +446,6 @@ public class SvgParser {
 		param = param.replace (",", " ");
 		
 		while (param.index_of ("  ") > -1) {
-			int it = param.index_of ("  ");
 			param = param.replace ("  ", " ");
 		}
 			

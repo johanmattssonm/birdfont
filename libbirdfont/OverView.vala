@@ -605,11 +605,10 @@ public class OverView : FontDisplay {
 			item = visible_items.get (i);
 
 			selected_item = false;
-
+	
 			if (all_available) {
 				glyphs = f.get_glyph_collection_index ((uint32) i);
-			} else {
-				item = visible_items.get (i);
+			} else {			
 				glyphs = f.get_glyph_collection_by_name ((!) item.character.to_string ());
 			}
 			
