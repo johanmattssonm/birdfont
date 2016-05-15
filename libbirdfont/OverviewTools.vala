@@ -284,6 +284,10 @@ public class OverviewTools : ToolCollection  {
 			}
 		}
 		
+		foreach (OverViewItem item in o.visible_items) {
+			item.draw_glyph_from_font ();	
+		}
+		
 		o.undo_items.add (ui);
 		
 		MainWindow.get_overview ().update_item_list ();
