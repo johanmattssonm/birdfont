@@ -574,7 +574,7 @@ public class OverView : FontDisplay {
 			
 			if (i < item_list_length && !font.has_glyph (".notdef")) {
 				item = new OverViewItem ();
-				item.set_glyphs (font.get_not_def_character ());
+				item.set_glyphs (font.get_notdef_character ());
 				item.generate_graphics (false);
 				item.version_menu = null;
 				item.selected = (selected_items.index_of ((!) glyphs) != -1);
@@ -628,17 +628,16 @@ public class OverView : FontDisplay {
 		
 		for (int i = 0; i < visible_size; i++) {
 			item = visible_items.get (i);
-			selected_item = false;
-	
+
 			if (all_available) {
-				glyphs = f.get_glyph_collection_index ((uint32) i);
+				glyphs = font.get_glyph_collection_index ((uint32) i);
 			} else {			
-				glyphs = f.get_glyph_collection_by_name ((!) item.character.to_string ());
+				glyphs = font.get_glyph_collection_by_name ((!) item.character.to_string ());
 			}
 			
 			if (glyphs != null) {
-				selected_index = selected_items.index_of ((!) glyphs);
-				selected_item = (selected_index != -1);
+				int selected_index = selected_items.index_of ((!) glyphs);
+				item.selected = (selected_index != -1);
 			}
 			
 			item.adjust_scale ();
