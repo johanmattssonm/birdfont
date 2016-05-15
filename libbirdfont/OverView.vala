@@ -1292,7 +1292,7 @@ public class OverView : FontDisplay {
 	}
 
 	public override void button_press (uint button, double x, double y) {
-		OverViewItem i;
+		OverViewItem selected_item;
 		int index = 0;
 		int selected_index = -1;
 		bool update = false;
@@ -1308,9 +1308,9 @@ public class OverView : FontDisplay {
 		}
 		
 		for (int j = 0; j < visible_items.size; j++) {
-			i = visible_items.get (j);
+			selected_item = visible_items.get (j);
 			
-			if (i.click (button, x, y)) {
+			if (selected_item.click (button, x, y)) {
 				selected = index;
 				selected_item = get_selected_item ();
 				
@@ -1335,8 +1335,8 @@ public class OverView : FontDisplay {
 					}
 				}
 				
-				if (!is_null (i.version_menu)) {
-					update = !i.version_menu.menu_visible;
+				if (!is_null (selected_item.version_menu)) {
+					update = !selected_item.version_menu.menu_visible;
 				} else {
 					update = true;
 				}
