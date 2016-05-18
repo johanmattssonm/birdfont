@@ -94,28 +94,28 @@ def make_birdfont(target_binary, deps):
 		-D 'GETTEXT_PACKAGE="birdfont"' \
         -I./build/libbirdfont \
         -I./build/libsvgbird \
-		$(pkg-config --cflags sqlite3) \
-		$(pkg-config --cflags {gee}) \
-		$(pkg-config --cflags gio-2.0) \
-		$(pkg-config --cflags cairo) \
-		$(pkg-config --cflags glib-2.0) \
-		$(pkg-config --cflags gdk-pixbuf-2.0) \
-		$(pkg-config --cflags webkitgtk-3.0) \
-		$(pkg-config --cflags libnotify) \
+		$({pkg-config} --cflags sqlite3) \
+		$({pkg-config} --cflags {gee}) \
+		$({pkg-config} --cflags gio-2.0) \
+		$({pkg-config} --cflags cairo) \
+		$({pkg-config} --cflags glib-2.0) \
+		$({pkg-config} --cflags gdk-pixbuf-2.0) \
+		$({pkg-config} --cflags webkitgtk-3.0) \
+		$({pkg-config} --cflags libnotify) \
         -o OBJECT_FILE""".format(**config.SETTINGS)
         
     linker_command = """{cc} {ldflags[birdfont]} \
         build/birdfont/*.o \
 		-L./build/bin -lbirdfont \
-		$(pkg-config --libs sqlite3) \
-		$(pkg-config --libs {gee}) \
-		$(pkg-config --libs gio-2.0) \
-		$(pkg-config --libs cairo) \
-		$(pkg-config --libs glib-2.0) \
-		$(pkg-config --libs gdk-pixbuf-2.0) \
-		$(pkg-config --libs webkitgtk-3.0) \
-		$(pkg-config --libs xmlbird) \
-		$(pkg-config --libs libnotify) \
+		$({pkg-config} --libs sqlite3) \
+		$({pkg-config} --libs {gee}) \
+		$({pkg-config} --libs gio-2.0) \
+		$({pkg-config} --libs cairo) \
+		$({pkg-config} --libs glib-2.0) \
+		$({pkg-config} --libs gdk-pixbuf-2.0) \
+		$({pkg-config} --libs webkitgtk-3.0) \
+		$({pkg-config} --libs xmlbird) \
+		$({pkg-config} --libs libnotify) \
 		-L./build -L./build/bin -l birdgems -l svgbird \
         -o build/bin/""".format(**config.SETTINGS) + target_binary
 
@@ -155,23 +155,23 @@ def make_birdfont_export(target_binary, deps):
 		-D 'GETTEXT_PACKAGE="birdfont"' \
         -I./build/libbirdfont \
         -I./build/libsvgbird \
-		$(pkg-config --cflags sqlite3) \
-		$(pkg-config --cflags {gee}) \
-		$(pkg-config --cflags gio-2.0) \
-		$(pkg-config --cflags cairo) \
-		$(pkg-config --cflags glib-2.0) \
+		$({pkg-config} --cflags sqlite3) \
+		$({pkg-config} --cflags {gee}) \
+		$({pkg-config} --cflags gio-2.0) \
+		$({pkg-config} --cflags cairo) \
+		$({pkg-config} --cflags glib-2.0) \
         -o OBJECT_FILE""".format(**config.SETTINGS)
         
     linker_command = """{cc} {ldflags[birdfont-export]} \
 		build/birdfont-export/*.o \
 		-Lbuild/bin/ -lbirdfont \
 		-lm \
-		$(pkg-config --libs sqlite3) \
-		$(pkg-config --libs {gee}) \
-		$(pkg-config --libs gio-2.0) \
-		$(pkg-config --libs cairo) \
-		$(pkg-config --libs glib-2.0) \
-		$(pkg-config --libs xmlbird) \
+		$({pkg-config} --libs sqlite3) \
+		$({pkg-config} --libs {gee}) \
+		$({pkg-config} --libs gio-2.0) \
+		$({pkg-config} --libs cairo) \
+		$({pkg-config} --libs glib-2.0) \
+		$({pkg-config} --libs xmlbird) \
 		-L./build -L./build/bin -l birdgems -l svgbird \
 		-o ./build/bin/""".format(**config.SETTINGS) + target_binary
 
@@ -210,23 +210,23 @@ def make_birdfont_import(target_binary, deps):
 		-D 'GETTEXT_PACKAGE="birdfont"' \
         -I./build/libbirdfont \
         -I./build/libsvgbird \
-		$(pkg-config --cflags sqlite3) \
-		$(pkg-config --cflags {gee}) \
-		$(pkg-config --cflags gio-2.0) \
-		$(pkg-config --cflags cairo) \
-		$(pkg-config --cflags glib-2.0) \
+		$({pkg-config} --cflags sqlite3) \
+		$({pkg-config} --cflags {gee}) \
+		$({pkg-config} --cflags gio-2.0) \
+		$({pkg-config} --cflags cairo) \
+		$({pkg-config} --cflags glib-2.0) \
         -o OBJECT_FILE""".format(**config.SETTINGS)
 
     linker_command = """{cc} {ldflags[birdfont-import]} \
 		build/birdfont-import/*.o \
 		-Lbuild/bin/ -lbirdfont \
 		-lm \
-		$(pkg-config --libs sqlite3) \
-		$(pkg-config --libs {gee}) \
-		$(pkg-config --libs gio-2.0) \
-		$(pkg-config --libs cairo) \
-		$(pkg-config --libs glib-2.0) \
-		$(pkg-config --libs xmlbird) \
+		$({pkg-config} --libs sqlite3) \
+		$({pkg-config} --libs {gee}) \
+		$({pkg-config} --libs gio-2.0) \
+		$({pkg-config} --libs cairo) \
+		$({pkg-config} --libs glib-2.0) \
+		$({pkg-config} --libs xmlbird) \
 		-L./build -L./build/bin -l birdgems -l svgbird \
 		-o ./build/bin/""".format(**config.SETTINGS) + target_binary
 
@@ -265,11 +265,11 @@ def make_birdfont_autotrace(target_binary, deps):
 		-D 'GETTEXT_PACKAGE="birdfont"' \
         -I./build/libbirdfont \
         -I./build/libsvgbird \
-		$(pkg-config --cflags sqlite3) \
-		$(pkg-config --cflags {gee}) \
-		$(pkg-config --cflags gio-2.0) \
-		$(pkg-config --cflags cairo) \
-		$(pkg-config --cflags glib-2.0) \
+		$({pkg-config} --cflags sqlite3) \
+		$({pkg-config} --cflags {gee}) \
+		$({pkg-config} --cflags gio-2.0) \
+		$({pkg-config} --cflags cairo) \
+		$({pkg-config} --cflags glib-2.0) \
         -o OBJECT_FILE""".format(**config.SETTINGS)
         
     linker_command = """{cc} {ldflags[birdfont-autotrace]} \
@@ -278,12 +278,12 @@ def make_birdfont_autotrace(target_binary, deps):
         -I./build/libsvgbird \
 		-Lbuild/bin/ -lbirdfont \
 		-lm \
-		$(pkg-config --libs sqlite3) \
-		$(pkg-config --libs {gee}) \
-		$(pkg-config --libs gio-2.0) \
-		$(pkg-config --libs cairo) \
-		$(pkg-config --libs glib-2.0) \
-		$(pkg-config --libs xmlbird) \
+		$({pkg-config} --libs sqlite3) \
+		$({pkg-config} --libs {gee}) \
+		$({pkg-config} --libs gio-2.0) \
+		$({pkg-config} --libs cairo) \
+		$({pkg-config} --libs glib-2.0) \
+		$({pkg-config} --libs xmlbird) \
 		-L./build -L./build/bin -l birdgems -l svgbird\
 		-o ./build/bin/""".format(**config.SETTINGS) + target_binary
 
@@ -331,27 +331,27 @@ def make_libbirdfont(target_binary, deps):
             -I ./build/libbirdfont \
             -I ./build/libbirdgems \
             -I ./build/libsvgbird \
-            $(pkg-config --cflags sqlite3) \
-            $(pkg-config --cflags fontconfig) \
-            $(pkg-config --cflags {gee}) \
-            $(pkg-config --cflags gio-2.0) \
-            $(pkg-config --cflags cairo) \
-            $(pkg-config --cflags glib-2.0) \
-            $(pkg-config --cflags xmlbird) \
+            $({pkg-config} --cflags sqlite3) \
+            $({pkg-config} --cflags fontconfig) \
+            $({pkg-config} --cflags {gee}) \
+            $({pkg-config} --cflags gio-2.0) \
+            $({pkg-config} --cflags cairo) \
+            $({pkg-config} --cflags glib-2.0) \
+            $({pkg-config} --cflags xmlbird) \
             -o OBJECT_FILE""".format(**config.SETTINGS)
 
     linker_command = ("""{cc} {ldflags[libbirdfont]} \
             -shared \
             """ + soname(target_binary) + """ \
             build/libbirdfont/*.o \
-            $(pkg-config --libs sqlite3) \
+            $({pkg-config} --libs sqlite3) \
             $(freetype-config --libs) \
-            $(pkg-config --libs {gee}) \
-            $(pkg-config --libs gio-2.0) \
-            $(pkg-config --libs fontconfig) \
-            $(pkg-config --libs cairo) \
-            $(pkg-config --libs glib-2.0) \
-            $(pkg-config --libs xmlbird) \
+            $({pkg-config} --libs {gee}) \
+            $({pkg-config} --libs gio-2.0) \
+            $({pkg-config} --libs fontconfig) \
+            $({pkg-config} --libs cairo) \
+            $({pkg-config} --libs glib-2.0) \
+            $({pkg-config} --libs xmlbird) \
             -L./build -L./build/bin -l birdgems -l svgbird \
             -o ./build/bin/""").format(**config.SETTINGS) + target_binary
 
@@ -390,22 +390,22 @@ def make_libsvgbird(target_binary, deps):
             -c C_SOURCE \
             -fPIC \
             -I ./build/libsvgbird \
-            $(pkg-config --cflags {gee}) \
-            $(pkg-config --cflags gio-2.0) \
-            $(pkg-config --cflags cairo) \
-            $(pkg-config --cflags glib-2.0) \
-            $(pkg-config --cflags xmlbird) \
+            $({pkg-config} --cflags {gee}) \
+            $({pkg-config} --cflags gio-2.0) \
+            $({pkg-config} --cflags cairo) \
+            $({pkg-config} --cflags glib-2.0) \
+            $({pkg-config} --cflags xmlbird) \
             -o OBJECT_FILE""".format(**config.SETTINGS)
 
     linker_command = ("""{cc} {ldflags[libsvgbird]} \
             -shared \
             """ + soname(target_binary) + """ \
             build/libsvgbird/*.o \
-            $(pkg-config --libs {gee}) \
-            $(pkg-config --libs gio-2.0) \
-            $(pkg-config --libs cairo) \
-            $(pkg-config --libs glib-2.0) \
-            $(pkg-config --libs xmlbird) \
+            $({pkg-config} --libs {gee}) \
+            $({pkg-config} --libs gio-2.0) \
+            $({pkg-config} --libs cairo) \
+            $({pkg-config} --libs glib-2.0) \
+            $({pkg-config} --libs xmlbird) \
             -L./build -L./build/bin \
             -o ./build/bin/""").format(**config.SETTINGS) + target_binary
 
@@ -441,7 +441,7 @@ def make_libbirdgems(target_binary, deps):
 
     cc_command = """{cc} {cflags[libbirdgems]} \
 			-fPIC \
-			$(pkg-config --cflags glib-2.0) \
+			$({pkg-config} --cflags glib-2.0) \
 			-c C_SOURCE \
             -o OBJECT_FILE \
 			""".format(**config.SETTINGS)
@@ -451,8 +451,8 @@ def make_libbirdgems(target_binary, deps):
 			""" + soname(target_binary) + """ \
 			-fPIC \
 			build/libbirdgems/*.o \
-			$(pkg-config --libs glib-2.0) \
-			$(pkg-config --libs gobject-2.0) \
+			$({pkg-config} --libs glib-2.0) \
+			$({pkg-config} --libs gobject-2.0) \
 			-o build/bin/""").format(**config.SETTINGS) + target_binary
 
     libbirdgems = Builder('libbirdgems',
@@ -527,22 +527,22 @@ def make_birdfont_test(target_binary, deps):
 		-D 'GETTEXT_PACKAGE="birdfont"' \
         -I./build/libbirdfont \
         -I./build/libsvgbird \
-		$(pkg-config --cflags sqlite3) \
-		$(pkg-config --cflags {gee}) \
-		$(pkg-config --cflags gio-2.0) \
-		$(pkg-config --cflags cairo) \
-		$(pkg-config --cflags glib-2.0) \
+		$({pkg-config} --cflags sqlite3) \
+		$({pkg-config} --cflags {gee}) \
+		$({pkg-config} --cflags gio-2.0) \
+		$({pkg-config} --cflags cairo) \
+		$({pkg-config} --cflags glib-2.0) \
         -o OBJECT_FILE""".format(**config.SETTINGS)
         
     linker_command = """{cc} {ldflags[birdfont-test]} \
         build/birdfont-test/*.o \
 		-L./build/bin -lbirdfont \
-		$(pkg-config --libs sqlite3) \
-		$(pkg-config --libs {gee}) \
-		$(pkg-config --libs gio-2.0) \
-		$(pkg-config --libs cairo) \
-		$(pkg-config --libs glib-2.0) \
-		$(pkg-config --libs xmlbird) \
+		$({pkg-config} --libs sqlite3) \
+		$({pkg-config} --libs {gee}) \
+		$({pkg-config} --libs gio-2.0) \
+		$({pkg-config} --libs cairo) \
+		$({pkg-config} --libs glib-2.0) \
+		$({pkg-config} --libs xmlbird) \
 		-L./build -L./build/bin -l birdgems -l svgbird\
         -o build/bin/""".format(**config.SETTINGS) + target_binary
 
@@ -576,10 +576,10 @@ def make_birdui(target_binary, deps):
 
     cc_command = """{cc}"" \
 			-fPIC \
-			$(pkg-config --cflags gtk+-3.0) \
-			$(pkg-config --cflags glib-2.0) \
-			$(pkg-config --cflags xmlbird) \
-			$(pkg-config --cflags {gee}) \
+			$({pkg-config} --cflags gtk+-3.0) \
+			$({pkg-config} --cflags glib-2.0) \
+			$({pkg-config} --cflags xmlbird) \
+			$({pkg-config} --cflags {gee}) \
 			-g \
 			-I ./build/libsvgbird \
 			-c C_SOURCE \
@@ -591,11 +591,11 @@ def make_birdui(target_binary, deps):
 			-fPIC \
 			-g \
 			build/birdui/*.o \
-			$(pkg-config --libs gtk+-3.0) \
-			$(pkg-config --libs glib-2.0) \
-			$(pkg-config --libs gobject-2.0) \
-			$(pkg-config --libs xmlbird) \
-			$(pkg-config --libs {gee}) \
+			$({pkg-config} --libs gtk+-3.0) \
+			$({pkg-config} --libs glib-2.0) \
+			$({pkg-config} --libs gobject-2.0) \
+			$({pkg-config} --libs xmlbird) \
+			$({pkg-config} --libs {gee}) \
 			-L ./build/bin -l m -l svgbird \
 			-o build/bin/""".format(**config.SETTINGS) + target_binary
 

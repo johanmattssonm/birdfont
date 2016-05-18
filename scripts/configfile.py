@@ -37,8 +37,8 @@ def write_config (prefix):
 
     f.write("}")
 
-def write_compile_parameters (prefix, dest, cc, gee, valac, non_null,
-                              valacflags, cflags, ldflags, gtk):
+def write_compile_parameters(prefix, dest, cc, gee, valac, pkg_config,
+                             non_null, valacflags, cflags, ldflags, gtk):
     settings = {
         'prefix': prefix,
         'dest': dest,
@@ -47,6 +47,7 @@ def write_compile_parameters (prefix, dest, cc, gee, valac, non_null,
         'ldflags': ldflags,
         'valac': valac,
         'valacflags': valacflags,
+        'pkg-config': pkg_config,
         'non_null': '--enable-experimental-non-null' if non_null else '',
         'gee': gee,
     }
