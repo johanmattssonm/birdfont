@@ -39,20 +39,31 @@ def write_config (prefix):
 
 def write_compile_parameters (prefix, dest, cc, gee, valac, non_null,
                               valacflags, cflags, ldflags, gtk):
+    settings = {
+        'prefix': prefix,
+        'dest': dest,
+        'cc': cc,
+        'cflags': cflags,
+        'ldflags': ldflags,
+        'valac': valac,
+        'valacflags': valacflags,
+        'non_null': '--enable-experimental-non-null' if non_null else '',
+        'gee': gee,
+    }
+    def autoquote(v):
+        if isinstance(v, str):
+            return '"' + v + '"'
+        else:
+            return str(v)
+
     f = open('./scripts/config.py', 'w+')
     f.write("#!/usr/bin/python3\n")
-    f.write("PREFIX =  \"" + prefix + "\"\n")
-    f.write("DEST = \"" + dest + "\"\n")
-    f.write("CC = \"" + cc + "\"\n")
-    f.write("GEE = \"" + gee + "\"\n")
-    f.write("VALAC = \"" + valac + "\"\n")
+    for k, v in settings.items():
+        f.write("%s = %s\n" % (k.upper().replace('-', '_'), autoquote(v)))
 
-    if non_null:
-        f.write("NON_NULL = \"--enable-experimental-non-null\"\n")
-    else:
-        f.write("NON_NULL = \"\"\n")
-        
-    f.write("VALACFLAGS = " + str(valacflags) + "\n")
-    f.write("CFLAGS = " + str(cflags) + "\n")
-    f.write("LDFLAGS = " + str(ldflags) + "\n")
     f.write("GTK = " + str(gtk) + "\n")
+
+    f.write("SETTINGS = {\n")
+    for k, v in settings.items():
+        f.write('    "%s": %s,\n' % (k, autoquote(v)))
+    f.write("}\n")
