@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-18 20:16+0100\n"
-"PO-Revision-Date: 2015-09-01 15:09+0000\n"
+"POT-Creation-Date: 2016-05-14 19:44+0200\n"
+"PO-Revision-Date: 2016-04-02 10:31+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: he\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1441120190.000000\n"
+"X-POOTLE-MTIME: 1459593065.000000\n"
 
 #: libbirdfont/Argument.vala:277
 msgid "Usage"
@@ -33,9 +33,8 @@ msgid "OPTION"
 msgstr "אפשרות"
 
 #: libbirdfont/Argument.vala:281
-#, fuzzy
 msgid "enable Android customizations"
-msgstr "להפעיל התאמות למקינטוש"
+msgstr "הפעיל התאמות לאנדרויד"
 
 #: libbirdfont/Argument.vala:282
 msgid "show coordinate in glyph view"
@@ -55,7 +54,7 @@ msgstr "להציג את ההודעה הזאת"
 
 #: libbirdfont/Argument.vala:286
 msgid "write a log file"
-msgstr ""
+msgstr "כתיבת קובץ לוג"
 
 #: libbirdfont/Argument.vala:287
 msgid "enable Machintosh customizations"
@@ -64,7 +63,7 @@ msgstr "להפעיל התאמות למקינטוש"
 #: libbirdfont/Argument.vala:288
 #, fuzzy
 msgid "enable Windows customizations"
-msgstr "להפעיל התאמות למקינטוש"
+msgstr "הפעיל התאמות לווינדוס"
 
 #: libbirdfont/Argument.vala:289
 msgid "don't translate"
@@ -72,25 +71,30 @@ msgstr "לא לתרגם"
 
 #: libbirdfont/Argument.vala:290
 msgid "sleep between each command in test suite"
-msgstr ""
+msgstr "שינה בפמי כל פקודה במצב טסטס"
 
 #: libbirdfont/Argument.vala:291
 msgid "run test case"
-msgstr ""
+msgstr "הפעיל מצב טסט"
 
 #: libbirdfont/BackgroundSelectionTool.vala:23
 msgid "Select background"
-msgstr ""
+msgstr "בחירת צבע רקע"
 
 #: libbirdfont/BackgroundTab.vala:47 libbirdfont/BackgroundTools.vala:26
 msgid "Background Image"
-msgstr ""
+msgstr "תמונת קרע"
 
-#: libbirdfont/BackgroundTool.vala:44
+#: libbirdfont/BackgroundTool.vala:163
 msgid "Move, resize and rotate background image"
 msgstr ""
 
-#: libbirdfont/BackgroundTool.vala:246
+#: libbirdfont/BackgroundTool.vala:166 libbirdfont/BezierTool.vala:103
+#: libbirdfont/PointTool.vala:88
+msgid "on axis"
+msgstr ""
+
+#: libbirdfont/BackgroundTool.vala:294
 msgid "Select background image"
 msgstr ""
 
@@ -107,7 +111,7 @@ msgstr "קבצים"
 msgid "Parts"
 msgstr "חלקים"
 
-#: libbirdfont/BackgroundTools.vala:53 libbirdfont/Glyph.vala:2364
+#: libbirdfont/BackgroundTools.vala:53 libbirdfont/Glyph.vala:2367
 #: libbirdfont/LigatureList.vala:106 libbirdfont/OtfFeatureTable.vala:181
 msgid "Add"
 msgstr ""
@@ -131,10 +135,6 @@ msgstr ""
 
 #: libbirdfont/BezierTool.vala:99
 msgid "corner"
-msgstr ""
-
-#: libbirdfont/BezierTool.vala:103
-msgid "on axis"
 msgstr ""
 
 #: libbirdfont/CircleTool.vala:36
@@ -620,39 +620,39 @@ msgstr ""
 msgid "Themes"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:512
+#: libbirdfont/Glyph.vala:515
 msgid "top margin"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:519
+#: libbirdfont/Glyph.vala:522
 msgid "top"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:526
+#: libbirdfont/Glyph.vala:529
 msgid "x-height"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:535
+#: libbirdfont/Glyph.vala:538
 msgid "baseline"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:542
+#: libbirdfont/Glyph.vala:545
 msgid "bottom"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:548
+#: libbirdfont/Glyph.vala:551
 msgid "bottom margin"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:554
+#: libbirdfont/Glyph.vala:557
 msgid "left"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:563
+#: libbirdfont/Glyph.vala:566
 msgid "right"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:2364
+#: libbirdfont/Glyph.vala:2367
 msgid "Guide"
 msgstr ""
 
@@ -929,8 +929,9 @@ msgid "Glyph sequence"
 msgstr ""
 
 #: libbirdfont/Menu.vala:37
+#, fuzzy
 msgid "File"
-msgstr ""
+msgstr "קבצים"
 
 #: libbirdfont/Menu.vala:43
 msgid "New"
@@ -1234,11 +1235,11 @@ msgstr ""
 msgid "Filter"
 msgstr ""
 
-#: libbirdfont/OverView.vala:671
+#: libbirdfont/OverView.vala:675
 msgid "No glyphs in this view."
 msgstr ""
 
-#: libbirdfont/OverView.vala:1478
+#: libbirdfont/OverView.vala:1486
 msgid "See also:"
 msgstr ""
 
@@ -1311,7 +1312,7 @@ msgstr ""
 msgid "Add new points"
 msgstr ""
 
-#: libbirdfont/PointTool.vala:24
+#: libbirdfont/PointTool.vala:84
 msgid "Move control points"
 msgstr ""
 

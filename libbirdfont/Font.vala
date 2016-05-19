@@ -187,6 +187,11 @@ public class Font : GLib.Object {
 		font_deleted ();
 	}
 
+	public void add_default_characters () {
+		add_glyph_collection (get_notdef_character ());
+		add_glyph_collection (get_space ());
+	}
+	
 	public Alternate? get_alternate (string glyph_name, string tag) {
 		Gee.ArrayList<Alternate> alt = alternates.get_alt (tag);
 		
@@ -506,7 +511,7 @@ public class Font : GLib.Object {
 		return gc;		
 	}
 	
-	public GlyphCollection get_not_def_character () {
+	public GlyphCollection get_notdef_character () {
 		Glyph g;
 		GlyphCollection gc;
 
@@ -900,6 +905,7 @@ public class Font : GLib.Object {
 		if (loaded) {
 			settings.load (get_file_name ());
 			kerning_strings.load (this);
+			add_default_characters ();
 		}
 		
 		return loaded;

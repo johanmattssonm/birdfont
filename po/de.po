@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-18 20:16+0100\n"
-"PO-Revision-Date: 2015-12-06 17:51+0000\n"
-"Last-Translator: killertomatoketchup <mumpitzmanfred@gmail.com>\n"
+"POT-Creation-Date: 2016-05-14 19:44+0200\n"
+"PO-Revision-Date: 2016-02-20 15:41+0000\n"
+"Last-Translator: Johan <johan.mattsson.m@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1449424312.000000\n"
+"X-POOTLE-MTIME: 1455982869.000000\n"
 
 #: libbirdfont/Argument.vala:277
 msgid "Usage"
@@ -84,11 +84,16 @@ msgstr "Hintergrundbild auswählen"
 msgid "Background Image"
 msgstr "Hintergrundbild"
 
-#: libbirdfont/BackgroundTool.vala:44
+#: libbirdfont/BackgroundTool.vala:163
 msgid "Move, resize and rotate background image"
 msgstr "Verschiebe, skaliere und rotiere das Hintergrundbild"
 
-#: libbirdfont/BackgroundTool.vala:246
+#: libbirdfont/BackgroundTool.vala:166 libbirdfont/BezierTool.vala:103
+#: libbirdfont/PointTool.vala:88
+msgid "on axis"
+msgstr "auf der Achse"
+
+#: libbirdfont/BackgroundTool.vala:294
 msgid "Select background image"
 msgstr "Hintergrundbild auswählen"
 
@@ -105,7 +110,7 @@ msgstr "Dateien"
 msgid "Parts"
 msgstr "Teile"
 
-#: libbirdfont/BackgroundTools.vala:53 libbirdfont/Glyph.vala:2364
+#: libbirdfont/BackgroundTools.vala:53 libbirdfont/Glyph.vala:2367
 #: libbirdfont/LigatureList.vala:106 libbirdfont/OtfFeatureTable.vala:181
 msgid "Add"
 msgstr "Hinzufügen"
@@ -130,10 +135,6 @@ msgstr "Linie"
 #: libbirdfont/BezierTool.vala:99
 msgid "corner"
 msgstr "Ecken"
-
-#: libbirdfont/BezierTool.vala:103
-msgid "on axis"
-msgstr "auf der Achse"
 
 #: libbirdfont/CircleTool.vala:36
 msgid "Circle"
@@ -195,7 +196,7 @@ msgstr "a ä b c d e f g h i j k l m n o ö p q r s ß t u ü v w x y z"
 #. / All upper case letters in alphabetic order separated by space. Letters with diacritical marks should be included.
 #: libbirdfont/DefaultCharactersSet.vala:121 libbirdfont/ExportTool.vala:421
 msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
-msgstr "A Ä B C D E F G H I J K L M O Ö P Q R S T U Ü V W X Y Z"
+msgstr "A Ä B C D E F G H I J K L M N O Ö P Q R S T U Ü V W X Y Z"
 
 #: libbirdfont/DescriptionDisplay.vala:66
 #: libbirdfont/DescriptionDisplay.vala:277 libbirdfont/ExportSettings.vala:133
@@ -397,7 +398,7 @@ msgstr "Kontur invertieren"
 
 #: libbirdfont/DrawingTools.vala:565
 msgid "Scale object to font top/baseline"
-msgstr ""
+msgstr "Skaliere das Objekt zum oberen Schriftrand/Basislinie"
 
 #: libbirdfont/DrawingTools.vala:574
 msgid "Close path"
@@ -618,39 +619,39 @@ msgstr "Einstellungen"
 msgid "Themes"
 msgstr "Designs"
 
-#: libbirdfont/Glyph.vala:512
+#: libbirdfont/Glyph.vala:515
 msgid "top margin"
 msgstr "oberer Rand"
 
-#: libbirdfont/Glyph.vala:519
+#: libbirdfont/Glyph.vala:522
 msgid "top"
 msgstr "oben"
 
-#: libbirdfont/Glyph.vala:526
+#: libbirdfont/Glyph.vala:529
 msgid "x-height"
 msgstr "X-Höhe"
 
-#: libbirdfont/Glyph.vala:535
+#: libbirdfont/Glyph.vala:538
 msgid "baseline"
 msgstr "Grundlinie"
 
-#: libbirdfont/Glyph.vala:542
+#: libbirdfont/Glyph.vala:545
 msgid "bottom"
 msgstr "unten"
 
-#: libbirdfont/Glyph.vala:548
+#: libbirdfont/Glyph.vala:551
 msgid "bottom margin"
 msgstr "Unterer Rand"
 
-#: libbirdfont/Glyph.vala:554
+#: libbirdfont/Glyph.vala:557
 msgid "left"
 msgstr "links"
 
-#: libbirdfont/Glyph.vala:563
+#: libbirdfont/Glyph.vala:566
 msgid "right"
 msgstr "rechts"
 
-#: libbirdfont/Glyph.vala:2364
+#: libbirdfont/Glyph.vala:2367
 msgid "Guide"
 msgstr "Anleitung"
 
@@ -1238,11 +1239,11 @@ msgstr "Zierschriften"
 msgid "Filter"
 msgstr "Filter"
 
-#: libbirdfont/OverView.vala:671
+#: libbirdfont/OverView.vala:675
 msgid "No glyphs in this view."
 msgstr "Keine Zeichen in dieser Ansicht."
 
-#: libbirdfont/OverView.vala:1478
+#: libbirdfont/OverView.vala:1486
 msgid "See also:"
 msgstr "Siehe auch:"
 
@@ -1268,8 +1269,9 @@ msgid "Transform"
 msgstr "Umwandeln"
 
 #: libbirdfont/OverviewTools.vala:43
+#, fuzzy
 msgid "Multi-Master"
-msgstr ""
+msgstr "Zentrale"
 
 #: libbirdfont/OverviewTools.vala:56
 msgid "All Glyphs"
@@ -1296,14 +1298,12 @@ msgid "Set curve orientation"
 msgstr "Kurvenausrichtung einstellen"
 
 #: libbirdfont/OverviewTools.vala:160
-#, fuzzy
 msgid "Master Size"
-msgstr "Gittergröße"
+msgstr "Hauptgröße"
 
 #: libbirdfont/OverviewTools.vala:175
-#, fuzzy
 msgid "Create new master font"
-msgstr "Criar uma nova fonte"
+msgstr "Erstelle neue Hauptschrift"
 
 #: libbirdfont/OverwriteBfFile.vala:25
 msgid "This file already exists. Do you want to replace it?"
@@ -1319,7 +1319,7 @@ msgstr "Ersetzen"
 msgid "Add new points"
 msgstr "Neue Punkte hinzufügen"
 
-#: libbirdfont/PointTool.vala:24
+#: libbirdfont/PointTool.vala:84
 msgid "Move control points"
 msgstr "Ankerpunkte verschieben"
 
@@ -1588,9 +1588,8 @@ msgid "Overview Item Border"
 msgstr "Übersicht des Element-Randes"
 
 #: libbirdfont/Theme.vala:473
-#, fuzzy
 msgid "Selected Overview Item"
-msgstr "Ausgewähles Überblicks-Werkzeug"
+msgstr "Ausgewähles Übersichts-Werkzeug"
 
 #: libbirdfont/Theme.vala:474
 #, fuzzy
@@ -1612,14 +1611,13 @@ msgid "Overview Foreground"
 msgstr "Vordergrunds-Ansicht"
 
 #: libbirdfont/Theme.vala:480
-#, fuzzy
 msgid "Glyph Count Background 1"
-msgstr "Glyphen Hintergrund-Zähler 1"
+msgstr "Glyphen-Zähler Hintergrund 1"
 
 #: libbirdfont/Theme.vala:481
 #, fuzzy
 msgid "Glyph Count Background 2"
-msgstr "Glyphen Hintergrund-Zähler 2"
+msgstr "Glyphen-Zähler Hintergrund 2"
 
 #: libbirdfont/Theme.vala:483
 msgid "Dialog Shadow"
@@ -1760,6 +1758,9 @@ msgstr "Unbekanntes Dateiformat."
 #: birdfont-autotrace/AutoTrace.vala:114
 msgid "Writing"
 msgstr "Wird geschrieben..."
+
+#~ msgid "color"
+#~ msgstr "Farbe"
 
 #~ msgid "Full name (name and style)"
 #~ msgstr "Vollständiger Name (Name und Schriftstil)"
@@ -2145,6 +2146,9 @@ msgstr "Wird geschrieben..."
 
 #~ msgid "Update name & description"
 #~ msgstr "Atualizar nome e descrição"
+
+#~ msgid "Create a new font"
+#~ msgstr "Criar uma nova fonte"
 
 #~ msgid "Add name and description to this font."
 #~ msgstr "Adicionar nome e descrição para esta fonte."

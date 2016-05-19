@@ -826,21 +826,18 @@ public class PenTool : Tool {
 			} else {
 				coordinate_x = Glyph.path_coordinate_x (x);
 				coordinate_y = Glyph.path_coordinate_y (y);
-				delta_coordinate_x = coordinate_x - last_point_x;
-				delta_coordinate_y = coordinate_y - last_point_y;			
-				selected_handle.move_delta_coordinate (delta_coordinate_x, delta_coordinate_y);
+				selected_handle.x = coordinate_x;
+				selected_handle.y = coordinate_y;
 				
 				if (on_axis) {
-					double horizontal, vertical;
-
-					horizontal = Path.distance (selected_handle.parent.x, selected_handle.x, selected_handle.y, selected_handle.y);
-					vertical = Path.distance (selected_handle.x, selected_handle.x, selected_handle.parent.y, selected_handle.y);
-
-					if (horizontal < vertical) {
-						selected_handle.move_to_coordinate (selected_handle.parent.x, selected_handle.y);
-					} else {
-						selected_handle.move_to_coordinate (selected_handle.x, selected_handle.parent.y);
-					}					
+					double tied_x = 0;
+					double tied_y = 0;
+					 
+					PointTool.tie_angle (selected_handle.parent.x, selected_handle.parent.y,
+							coordinate_x, coordinate_y, out tied_x, out tied_y);
+							
+					selected_handle.x = tied_x;
+					selected_handle.y = tied_y;
 				}
 			}
 

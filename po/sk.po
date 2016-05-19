@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-18 20:16+0100\n"
-"PO-Revision-Date: 2015-09-08 14:34+0000\n"
+"POT-Creation-Date: 2016-05-14 19:44+0200\n"
+"PO-Revision-Date: 2016-05-06 07:23+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: sk\n"
@@ -16,12 +16,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1441722874.000000\n"
+"X-POOTLE-MTIME: 1462519401.000000\n"
 
 #: libbirdfont/Argument.vala:277
-#, fuzzy
 msgid "Usage"
-msgstr "connot be found"
+msgstr "Použitie"
 
 #: libbirdfont/Argument.vala:279 libbirdfont/ExportUtils.vala:19
 #: birdfont-autotrace/AutoTrace.vala:68
@@ -63,9 +62,8 @@ msgid "enable Machintosh customizations"
 msgstr "Povoliť prispôsobenia pre Mac"
 
 #: libbirdfont/Argument.vala:288
-#, fuzzy
 msgid "enable Windows customizations"
-msgstr "povoliť prispôsobenia pre Android"
+msgstr "povoliť prispôsobenia pre Windows"
 
 #: libbirdfont/Argument.vala:289
 msgid "don't translate"
@@ -87,11 +85,16 @@ msgstr "vyber pozadie"
 msgid "Background Image"
 msgstr "Obrázok pozadia"
 
-#: libbirdfont/BackgroundTool.vala:44
+#: libbirdfont/BackgroundTool.vala:163
 msgid "Move, resize and rotate background image"
 msgstr "Posunúť, zmeniť veľkosť a otočiť obrázok pozadia"
 
-#: libbirdfont/BackgroundTool.vala:246
+#: libbirdfont/BackgroundTool.vala:166 libbirdfont/BezierTool.vala:103
+#: libbirdfont/PointTool.vala:88
+msgid "on axis"
+msgstr ""
+
+#: libbirdfont/BackgroundTool.vala:294
 msgid "Select background image"
 msgstr "Vybrať obrázok pozadia"
 
@@ -103,13 +106,13 @@ msgstr "Obrázok"
 #: libbirdfont/RecentFiles.vala:106
 #, fuzzy
 msgid "Files"
-msgstr "Súbor"
+msgstr "Súbory"
 
 #: libbirdfont/BackgroundTools.vala:38
 msgid "Parts"
-msgstr ""
+msgstr "Časti"
 
-#: libbirdfont/BackgroundTools.vala:53 libbirdfont/Glyph.vala:2364
+#: libbirdfont/BackgroundTools.vala:53 libbirdfont/Glyph.vala:2367
 #: libbirdfont/LigatureList.vala:106 libbirdfont/OtfFeatureTable.vala:181
 msgid "Add"
 msgstr "Pridať"
@@ -134,10 +137,6 @@ msgstr "čiara"
 #: libbirdfont/BezierTool.vala:99
 msgid "corner"
 msgstr "roh"
-
-#: libbirdfont/BezierTool.vala:103
-msgid "on axis"
-msgstr ""
 
 #: libbirdfont/CircleTool.vala:36
 msgid "Circle"
@@ -639,39 +638,39 @@ msgstr ""
 msgid "Themes"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:512
+#: libbirdfont/Glyph.vala:515
 msgid "top margin"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:519
+#: libbirdfont/Glyph.vala:522
 msgid "top"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:526
+#: libbirdfont/Glyph.vala:529
 msgid "x-height"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:535
+#: libbirdfont/Glyph.vala:538
 msgid "baseline"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:542
+#: libbirdfont/Glyph.vala:545
 msgid "bottom"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:548
+#: libbirdfont/Glyph.vala:551
 msgid "bottom margin"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:554
+#: libbirdfont/Glyph.vala:557
 msgid "left"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:563
+#: libbirdfont/Glyph.vala:566
 msgid "right"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:2364
+#: libbirdfont/Glyph.vala:2367
 msgid "Guide"
 msgstr ""
 
@@ -1274,11 +1273,11 @@ msgstr ""
 msgid "Filter"
 msgstr ""
 
-#: libbirdfont/OverView.vala:671
+#: libbirdfont/OverView.vala:675
 msgid "No glyphs in this view."
 msgstr ""
 
-#: libbirdfont/OverView.vala:1478
+#: libbirdfont/OverView.vala:1486
 msgid "See also:"
 msgstr ""
 
@@ -1336,9 +1335,8 @@ msgid "Master Size"
 msgstr ""
 
 #: libbirdfont/OverviewTools.vala:175
-#, fuzzy
 msgid "Create new master font"
-msgstr "Vytvoriť obrátenú cestu"
+msgstr ""
 
 #: libbirdfont/OverwriteBfFile.vala:25
 msgid "This file already exists. Do you want to replace it?"
@@ -1352,7 +1350,7 @@ msgstr ""
 msgid "Add new points"
 msgstr "Pridať nové body"
 
-#: libbirdfont/PointTool.vala:24
+#: libbirdfont/PointTool.vala:84
 msgid "Move control points"
 msgstr "Posunúť kontrolné body"
 
@@ -1923,6 +1921,9 @@ msgstr "Ukladá sa"
 
 #~ msgid "_Select Point Above"
 #~ msgstr "Vybrať bod nad"
+
+#~ msgid "_Create Counter Path"
+#~ msgstr "Vytvoriť obrátenú cestu"
 
 #~ msgid "_Move"
 #~ msgstr "Posunúť"

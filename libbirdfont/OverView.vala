@@ -50,7 +50,7 @@ public class OverView : FontDisplay {
 	
 	string search_query = "";
 	
-	Gee.ArrayList<OverViewItem> visible_items = new Gee.ArrayList<OverViewItem> ();
+	public Gee.ArrayList<OverViewItem> visible_items = new Gee.ArrayList<OverViewItem> ();
 	
 	/** List of undo commands. */
 	public Gee.ArrayList<OverViewUndoItem> undo_items = new Gee.ArrayList<OverViewUndoItem> ();
@@ -605,6 +605,12 @@ public class OverView : FontDisplay {
 			item = visible_items.get (i);
 
 			selected_item = false;
+	
+			if (all_available) {
+				glyphs = f.get_glyph_collection_index ((uint32) i);
+			} else {			
+				glyphs = f.get_glyph_collection_by_name ((!) item.character.to_string ());
+			}
 			
 			if (glyphs != null) {
 				selected_index = selected_items.index_of ((!) glyphs);
@@ -1278,6 +1284,10 @@ public class OverView : FontDisplay {
 			return;
 		}
 		
+		if (!KeyBindings.has_shift ()) {
+			selected_items.clear ();
+		}
+		
 		for (int j = 0; j < visible_items.size; j++) {
 			i = visible_items.get (j);
 			
@@ -1305,7 +1315,11 @@ public class OverView : FontDisplay {
 					}
 				}
 				
-				update = !i.version_menu.menu_visible;
+				if (!is_null (i.version_menu)) {
+					update = !i.version_menu.menu_visible;
+				} else {
+					update = true;
+				}
 			}
 			index++;
 		}

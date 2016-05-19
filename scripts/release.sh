@@ -15,9 +15,11 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 rep="$(pwd)"
+repname="$(basename $(pwd))"
 
 mkdir -p build
 cd build
+rm -rf export
 mkdir -p export
 cd export 
 
@@ -51,7 +53,7 @@ else
 	git clone --depth 1 -b $1 file://$rep
 fi
 
-mv birdfont birdfont-$version
+mv $repname birdfont-$version
 
 rm -rf birdfont-$version/.git
 rm -rf birdfont-$version/.gitignore

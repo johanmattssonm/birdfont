@@ -134,7 +134,6 @@ public class FallbackFont : GLib.Object {
 		
 		idle.set_callback (() => {
 			font_config = config;
-			print("Fontconfog loaded.");
 			return false;
 		});
 		idle.attach (null);

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-18 20:16+0100\n"
-"PO-Revision-Date: 2015-09-23 08:27+0000\n"
+"POT-Creation-Date: 2016-05-14 19:44+0200\n"
+"PO-Revision-Date: 2016-04-01 04:03+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: tr\n"
@@ -16,11 +16,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1442996830.000000\n"
+"X-POOTLE-MTIME: 1459483431.000000\n"
 
 #: libbirdfont/Argument.vala:277
 msgid "Usage"
-msgstr "Kullanımı"
+msgstr "rotate"
 
 #: libbirdfont/Argument.vala:279 libbirdfont/ExportUtils.vala:19
 #: birdfont-autotrace/AutoTrace.vala:68
@@ -46,7 +46,7 @@ msgstr "Test sonucu hatalıysa çık"
 
 #: libbirdfont/Argument.vala:284
 msgid "treat warnings as fatal"
-msgstr ""
+msgstr "uyarıları \"çok önemli\" olarak değerlendir"
 
 #: libbirdfont/Argument.vala:285
 msgid "show this message"
@@ -70,12 +70,14 @@ msgid "don't translate"
 msgstr "tercüme etme"
 
 #: libbirdfont/Argument.vala:290
+#, fuzzy
 msgid "sleep between each command in test suite"
-msgstr ""
+msgstr "test paketinde her bir komut arasında bekle"
 
 #: libbirdfont/Argument.vala:291
+#, fuzzy
 msgid "run test case"
-msgstr ""
+msgstr "deneme sürümünü çalıştır"
 
 #: libbirdfont/BackgroundSelectionTool.vala:23
 #, fuzzy
@@ -86,17 +88,22 @@ msgstr "Arkaplan Seç"
 msgid "Background Image"
 msgstr "Arkaplan Resmi"
 
-#: libbirdfont/BackgroundTool.vala:44
+#: libbirdfont/BackgroundTool.vala:163
 msgid "Move, resize and rotate background image"
-msgstr "Arkaplan görselini taşı, ölçeklendir ve/veya çevir"
+msgstr "Arkaplan görselini taşı, ölçeklendir ve çevir"
 
-#: libbirdfont/BackgroundTool.vala:246
+#: libbirdfont/BackgroundTool.vala:166 libbirdfont/BezierTool.vala:103
+#: libbirdfont/PointTool.vala:88
+msgid "on axis"
+msgstr "eksen üzerinde"
+
+#: libbirdfont/BackgroundTool.vala:294
 msgid "Select background image"
-msgstr "Arkaplan Resmi Seç"
+msgstr "Arkaplan görselini seç"
 
 #: libbirdfont/BackgroundTools.vala:27
 msgid "Images"
-msgstr ""
+msgstr "Resimler"
 
 #: libbirdfont/BackgroundTools.vala:34 libbirdfont/FileDialogTab.vala:94
 #: libbirdfont/RecentFiles.vala:106
@@ -105,16 +112,16 @@ msgstr "Dosyalar"
 
 #: libbirdfont/BackgroundTools.vala:38
 msgid "Parts"
-msgstr ""
+msgstr "Bölümler"
 
-#: libbirdfont/BackgroundTools.vala:53 libbirdfont/Glyph.vala:2364
+#: libbirdfont/BackgroundTools.vala:53 libbirdfont/Glyph.vala:2367
 #: libbirdfont/LigatureList.vala:106 libbirdfont/OtfFeatureTable.vala:181
 msgid "Add"
-msgstr ""
+msgstr "Ekle"
 
 #: libbirdfont/BackgroundTools.vala:122
 msgid "Select Glyph"
-msgstr "Klip Seç"
+msgstr "Glyph Seç"
 
 #: libbirdfont/BackgroundTools.vala:231 libbirdfont/LoadCallback.vala:102
 #: libbirdfont/Menu.vala:50
@@ -123,19 +130,16 @@ msgstr "Aç"
 
 #: libbirdfont/BezierTool.vala:91
 msgid "Create Beziér curves"
-msgstr ""
+msgstr "Bezier eğrisi oluştur"
 
 #: libbirdfont/BezierTool.vala:95
+#, fuzzy
 msgid "line"
-msgstr ""
+msgstr "çizgi"
 
 #: libbirdfont/BezierTool.vala:99
 msgid "corner"
-msgstr ""
-
-#: libbirdfont/BezierTool.vala:103
-msgid "on axis"
-msgstr ""
+msgstr "köşe"
 
 #: libbirdfont/CircleTool.vala:36
 msgid "Circle"
@@ -143,7 +147,7 @@ msgstr "Çember"
 
 #: libbirdfont/CutBackgroundTool.vala:38
 msgid "Crop background image"
-msgstr "Arkaplan imajı kesme"
+msgstr "Arkaplan imajını kes"
 
 #: libbirdfont/DefaultCharactersSet.vala:25
 msgid "Default Language"
@@ -176,7 +180,7 @@ msgstr "Polinezce"
 
 #: libbirdfont/DefaultCharactersSet.vala:33
 msgid "Latin"
-msgstr "Latin"
+msgstr "Latince"
 
 #: libbirdfont/DefaultCharactersSet.vala:34
 msgid "Russian"
@@ -188,7 +192,7 @@ msgstr "İsveççe"
 
 #: libbirdfont/DefaultCharactersSet.vala:36
 msgid "Thai"
-msgstr "Taylandça"
+msgstr "Tay Dili"
 
 #. / All lower case letters in alphabetic order separated by space. Letters with diacritical marks should be included.
 #: libbirdfont/DefaultCharactersSet.vala:118 libbirdfont/ExportTool.vala:420
@@ -628,39 +632,39 @@ msgstr ""
 msgid "Themes"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:512
+#: libbirdfont/Glyph.vala:515
 msgid "top margin"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:519
+#: libbirdfont/Glyph.vala:522
 msgid "top"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:526
+#: libbirdfont/Glyph.vala:529
 msgid "x-height"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:535
+#: libbirdfont/Glyph.vala:538
 msgid "baseline"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:542
+#: libbirdfont/Glyph.vala:545
 msgid "bottom"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:548
+#: libbirdfont/Glyph.vala:551
 msgid "bottom margin"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:554
+#: libbirdfont/Glyph.vala:557
 msgid "left"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:563
+#: libbirdfont/Glyph.vala:566
 msgid "right"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:2364
+#: libbirdfont/Glyph.vala:2367
 msgid "Guide"
 msgstr ""
 
@@ -1246,11 +1250,11 @@ msgstr ""
 msgid "Filter"
 msgstr "Filtre"
 
-#: libbirdfont/OverView.vala:671
+#: libbirdfont/OverView.vala:675
 msgid "No glyphs in this view."
 msgstr ""
 
-#: libbirdfont/OverView.vala:1478
+#: libbirdfont/OverView.vala:1486
 msgid "See also:"
 msgstr "Ayrıca bakınız:"
 
@@ -1304,14 +1308,12 @@ msgid "Set curve orientation"
 msgstr ""
 
 #: libbirdfont/OverviewTools.vala:160
-#, fuzzy
 msgid "Master Size"
-msgstr "Izgara boyutu"
+msgstr ""
 
 #: libbirdfont/OverviewTools.vala:175
-#, fuzzy
 msgid "Create new master font"
-msgstr "Yeni bir yazı tipi oluştur"
+msgstr ""
 
 #: libbirdfont/OverwriteBfFile.vala:25
 msgid "This file already exists. Do you want to replace it?"
@@ -1325,7 +1327,7 @@ msgstr ""
 msgid "Add new points"
 msgstr "Yeni nokta ekle"
 
-#: libbirdfont/PointTool.vala:24
+#: libbirdfont/PointTool.vala:84
 msgid "Move control points"
 msgstr "Kontrol noktası taşı"
 
@@ -1853,6 +1855,9 @@ msgstr "Yazılıyor"
 
 #~ msgid "Update name & description"
 #~ msgstr "İsim & açıklamayı güncelle"
+
+#~ msgid "Create a new font"
+#~ msgstr "Yeni bir yazı tipi oluştur"
 
 #~ msgid "Preferences"
 #~ msgstr "Tercihler"
