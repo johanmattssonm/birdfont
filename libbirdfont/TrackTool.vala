@@ -174,8 +174,9 @@ public class TrackTool : Tool {
 				
 				foreach (Object path in g.active_paths) {
 					if (path is PathObject) {
-						convert_hidden_points (((PathObject) path).get_path ());
-						path.update_region_boundaries ();
+						Path freehand_path = ((PathObject) path).get_path ();
+						convert_hidden_points (freehand_path);
+						freehand_path.update_region_boundaries ();
 					}
 				}
 				
