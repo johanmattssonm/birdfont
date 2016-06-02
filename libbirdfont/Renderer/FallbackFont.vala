@@ -109,7 +109,6 @@ public class FallbackFont : GLib.Object {
 	}
 
 	public void init_font_config () {
-		print("init_font_config\n");
 		FcConfig* config;
 		
 #if MAC
