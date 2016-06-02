@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2014 2015 Johan Mattsson
+	Copyright (C) 2014 2015 2016 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -97,16 +97,20 @@ public class TrackTool : Tool {
 				
 				if (join_paths) {
 					ps = get_path_with_end_point (x, y);
+					
 					if (unlikely (ps == null)) {
 						warning ("No end point.");
 						return;
 					}
+					
 					end_point = (!) ps;
+
 					if (end_point.is_first ()) {
 						end_point.path.reverse ();
 					}
+					
+					Path path = end_point.path;					
 					glyph.set_active_path (end_point.path);
-					add_corner (x, y);
 				} else {
 					p = new Path ();
 					glyph.add_path (p);
@@ -154,11 +158,11 @@ public class TrackTool : Tool {
 									
 					if (p.points.size > 1) {
 						previous = p.points.get (p.points.size - 1);
-						previous.type = DrawingTools.point_type;
+						previous.type = PointType.CUBIC;
 						previous.set_tie_handle (false);
 
 						previous = p.points.get (0);
-						previous.type = DrawingTools.point_type;
+						previous.type = PointType.CUBIC;
 						previous.set_tie_handle (false);
 					}
 				}
@@ -167,10 +171,11 @@ public class TrackTool : Tool {
 					return_if_fail (drawing);
 					add_endpoint_and_merge (x, y);
 				}
-							
+				
 				foreach (Object path in g.active_paths) {
 					if (path is PathObject) {
 						convert_hidden_points (((PathObject) path).get_path ());
+						path.update_region_boundaries ();
 					}
 				}
 				
@@ -227,8 +232,8 @@ public class TrackTool : Tool {
 		foreach (EditPoint e in p.points) {
 			if (e.type == PointType.HIDDEN) {
 				e.type = DrawingTools.point_type;
-				e.get_right_handle ().type = DrawingTools.point_type;
-				e.get_left_handle ().type = DrawingTools.point_type;
+				e.get_right_handle ().type = PointType.CUBIC;
+				e.get_left_handle ().type = PointType.CUBIC;
 			}
 		}
 	}
@@ -303,16 +308,15 @@ public class TrackTool : Tool {
 			return;
 		}
 
+		EditPoint last_point = p.get_last_point ();
+		EditPointHandle handle = last_point.get_right_handle ();
+		handle.convert_to_line ();
+		p.recalculate_linear_handles ();
+
+		PenTool.convert_point_type (p.get_last_point (), PointType.CUBIC);
+		PenTool.convert_point_type (p.get_first_point (), PointType.CUBIC);
+
 		p.create_list ();
-		
-		if (DrawingTools.get_selected_point_type () == PointType.QUADRATIC) {
-			foreach (EditPoint e in p.points) {
-				if (e.tie_handles) {
-					e.convert_to_curve ();
-					e.process_tied_handle ();							
-				}
-			}
-		}
 
 		if (PenTool.is_counter_path (p)) {
 			p.force_direction (Direction.COUNTER_CLOCKWISE);
@@ -345,10 +349,8 @@ public class TrackTool : Tool {
 		
 		merged.append_path (b.path);
 		
-		g = MainWindow.get_current_glyph ();
-		
+		g = MainWindow.get_current_glyph ();		
 		g.add_path (merged);
-		
 		a.delete_last_point ();
 		
 		update_corner_handle (a.get_last_point (), b.path.get_first_point ());
@@ -360,7 +362,7 @@ public class TrackTool : Tool {
 		merged.update_region_boundaries ();
 		merged.recalculate_linear_handles ();
 		merged.reopen ();
-		
+
 		return merged;
 	}
 
@@ -423,14 +425,26 @@ public class TrackTool : Tool {
 		
 		p = ((PathObject) o).get_path ();
 		p.reopen ();
+
+		EditPoint last_point = new EditPoint ();
+		
+		if (p.points.size > 0) {
+			last_point = p.get_last_point ();
+		}
+		
 		px = Glyph.path_coordinate_x (x);
 		py = Glyph.path_coordinate_y (y);
-		new_point = p.add (px, py);
+		
+		new_point = new EditPoint (px, py, PointType.CUBIC);
+		p.add_point (new_point);
 		added_points++;
 
 		PenTool.convert_point_to_line (new_point, false);
-		new_point.set_point_type (PointType.HIDDEN);		
+		
+		new_point.set_point_type (PointType.HIDDEN);
 		p.recalculate_linear_handles_for_point (new_point);
+
+		last_point.get_right_handle ().length = 0.000001;
 		
 		if (p.points.size > 1) {
 			glyph.redraw_segment (new_point, new_point.get_prev ());
@@ -472,29 +486,28 @@ public class TrackTool : Tool {
 			update_cycles = 0;
 		}
 		
-		if (update_cycles > 4) { // cycles of 100 ms
+		if (update_cycles > 0.7 * 10) { // delay in time
 			convert_points_to_line ();
-			last_update  = get_current_time ();
+			last_update = get_current_time ();
 			add_corner (last_x, last_y);
 			added_points = 0;
 			update_cycles = 0;
 		}
 			
-		if (added_points > 25 / samples_per_point) {
-			last_update  = get_current_time ();
+		if (added_points > 80 / samples_per_point) {
+			last_update = get_current_time ();
 			convert_points_to_line ();
 		}
 	}
 	
 	/** Add a sharp corner instead of a smooth curve. */
-	void add_corner (int px, int py) {
-		PointSelection p;
-		delete_last_points_at (px, py);
-		p = PenTool.add_new_edit_point (px, py);
-		p.point.set_tie_handle (false);
-		p.point.get_left_handle ().convert_to_line ();
-		p.point.get_right_handle ().convert_to_line ();
-		p.path.recalculate_linear_handles_for_point (p.point);
+	void add_corner (double px, double py) {
+		EditPoint p;
+		p = new EditPoint (px, py, PointType.CUBIC);
+		p.set_tie_handle (false);
+		p.get_left_handle ().convert_to_line ();
+		p.get_right_handle ().convert_to_line ();
+		get_active_path ().recalculate_linear_handles_for_point (p);
 		last_update = get_current_time ();
 		MainWindow.get_current_glyph ().update_view ();
 	}
@@ -519,8 +532,7 @@ public class TrackTool : Tool {
 	}
 	
 	/** Delete all points close to the pixel at x,y. */
-	void delete_last_points_at (int x, int y) {
-		double px, py;
+	void delete_last_points_at (double px, double py) {
 		Path p;
 					
 		p = get_active_path ();
@@ -529,9 +541,6 @@ public class TrackTool : Tool {
 			warning ("Missing point.");
 			return;
 		}
-
-		px = Glyph.path_coordinate_x (x);
-		py = Glyph.path_coordinate_y (y);
 
 		while (p.points.size > 0 && is_close (p.points.get (p.points.size - 1), px, py)) {
 			p.delete_last_point ();
@@ -579,42 +588,22 @@ public class TrackTool : Tool {
 		sum_x = 0;
 		sum_y = 0;
 		
-		last_point = p.points.get (p.points.size - 1);
+		int start = p.points.size - 1 - added_points;
+		int stop = p.points.size - 1;
+		
+		EditPoint end = p.points.get (stop);
+		
+		Path segment = StrokeTool.fit_bezier_path (p, start, stop, 5.0 / samples_per_point);
 		
 		for (int i = 0; i < added_points; i++) {
-			ep = p.delete_last_point ();
-			sum_x += ep.x;
-			sum_y += ep.y;			
-			points.add (ep);
-		}
+			p.delete_last_point ();
+		}		
 		
-		nx = sum_x / added_points;
-		ny = sum_y / added_points;
-
-		px = Glyph.reverse_path_coordinate_x (nx);
-		py = Glyph.reverse_path_coordinate_y (ny);
-		average = PenTool.add_new_edit_point (px, py).point;
-		average.type = PointType.HIDDEN;
+		p.append_path (segment);
+		p.remove_points_on_points ();
 		
-		// tie handles for all points except for the end points
-		average.set_tie_handle (p.points.size > 1); 
+		add_corner (end.x, end.y);
 		
-		if (unlikely (p.points.size == 0)) {
-			warning ("No points.");
-			return;
-		}
-		
-		if (average.prev != null && average.get_prev ().tie_handles) {
-			if (p.points.size > 2) {
-				previous = average.get_prev ();
-				previous.type = DrawingTools.point_type;
-				PenTool.convert_point_to_line (previous, true);
-				p.recalculate_linear_handles_for_point (previous);
-				previous.process_tied_handle ();
-				previous.set_tie_handle (false);
-			}
-		}
-
 		added_points = 0;
 		last_update = get_current_time ();
 		glyph.update_view ();
