@@ -113,15 +113,17 @@ public class GlyfTable : OtfTable {
 		
 		foreach (GlyphCollection gc in glyphs) {
 			g = gc.get_current ();
+
+			printd (@"adding glyph: $(gc.get_name ())\n");
+						
 			// set values for loca table
 			assert (fd.length () % 4 == 0);
 			location_offsets.add (fd.length ());
 			process_glyph (g, fd);
 
-			printd (@"adding glyph: $(g.name)\n");
 			printd (@"glyf length: $(fd.length () - last_len)\n");
 			printd (@"loca fd.length (): $(fd.length ())\n");
-
+			
 			last_len = fd.length ();
 		}
 
@@ -193,6 +195,13 @@ public class GlyfTable : OtfTable {
 		
 		foreach (GlyphCollection ug in unassigned_glyphs) {
 			glyphs.add (ug);
+		}
+		
+		
+		int gid = 0;
+		foreach (GlyphCollection ug in glyphs) {
+			printd (@"Glyph: $(ug.get_name ()) GID: $(gid)\n");
+			gid++;
 		}
 	}
 

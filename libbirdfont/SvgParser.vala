@@ -1491,7 +1491,10 @@ public class SvgParser {
 			return 0;
 		}
 		
-		return double.parse ((!) s);
+		string d = (!) s;
+		d = d.replace ("px", "");
+		
+		return double.parse (d);
 	}
 	
 	static bool is_point (string? s) {
