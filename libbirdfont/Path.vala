@@ -1204,9 +1204,9 @@ public class Path : GLib.Object {
 	/** Convert quadratic bezier points to cubic representation of the glyph
 	 * for ttf-export.
 	 */ 
-	public Path get_quadratic_points () {
+	public Path get_quadratic_points (double tolerance) {
 		PointConverter converter;
-		converter = new PointConverter (this);		
+		converter = new PointConverter (this, tolerance);
 		return converter.get_quadratic_path ();
 	}
 
