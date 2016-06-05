@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-14 20:03+0200\n"
+"POT-Creation-Date: 2016-06-05 11:26+0200\n"
 "PO-Revision-Date: 2016-04-14 09:55+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
@@ -204,7 +204,7 @@ msgstr ""
 "Ý Z Ž"
 
 #: libbirdfont/DescriptionDisplay.vala:66
-#: libbirdfont/DescriptionDisplay.vala:277 libbirdfont/ExportSettings.vala:133
+#: libbirdfont/DescriptionDisplay.vala:277 libbirdfont/ExportSettings.vala:159
 #: libbirdfont/Menu.vala:499 libbirdfont/TableLayout.vala:203
 msgid "Name and Description"
 msgstr "Název a popis"
@@ -541,28 +541,32 @@ msgstr "Další zobrazení"
 msgid "Set size for grid"
 msgstr "Nastavit velikost mřížky"
 
-#: libbirdfont/ExportSettings.vala:41 libbirdfont/ExportSettings.vala:185
+#: libbirdfont/ExportSettings.vala:42 libbirdfont/ExportSettings.vala:211
 #: libbirdfont/Menu.vala:329
 msgid "Export Settings"
 msgstr "Nastavení ukládání"
 
-#: libbirdfont/ExportSettings.vala:45 libbirdfont/ExportSettings.vala:60
+#: libbirdfont/ExportSettings.vala:46 libbirdfont/ExportSettings.vala:61
 msgid "File Name"
 msgstr "Název souboru"
 
-#: libbirdfont/ExportSettings.vala:75
+#: libbirdfont/ExportSettings.vala:76
 msgid "Units Per Em"
 msgstr "Jednotky za Em"
 
-#: libbirdfont/ExportSettings.vala:94 libbirdfont/RecentFiles.vala:73
+#: libbirdfont/ExportSettings.vala:95 libbirdfont/RecentFiles.vala:73
 msgid "Folder"
 msgstr "Složka"
 
-#: libbirdfont/ExportSettings.vala:98
+#: libbirdfont/ExportSettings.vala:99
 msgid "Formats"
 msgstr "Formáty"
 
-#: libbirdfont/ExportSettings.vala:139
+#: libbirdfont/ExportSettings.vala:134
+msgid "Conversion Tolerance"
+msgstr ""
+
+#: libbirdfont/ExportSettings.vala:165
 msgid "Export"
 msgstr "Exportovat"
 
@@ -1271,7 +1275,7 @@ msgstr "Ozdobná písmena"
 msgid "Filter"
 msgstr "Filtr"
 
-#: libbirdfont/OverView.vala:1518
+#: libbirdfont/OverView.vala:1509
 msgid "See also:"
 msgstr "Další podrobnosti:"
 

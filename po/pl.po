@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-14 20:03+0200\n"
-"PO-Revision-Date: 2015-11-05 19:53+0000\n"
+"POT-Creation-Date: 2016-06-05 11:26+0200\n"
+"PO-Revision-Date: 2016-05-29 17:10+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: pl\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1446753197.000000\n"
+"X-POOTLE-MTIME: 1464541857.000000\n"
 
 #: libbirdfont/Argument.vala:277
 msgid "Usage"
@@ -200,7 +200,7 @@ msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 msgstr "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 
 #: libbirdfont/DescriptionDisplay.vala:66
-#: libbirdfont/DescriptionDisplay.vala:277 libbirdfont/ExportSettings.vala:133
+#: libbirdfont/DescriptionDisplay.vala:277 libbirdfont/ExportSettings.vala:159
 #: libbirdfont/Menu.vala:499 libbirdfont/TableLayout.vala:203
 msgid "Name and Description"
 msgstr "Nazwa i opis"
@@ -541,28 +541,32 @@ msgstr "Następny widok"
 msgid "Set size for grid"
 msgstr "Ustaw rozmiar siatki"
 
-#: libbirdfont/ExportSettings.vala:41 libbirdfont/ExportSettings.vala:185
+#: libbirdfont/ExportSettings.vala:42 libbirdfont/ExportSettings.vala:211
 #: libbirdfont/Menu.vala:329
 msgid "Export Settings"
 msgstr "Ustawienia eksportu"
 
-#: libbirdfont/ExportSettings.vala:45 libbirdfont/ExportSettings.vala:60
+#: libbirdfont/ExportSettings.vala:46 libbirdfont/ExportSettings.vala:61
 msgid "File Name"
 msgstr "Nazwa pliku"
 
-#: libbirdfont/ExportSettings.vala:75
+#: libbirdfont/ExportSettings.vala:76
 msgid "Units Per Em"
 msgstr "Jednostek na Em"
 
-#: libbirdfont/ExportSettings.vala:94 libbirdfont/RecentFiles.vala:73
+#: libbirdfont/ExportSettings.vala:95 libbirdfont/RecentFiles.vala:73
 msgid "Folder"
 msgstr "Katalog"
 
-#: libbirdfont/ExportSettings.vala:98
+#: libbirdfont/ExportSettings.vala:99
 msgid "Formats"
 msgstr "Formaty"
 
-#: libbirdfont/ExportSettings.vala:139
+#: libbirdfont/ExportSettings.vala:134
+msgid "Conversion Tolerance"
+msgstr ""
+
+#: libbirdfont/ExportSettings.vala:165
 msgid "Export"
 msgstr "Eksportuj"
 
@@ -637,11 +641,11 @@ msgstr "Motywy"
 
 #: libbirdfont/Glyph.vala:575
 msgid "top margin"
-msgstr ""
+msgstr "margines górny"
 
 #: libbirdfont/Glyph.vala:582
 msgid "top"
-msgstr ""
+msgstr "góra"
 
 #: libbirdfont/Glyph.vala:589
 msgid "x-height"
@@ -1277,7 +1281,7 @@ msgstr ""
 msgid "Filter"
 msgstr "Filtr"
 
-#: libbirdfont/OverView.vala:1518
+#: libbirdfont/OverView.vala:1509
 msgid "See also:"
 msgstr "Zobacz także:"
 

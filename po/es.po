@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-14 20:03+0200\n"
-"PO-Revision-Date: 2016-05-04 09:29+0000\n"
-"Last-Translator: martias <manuel.martiarena@axa-groupsolutions.com>\n"
+"POT-Creation-Date: 2016-06-05 11:26+0200\n"
+"PO-Revision-Date: 2016-05-24 14:27+0000\n"
+"Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1462354199.000000\n"
+"X-POOTLE-MTIME: 1464100059.000000\n"
 
 #: libbirdfont/Argument.vala:277
 msgid "Usage"
@@ -199,7 +199,7 @@ msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 msgstr "A B C D E F G H I J K L M N Ã‘ O P Q R S T U V W X Y Z"
 
 #: libbirdfont/DescriptionDisplay.vala:66
-#: libbirdfont/DescriptionDisplay.vala:277 libbirdfont/ExportSettings.vala:133
+#: libbirdfont/DescriptionDisplay.vala:277 libbirdfont/ExportSettings.vala:159
 #: libbirdfont/Menu.vala:499 libbirdfont/TableLayout.vala:203
 msgid "Name and Description"
 msgstr "Nombre y descripciÃ³n"
@@ -538,28 +538,32 @@ msgstr "Vista siguiente"
 msgid "Set size for grid"
 msgstr "Establecer tamaÃ±o de la cuadrÃ­cula"
 
-#: libbirdfont/ExportSettings.vala:41 libbirdfont/ExportSettings.vala:185
+#: libbirdfont/ExportSettings.vala:42 libbirdfont/ExportSettings.vala:211
 #: libbirdfont/Menu.vala:329
 msgid "Export Settings"
 msgstr "Configuraciones de exportaciÃ³n"
 
-#: libbirdfont/ExportSettings.vala:45 libbirdfont/ExportSettings.vala:60
+#: libbirdfont/ExportSettings.vala:46 libbirdfont/ExportSettings.vala:61
 msgid "File Name"
 msgstr "Nombre del archivo"
 
-#: libbirdfont/ExportSettings.vala:75
+#: libbirdfont/ExportSettings.vala:76
 msgid "Units Per Em"
 msgstr ""
 
-#: libbirdfont/ExportSettings.vala:94 libbirdfont/RecentFiles.vala:73
+#: libbirdfont/ExportSettings.vala:95 libbirdfont/RecentFiles.vala:73
 msgid "Folder"
 msgstr "Carpeta"
 
-#: libbirdfont/ExportSettings.vala:98
+#: libbirdfont/ExportSettings.vala:99
 msgid "Formats"
 msgstr "Formatos"
 
-#: libbirdfont/ExportSettings.vala:139
+#: libbirdfont/ExportSettings.vala:134
+msgid "Conversion Tolerance"
+msgstr ""
+
+#: libbirdfont/ExportSettings.vala:165
 msgid "Export"
 msgstr "Exportar"
 
@@ -843,7 +847,7 @@ msgstr ""
 #: libbirdfont/KerningTools.vala:136
 #, fuzzy
 msgid "You have reached the beginning of the list."
-msgstr "Has llegado al final de la lista."
+msgstr "Has llegado al principio de la lista."
 
 #: libbirdfont/KerningTools.vala:145
 #, fuzzy
@@ -873,7 +877,7 @@ msgstr ""
 #: libbirdfont/LayerLabel.vala:171
 #, fuzzy
 msgid "Layer"
-msgstr "Capas"
+msgstr "Capa"
 
 #: libbirdfont/LigatureList.vala:53
 msgid "character sequence"
@@ -1281,7 +1285,7 @@ msgstr ""
 msgid "Filter"
 msgstr "Filtro"
 
-#: libbirdfont/OverView.vala:1518
+#: libbirdfont/OverView.vala:1509
 msgid "See also:"
 msgstr "Ver tambiÃ©n:"
 

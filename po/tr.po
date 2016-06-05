@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-14 20:03+0200\n"
+"POT-Creation-Date: 2016-06-05 11:26+0200\n"
 "PO-Revision-Date: 2016-04-01 04:03+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -205,7 +205,7 @@ msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:66
-#: libbirdfont/DescriptionDisplay.vala:277 libbirdfont/ExportSettings.vala:133
+#: libbirdfont/DescriptionDisplay.vala:277 libbirdfont/ExportSettings.vala:159
 #: libbirdfont/Menu.vala:499 libbirdfont/TableLayout.vala:203
 msgid "Name and Description"
 msgstr "ad ve açıklama"
@@ -546,28 +546,32 @@ msgstr "Sonraki görünüm"
 msgid "Set size for grid"
 msgstr ""
 
-#: libbirdfont/ExportSettings.vala:41 libbirdfont/ExportSettings.vala:185
+#: libbirdfont/ExportSettings.vala:42 libbirdfont/ExportSettings.vala:211
 #: libbirdfont/Menu.vala:329
 msgid "Export Settings"
 msgstr ""
 
-#: libbirdfont/ExportSettings.vala:45 libbirdfont/ExportSettings.vala:60
+#: libbirdfont/ExportSettings.vala:46 libbirdfont/ExportSettings.vala:61
 msgid "File Name"
 msgstr ""
 
-#: libbirdfont/ExportSettings.vala:75
+#: libbirdfont/ExportSettings.vala:76
 msgid "Units Per Em"
 msgstr ""
 
-#: libbirdfont/ExportSettings.vala:94 libbirdfont/RecentFiles.vala:73
+#: libbirdfont/ExportSettings.vala:95 libbirdfont/RecentFiles.vala:73
 msgid "Folder"
 msgstr ""
 
-#: libbirdfont/ExportSettings.vala:98
+#: libbirdfont/ExportSettings.vala:99
 msgid "Formats"
 msgstr ""
 
-#: libbirdfont/ExportSettings.vala:139
+#: libbirdfont/ExportSettings.vala:134
+msgid "Conversion Tolerance"
+msgstr ""
+
+#: libbirdfont/ExportSettings.vala:165
 msgid "Export"
 msgstr ""
 
@@ -1281,7 +1285,7 @@ msgstr ""
 msgid "Filter"
 msgstr "Filtre"
 
-#: libbirdfont/OverView.vala:1518
+#: libbirdfont/OverView.vala:1509
 msgid "See also:"
 msgstr "Ayrıca bakınız:"
 
