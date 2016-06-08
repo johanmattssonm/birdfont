@@ -56,12 +56,11 @@ public class SpacingClass : GLib.Object  {
 			} else {
 				next = v.dup ();
 			}
-			
-			updated (this);
 		});
 		
 		listener.signal_submit.connect (() => {
 			TabContent.hide_text_input ();
+			updated (this);
 		});
 		
 		TabContent.show_text_input (listener);
