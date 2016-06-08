@@ -49,6 +49,7 @@ public class SvgPath : Object {
 		PointValue* points = path.point_data.data;
 		int size = path.point_data.size;
 		
+		// points are padded up to 8 units
 		return_if_fail (size % 8 == 0);
 		
 		for (int i = 0; i < size; i += 8) {

@@ -48,6 +48,12 @@ public class Gradient : GLib.Object {
 		foreach (Stop s in stops) {
 			g.stops.add (s.copy ());
 		}
+	
+		g.id = id;
+		g.href = href;	
+		transforms = transforms.copy ();
+		
+		print (@"$(this)\n");
 		
 		return g;
 	}
@@ -60,7 +66,7 @@ public class Gradient : GLib.Object {
 	
 	public string to_string () {
 		StringBuilder description = new StringBuilder ();
-		description.append ("Gradient: ");
+		description.append (@"Gradient $(id): ");
 		description.append (@"x1=$x1, y1=$y1, x2=$x2, y2=$y2");
 		
 		foreach (Stop stop in stops) {

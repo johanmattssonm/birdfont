@@ -54,7 +54,7 @@ public class Circle : Object {
 		
 		Object.copy_attributes (this, c);
 		c.cx = cx;
-		c.cx = cy;
+		c.cy = cy;
 		c.r = r;
 		
 		return c; 
