@@ -71,6 +71,13 @@ public class ObjectGroup : GLib.Object {
 		
 		return objects_copy;
 	}
+	
+	public void print_objects () {
+		foreach (Object o in objects) {
+			stdout.printf (o.to_string ());
+			stdout.printf ("\n");
+		}
+	}
 }
 
 }

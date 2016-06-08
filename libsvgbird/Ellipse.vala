@@ -29,10 +29,10 @@ public class Ellipse : Object {
 
 	public Ellipse.create_copy (Ellipse c) {
 		Object.copy_attributes (c, this);
-		c.cx = cx;
-		c.cx = cy;
-		c.rx = rx;
-		c.ry = ry;
+		cx = c.cx;
+		cx = c.cy;
+		rx = c.rx;
+		ry = c.ry;
 	}
 	
 	public override bool is_over (double x, double y) {

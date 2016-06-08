@@ -28,10 +28,10 @@ public class Line : Object {
 
 	public Line.create_copy (Line c) {
 		Object.copy_attributes (c, this);
-		c.x1 = x1;
-		c.y1 = y1;
-		c.x2 = x2;
-		c.y2 = y2;
+		x1 = c.x1;
+		y1 = c.y1;
+		x2 = c.x2;
+		y2 = c.y2;
 	}
 	
 	public override bool is_over (double x, double y) {

@@ -27,9 +27,9 @@ public class Circle : Object {
 
 	public Circle.create_copy (Circle c) {
 		Object.copy_attributes (c, this);
-		c.cx = cx;
-		c.cx = cy;
-		c.r = r;
+		cx = c.cx;
+		cx = c.cy;
+		r = c.r;
 	}
 	
 	public override bool is_over (double x, double y) {
