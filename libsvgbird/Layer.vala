@@ -111,10 +111,6 @@ public class Layer : Object {
 		Layer layer = new Layer ();
 		copy_layer (this, layer);
 		Object.copy_attributes (this, layer);
-		
-		stdout.printf (@"Copy $(layer.name)\n");
-		layer.objects.print_objects ();
-		
 		return layer;
 	}
 	

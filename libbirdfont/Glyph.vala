@@ -1826,6 +1826,8 @@ public class Glyph : FontDisplay {
 		if (clear_redo) {
 			redo_list.clear ();
 		}
+		
+		// set_glyph_data (g); // FIXME: DELETE
 	}
 
 	public void print_layers (Layer layer, int indent = 0) {

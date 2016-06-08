@@ -99,9 +99,31 @@ public class SvgStyle : GLib.Object {
 	}
 
 	public SvgStyle copy () {
-		SvgStyle style = new SvgStyle ();
-		style.apply (this);
-		return style;
+		SvgStyle style_copy = new SvgStyle ();
+
+		foreach (string key in style.keys) {
+			style_copy.style.set (key, style.get (key));
+		}
+
+		if (stroke != null) {
+			style_copy.stroke = ((!) stroke).copy ();
+		}
+
+		if (fill != null) {
+			style_copy.fill = ((!) fill).copy ();
+		}
+
+		if (stroke_gradient != null) {
+			style_copy.stroke_gradient = ((!) stroke_gradient).copy ();
+		}
+
+		if (fill_gradient != null) {
+			style_copy.fill_gradient = ((!) fill_gradient).copy ();
+		}
+		
+		style_copy.stroke_width = stroke_width;
+				
+		return style_copy;
 	}
 
 	public LineCap get_line_cap () {

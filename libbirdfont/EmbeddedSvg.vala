@@ -105,11 +105,10 @@ public class EmbeddedSvg : SvgBird.Object {
 
 	public override SvgBird.Object copy () {
 		EmbeddedSvg svg = new EmbeddedSvg ((SvgDrawing) drawing.copy ());
-		
+		SvgBird.Object.copy_attributes (this, svg);
 		svg.svg_data = svg_data;
 		svg.x = x;
 		svg.y = y;
-		
 		return svg;
 	}
 	
