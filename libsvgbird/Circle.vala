@@ -24,13 +24,6 @@ public class Circle : Object {
 	
 	public Circle () {
 	}
-
-	public Circle.create_copy (Circle c) {
-		Object.copy_attributes (c, this);
-		cx = c.cx;
-		cx = c.cy;
-		r = c.r;
-	}
 	
 	public override bool is_over (double x, double y) {
 		return false;
@@ -57,7 +50,14 @@ public class Circle : Object {
 	}
 	
 	public override Object copy () {
-		return new Circle.create_copy (this);
+		Circle c = new Circle ();
+		
+		Object.copy_attributes (this, c);
+		c.cx = cx;
+		c.cx = cy;
+		c.r = r;
+		
+		return c; 
 	}
 
 	public override string to_string () {

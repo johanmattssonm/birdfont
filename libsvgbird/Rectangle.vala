@@ -23,6 +23,8 @@ public class Rectangle : Object {
 	public double y = 0;
 	public double width = 0;
 	public double height = 0;
+
+	/** Corner radius */
 	public double rx = 0;
 	public double ry = 0;
 
@@ -81,6 +83,8 @@ public class Rectangle : Object {
 		
 		r.x = x;
 		r.y = y;
+		r.rx = rx;
+		r.ry = ry;
 		r.width = width;
 		r.height = height;
 		

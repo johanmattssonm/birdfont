@@ -26,14 +26,6 @@ public class Ellipse : Object {
 	
 	public Ellipse () {
 	}
-
-	public Ellipse.create_copy (Ellipse c) {
-		Object.copy_attributes (c, this);
-		cx = c.cx;
-		cx = c.cy;
-		rx = c.rx;
-		ry = c.ry;
-	}
 	
 	public override bool is_over (double x, double y) {
 		return false;
@@ -64,7 +56,16 @@ public class Ellipse : Object {
 	}
 	
 	public override Object copy () {
-		return new Ellipse.create_copy (this);
+		Ellipse e = new Ellipse ();
+		Object.copy_attributes (this, e);
+		
+		print (@"cy $(cy)\n");
+		
+		e.cx = cx;
+		e.cy = cy;
+		e.rx = rx;
+		e.ry = ry;
+		return e;
 	}
 
 	public override string to_string () {

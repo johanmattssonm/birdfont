@@ -35,10 +35,19 @@ public class SvgDrawing : Object {
 			svg_width = value;
 		}
 	}
+
+	public double height {
+		get {			
+			return svg_height;
+		}
+		
+		set {
+			svg_height = value;
+		}
+	}
 	
 	public double svg_width = 0;
-	
-	public double height = 0;
+	public double svg_height = 0;
 
 	public override double xmin {
 		get {
@@ -94,6 +103,7 @@ public class SvgDrawing : Object {
 	
 	public override Object copy () {
 		SvgDrawing drawing = new SvgDrawing ();
+		SvgBird.Object.copy_attributes (this, drawing);
 		drawing.root_layer = (Layer) root_layer.copy ();
 		drawing.defs = defs.copy ();
 		drawing.x = x;
