@@ -65,7 +65,7 @@ public class Doubles : GLib.Object {
 	public Doubles copy () {
 		Doubles d = new Doubles ();
 		delete d.data;
-		d.data = new double[capacity];
+		d.data = new PointValue[capacity];
 		d.capacity = capacity;
 		d.size = size;
 		Posix.memcpy (d.data, data, sizeof (PointValue) * size);

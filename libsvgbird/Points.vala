@@ -34,6 +34,15 @@ public class Points : GLib.Object {
 	public void add_type (uchar type) {
 		point_data.add_type (type);
 	}
+
+	public Points copy () {
+		Points p = new Points ();
+		p.point_data = point_data.copy ();
+		p.x = x;
+		p.y = y;
+		p.closed = closed;
+		return p;
+	}
 }
 
 }

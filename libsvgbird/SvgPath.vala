@@ -24,6 +24,10 @@ public class SvgPath : Object {
 
 	public SvgPath.create_copy (SvgPath p) {
 		Object.copy_attributes (p, this);
+		
+		foreach (Points point_data in p.points) {
+			points.add (point_data.copy ());
+		}
 	}
 	
 	public override bool is_over (double x, double y) {
