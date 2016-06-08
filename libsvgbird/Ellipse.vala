@@ -35,6 +35,7 @@ public class Ellipse : Object {
 		cr.save ();
 		cr.translate (cx, cy);
 		cr.scale (rx, ry);
+		cr.move_to (1, 0);
 		cr.arc (0, 0, 1, 0, 2 * PI);
 		cr.restore ();		
 	}

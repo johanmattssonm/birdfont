@@ -30,6 +30,7 @@ public class Circle : Object {
 	}
 			
 	public override void draw_outline (Context cr) {
+		cr.move_to (cx + r, cy);
 		cr.arc (cx, cy, r, 0, 2 * Math.PI);
 	}
 
