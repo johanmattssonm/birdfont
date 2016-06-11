@@ -346,15 +346,16 @@ public class Path : GLib.Object {
 		y = Glyph.yc () - top.y - sin (angle + PI / 2) * 10 * Glyph.ivz ();
 		
 		if (points.size > 0) {
-			cr.save ();
-			cr.translate (x, y);
 			double inverted_zoom = Glyph.ivz ();
-			cr.rotate (-angle);
-			cr.translate (-x, -y); 
-			
+			double zoom = 1 / inverted_zoom;
 			cr.scale (inverted_zoom, inverted_zoom);
 			
-			arrow_icon.draw_at_baseline (cr, x, y);
+			cr.save ();
+			cr.translate (x * zoom, y * zoom);
+			cr.rotate (-angle);
+			cr.translate (-x * zoom, -y * zoom); 
+						
+			arrow_icon.draw_at_baseline (cr, x * zoom, y * zoom);
 			
 			cr.restore ();
 		}
