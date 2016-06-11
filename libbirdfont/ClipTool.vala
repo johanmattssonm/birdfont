@@ -32,7 +32,7 @@ public class ClipTool : Tool {
 		string bf_data;
 		string data;
 		
-		if (fd is Glyph) {
+		if (fd is GlyphTab) {
 			svg_data = ExportTool.export_selected_paths_to_svg ();
 			
 			bf_data = export_selected_paths_to_birdfont_clipboard ();
@@ -87,7 +87,7 @@ public class ClipTool : Tool {
 		double x, y, w, h;
 		double dx, dy;
 		
-		if (fd is Glyph) {
+		if (fd is GlyphTab) {
 			paste_paths (false);
 			
 			g.selection_boundaries (out x, out y, out w, out h);
@@ -115,7 +115,7 @@ public class ClipTool : Tool {
 		// Determine if clipboard contains data in birdfont format.
 		is_bf_clipboard = clipboard_data.index_of ("BirdFontClipboard") > -1; 
 
-		if (fd is Glyph) {
+		if (fd is GlyphTab) {
 			paste_to_glyph (is_bf_clipboard, paste_guide_lines);
 		}
 		
@@ -132,7 +132,7 @@ public class ClipTool : Tool {
 		FontDisplay fd = MainWindow.get_current_display ();
 		Glyph? destination = null;
 		string data;
-		return_if_fail (fd is Glyph);
+		return_if_fail (fd is GlyphTab);
 		
 		destination = (Glyph) fd;
 		((!)destination).store_undo_state ();

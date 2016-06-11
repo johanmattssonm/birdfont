@@ -234,7 +234,7 @@ public class VersionList : GLib.Object {
 
 			tab = (!) tn;
 
-			if (! (tab.get_display () is Glyph)) {
+			if (! (tab.get_display () is GlyphTab)) {
 				continue; 
 			}
 			
