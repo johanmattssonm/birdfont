@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2014 Johan Mattsson
+	Copyright (C) 2014 2016 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -50,6 +50,8 @@ public class PointConverter {
 			}
 		}
 		
+		
+		
 		if (!original_path.is_open ()) {
 			if (quadratic_path.get_last_point ().get_right_handle ().type == PointType.CUBIC) {
 				PenTool.convert_point_segment_type (quadratic_path.get_last_point (),
@@ -93,8 +95,9 @@ public class PointConverter {
 			quadratic_segment_start = segment_start.copy ();
 			quadratic_segment_stop = segment_stop.copy ();
 			
-			PenTool.convert_point_segment_type (quadratic_segment_start, quadratic_segment_stop, PointType.DOUBLE_CURVE);
-			
+			PenTool.convert_point_segment_type (quadratic_segment_start, quadratic_segment_stop, PointType.DOUBLE_CURVE);			
+
+			// add new points to estimate path
 			distance = 0;
 			e = new EditPoint ();
 			if (segment_start.get_right_handle ().is_line () 
@@ -124,7 +127,7 @@ public class PointConverter {
 			out double distance, out EditPoint new_point, out double step) {
 		double max_d;
 		double min_d;
-		int steps = (int) (1.6 * Path.get_length_from (a0, a1));
+		int steps;
 		double x_out, y_out;
 		double step_out;
 

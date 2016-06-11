@@ -285,9 +285,11 @@ public class MainWindow : GLib.Object {
 	/** Reaload all paths and help lines from disk. */
 	public static void clear_glyph_cache () {
 		Glyph g;
+		GlyphTab tab;
 		foreach (Tab t in get_tab_bar ().tabs) {
-			if (t.get_display () is Glyph) {
-				g = (Glyph) t.get_display ();
+			if (t.get_display () is GlyphTab) {
+				tab = (GlyphTab) t.get_display ();
+				g = tab.glyphs.get_current ();
 				g.add_help_lines ();
 			}
 		}

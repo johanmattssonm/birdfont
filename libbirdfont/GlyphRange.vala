@@ -532,7 +532,9 @@ public class GlyphRange {
 		uns = unserialize (c);
 		
 		if (uns.char_count () != 1) {
-			warning (@"Expecting a single character got $c");
+			// the glyph was not found by its name because it is not in the list of
+			// unassigned characters
+			return false; 
 		}
 		
 		s = uns.get_char ();

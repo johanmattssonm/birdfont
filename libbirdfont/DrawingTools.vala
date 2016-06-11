@@ -685,7 +685,7 @@ public class DrawingTools : ToolCollection  {
 		});	
 		
 		bg_selection.select_action.connect((self) => {
-			if (MainWindow.get_current_display () is Glyph) {
+			if (MainWindow.get_current_display () is GlyphTab) {
 				BackgroundTool.import_background_image ();
 			}
 		});
@@ -1255,9 +1255,11 @@ public class DrawingTools : ToolCollection  {
 		// update selelction when the user switches tab
 		MainWindow.get_tab_bar ().signal_tab_selected.connect((tab) => {
 			Glyph glyph;
+			GlyphTab glyph_tab;
 			
-			if (tab.get_display () is Glyph) {
-				glyph = (Glyph) tab.get_display ();
+			if (tab.get_display () is GlyphTab) {
+				glyph_tab = (GlyphTab) tab.get_display ();
+				glyph = glyph_tab.glyphs.get_current ();
 				show_bg.set_selected (glyph.get_background_visible ());
 				update_line_selection (glyph);
 			}

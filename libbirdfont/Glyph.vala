@@ -122,7 +122,7 @@ public class Glyph : FontDisplay {
 	Line left_line;
 	Line right_line;
 
-	/** Cache for Cairo rendering */
+	/** Cache for Cairo surface rendering */
 	HashMap<string, Surface> glyph_cache = new HashMap<string, Surface> ();
 
 	public const double CANVAS_MIN = -10000;

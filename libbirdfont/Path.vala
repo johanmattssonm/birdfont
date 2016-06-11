@@ -1471,7 +1471,7 @@ public class Path : GLib.Object {
 		
 		if (steps == -1) {
 			steps = (int) (10 * get_length_from (start, stop));
-		}
+		}	
 		
 		if (right == PointType.DOUBLE_CURVE || left == PointType.DOUBLE_CURVE) {
 			return all_of_double (start.x, start.y, start.get_right_handle ().x, start.get_right_handle ().y, stop.get_left_handle ().x, stop.get_left_handle ().y, stop.x, stop.y, iter, steps, min_t, max_t);

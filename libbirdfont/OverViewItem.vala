@@ -271,8 +271,8 @@ public class OverViewItem : GLib.Object {
 		cr.set_line_width (1);
 		cr.stroke ();
 		cr.restore ();
-	
-		draw_thumbnail (cr, x, y + height);	
+		
+		draw_thumbnail (cr, x, y + height);
 		draw_caption (cr);
 		draw_menu (cr);
 	}

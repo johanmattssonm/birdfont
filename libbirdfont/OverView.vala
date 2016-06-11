@@ -96,10 +96,12 @@ public class OverView : FontDisplay {
 				bool selected = tabs.select_char (n);
 				GlyphCanvas canvas;
 				Glyph g = glyph_collection.get_current (); 
+				GlyphTab glyph_tab;				
 				
 				if (!selected) {
+					glyph_tab = new GlyphTab (glyph_collection);
 					canvas = MainWindow.get_glyph_canvas ();
-					tabs.add_tab (g, true, glyph_collection);
+					tabs.add_tab (glyph_tab, true, glyph_collection);
 					canvas.set_current_glyph_collection (glyph_collection);
 					set_initial_zoom ();
 					PenTool.update_orientation ();
@@ -184,6 +186,7 @@ public class OverView : FontDisplay {
 		Glyph glyph;
 		GlyphCollection glyph_collection;
 		GlyphCanvas canvas;
+		GlyphTab glyph_tab; 
 		
 		glyph_collection = MainWindow.get_current_glyph_collection ();
 		name.append_unichar (character);
@@ -191,10 +194,10 @@ public class OverView : FontDisplay {
 				
 		if (!selected) {
 			glyph_collection = add_character_to_font (character);
-			
+			glyph_tab = new GlyphTab (glyph_collection);
 			glyph = glyph_collection.get_current ();
 			glyph.layers.add_layer (new Layer ());
-			tabs.add_tab (glyph, true, glyph_collection);
+			tabs.add_tab (glyph_tab, true, glyph_collection);
 			
 			selected_items.add (glyph_collection);
 			
