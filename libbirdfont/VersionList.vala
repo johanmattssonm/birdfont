@@ -251,7 +251,7 @@ public class VersionList : GLib.Object {
 			}
 
 			updated_glyph = (!) ug;
-			tab.set_display (updated_glyph);
+			tab.set_display (glyph_tab);
 			updated_glyph.view_zoom = glyph.view_zoom;
 			updated_glyph.view_offset_x = glyph.view_offset_x;
 			updated_glyph.view_offset_y = glyph.view_offset_y;

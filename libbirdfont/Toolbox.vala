@@ -127,6 +127,9 @@ public class Toolbox : GLib.Object  {
 			current_set = (ToolCollection) theme_tools;
 		} else if (t != null && ((!) t).get_display () is GlyphTab) {
 			current_set = (ToolCollection) drawing_tools;
+		} else if (t != null && ((!) t).get_display () is Glyph) {
+			warning ("Expecting GlyphTab instead of Glyph.");
+			current_set = (ToolCollection) drawing_tools;
 		} else {
 			current_set = (ToolCollection) file_tools;
 		}

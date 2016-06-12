@@ -240,7 +240,6 @@ public class RecentFiles : Table {
 			
 			f = BirdFont.new_font ();
 			
-			MainWindow.clear_glyph_cache ();
 			MainWindow.close_all_tabs ();
 			
 			f.set_file (fn);
