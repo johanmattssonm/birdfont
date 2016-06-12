@@ -328,8 +328,8 @@ public class TabBar : GLib.Object {
 	public bool close_by_name (string name, bool background_tab = false) {
 		int i = 0;
 				
-		foreach (var t in tabs) {
-			if (t.get_display ().get_name () == name) {
+		foreach (Tab tab in tabs) {
+			if (tab.get_display ().get_name () == name) {
 				bool closed = close_tab (i, background_tab);
 				redraw_tab_bar (0, 0, width, height);
 				return closed;

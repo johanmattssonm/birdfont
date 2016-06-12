@@ -1079,7 +1079,6 @@ public class OverView : FontDisplay {
 			font.delete_glyph (g);
 			font.add_glyph_collection (g);
 		}
-		
 		font.alternates = previous_collection.alternate_sets.copy ();
 
 		redo_items.remove_at (redo_items.size - 1);
