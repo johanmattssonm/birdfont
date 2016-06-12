@@ -13,6 +13,7 @@
 */
 
 using Cairo;
+using Math;
 
 namespace BirdFont {
 
@@ -40,8 +41,12 @@ public class BackgroundTool : Tool {
 	static BackgroundImage imported_background;
 	static ImageSurface imported_surface;
 	
+	static bool on_axis = false;
+	double rotation_position_x = 0;
+	double rotation_position_y = 0;
+				
 	public BackgroundTool (string name) {
-		base (name, t_("Move, resize and rotate background image"));
+		base (name, "");
 		
 		top_limit = 0;
 		bottom_limit = 0;
@@ -103,7 +108,7 @@ public class BackgroundTool : Tool {
 			coordinate_y = Glyph.path_coordinate_y (y);
 		
 			if (background.selected_handle == 2) {
-				background.set_img_rotation_from_coordinate (coordinate_x, coordinate_y);
+				background.set_img_rotation_from_coordinate (rotation_position_x, rotation_position_y);
 			}
 						
 			img_offset_x = background.img_offset_x;
@@ -111,6 +116,7 @@ public class BackgroundTool : Tool {
 			
 			background.handler_release (x, y);
 			
+			on_axis = false;
 			move_bg = false;
 		});
 
@@ -135,7 +141,7 @@ public class BackgroundTool : Tool {
 					break;
 				case Key.RIGHT:
 					move (1, 0);
-					break;						
+					break;
 				default:
 					break;
 			}
@@ -152,7 +158,19 @@ public class BackgroundTool : Tool {
 			((!) background_image).draw_handle (cairo_context, glyph);
 		});
 	}
-		
+
+	public override string get_tip () {
+		string tip = t_("Move, resize and rotate background image") + "\n";
+		tip += HiddenTools.move_along_axis.get_key_binding ();
+		tip += " - ";
+		tip += t_ ("on axis") + "\n";
+		return tip;
+	}
+	
+	public static void move_handle_on_axis () {
+		on_axis = true;
+	}
+	
 	void move (int x, int y) {
 		Glyph g = MainWindow.get_current_glyph ();
 		BackgroundImage? background_image = g.get_background_image ();
@@ -176,13 +194,43 @@ public class BackgroundTool : Tool {
 		dx *= PenTool.precision;
 		dy *= PenTool.precision;
 
+		// rotation handle
 		if (bg.selected_handle == 2) {
 			coordinate_x = Glyph.path_coordinate_x (x);
 			coordinate_y = Glyph.path_coordinate_y (y);
 			view_zoom = MainWindow.get_current_glyph ().view_zoom;
-			bg.preview_img_rotation_from_coordinate (coordinate_x, coordinate_y, view_zoom);
+			
+			rotation_position_x = coordinate_x;
+			rotation_position_y = coordinate_y;
+			
+			if (on_axis) {
+				double length = fabs (Path.distance (bg.img_middle_x, coordinate_x,
+					bg.img_middle_y, coordinate_y));
+				
+				double min = double.MAX;
+				double circle_edge;
+				double circle_x;
+				double circle_y;
+				
+				for (double circle_angle = 0; circle_angle < 2 * PI; circle_angle += PI / 4) {
+					circle_x = bg.img_middle_x + cos (circle_angle) * length;
+					circle_y = bg.img_middle_y + sin (circle_angle) * length;
+					
+					circle_edge = fabs (Path.distance (coordinate_x, circle_x, 
+						coordinate_y, circle_y));
+					
+					if (circle_edge < min) {
+						rotation_position_x = circle_x;
+						rotation_position_y = circle_y;
+						min = circle_edge;
+					}
+				}
+			}
+			
+			bg.preview_img_rotation_from_coordinate (rotation_position_x, rotation_position_y, view_zoom);
 		}
 		
+		// resize handle
 		if (bg.selected_handle == 1) {
 			xscale = img_scale_x * ((img_width - dx) / img_width);	
 			yscale = xscale;

@@ -187,6 +187,11 @@ public class Font : GLib.Object {
 		font_deleted ();
 	}
 
+	public void add_default_characters () {
+		add_glyph_collection (get_notdef_character ());
+		add_glyph_collection (get_space ());
+	}
+	
 	public Alternate? get_alternate (string glyph_name, string tag) {
 		Gee.ArrayList<Alternate> alt = alternates.get_alt (tag);
 		
@@ -433,9 +438,16 @@ public class Font : GLib.Object {
 	public GlyphCollection get_nonmarking_return () {
 		Glyph g;
 		GlyphCollection gc;
+		GlyphCollection? non_marking;
 		
 		if (has_glyph ("nonmarkingreturn")) {
-			return (!) get_glyph_collection ("nonmarkingreturn");
+			non_marking = get_glyph_collection ("nonmarkingreturn");
+			
+			if (non_marking == null) {
+				warning ("Non marking return not created.");
+			} else {
+				return (!)non_marking;
+			}
 		}
 		
 		gc = new GlyphCollection ('\r', "nonmarkingreturn");
@@ -457,9 +469,16 @@ public class Font : GLib.Object {
 	public GlyphCollection get_null_character () {
 		Glyph n;
 		GlyphCollection gc;
+		GlyphCollection? none;		
 		
 		if (has_glyph ("null")) {
-			return (!) get_glyph_collection ("null");
+			none = get_glyph_collection ("null");
+			
+			if (none == null) {
+				warning("Null character not created.");
+			} else {
+				return (!) none;
+			}
 		}
 		
 		gc = new GlyphCollection ('\0', "null");
@@ -480,14 +499,19 @@ public class Font : GLib.Object {
 	
 	public GlyphCollection get_space () {
 		Glyph n;
-		GlyphCollection gc;
+		GlyphCollection gc;		
+		GlyphCollection? space = null;
 		
 		if (has_glyph (" ")) {
-			return (!) get_glyph_collection (" ");
+			space = get_glyph_collection (" ");
 		}
 
 		if (has_glyph ("space")) {
-			return (!) get_glyph_collection ("space");
+			space = get_glyph_collection ("space");
+		}
+
+		if (space != null) {
+			return (!) space;			
 		}
 		
 		gc = new GlyphCollection (' ', "space");
@@ -506,7 +530,7 @@ public class Font : GLib.Object {
 		return gc;		
 	}
 	
-	public GlyphCollection get_not_def_character () {
+	public GlyphCollection get_notdef_character () {
 		Glyph g;
 		GlyphCollection gc;
 
@@ -900,6 +924,7 @@ public class Font : GLib.Object {
 		if (loaded) {
 			settings.load (get_file_name ());
 			kerning_strings.load (this);
+			add_default_characters ();
 		}
 		
 		return loaded;

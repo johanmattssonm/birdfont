@@ -115,7 +115,6 @@ public class GlyphMaster : GLib.Object {
 		
 		foreach (Glyph g in glyphs) {
 			n.glyphs.add (g);
-			n.glyphs.add (g);
 		}
 		
 		n.selected = selected;

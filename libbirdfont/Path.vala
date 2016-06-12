@@ -346,15 +346,16 @@ public class Path : GLib.Object {
 		y = Glyph.yc () - top.y - sin (angle + PI / 2) * 10 * Glyph.ivz ();
 		
 		if (points.size > 0) {
-			cr.save ();
-			cr.translate (x, y);
 			double inverted_zoom = Glyph.ivz ();
-			cr.rotate (-angle);
-			cr.translate (-x, -y); 
-			
+			double zoom = 1 / inverted_zoom;
 			cr.scale (inverted_zoom, inverted_zoom);
 			
-			arrow_icon.draw_at_baseline (cr, x, y);
+			cr.save ();
+			cr.translate (x * zoom, y * zoom);
+			cr.rotate (-angle);
+			cr.translate (-x * zoom, -y * zoom); 
+						
+			arrow_icon.draw_at_baseline (cr, x * zoom, y * zoom);
 			
 			cr.restore ();
 		}
@@ -1533,7 +1534,7 @@ public class Path : GLib.Object {
 		
 		if (steps == -1) {
 			steps = (int) (10 * get_length_from (start, stop));
-		}
+		}	
 		
 		if (right == PointType.DOUBLE_CURVE || left == PointType.DOUBLE_CURVE) {
 			return all_of_double (start.x, start.y, start.get_right_handle ().x, start.get_right_handle ().y, stop.get_left_handle ().x, stop.get_left_handle ().y, stop.x, stop.y, iter, steps, min_t, max_t);

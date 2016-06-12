@@ -81,7 +81,7 @@ public class OverViewItem : GLib.Object {
 			truncate_label ();
 		}
 		
-		draw_background ();
+		draw_background ();		
 	}
 
 	public void draw_glyph_from_font () {
@@ -279,10 +279,10 @@ public class OverViewItem : GLib.Object {
 		cr.stroke ();
 		cr.restore ();
 		
+		draw_thumbnail (cr, x, y + height);
+		
 		draw_caption (cr);
 		draw_menu (cr);
-		
-		draw_thumbnail (cr, x, y + height);
 	}
 
 	public void adjust_scale () {
@@ -455,7 +455,9 @@ public class OverViewItem : GLib.Object {
 	}
 	
 	public void hide_menu () {
-		version_menu.menu_visible = false;
+		if (!is_null (version_menu)) {
+			version_menu.menu_visible = false;
+		}
 	}
 	
 	private void draw_menu_icon (Context cc, bool selected) {

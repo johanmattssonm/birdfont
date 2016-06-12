@@ -446,7 +446,7 @@ public class SvgParser {
 		param = param.replace (",", " ");
 		
 		while (param.index_of ("  ") > -1) {
-			param.replace ("  ", " ");
+			param = param.replace ("  ", " ");
 		}
 			
 		return param.strip();			
@@ -2014,7 +2014,10 @@ public class SvgParser {
 			return 0;
 		}
 		
-		return double.parse ((!) s);
+		string d = (!) s;
+		d = d.replace ("px", "");
+		
+		return double.parse (d);
 	}
 	
 	static bool is_point (string? s) {

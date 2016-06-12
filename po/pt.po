@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-18 20:16+0100\n"
+"POT-Creation-Date: 2016-05-14 19:44+0200\n"
 "PO-Revision-Date: 2015-09-22 23:15+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -90,11 +90,17 @@ msgstr "Selecionar fundo"
 msgid "Background Image"
 msgstr "Imagem de fundo"
 
-#: libbirdfont/BackgroundTool.vala:44
+#: libbirdfont/BackgroundTool.vala:163
 msgid "Move, resize and rotate background image"
 msgstr "Mover, redimensionar e rodar a imagem de fundo"
 
-#: libbirdfont/BackgroundTool.vala:246
+#: libbirdfont/BackgroundTool.vala:166 libbirdfont/BezierTool.vala:103
+#: libbirdfont/PointTool.vala:88
+#, fuzzy
+msgid "on axis"
+msgstr "no eixo"
+
+#: libbirdfont/BackgroundTool.vala:294
 msgid "Select background image"
 msgstr "Selecione a imagem de fundo"
 
@@ -112,7 +118,7 @@ msgstr "_Ficheiro"
 msgid "Parts"
 msgstr "Partes"
 
-#: libbirdfont/BackgroundTools.vala:53 libbirdfont/Glyph.vala:2364
+#: libbirdfont/BackgroundTools.vala:53 libbirdfont/Glyph.vala:2367
 #: libbirdfont/LigatureList.vala:106 libbirdfont/OtfFeatureTable.vala:181
 msgid "Add"
 msgstr "Adicionar"
@@ -138,11 +144,6 @@ msgstr "linha"
 #: libbirdfont/BezierTool.vala:99
 msgid "corner"
 msgstr "canto"
-
-#: libbirdfont/BezierTool.vala:103
-#, fuzzy
-msgid "on axis"
-msgstr "no eixo"
 
 #: libbirdfont/CircleTool.vala:36
 msgid "Circle"
@@ -647,39 +648,39 @@ msgstr "Definições"
 msgid "Themes"
 msgstr "Temas"
 
-#: libbirdfont/Glyph.vala:512
+#: libbirdfont/Glyph.vala:515
 msgid "top margin"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:519
+#: libbirdfont/Glyph.vala:522
 msgid "top"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:526
+#: libbirdfont/Glyph.vala:529
 msgid "x-height"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:535
+#: libbirdfont/Glyph.vala:538
 msgid "baseline"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:542
+#: libbirdfont/Glyph.vala:545
 msgid "bottom"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:548
+#: libbirdfont/Glyph.vala:551
 msgid "bottom margin"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:554
+#: libbirdfont/Glyph.vala:557
 msgid "left"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:563
+#: libbirdfont/Glyph.vala:566
 msgid "right"
 msgstr ""
 
-#: libbirdfont/Glyph.vala:2364
+#: libbirdfont/Glyph.vala:2367
 msgid "Guide"
 msgstr "Guia"
 
@@ -1296,11 +1297,11 @@ msgstr ""
 msgid "Filter"
 msgstr ""
 
-#: libbirdfont/OverView.vala:671
+#: libbirdfont/OverView.vala:675
 msgid "No glyphs in this view."
 msgstr ""
 
-#: libbirdfont/OverView.vala:1478
+#: libbirdfont/OverView.vala:1486
 msgid "See also:"
 msgstr "Ayrıca bakınız:"
 
@@ -1355,14 +1356,12 @@ msgid "Set curve orientation"
 msgstr ""
 
 #: libbirdfont/OverviewTools.vala:160
-#, fuzzy
 msgid "Master Size"
-msgstr "Tamanho da Grelha"
+msgstr ""
 
 #: libbirdfont/OverviewTools.vala:175
-#, fuzzy
 msgid "Create new master font"
-msgstr "Yeni bir yazı tipi oluştur"
+msgstr ""
 
 #: libbirdfont/OverwriteBfFile.vala:25
 msgid "This file already exists. Do you want to replace it?"
@@ -1376,7 +1375,7 @@ msgstr ""
 msgid "Add new points"
 msgstr "Adicionar novos pontos"
 
-#: libbirdfont/PointTool.vala:24
+#: libbirdfont/PointTool.vala:84
 msgid "Move control points"
 msgstr "Mover pontos de controlo"
 
@@ -2050,6 +2049,9 @@ msgstr "Yazılıyor"
 
 #~ msgid "Update name & description"
 #~ msgstr "İsim & açıklamayı güncelle"
+
+#~ msgid "Create a new font"
+#~ msgstr "Yeni bir yazı tipi oluştur"
 
 #~ msgid "Preferences"
 #~ msgstr "Tercihler"

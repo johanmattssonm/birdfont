@@ -109,7 +109,6 @@ public class FallbackFont : GLib.Object {
 	}
 
 	public void init_font_config () {
-		print("init_font_config\n");
 		FcConfig* config;
 		
 #if MAC
@@ -134,7 +133,6 @@ public class FallbackFont : GLib.Object {
 		
 		idle.set_callback (() => {
 			font_config = config;
-			print("Fontconfog loaded.");
 			return false;
 		});
 		idle.attach (null);

@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-18 20:16+0100\n"
-"PO-Revision-Date: 2015-11-18 11:02+0000\n"
-"Last-Translator: Anonymous Pootle User\n"
+"POT-Creation-Date: 2016-05-14 19:44+0200\n"
+"PO-Revision-Date: 2015-12-22 19:35+0000\n"
+"Last-Translator: Johan <johan.mattsson.m@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1447844539.000000\n"
+"X-POOTLE-MTIME: 1450812928.000000\n"
 
 #: libbirdfont/Argument.vala:277
 msgid "Usage"
@@ -84,11 +84,16 @@ msgstr "Välj bakgrund"
 msgid "Background Image"
 msgstr "Bakgrundsbild"
 
-#: libbirdfont/BackgroundTool.vala:44
+#: libbirdfont/BackgroundTool.vala:163
 msgid "Move, resize and rotate background image"
 msgstr "Flytta, ändra storlek på och rotera bakgrundsbilden"
 
-#: libbirdfont/BackgroundTool.vala:246
+#: libbirdfont/BackgroundTool.vala:166 libbirdfont/BezierTool.vala:103
+#: libbirdfont/PointTool.vala:88
+msgid "on axis"
+msgstr "på axel"
+
+#: libbirdfont/BackgroundTool.vala:294
 msgid "Select background image"
 msgstr "Välj bakgrundsbild"
 
@@ -105,7 +110,7 @@ msgstr "Filer"
 msgid "Parts"
 msgstr "Delar"
 
-#: libbirdfont/BackgroundTools.vala:53 libbirdfont/Glyph.vala:2364
+#: libbirdfont/BackgroundTools.vala:53 libbirdfont/Glyph.vala:2367
 #: libbirdfont/LigatureList.vala:106 libbirdfont/OtfFeatureTable.vala:181
 msgid "Add"
 msgstr "Lägg till"
@@ -130,10 +135,6 @@ msgstr "linje"
 #: libbirdfont/BezierTool.vala:99
 msgid "corner"
 msgstr "hörn"
-
-#: libbirdfont/BezierTool.vala:103
-msgid "on axis"
-msgstr "på axel"
 
 #: libbirdfont/CircleTool.vala:36
 msgid "Circle"
@@ -396,7 +397,7 @@ msgstr "Skapa insida från kontur"
 
 #: libbirdfont/DrawingTools.vala:565
 msgid "Scale object to font top/baseline"
-msgstr ""
+msgstr "Skala objekt till typsnittets topp/baslinje"
 
 #: libbirdfont/DrawingTools.vala:574
 msgid "Close path"
@@ -617,39 +618,39 @@ msgstr "Inställningar"
 msgid "Themes"
 msgstr "Temata"
 
-#: libbirdfont/Glyph.vala:512
+#: libbirdfont/Glyph.vala:515
 msgid "top margin"
 msgstr "övre marginal"
 
-#: libbirdfont/Glyph.vala:519
+#: libbirdfont/Glyph.vala:522
 msgid "top"
 msgstr "överkant"
 
-#: libbirdfont/Glyph.vala:526
+#: libbirdfont/Glyph.vala:529
 msgid "x-height"
 msgstr "x-höjd"
 
-#: libbirdfont/Glyph.vala:535
+#: libbirdfont/Glyph.vala:538
 msgid "baseline"
 msgstr "baslinje"
 
-#: libbirdfont/Glyph.vala:542
+#: libbirdfont/Glyph.vala:545
 msgid "bottom"
 msgstr "nederkant"
 
-#: libbirdfont/Glyph.vala:548
+#: libbirdfont/Glyph.vala:551
 msgid "bottom margin"
 msgstr "undre marginal"
 
-#: libbirdfont/Glyph.vala:554
+#: libbirdfont/Glyph.vala:557
 msgid "left"
 msgstr "vänster"
 
-#: libbirdfont/Glyph.vala:563
+#: libbirdfont/Glyph.vala:566
 msgid "right"
 msgstr "höger"
 
-#: libbirdfont/Glyph.vala:2364
+#: libbirdfont/Glyph.vala:2367
 msgid "Guide"
 msgstr "Hjälplinje"
 
@@ -1235,11 +1236,11 @@ msgstr "Swashes"
 msgid "Filter"
 msgstr "Filtrera"
 
-#: libbirdfont/OverView.vala:671
+#: libbirdfont/OverView.vala:675
 msgid "No glyphs in this view."
 msgstr "Inga tecken att visa."
 
-#: libbirdfont/OverView.vala:1478
+#: libbirdfont/OverView.vala:1486
 msgid "See also:"
 msgstr "Se även:"
 
@@ -1266,7 +1267,7 @@ msgstr "Transformera"
 
 #: libbirdfont/OverviewTools.vala:43
 msgid "Multi-Master"
-msgstr ""
+msgstr "Multi-Master"
 
 #: libbirdfont/OverviewTools.vala:56
 msgid "All Glyphs"
@@ -1293,14 +1294,12 @@ msgid "Set curve orientation"
 msgstr "Ställ in riktning för slingorna"
 
 #: libbirdfont/OverviewTools.vala:160
-#, fuzzy
 msgid "Master Size"
-msgstr "Storlek på rutnätet"
+msgstr "Storlek för master"
 
 #: libbirdfont/OverviewTools.vala:175
-#, fuzzy
 msgid "Create new master font"
-msgstr "Skapa ett nytt typsnitt"
+msgstr "Skapa en ny masterfont"
 
 #: libbirdfont/OverwriteBfFile.vala:25
 msgid "This file already exists. Do you want to replace it?"
@@ -1314,7 +1313,7 @@ msgstr "Ersätt"
 msgid "Add new points"
 msgstr "Lägg till nya punkter"
 
-#: libbirdfont/PointTool.vala:24
+#: libbirdfont/PointTool.vala:84
 msgid "Move control points"
 msgstr "Flytta kontrollpunkter"
 
@@ -1749,6 +1748,9 @@ msgstr "Okänt filformat."
 #: birdfont-autotrace/AutoTrace.vala:114
 msgid "Writing"
 msgstr "Skriver"
+
+#~ msgid "color"
+#~ msgstr "färg"
 
 #~ msgid "Manufakturer"
 #~ msgstr "Tillverkare"
@@ -2231,6 +2233,9 @@ msgstr "Skriver"
 
 #~ msgid "Update name & description"
 #~ msgstr "Uppdatera namn & beskrivning"
+
+#~ msgid "Create a new font"
+#~ msgstr "Skapa ett nytt typsnitt"
 
 #~ msgid "Add name and description to this font."
 #~ msgstr "Lägg till namn och beskrivning för det här typsnittet."

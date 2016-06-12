@@ -83,7 +83,7 @@ public class AbstractMenu : GLib.Object {
 		
 		display = current_display.get_name ();
 
-		if (current_display is Glyph) {
+		if (current_display is GlyphTab) {
 			display = "Glyph";
 		}
 		

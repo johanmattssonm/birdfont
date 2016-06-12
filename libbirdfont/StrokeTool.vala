@@ -1071,7 +1071,7 @@ public class StrokeTool : GLib.Object {
 		return simplified;
 	}
 	
-	Path fit_bezier_path (Path p, int start, int stop, double error) {
+	public static Path fit_bezier_path (Path p, int start, int stop, double error) {
 		int index, size;
 		Path simplified;
 		double[] lines;

@@ -67,6 +67,8 @@ public class HiddenTools : ToolCollection  {
 				DrawingTools.bezier_tool.move_handle_on_axis ();
 			} else if (t is PenTool || t is PointTool) {
 				PenTool.move_handle_on_axis ();
+			} else if (t is BackgroundTool) {
+				BackgroundTool.move_handle_on_axis ();
 			}
 		});
 		move_along_axis.is_tool_modifier = true;

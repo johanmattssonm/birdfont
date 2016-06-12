@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012 2014 2015 Johan Mattsson
+	Copyright (C) 2012 - 2016 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -50,7 +50,7 @@ public class OverView : FontDisplay {
 	
 	string search_query = "";
 	
-	Gee.ArrayList<OverViewItem> visible_items = new Gee.ArrayList<OverViewItem> ();
+	public Gee.ArrayList<OverViewItem> visible_items = new Gee.ArrayList<OverViewItem> ();
 	
 	/** List of undo commands. */
 	public Gee.ArrayList<OverViewUndoItem> undo_items = new Gee.ArrayList<OverViewUndoItem> ();
@@ -95,10 +95,12 @@ public class OverView : FontDisplay {
 				bool selected = tabs.select_char (n);
 				GlyphCanvas canvas;
 				Glyph g = glyph_collection.get_current (); 
+				GlyphTab glyph_tab;
 				
 				if (!selected) {
+					glyph_tab = new GlyphTab (glyph_collection);
 					canvas = MainWindow.get_glyph_canvas ();
-					tabs.add_tab (g, true, glyph_collection);
+					tabs.add_tab (glyph_tab, true, glyph_collection);
 					canvas.set_current_glyph_collection (glyph_collection);
 					set_initial_zoom ();
 					PenTool.update_orientation ();
@@ -176,6 +178,7 @@ public class OverView : FontDisplay {
 		Glyph glyph;
 		GlyphCollection glyph_collection;
 		GlyphCanvas canvas;
+		GlyphTab glyph_tab; 
 		
 		glyph_collection = MainWindow.get_current_glyph_collection ();
 		name.append_unichar (character);
@@ -183,10 +186,10 @@ public class OverView : FontDisplay {
 				
 		if (!selected) {
 			glyph_collection = add_character_to_font (character);
-			
+			glyph_tab = new GlyphTab (glyph_collection);
 			glyph = glyph_collection.get_current ();
 			glyph.layers.add_layer (new Layer ());
-			tabs.add_tab (glyph, true, glyph_collection);
+			tabs.add_tab (glyph_tab, true, glyph_collection);
 			
 			selected_items.add (glyph_collection);
 			
@@ -605,6 +608,12 @@ public class OverView : FontDisplay {
 			item = visible_items.get (i);
 
 			selected_item = false;
+	
+			if (all_available) {
+				glyphs = f.get_glyph_collection_index ((uint32) i);
+			} else {			
+				glyphs = f.get_glyph_collection_by_name ((!) item.character.to_string ());
+			}
 			
 			if (glyphs != null) {
 				selected_index = selected_items.index_of ((!) glyphs);
@@ -1017,8 +1026,10 @@ public class OverView : FontDisplay {
 		}
 		store_undo_items (undo_item);
 
-		foreach (GlyphCollection gc in selected_items) {
-			font.delete_glyph (gc);
+		foreach (GlyphCollection glyph_collection in selected_items) {
+			font.delete_glyph (glyph_collection);
+			string name = glyph_collection.get_name ();
+			MainWindow.get_tab_bar ().close_background_tab_by_name (name);
 		}
 
 		update_item_list ();
@@ -1068,7 +1079,6 @@ public class OverView : FontDisplay {
 			font.delete_glyph (g);
 			font.add_glyph_collection (g);
 		}
-		
 		font.alternates = previous_collection.alternate_sets.copy ();
 
 		redo_items.remove_at (redo_items.size - 1);
@@ -1165,12 +1175,12 @@ public class OverView : FontDisplay {
 		if (all_available) {
 			
 			// don't search for glyphs in huge CJK fonts 
-			if (font.length () > 300) {
+			if (font.length () > 500) {
 				r = 0;
 			} else {
 				// FIXME: too slow
 				for (r = 0; r < font.length (); r += items_per_row) {
-					for (i = 0; i < items_per_row; i++) {
+					for (i = 0; i < items_per_row && i < font.length (); i++) {
 						glyphs = font.get_glyph_collection_index ((uint32) r + i);
 						return_if_fail (glyphs != null);
 						glyph = ((!) glyphs).get_current ();
@@ -1207,6 +1217,7 @@ public class OverView : FontDisplay {
 		
 		if (index > -1) {
 			first_visible = r;
+			process_item_list_update ();
 			update_item_list ();
 			select_visible_glyph (ch);
 		}
@@ -1278,6 +1289,10 @@ public class OverView : FontDisplay {
 			return;
 		}
 		
+		if (!KeyBindings.has_shift ()) {
+			selected_items.clear ();
+		}
+		
 		for (int j = 0; j < visible_items.size; j++) {
 			i = visible_items.get (j);
 			
@@ -1305,7 +1320,11 @@ public class OverView : FontDisplay {
 					}
 				}
 				
-				update = !i.version_menu.menu_visible;
+				if (!is_null (i.version_menu)) {
+					update = !((!)i).version_menu.menu_visible;
+				} else {
+					update = true;
+				}
 			}
 			index++;
 		}
