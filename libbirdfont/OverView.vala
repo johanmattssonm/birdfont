@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012 2014 2015 Johan Mattsson
+	Copyright (C) 2012 - 2016 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -1174,7 +1174,7 @@ public class OverView : FontDisplay {
 		if (all_available) {
 			
 			// don't search for glyphs in huge CJK fonts 
-			if (font.length () > 300) {
+			if (font.length () > 500) {
 				r = 0;
 			} else {
 				// FIXME: too slow
@@ -1216,6 +1216,7 @@ public class OverView : FontDisplay {
 		
 		if (index > -1) {
 			first_visible = r;
+			process_item_list_update ();
 			update_item_list ();
 			select_visible_glyph (ch);
 		}
