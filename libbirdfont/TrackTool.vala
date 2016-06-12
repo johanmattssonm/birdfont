@@ -109,7 +109,6 @@ public class TrackTool : Tool {
 						end_point.path.reverse ();
 					}
 					
-					Path path = end_point.path;					
 					glyph.set_active_path (end_point.path);
 				} else {
 					p = new Path ();
@@ -558,10 +557,6 @@ public class TrackTool : Tool {
 	 * @return the last removed point.
 	 */
 	public void convert_points_to_line () {
-		EditPoint ep, last_point;
-		double sum_x, sum_y, nx, ny;
-		int px, py;
-		EditPoint average, previous;
 		Path p;
 		Glyph glyph;
 		Gee.ArrayList<EditPoint> points;
@@ -585,9 +580,6 @@ public class TrackTool : Tool {
 			warning ("Missing point.");
 			return;
 		}
-
-		sum_x = 0;
-		sum_y = 0;
 		
 		int start = p.points.size - 1 - added_points;
 		int stop = p.points.size - 1;

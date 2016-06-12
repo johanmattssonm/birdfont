@@ -95,7 +95,6 @@ public class OverView : FontDisplay {
 				string n = glyph_collection.get_current ().name;
 				bool selected = tabs.select_char (n);
 				GlyphCanvas canvas;
-				Glyph g = glyph_collection.get_current (); 
 				GlyphTab glyph_tab;
 				
 				if (!selected) {
