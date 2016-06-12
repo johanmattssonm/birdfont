@@ -1,16 +1,24 @@
+birdfont (2.16.0) stable;
+
+  * New freehand tool
+  * Rotate objects and point handles with 45 degree steps
+  * Bug fixes
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Sun Jun 12 19:53:43 CEST 2016
+
 birdfont (2.15.6) stable;
 
   * Editable .notdef character
   * Bug fixes in the SVG parser
 
- -- Johan Mattsson <johan.mattsson.m@gmail.com  Fri Jan 22 13:10:07 CET 2016
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Fri Jan 22 13:10:07 CET 2016
 
 birdfont (2.15.0) stable;
 
   * Speed optimizations
   * Bug fixes
 
- -- Johan Mattsson <johan.mattsson.m@gmail.com  Fri Dec 11 22:26:42 CET 2015
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Fri Dec 11 22:26:42 CET 2015
 
 birdfont (2.14.0) stable;
 
@@ -18,7 +26,7 @@ birdfont (2.14.0) stable;
   * Sandbox support on Mac OS
   * Bug fixes
 
- -- Johan Mattsson <johan.mattsson.m@gmail.com  Thu Nov 12 20:45:02 CET 2015
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Thu Nov 12 20:45:02 CET 2015
 
 birdfont (2.13.0) stable;
 
@@ -29,7 +37,7 @@ birdfont (2.13.0) stable;
   * Swashes (OpenType feature tag: swsh)
   * Parse circles, ellipses and lines in SVG files
 
- -- Johan Mattsson <johan.mattsson.m@gmail.com  Mon Oct 26 11:33:09 CET 2015
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Mon Oct 26 11:33:09 CET 2015
 
 birdfont (2.12.0) stable;
 
