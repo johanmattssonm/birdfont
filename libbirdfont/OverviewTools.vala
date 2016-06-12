@@ -279,15 +279,16 @@ public class OverviewTools : ToolCollection  {
 	public void add_new_alternate (Tool tool) {
 		OverView o = MainWindow.get_overview ();
 		OverViewItem oi = o.selected_item;
-		GlyphCollection gc;
+		GlyphCollection? gc;
 		
 		tool.set_selected (false);
 		
-		if (oi.glyphs == null || ((!) oi.glyphs).is_unassigned ()) {
-			return;
+		gc = (!) oi.glyphs;		
+		
+		if (oi.glyphs != null && ((!) oi.glyphs).is_unassigned ()) {
+			gc = null;
 		}
 		
-		gc = (!) oi.glyphs;		
 		MainWindow.tabs.add_tab (new OtfFeatureTable (gc));
 	}
 	

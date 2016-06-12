@@ -1874,7 +1874,7 @@ public class Glyph : FontDisplay {
 	private void move_view_offset (double x, double y) {
 		view_offset_x = move_offset_x + (pointer_begin_x - x) * (1/view_zoom);
 		view_offset_y = move_offset_y + (pointer_begin_y - y) * (1/view_zoom);
-		redraw_area (0, 0, allocation.width, allocation.height);
+		GlyphCanvas.redraw ();
 	}
 
 	public void store_undo_state (bool clear_redo = false) {
