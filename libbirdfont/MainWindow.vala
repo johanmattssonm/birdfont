@@ -222,16 +222,6 @@ public class MainWindow : GLib.Object {
 	public static bool select_tab (Tab t) {
 		return tabs.selected_open_tab (t);
 	}
-
-	public static OverView get_overview () {
-		foreach (Tab t in tabs.tabs) {
-			if (t.get_display () is OverView) {
-				return (OverView) t.get_display ();
-			}
-		}
-		
-		return overview;
-	}
 	
 	public static SpacingClassTab get_spacing_class_tab () {
 		return spacing_class_tab;
@@ -280,21 +270,6 @@ public class MainWindow : GLib.Object {
 		if (!is_null (MainWindow.native_window)) {
 			MainWindow.native_window.set_scrollbar_position (position);
 		}
-	}
-
-	/** Reaload all paths and help lines from disk. */
-	public static void clear_glyph_cache () {
-		Glyph g;
-		GlyphTab tab;
-		foreach (Tab t in get_tab_bar ().tabs) {
-			if (t.get_display () is GlyphTab) {
-				tab = (GlyphTab) t.get_display ();
-				g = tab.glyphs.get_current ();
-				g.add_help_lines ();
-			}
-		}
-		
-		GlyphCanvas.redraw ();
 	}
 		
 	public static void close_all_tabs () {
@@ -348,6 +323,10 @@ public class MainWindow : GLib.Object {
 	
 	public static void set_toolbox (Toolbox tb) {
 		tools = tb;
+	}
+
+	public static OverView get_overview () {
+		return overview;
 	}
 }
 

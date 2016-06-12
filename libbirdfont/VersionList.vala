@@ -94,6 +94,8 @@ public class VersionList : GLib.Object {
 		if (glyphs.size == 1) {
 			over_view.store_undo_state (glyph_collection.copy ());
 			font.delete_glyph (glyph_collection);
+			string name = glyph_collection.get_name ();
+			MainWindow.get_tab_bar ().close_background_tab_by_name (name);
 			return;
 		}
 		
@@ -238,7 +240,8 @@ public class VersionList : GLib.Object {
 				continue; 
 			}
 			
-			glyph = (Glyph) tab.get_display ();
+			GlyphTab glyph_tab = (GlyphTab) tab.get_display ();
+			glyph = glyph_tab.glyphs.get_current ();
 			uni.truncate (0);
 			uni.append_unichar (glyph.unichar_code);
 			ug = font.get_glyph (uni.str);
@@ -248,7 +251,7 @@ public class VersionList : GLib.Object {
 			}
 
 			updated_glyph = (!) ug;
-			tab.set_display (updated_glyph);
+			tab.set_display (glyph_tab);
 			updated_glyph.view_zoom = glyph.view_zoom;
 			updated_glyph.view_offset_x = glyph.view_offset_x;
 			updated_glyph.view_offset_y = glyph.view_offset_y;

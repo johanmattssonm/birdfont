@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012 2014 2015 Johan Mattsson
+	Copyright (C) 2012 - 2016 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -96,7 +96,7 @@ public class OverView : FontDisplay {
 				bool selected = tabs.select_char (n);
 				GlyphCanvas canvas;
 				Glyph g = glyph_collection.get_current (); 
-				GlyphTab glyph_tab;				
+				GlyphTab glyph_tab;
 				
 				if (!selected) {
 					glyph_tab = new GlyphTab (glyph_collection);
@@ -1045,8 +1045,10 @@ public class OverView : FontDisplay {
 		}
 		store_undo_items (undo_item);
 
-		foreach (GlyphCollection gc in selected_items) {
-			font.delete_glyph (gc);
+		foreach (GlyphCollection glyph_collection in selected_items) {
+			font.delete_glyph (glyph_collection);
+			string name = glyph_collection.get_name ();
+			MainWindow.get_tab_bar ().close_background_tab_by_name (name);
 		}
 
 		update_item_list ();
@@ -1096,7 +1098,6 @@ public class OverView : FontDisplay {
 			font.delete_glyph (g);
 			font.add_glyph_collection (g);
 		}
-		
 		font.alternates = previous_collection.alternate_sets.copy ();
 
 		redo_items.remove_at (redo_items.size - 1);
@@ -1193,12 +1194,12 @@ public class OverView : FontDisplay {
 		if (all_available) {
 			
 			// don't search for glyphs in huge CJK fonts 
-			if (font.length () > 300) {
+			if (font.length () > 500) {
 				r = 0;
 			} else {
 				// FIXME: too slow
 				for (r = 0; r < font.length (); r += items_per_row) {
-					for (i = 0; i < items_per_row; i++) {
+					for (i = 0; i < items_per_row && i < font.length (); i++) {
 						glyphs = font.get_glyph_collection_index ((uint32) r + i);
 						return_if_fail (glyphs != null);
 						glyph = ((!) glyphs).get_current ();
@@ -1235,6 +1236,7 @@ public class OverView : FontDisplay {
 		
 		if (index > -1) {
 			first_visible = r;
+			process_item_list_update ();
 			update_item_list ();
 			select_visible_glyph (ch);
 		}

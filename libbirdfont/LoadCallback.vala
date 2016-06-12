@@ -86,8 +86,6 @@ public class LoadCallback : GLib.Object {
 				
 				f = BirdFont.new_font ();
 				
-				MainWindow.clear_glyph_cache ();
-				
 				f.set_file ((!) fn);
 				Preferences.add_recent_files ((!) fn);
 				MainWindow.native_window.load ();
