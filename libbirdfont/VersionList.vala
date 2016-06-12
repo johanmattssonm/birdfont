@@ -94,6 +94,8 @@ public class VersionList : GLib.Object {
 		if (glyphs.size == 1) {
 			over_view.store_undo_state (glyph_collection.copy ());
 			font.delete_glyph (glyph_collection);
+			string name = glyph_collection.get_name ();
+			MainWindow.get_tab_bar ().close_background_tab_by_name (name);
 			return;
 		}
 		

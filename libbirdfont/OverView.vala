@@ -1026,8 +1026,10 @@ public class OverView : FontDisplay {
 		}
 		store_undo_items (undo_item);
 
-		foreach (GlyphCollection gc in selected_items) {
-			font.delete_glyph (gc);
+		foreach (GlyphCollection glyph_collection in selected_items) {
+			font.delete_glyph (glyph_collection);
+			string name = glyph_collection.get_name ();
+			MainWindow.get_tab_bar ().close_background_tab_by_name (name);
 		}
 
 		update_item_list ();
