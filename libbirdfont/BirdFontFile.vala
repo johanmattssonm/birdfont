@@ -24,7 +24,7 @@ class BirdFontFile : GLib.Object {
 	Font font;
 	
 	public static const int FORMAT_MAJOR = 2;
-	public static const int FORMAT_MINOR = 2;
+	public static const int FORMAT_MINOR = 1;
 	
 	public static const int MIN_FORMAT_MAJOR = 0;
 	public static const int MIN_FORMAT_MINOR = 0;
@@ -341,8 +341,7 @@ class BirdFontFile : GLib.Object {
 			os.put_string ("\n");
 		}
 		
-		os.put_string (@"<background scale=\"$(font.background_scale)\" />\n");
-		os.put_string (@"<conversion tolerance=\"$(font.tolerance)\" />\n");	
+		os.put_string (@"<background scale=\"$(font.background_scale)\" />\n");	
 	}
 
 	public void write_description (DataOutputStream os) throws GLib.Error {
@@ -745,10 +744,6 @@ class BirdFontFile : GLib.Object {
 				parse_background (t);
 			}
 
-			if (t.get_name () == "conversion") {
-				parse_cubic_conversion (t);
-			}
-			
 			if (t.get_name () == "postscript_name") {
 				font.postscript_name = XmlParser.decode (t.get_content ());
 			}
@@ -1117,18 +1112,6 @@ class BirdFontFile : GLib.Object {
 		} catch (MarkupError e) {
 			warning (e.message);
 		}
-	}
-	
-	private void parse_cubic_conversion (Tag tag) {
-		string tolerance = "1";
-		
-		foreach (Attribute attr in tag.get_attributes ()) {
-			if (attr.get_name () == "tolerance") {
-				tolerance = attr.get_content ();
-			}
-		}
-		
-		font.tolerance = parse_double (tolerance);
 	}
 	
 	private void parse_background_image (Tag tag) {

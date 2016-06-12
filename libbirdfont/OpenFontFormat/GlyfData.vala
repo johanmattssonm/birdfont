@@ -58,12 +58,11 @@ public class GlyfData : GLib.Object {
 		
 	public GlyfData (Glyph g) {
 		bool process;
-		Font font = OpenFontFormatWriter.get_current_font ();
-		PathList quadratic_path = g.get_quadratic_paths (font.tolerance); 
+		PathList qp = g.get_quadratic_paths (); 
 		
 		glyph = g;
 						
-		foreach (Path p in quadratic_path.paths) {
+		foreach (Path p in qp.paths) {
 			if (p.points.size > 0) {
 				if (!is_empty (p)) {
 					// Add points at extrema
@@ -77,7 +76,7 @@ public class GlyfData : GLib.Object {
 		while (process) {
 			points.clear ();
 			paths.clear ();
-			foreach (Path p in quadratic_path.paths) {
+			foreach (Path p in qp.paths) {
 				if (!is_empty (p)) {
 					paths.add (p);
 					foreach (EditPoint ep in p.points) {

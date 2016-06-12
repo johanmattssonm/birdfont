@@ -645,7 +645,7 @@ class TestCases {
 		g = MainWindow.get_current_glyph ();
 		
 		foreach (Path path in g.get_all_paths ()) {
-			paths.append (path.get_quadratic_points (1.0));
+			paths.append (path.get_quadratic_points ());
 			paths.append (path.copy ());
 		}
 				
@@ -663,7 +663,7 @@ class TestCases {
 		p.add (-10, -10);
 		p.close ();
 		g.add_path (p);
-		g.add_path (p1.get_quadratic_points (1.0));
+		g.add_path (p1.get_quadratic_points ());
 
 		e0 = new EditPoint (20, 40);
 		e1 = new EditPoint (40, 40);
@@ -687,7 +687,7 @@ class TestCases {
 		e3.process_tied_handle ();
 
 		g.add_path (p1);
-		g.add_path (p1.get_quadratic_points (1.0));
+		g.add_path (p1.get_quadratic_points ());
 		
 		foreach (Path path in paths) {
 			g.add_path (path);

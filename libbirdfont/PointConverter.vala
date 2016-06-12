@@ -22,11 +22,9 @@ public class PointConverter {
 
 	Path original_path;
 	Path quadratic_path;
-	double error_tolerance = 1;
 
-	public PointConverter (Path path, double tolerance) {	
+	public PointConverter (Path path) {	
 		original_path = path;
-		error_tolerance = tolerance;
 	}
 
 	public Path get_quadratic_path () {
@@ -111,7 +109,7 @@ public class PointConverter {
 						out distance, out e, out step);
 			}
 			
-			if (distance > 0.1 + 0.1 * error_tolerance) { //  range 0.1 - 0.4,
+			if (distance > 0.2) { //  range 0.1 - 0.4,
 				quadratic_path.insert_new_point_on_path (e);
 				points_in_segment++;
 				size += 2; // the new point + segment start

@@ -212,7 +212,7 @@ public class Glyph : FontDisplay {
 		return (!) ttf_data;
 	}
 
-	public PathList get_quadratic_paths (double tolerance) {
+	public PathList get_quadratic_paths () {
 		PointConverter pc;
 		PathList pl;
 		PathList stroke;
@@ -223,11 +223,11 @@ public class Glyph : FontDisplay {
 			if (p.stroke > 0) {
 				stroke = p.get_completed_stroke ();
 				foreach (Path stroke_part in stroke.paths) {
-					pc = new PointConverter (stroke_part, tolerance);
+					pc = new PointConverter (stroke_part);
 					pl.add (pc.get_quadratic_path ());
 				}
 			} else {
-				pc = new PointConverter (p, tolerance);
+				pc = new PointConverter (p);
 				pl.add (pc.get_quadratic_path ());
 			}
 		}

@@ -24,7 +24,6 @@ public class ExportSettings : TableLayout {
 	CheckBox ttf;
 	CheckBox eot;
 	CheckBox svg;
-	TextArea tolerance;
 	Button export_action;
 	Button name_tab;
 	
@@ -130,31 +129,6 @@ public class ExportSettings : TableLayout {
 		focus_ring.add (svg);
 
 		svg.margin_bottom = 20 * MainWindow.units;
-
-		widgets.add (new Text (t_("Conversion Tolerance"), label_size, label_margin));
-		
-		tolerance = new LineTextArea (label_size);
-		tolerance.margin_bottom = 20 * MainWindow.units;
-		
-		tolerance.set_text (@"$(font.tolerance * 100.0)%");
-		tolerance.text_changed.connect ((t) => {
-			Font f = BirdFont.get_current_font ();
-			string tolerance_percent = t.replace ("%", "");
-			tolerance_percent = t.replace (",", ".");
-			tolerance_percent = t.replace (" ", "");
-			double error_tolerance = double.parse (tolerance_percent);
-			
-			if (error_tolerance >= 100.0) {
-				f.tolerance = 1;
-			} else if (error_tolerance <= 0) {
-				f.tolerance = 0;
-			} else {
-				f.tolerance = error_tolerance / 100.0;
-			}
-		});
-		
-		widgets.add (tolerance);
-		focus_ring.add (tolerance);
 
 		name_tab = new Button (t_("Name and Description"), margin);
 		name_tab.action.connect ((c) => {
