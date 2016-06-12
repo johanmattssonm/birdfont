@@ -1180,7 +1180,7 @@ public class OverView : FontDisplay {
 			} else {
 				// FIXME: too slow
 				for (r = 0; r < font.length (); r += items_per_row) {
-					for (i = 0; i < items_per_row; i++) {
+					for (i = 0; i < items_per_row && i < font.length (); i++) {
 						glyphs = font.get_glyph_collection_index ((uint32) r + i);
 						return_if_fail (glyphs != null);
 						glyph = ((!) glyphs).get_current ();
