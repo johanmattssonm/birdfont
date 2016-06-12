@@ -21,7 +21,7 @@ public class TabBar : GLib.Object {
 	public int width = 0;
 	public int height = 0;
 	
-	private Gee.ArrayList<Tab> tabs;
+	public Gee.ArrayList<Tab> tabs;
 
 	static const int NO_TAB = -1;
 	static const int NEXT_TAB = -2;

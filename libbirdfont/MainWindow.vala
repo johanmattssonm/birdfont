@@ -320,6 +320,12 @@ public class MainWindow : GLib.Object {
 	}
 
 	public static OverView get_overview () {
+		foreach (Tab t in tabs.tabs) {
+			if (t.get_display () is OverView) {
+				return (OverView) t.get_display ();
+			}
+		}
+		
 		return overview;
 	}
 }
