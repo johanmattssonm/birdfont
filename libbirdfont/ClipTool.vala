@@ -134,7 +134,8 @@ public class ClipTool : Tool {
 		string data;
 		return_if_fail (fd is GlyphTab);
 		
-		destination = (Glyph) fd;
+		GlyphTab glyph_tab = (GlyphTab) fd; 
+		destination = glyph_tab.glyphs.get_current ();
 		((!)destination).store_undo_state ();
 		((!)destination).clear_active_paths ();
 		

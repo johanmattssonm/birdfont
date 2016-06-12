@@ -181,13 +181,14 @@ public class BackgroundTools : ToolCollection  {
 		});
 		label.has_delete_button = true;
 		parts.add_tool (label, 0);
+		parts.redraw ();		
 		
 		if (!is_null (MainWindow.get_toolbox ())) {
-			MainWindow.get_toolbox ().update_expanders ();
-			Toolbox.redraw_tool_box ();
+				MainWindow.get_toolbox ().update_expanders ();
+				parts.clear_cache ();
+				Toolbox.redraw_tool_box ();
+				GlyphCanvas.redraw ();
 		}
-		
-		parts.redraw ();
 	}
 
 	void set_new_background_image (GlyphCollection gc, BackgroundPartLabel bpl) {

@@ -238,7 +238,8 @@ public class VersionList : GLib.Object {
 				continue; 
 			}
 			
-			glyph = (Glyph) tab.get_display ();
+			GlyphTab glyph_tab = (GlyphTab) tab.get_display ();
+			glyph = glyph_tab.glyphs.get_current ();
 			uni.truncate (0);
 			uni.append_unichar (glyph.unichar_code);
 			ug = font.get_glyph (uni.str);
