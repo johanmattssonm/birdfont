@@ -20,12 +20,26 @@ public class SpacingClassTab : Table {
 	
 	public static int NEW_CLASS = -1;
 	Gee.ArrayList<Row> rows = new Gee.ArrayList<Row> ();
+	public static SpacingClass current_class;
+	public static bool current_class_first_element;
 	
 	public SpacingClassTab () {
+		current_class = new SpacingClass ("", "");
 	}
 
 	public override Gee.ArrayList<Row> get_rows () {
 		return rows;
+	}
+	
+	public static void set_class (string glyph) {
+		print(@"G: $(glyph)\n");
+		if (current_class_first_element) {
+			current_class.first = glyph;
+		} else {
+			current_class.next = glyph;
+		}
+		
+		MainWindow.get_spacing_class_tab ().update_rows ();
 	}
 
 	public override void selected_row (Row row, int column, bool delete_button) {
@@ -51,11 +65,15 @@ public class SpacingClassTab : Table {
 					warning (@"Index: $(row.get_index ()) classes.size: $(spacing.classes.size)");
 					return;
 				}
-				spacing.classes.get (row.get_index ()).set_first ();
+				current_class = spacing.classes.get (row.get_index ());
+				current_class.set_first ();
+				current_class_first_element = true;
 				font.touch ();
 			} else if (column == 2) {
 				return_if_fail (0 <= row.get_index () < spacing.classes.size);
-				spacing.classes.get (row.get_index ()).set_next ();
+				current_class = spacing.classes.get (row.get_index ());
+				current_class.set_next ();
+				current_class_first_element = false;
 				font.touch ();
 			}
 		}

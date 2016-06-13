@@ -27,6 +27,7 @@ public class Toolbox : GLib.Object  {
 	public static OverviewTools overview_tools;
 	public static BackgroundTools background_tools;	
 	public static SpacingTools spacing_tools;
+	public static SpacingClassTools spacing_class_tools;
 	public static FileTools file_tools;
 	public static ThemeTools theme_tools;
 	
@@ -64,6 +65,7 @@ public class Toolbox : GLib.Object  {
 		overview_tools = new OverviewTools ();
 		background_tools = new BackgroundTools ();
 		spacing_tools = new SpacingTools ();
+		spacing_class_tools = new SpacingClassTools  ();
 		file_tools = new FileTools ();
 		theme_tools = new ThemeTools ();
 		
@@ -74,6 +76,7 @@ public class Toolbox : GLib.Object  {
 		tool_sets.add (kerning_tools);
 		tool_sets.add (preview_tools);
 		tool_sets.add (overview_tools);
+		tool_sets.add (spacing_class_tools);
 		tool_sets.add (background_tools);
 		// the menu has all the file_tools commands, it will not be added here
 		tool_sets.add (hidden_tools); // tools without a button
@@ -123,6 +126,8 @@ public class Toolbox : GLib.Object  {
 			current_set = (ToolCollection) overview_tools;
 		} else if (tab_name == "Backgrounds") {
 			current_set = (ToolCollection) background_tools;
+		} else if (tab_name == "SpacingClasses") {
+			current_set = (ToolCollection) spacing_class_tools;
 		} else if (tab_name == "Themes") {
 			current_set = (ToolCollection) theme_tools;
 		} else if (t != null && ((!) t).get_display () is GlyphTab) {

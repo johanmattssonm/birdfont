@@ -1056,7 +1056,9 @@ public class Glyph : FontDisplay {
 			return;
 		}
 
-		if (move_canvas || DrawingTools.move_canvas.is_selected ()) {
+		if (move_canvas 
+			|| DrawingTools.move_canvas.is_selected ()
+			|| (KeyBindings.has_ctrl () && KeyBindings.has_shift ())) {
 			view_is_moving = true;
 			move_offset_x = view_offset_x;
 			move_offset_y = view_offset_y;
@@ -1813,7 +1815,7 @@ public class Glyph : FontDisplay {
 	private void move_view_offset (double x, double y) {
 		view_offset_x = move_offset_x + (pointer_begin_x - x) * (1/view_zoom);
 		view_offset_y = move_offset_y + (pointer_begin_y - y) * (1/view_zoom);
-		redraw_area (0, 0, allocation.width, allocation.height);
+		GlyphCanvas.redraw ();
 	}
 
 	public void store_undo_state (bool clear_redo = false) {
@@ -2306,7 +2308,7 @@ public class Glyph : FontDisplay {
 		SpacingData sd;
 
 		sd = font.get_spacing ();
-		s = sd.get_all_connections ((!) unichar_code.to_string ());
+		s = sd.get_all_connections (get_name ());
 
 		foreach (string l in s) {
 			if (l != (!) unichar_code.to_string ()) {

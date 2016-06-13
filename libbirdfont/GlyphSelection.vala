@@ -27,7 +27,7 @@ public class GlyphSelection : OverView {
 		FontDisplay.dirty_scrollbar = true;	
 		
 		open_glyph_signal.connect ((gc) => {
-			selected_glyph (gc);
+			selected_glyph (gc);			
 			Toolbox.redraw_tool_box ();
 		});
 		

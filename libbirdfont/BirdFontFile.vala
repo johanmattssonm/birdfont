@@ -26,7 +26,7 @@ class BirdFontFile : GLib.Object {
 	Font font;
 	
 	public static const int FORMAT_MAJOR = 2;
-	public static const int FORMAT_MINOR = 1;
+	public static const int FORMAT_MINOR = 2;
 	
 	public static const int MIN_FORMAT_MAJOR = 0;
 	public static const int MIN_FORMAT_MINOR = 0;
@@ -277,11 +277,25 @@ class BirdFontFile : GLib.Object {
 		foreach (SpacingClass sc in s.classes) {
 				os.put_string ("<spacing ");
 				os.put_string ("first=\"");
-				os.put_string (Font.to_hex (sc.first.get_char ()));
+				
+				if (sc.first.char_count () == 1) {
+					os.put_string (Font.to_hex (sc.first.get_char ()));
+				} else {
+					os.put_string ("name:");
+					os.put_string (XmlParser.encode (sc.first));
+				}
+				
 				os.put_string ("\" ");
 				
 				os.put_string ("next=\"");
-				os.put_string (Font.to_hex (sc.next.get_char ()));
+				
+				if (sc.next.char_count () == 1) {
+					os.put_string (Font.to_hex (sc.next.get_char ()));
+				} else {
+					os.put_string ("name:");
+					os.put_string (XmlParser.encode (sc.next));
+				}
+				
 				os.put_string ("\" ");
 				
 				os.put_string ("/>\n");
@@ -1128,6 +1142,7 @@ class BirdFontFile : GLib.Object {
 	
 	private void parse_spacing_class (Tag tag) {
 		string first, next;
+		string name;
 		SpacingData spacing = font.get_spacing ();
 		
 		first = "";
@@ -1135,11 +1150,21 @@ class BirdFontFile : GLib.Object {
 		
 		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "first") {
-				first = (!) Font.to_unichar (attr.get_content ()).to_string ();
+				if (attr.get_content ().has_prefix ("U+")) {
+					first = (!) Font.to_unichar (attr.get_content ()).to_string ();
+				} else if (attr.get_content ().has_prefix ("name:")) {
+					name = attr.get_content ().substring ("name:".length);
+					first = XmlParser.decode (name);
+				}
 			}
 
 			if (attr.get_name () == "next") {
-				next = (!) Font.to_unichar (attr.get_content ()).to_string ();
+				if (attr.get_content ().has_prefix ("U+")) {
+					next = (!) Font.to_unichar (attr.get_content ()).to_string ();
+				} else if (attr.get_content ().has_prefix ("name:")) {
+					name = attr.get_content ().substring ("name:".length);
+					next = XmlParser.decode (name);
+				}
 			}		
 		}
 		
@@ -1157,6 +1182,7 @@ class BirdFontFile : GLib.Object {
 			
 			foreach (Attribute attr in tag.get_attributes ()) {
 				if (attr.get_name () == "left") {
+
 					range_left.parse_ranges (unserialize (attr.get_content ()));
 				}
 

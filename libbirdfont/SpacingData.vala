@@ -69,7 +69,7 @@ public class SpacingData : GLib.Object {
 					add_connections (s.next);
 				}
 			}
-
+			
 			if (s.next == glyph) {
 				if (!has_connection (s.first)) {
 					add_connections (s.first);
