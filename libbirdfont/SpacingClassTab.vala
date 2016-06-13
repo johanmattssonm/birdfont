@@ -30,6 +30,17 @@ public class SpacingClassTab : Table {
 	public override Gee.ArrayList<Row> get_rows () {
 		return rows;
 	}
+	
+	public static void set_class (string glyph) {
+		print(@"G: $(glyph)\n");
+		if (current_class_first_element) {
+			current_class.first = glyph;
+		} else {
+			current_class.next = glyph;
+		}
+		
+		MainWindow.get_spacing_class_tab ().update_rows ();
+	}
 
 	public override void selected_row (Row row, int column, bool delete_button) {
 		Font font = BirdFont.get_current_font ();
@@ -56,11 +67,13 @@ public class SpacingClassTab : Table {
 				}
 				current_class = spacing.classes.get (row.get_index ());
 				current_class.set_first ();
+				current_class_first_element = true;
 				font.touch ();
 			} else if (column == 2) {
 				return_if_fail (0 <= row.get_index () < spacing.classes.size);
 				current_class = spacing.classes.get (row.get_index ());
-				current_class .set_next ();
+				current_class.set_next ();
+				current_class_first_element = false;
 				font.touch ();
 			}
 		}

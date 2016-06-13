@@ -27,7 +27,9 @@ public class GlyphSelection : OverView {
 		FontDisplay.dirty_scrollbar = true;	
 		
 		open_glyph_signal.connect ((gc) => {
-			selected_glyph (gc);
+			print(@"name $(gc.get_name ())\n");
+			print(@"g name $(gc.get_current ().get_name ())\n");
+			selected_glyph (gc);			
 			Toolbox.redraw_tool_box ();
 		});
 		

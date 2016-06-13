@@ -231,6 +231,7 @@ public class AbstractMenu : GLib.Object {
 
 	public void add_tool_key_bindings () {
 		ToolItem tool_item;
+
 		foreach (ToolCollection tool_set in MainWindow.get_toolbox ().tool_sets) {
 			foreach (Expander e in tool_set.get_expanders ()) {
 				foreach (Tool t in e.tool) {

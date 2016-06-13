@@ -21,6 +21,11 @@ public class SpacingClassTools : ToolCollection  {
 	public static Gee.ArrayList<Expander> expanders;
 
 	public SpacingClassTools () {
+		expanders = new Gee.ArrayList<Expander> ();
+
+		Expander font_name = new Expander ();
+		font_name.add_tool (new FontName ());
+		
 		Expander spacing_class_tools = new Expander ();
 		Tool insert = new Tool ("insert_glyph_from_overview_in_spacing_class", t_("Insert glyph from overview"));
 		
@@ -30,15 +35,20 @@ public class SpacingClassTools : ToolCollection  {
 			GlyphSelection glyph_selection = new GlyphSelection ();
 			
 			glyph_selection.selected_glyph.connect ((glyph_collection) => {
-				SpacingClassTab.current_class.update_class (glyph_collection.get_name (),
-					SpacingClassTab.current_class_first_element);
+				print (@"glyph_collection.get_name (): $(glyph_collection.get_name ())\n");
+				SpacingClassTab.set_class (glyph_collection.get_name ());
 				MainWindow.get_tab_bar ().select_tab_name ("SpacingClasses");
 			});
 			
 			GlyphCanvas.set_display (glyph_selection);
 			self.set_selected (false);
+			
+			TabContent.hide_text_input ();
 		});
 		spacing_class_tools.add_tool (insert);
+		
+		expanders.add (font_name);
+		expanders.add (spacing_class_tools);
 	}
 	
 	public override Gee.ArrayList<Expander> get_expanders () {
