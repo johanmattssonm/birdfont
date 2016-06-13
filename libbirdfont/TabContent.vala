@@ -144,8 +144,12 @@ public class TabContent : GLib.Object {
 		KeyBindings.add_modifier_from_keyval (keyval);
 
 		if (!text_input_visible) {
-			MainWindow.get_menu ().process_key_binding_events (keyval);
-			GlyphCanvas.current_display.key_press (keyval);
+			AbstractMenu menu = MainWindow.get_menu ();
+			bool consumed = menu.process_key_binding_events (keyval);
+			
+			if (!consumed) {
+				GlyphCanvas.current_display.key_press (keyval);
+			}
 		} else {
 			text_input.key_press (keyval);
 		}
