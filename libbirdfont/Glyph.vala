@@ -1077,19 +1077,9 @@ public class Glyph : FontDisplay {
 	}
 
 	public void show_zoom_area (int sx, int sy, int nx, int ny) {
-		double x, y, w, h;
-
 		set_zoom_area (sx, sy, nx, ny);
-
 		zoom_area_is_visible = true;
-
-		x = Math.fmin (zoom_x1, zoom_x2) - 50;
-		y = Math.fmin (zoom_y1, zoom_y2) - 50;
-
-		w = Math.fabs (zoom_x1 - zoom_x2) + 100;
-		h = Math.fabs (zoom_y1 - zoom_y2) + 100;
-
-		redraw_area ((int)x, (int)y, (int)w, (int)h);
+		GlyphCanvas.redraw ();
 	}
 
 	public void set_zoom_area (int sx, int sy, int nx, int ny) {

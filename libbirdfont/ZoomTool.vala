@@ -36,17 +36,18 @@ public class ZoomTool : Tool {
 		});
 			
 		press_action.connect((self, b, x, y) => {
-			if (b == 1 && KeyBindings.modifier != CTRL) {
+			if (b == 1 && !KeyBindings.has_ctrl () && !KeyBindings.has_shift ()) {
 				zoom_area_begin_x = x;
 				zoom_area_begin_y = y;
+				Glyph g = MainWindow.get_current_glyph ();
+				g.zoom_area_is_visible = true;
 			}
 		});
 
 		move_action.connect((self, x, y) => {
-			Glyph g;
+			Glyph g = MainWindow.get_current_glyph ();
 			
-			if (zoom_area_begin_x > 0) {
-				g = MainWindow.get_current_glyph ();
+			if (g.zoom_area_is_visible) {
 				g.show_zoom_area (zoom_area_begin_x, zoom_area_begin_y, x, y);
 			}
 		});
@@ -54,7 +55,7 @@ public class ZoomTool : Tool {
 		release_action.connect((self, b, x, y) => {
 			Glyph g;
 						
-			if (b == 1 && KeyBindings.modifier != CTRL) {
+			if (b == 1 && !KeyBindings.has_ctrl () && !KeyBindings.has_shift ()) {
 				store_current_view ();
 				
 				g =	MainWindow.get_current_glyph ();
@@ -65,6 +66,7 @@ public class ZoomTool : Tool {
 					g.set_zoom_from_area ();
 				}
 				
+				g.zoom_area_is_visible = false;
 				zoom_area_begin_x = -1;
 				zoom_area_begin_y = -1;
 			}
