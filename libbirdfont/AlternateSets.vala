@@ -51,7 +51,30 @@ public class AlternateSets : GLib.Object {
 		
 		return alt;
 	}
-	
+
+	public Gee.ArrayList<Alternate> get_alt_with_glyph (string tag, Font font) {	
+		Gee.ArrayList<Alternate> alt;
+		alt = new Gee.ArrayList<Alternate> ();
+		
+		foreach (Alternate a in alternates) {
+			Alternate available = new Alternate (a.glyph_name, a.tag);
+			
+			foreach (string substitution in a.alternates) {
+				if (font.has_glyph (substitution)) {
+					available.alternates.add (substitution);
+				}
+			}
+			
+			if (available.tag == tag && available.alternates.size > 0) {
+				if (font.has_glyph (available.glyph_name)) {
+					alt.add (available);
+				}
+			}
+		}
+		
+		return alt;
+	}
+		
 	public void remove_empty_sets () {
 		int i = 0;
 		foreach (Alternate a in alternates) {
