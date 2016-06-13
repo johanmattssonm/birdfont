@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012 2013 2014 2015 Johan Mattsson
+	Copyright (C) 2012 - 2016 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as
@@ -2331,7 +2331,7 @@ public class Glyph : FontDisplay {
 		SpacingData sd;
 
 		sd = font.get_spacing ();
-		s = sd.get_all_connections ((!) unichar_code.to_string ());
+		s = sd.get_all_connections (get_name ());
 
 		foreach (string l in s) {
 			if (l != (!) unichar_code.to_string ()) {

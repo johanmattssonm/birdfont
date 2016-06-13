@@ -35,7 +35,6 @@ public class SpacingClassTools : ToolCollection  {
 			GlyphSelection glyph_selection = new GlyphSelection ();
 			
 			glyph_selection.selected_glyph.connect ((glyph_collection) => {
-				print (@"glyph_collection.get_name (): $(glyph_collection.get_name ())\n");
 				SpacingClassTab.set_class (glyph_collection.get_name ());
 				MainWindow.get_tab_bar ().select_tab_name ("SpacingClasses");
 			});
@@ -48,6 +47,7 @@ public class SpacingClassTools : ToolCollection  {
 		spacing_class_tools.add_tool (insert);
 		
 		expanders.add (font_name);
+		
 		expanders.add (spacing_class_tools);
 	}
 	
