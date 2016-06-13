@@ -93,16 +93,13 @@ public class OverView : FontDisplay {
 				TabBar tabs = MainWindow.get_tab_bar ();
 				string n = glyph_collection.get_current ().name;
 				bool selected = tabs.select_char (n);
-				GlyphCanvas canvas;
 				Glyph g = glyph_collection.get_current (); 
 				GlyphTab glyph_tab;
 				
 				if (!selected) {
 					glyph_tab = new GlyphTab (glyph_collection);
-					canvas = MainWindow.get_glyph_canvas ();
 					tabs.add_tab (glyph_tab, true, glyph_collection);
-					canvas.set_current_glyph_collection (glyph_collection);
-					set_initial_zoom ();
+					set_glyph_zoom (glyph_collection);
 					PenTool.update_orientation ();
 				}
 			});
@@ -196,7 +193,7 @@ public class OverView : FontDisplay {
 			canvas = MainWindow.get_glyph_canvas ();
 			canvas.set_current_glyph_collection (glyph_collection);
 			
-			set_initial_zoom ();
+			set_glyph_zoom (glyph_collection);
 		} else {
 			warning ("Glyph is already open");
 		}
@@ -284,15 +281,18 @@ public class OverView : FontDisplay {
 		return null;
 	}
 	
-	public void set_initial_zoom () {
+	public void set_glyph_zoom (GlyphCollection glyphs) {
+		GlyphCanvas canvas;
+		canvas = MainWindow.get_glyph_canvas ();
+		canvas.set_current_glyph_collection (glyphs);
 		Toolbox tools = MainWindow.get_toolbox ();
 		ZoomTool z = (ZoomTool) tools.get_tool ("zoom_tool");
 		z.store_current_view ();
-		MainWindow.get_current_glyph ().default_zoom ();
+		glyphs.get_current ().default_zoom ();
 		z.store_current_view ();
 		OverViewItem.reset_label ();
 	}
-
+	
 	public double get_height () {
 		double l;
 		Font f;
@@ -1054,6 +1054,16 @@ public class OverView : FontDisplay {
 			if (g.length () > 0) {
 				font.add_glyph_collection (g);
 			}
+
+			TabBar tabs = MainWindow.get_tab_bar ();
+			Tab? tab = tabs.get_tab (g.get_name ());
+			
+			if (tab != null) {
+				Tab t = (!) tab;
+				set_glyph_zoom (g);
+				t.set_glyph_collection (g);
+				t.set_display (new GlyphTab (g));
+			}
 		}
 		
 		Font f = BirdFont.get_current_font ();
@@ -1078,6 +1088,16 @@ public class OverView : FontDisplay {
 		foreach (GlyphCollection g in previous_collection.glyphs) {
 			font.delete_glyph (g);
 			font.add_glyph_collection (g);
+
+			TabBar tabs = MainWindow.get_tab_bar ();
+			Tab? tab = tabs.get_tab (g.get_name ());
+			
+			if (tab != null) {
+				Tab t = (!) tab;
+				set_glyph_zoom (g);
+				t.set_glyph_collection (g);
+				t.set_display (new GlyphTab (g));
+			}
 		}
 		font.alternates = previous_collection.alternate_sets.copy ();
 
