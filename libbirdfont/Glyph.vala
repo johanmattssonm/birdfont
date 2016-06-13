@@ -991,7 +991,9 @@ public class Glyph : FontDisplay {
 			return;
 		}
 
-		if (move_canvas || DrawingTools.move_canvas.is_selected ()) {
+		if (move_canvas 
+			|| DrawingTools.move_canvas.is_selected ()
+			|| (KeyBindings.has_ctrl () && KeyBindings.has_shift ())) {
 			view_is_moving = true;
 			move_offset_x = view_offset_x;
 			move_offset_y = view_offset_y;

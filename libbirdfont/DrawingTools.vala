@@ -191,7 +191,9 @@ public class DrawingTools : ToolCollection  {
 		});	
 		draw_tools.add_tool (move_background);
 
-		move_canvas = new Tool ("move_canvas", t_("Move canvas"));
+		move_canvas = new Tool ("move_canvas", t_("Move canvas") 
+			+ "\n" + t_("Ctrl + Shift + Click")
+			+ "\n" + t_("Space + Click") + "\n");
 		move_canvas.select_action.connect ((self) => {
 			update_drawing_and_background_tools (self);
 		});	
