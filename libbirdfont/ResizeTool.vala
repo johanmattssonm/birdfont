@@ -165,36 +165,38 @@ public class ResizeTool : Tool {
 			Text handle;
 			Glyph g = MainWindow.get_current_glyph ();
 			
-			if (!rotate_path) {
-				if (!resize_width) {
-					handle = proportional_handle;
-					get_resize_handle_position (out handle.widget_x, out handle.widget_y);
+			if (!move_paths) {
+				if (!rotate_path) {
+					if (!resize_width) {
+						handle = proportional_handle;
+						get_resize_handle_position (out handle.widget_x, out handle.widget_y);
+						
+						handle.widget_x -= handle.get_sidebearing_extent () / 2;
+						handle.widget_y -= handle.get_height () / 2;
+						
+						handle.draw (cr);
+					} 
 					
-					handle.widget_x -= handle.get_sidebearing_extent () / 2;
-					handle.widget_y -= handle.get_height () / 2;
+					if (!resize_path_proportional) {
+						handle = horizontal_handle;
+						
+						get_horizontal_reseize_handle_position (out handle.widget_x, 
+							out handle.widget_y);
+						
+						handle.widget_x -= handle.get_sidebearing_extent () / 2;
+						handle.widget_y -= handle.get_height () / 2;
+						
+						handle.draw (cr);
+					}
+				}
+
+				if (!resize_path_proportional && !resize_width 
+					&& g.active_paths.size > 0) {
 					
-					handle.draw (cr);
-				} 
-				
-				if (!resize_path_proportional) {
-					handle = horizontal_handle;
-					
-					get_horizontal_reseize_handle_position (out handle.widget_x, 
-						out handle.widget_y);
-					
-					handle.widget_x -= handle.get_sidebearing_extent () / 2;
-					handle.widget_y -= handle.get_height () / 2;
-					
-					handle.draw (cr);
+					draw_rotate_handle (cr);
 				}
 			}
-
-			if (!resize_path_proportional && !resize_width 
-				&& g.active_paths.size > 0) {
-				
-				draw_rotate_handle (cr);
-			}
-		
+			
 			MoveTool.draw_actions (cr);
 		});
 		

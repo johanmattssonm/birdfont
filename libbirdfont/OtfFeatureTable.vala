@@ -53,7 +53,8 @@ public class OtfFeatureTable : Table {
 			GlyphSelection gs = new GlyphSelection ();
 			
 			gs.selected_glyph.connect ((gc) => {
-				glyph_collection = gc;		
+				glyph_collection = gc;
+				replacement_glyph = null;		
 				MainWindow.get_tab_bar ().select_tab_name (get_name ());
 			});
 			
