@@ -32,7 +32,6 @@ public class SpacingClassTab : Table {
 	}
 	
 	public static void set_class (string glyph) {
-		print(@"G: $(glyph)\n");
 		if (current_class_first_element) {
 			current_class.first = glyph;
 		} else {
