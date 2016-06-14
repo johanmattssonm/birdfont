@@ -577,6 +577,8 @@ public class KerningDisplay : FontDisplay {
 			kd = (KerningDisplay) fd;
 			kd.set_selected_handle (kd.selected_handle - 1);	
 		}
+		
+		GlyphCanvas.redraw ();
 	}
 	
 	public static void next_pair () {
@@ -588,6 +590,7 @@ public class KerningDisplay : FontDisplay {
 		
 		if (fd is SpacingTab) {
 			st = (SpacingTab) fd;
+	
 			if (st.right_side_bearing) {
 				st.right_side_bearing = false;
 			} else {
@@ -598,6 +601,8 @@ public class KerningDisplay : FontDisplay {
 			kd = (KerningDisplay) fd;
 			kd.set_selected_handle (kd.selected_handle + 1);	
 		}
+		
+		GlyphCanvas.redraw ();
 	}
 
 	private static string round (double d) {
