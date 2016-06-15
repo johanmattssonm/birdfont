@@ -503,7 +503,7 @@ public class OverView : FontDisplay {
 			return new OverViewItem ();
 		}
 		
-		if (!(0 <= selected < visible_items.size)) { 
+		if (!(0 <= selected < visible_items.size)) {
 			return selected_item;
 		}
 
@@ -658,6 +658,7 @@ public class OverView : FontDisplay {
 			}
 		}
 		
+		get_selected_item ().selected = true;
 		update_scheduled = false;
 	}
 	
