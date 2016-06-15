@@ -30,55 +30,6 @@ public class PathObject : SvgBird.Object {
 			path.stroke = value;
 		}
 	}
-
-	// FIXME: flip y axis
-	public override double xmin {
-		get {
-			return path.xmin;
-		}
-
-		set {
-			path.xmin = value;
-		}
-		
-		default = Glyph.CANVAS_MAX;
-	}
-
-	public override double xmax {
-		get {
-			return path.xmax;
-		}
-
-		set {
-			path.xmax = value;
-		}
-		
-		default = Glyph.CANVAS_MIN;
-	}
-
-	public override double ymin {
-		get {
-			return path.ymin;
-		}
-
-		set {
-			path.ymin = value;
-		}
-		
-		default = Glyph.CANVAS_MAX;
-	}
-
-	public override double ymax {
-		get {
-			return path.ymax;
-		}
-
-		set {
-			path.ymax = value;
-		}
-		
-		default = Glyph.CANVAS_MIN;
-	}
 		
 	public PathObject () {
 		base ();
@@ -128,7 +79,17 @@ public class PathObject : SvgBird.Object {
 	}
 
 	public override void update_region_boundaries () {
+		xmin = Glyph.CANVAS_MAX;
+		xmax = Glyph.CANVAS_MIN;
+		ymin = Glyph.CANVAS_MAX;
+		ymax = Glyph.CANVAS_MIN;
+
 		path.update_region_boundaries ();
+		
+		xmin = path.xmin;
+		xmax = path.xmax;
+		ymin = path.ymin;
+		ymax = path.ymax;
 	}
 
 	public override void rotate (double theta, double xc, double yc) {

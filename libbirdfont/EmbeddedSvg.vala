@@ -26,7 +26,7 @@ public class EmbeddedSvg : SvgBird.Object {
 	public double x { get; set; }
 	public double y { get; set; }
 
-	public override double xmin {
+	public override double left {
 		get {
 			return x;
 		}
@@ -35,7 +35,7 @@ public class EmbeddedSvg : SvgBird.Object {
 		}
 	}
 
-	public override double xmax {
+	public override double right {
 		get {
 			return x + drawing.width;
 		}
@@ -44,8 +44,7 @@ public class EmbeddedSvg : SvgBird.Object {
 		}
 	}
 	
-
-	public override double ymin {
+	public override double top {
 		get {
 			return y - drawing.height;
 		}
@@ -54,7 +53,7 @@ public class EmbeddedSvg : SvgBird.Object {
 		}
 	}
 
-	public override double ymax {
+	public override double bottom {
 		get {
 			return y;
 		}

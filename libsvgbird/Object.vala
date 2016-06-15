@@ -32,11 +32,64 @@ public abstract class Object : GLib.Object {
 	public virtual Gradient? gradient { get; set; }
 
 	/** Path boundaries */
-	public virtual double xmax { get; set; }
-	public virtual double xmin { get; set; }
-	public virtual double ymax { get; set; }
-	public virtual double ymin { get; set; }
+	public virtual double left { get; set; }
+	public virtual double right { get; set; }
+	public virtual double top { get; set; }
+	public virtual double bottom { get; set; }
 	
+	public virtual double boundaries_height { 
+		get {
+			return bottom - top;
+		}
+	}
+
+	public virtual double boundaries_width { 
+		get {
+			return right - left;
+		}
+	}
+
+	/** Cartesian coordinates for the old BirdFont system. */
+	public double xmax { 
+		get {
+			return right;
+		}
+		
+		set {
+			right = value;
+		}
+	}
+	
+	public double xmin { 
+		get {
+			return left;
+		}
+		
+		set {
+			left = value;
+		}
+	}
+
+	public double ymin {
+		get {
+			return top - boundaries_height;
+		}
+		
+		set {
+			top = value + boundaries_height;
+		}
+	}
+
+	public double ymax {
+		get {
+			return top;
+		}
+		
+		set {
+			top = value;
+		}
+	}
+
 	public virtual double rotation { get; set; }
 	public virtual double stroke { get; set; }
 	public virtual LineCap line_cap { get; set; default = LineCap.BUTT; }

@@ -49,7 +49,7 @@ public class SvgDrawing : Object {
 	public double svg_width = 0;
 	public double svg_height = 0;
 
-	public override double xmin {
+	public override double left {
 		get {
 			return x;
 		}
@@ -58,7 +58,7 @@ public class SvgDrawing : Object {
 		}
 	}
 
-	public override double xmax {
+	public override double right {
 		get {
 			return x + width;
 		}
@@ -67,7 +67,7 @@ public class SvgDrawing : Object {
 		}
 	}
 
-	public override double ymin {
+	public override double top {
 		get {
 			return y;
 		}
@@ -76,7 +76,7 @@ public class SvgDrawing : Object {
 		}
 	}
 
-	public override double ymax {
+	public override double bottom {
 		get {
 			return y + height;
 		}
