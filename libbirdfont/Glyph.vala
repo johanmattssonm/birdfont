@@ -689,9 +689,9 @@ public class Glyph : FontDisplay {
 
 		double max_x, min_x, max_y, min_y;
 		PathList pl;
-		var paths = get_all_paths ();
+		var objects = get_visible_objects ();
 
-		if (paths.size == 0) {
+		if (objects.size == 0) {
 			x1 = 0;
 			y1 = 0;
 			x2 = 0;
@@ -704,17 +704,17 @@ public class Glyph : FontDisplay {
 		max_y = CANVAS_MIN;
 		min_y = CANVAS_MAX;
 
-		// FIXME: optimize
-		foreach (Path p in paths) {
+		foreach (SvgBird.Object object in objects) {
 
-			if (p.stroke > 0) {
-				pl = p.get_stroke_fast ();
+			if (object is PathObject && object.stroke > 0) {
+				PathObject o = (PathObject) object;
+				pl = o.get_path ().get_stroke_fast ();
 
 				foreach (Path part in pl.paths) {
 					boundaries_for_path (part, ref min_x, ref max_x, ref min_y, ref max_y);
 				}
 			} else {
-				boundaries_for_path (p, ref min_x, ref max_x, ref min_y, ref max_y);
+				boundaries_for_object (object, ref min_x, ref max_x, ref min_y, ref max_y);
 			}
 		}
 
@@ -726,7 +726,24 @@ public class Glyph : FontDisplay {
 		return max_x != CANVAS_MIN;
 	}
 
-	void boundaries_for_path (Path p, ref double min_x, ref double max_x,
+	void boundaries_for_object (SvgBird.Object object, 
+		ref double min_x, ref double max_x,
+		ref double min_y, ref double max_y) {
+		max_x = object.xmax;
+		min_x = object.xmin;
+		max_y = object.ymax;
+		min_y = object.ymin;
+
+		if (object is PathObject) {
+			PathObject o = (PathObject) object;
+			boundaries_for_path (o.get_path (), 
+				ref max_x, ref min_x,
+				ref max_y, ref min_y);
+		}
+	}
+
+	void boundaries_for_path (Path path,
+		ref double min_x, ref double max_x,
 		ref double min_y, ref double max_y) {
 
 		double max_x2, max_y2, min_x2, min_y2;
@@ -736,7 +753,8 @@ public class Glyph : FontDisplay {
 		max_y2 = max_y;
 		min_y2 = min_y;
 
-		p.all_of_path ((x, y, t) => {
+		// FIXME: Optimize
+		path.all_of_path ((x, y, t) => {
 			if (x > max_x2) {
 				max_x2 = x;
 			}
