@@ -706,12 +706,17 @@ public class Glyph : FontDisplay {
 
 		foreach (SvgBird.Object object in objects) {
 
-			if (object is PathObject && object.stroke > 0) {
+			if (object is PathObject) {
 				PathObject o = (PathObject) object;
-				pl = o.get_path ().get_stroke_fast ();
+				
+				if (object.stroke > 0) {
+					pl = o.get_path ().get_stroke_fast ();
 
-				foreach (Path part in pl.paths) {
-					boundaries_for_path (part, ref min_x, ref max_x, ref min_y, ref max_y);
+					foreach (Path part in pl.paths) {
+						boundaries_for_path (part, ref min_x, ref max_x, ref min_y, ref max_y);
+					}
+				} else {
+					boundaries_for_path (o.get_path (), ref min_x, ref max_x, ref min_y, ref max_y);
 				}
 			} else {
 				boundaries_for_object (object, ref min_x, ref max_x, ref min_y, ref max_y);
@@ -774,10 +779,21 @@ public class Glyph : FontDisplay {
 			return true;
 		});
 
-		max_x = max_x2;
-		min_x = min_x2;
-		max_y = max_y2;
-		min_y = min_y2;
+		if (max_x2 > max_x) {
+			max_x = max_x2;
+		}
+		
+		if (min_x2 < min_x) {
+			min_x = min_x2;
+		}
+		
+		if (max_y2 < max_y) {
+			max_y = max_y2;
+		}
+		
+		if (min_x2 < min_y) {
+			min_y = min_y2;
+		}
 	}
 
 	bool has_top_line () {
