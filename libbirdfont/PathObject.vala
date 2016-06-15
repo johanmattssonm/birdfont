@@ -20,6 +20,42 @@ namespace BirdFont {
 public class PathObject : SvgBird.Object {
 
 	public Path path;
+
+	public override double left { 
+		get {
+			return path.xmin;
+		}
+		
+		set {
+		}
+	}
+	
+	public override double right { 
+		get {
+			return path.xmax;
+		}
+		
+		set {
+		}
+	}
+
+	public override double top {
+		get {
+			return -path.ymax;
+		}
+		
+		set {
+		}
+	}
+
+	public override double bottom {
+		get {
+			return -path.ymin;
+		}
+		
+		set {
+		}
+	}
 	
 	public override double stroke {
 		get {

@@ -31,38 +31,94 @@ public class Layer : Object {
 		transforms = new SvgTransforms ();
 	}
 	
-	public void update_boundaries () {
+	public override void update_boundaries (Matrix view_matrix) {
 		top = CANVAS_MAX;
 		bottom = CANVAS_MIN;
 		left = CANVAS_MAX;
 		right = CANVAS_MIN;
 
+		Matrix layer_matrix = transforms.get_matrix ();
+		layer_matrix.multiply (layer_matrix, view_matrix);
+
 		foreach (Object object in objects) {
 			if (object is Layer) {
 				Layer sublayer = (Layer) object;
-				sublayer.update_boundaries ();
+				sublayer.update_boundaries (layer_matrix);
 			}
 			
 			if (object.boundaries_height > 0.000001 
 				&& object.boundaries_width > 0.000001) {
-				
-				if (object.top < top) {
-					top = object.top;
-				}
 
-				if (object.bottom > bottom) {
-					bottom = object.bottom;
-				}
+				Matrix object_matrix = object.transforms.get_matrix ();
+				object_matrix.multiply (object_matrix, layer_matrix);
 				
-				if (object.left < left) {
-					left = object.left;
-				}
+				double x0, x1, x2, x3;
+				double y0, y1, y2, y3;
+				
+				x0 = object.left;
+				y0 = object.top;
+				x1 = object.right;
+				y1 = object.top;
+				x2 = object.right;
+				y2 = object.bottom;
+				x3 = object.left;
+				y3 = object.bottom;
 
-				if (object.right > right) {
-					right = object.right;
-				}
+				object_matrix.transform_point (ref x0, ref y0);
+				object_matrix.transform_point (ref x1, ref y1);
+				object_matrix.transform_point (ref x2, ref y2);
+				object_matrix.transform_point (ref x3, ref y3);
+
+				left = min (left, x0, x1, x2, x3);
+				right = max (right, x0, x1, x2, x3);
+				top = min (top, y0, y1, y2, y3);
+				bottom = max (bottom, y0, y1, y2, y3);
 			}
 		}
+	}
+	
+	static double min (double x0, double x1, double x2, double x3, double x4) {
+		double r = x0;
+
+		if (x1 < r) {
+			r = x1;
+		}
+
+		if (x2 < r) {
+			r = x2;
+		}
+
+		if (x3 < r) {
+			r = x3;
+		}
+
+		if (x4 < r) {
+			r = x4;
+		}
+		
+		return r;
+	}
+
+	static double max (double x0, double x1, double x2, double x3, double x4) {
+		double r = x0;
+
+		if (x1 > r) {
+			r = x1;
+		}
+
+		if (x2 > r) {
+			r = x2;
+		}
+
+		if (x3 > r) {
+			r = x3;
+		}
+
+		if (x4 > r) {
+			r = x4;
+		}
+		
+		return r;
 	}
 	
 	public void draw (Context cr) {
@@ -115,17 +171,17 @@ public class Layer : Object {
 		
 	public void add_layer (Layer layer) {
 		objects.add (layer);
-		update_boundaries ();
+		update_boundaries (Matrix.identity ());
 	}
 	
 	public void add_object (Object object) {
 		objects.add (object);
-		update_boundaries ();
+		update_boundaries (Matrix.identity ());
 	}
 
 	public void remove (Object o) {
 		objects.remove (o);
-		update_boundaries ();
+		update_boundaries (Matrix.identity ());
 	}
 	
 	public void remove_layer (Layer layer) {
@@ -138,7 +194,7 @@ public class Layer : Object {
 			}
 		}
 		
-		update_boundaries ();
+		update_boundaries (Matrix.identity ());
 	}
 	
 	public static void copy_layer (Layer from, Layer to) {

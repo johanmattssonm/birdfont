@@ -354,7 +354,7 @@ public class Glyph : FontDisplay {
 		y2 = CANVAS_MIN;
 
 		foreach (SvgBird.Object object in objects) {
-			object.update_boundaries ();
+			object.update_boundaries (Matrix.identity ());
 			
 			if (object is PathObject) {
 				PathObject path = (PathObject) object;
@@ -380,7 +380,7 @@ public class Glyph : FontDisplay {
 				y2 = object.ymax;
 			}
 		}
-
+	
 		return x1 != CANVAS_MAX;
 	}
 
@@ -734,7 +734,7 @@ public class Glyph : FontDisplay {
 		x2 = max_x;
 		y2 = min_y;
 
-		return max_x != CANVAS_MIN;
+		return true;
 	}
 
 	void boundaries_for_object (SvgBird.Object object, 
@@ -1851,9 +1851,6 @@ public class Glyph : FontDisplay {
 	public void store_undo_state (bool clear_redo = false) {
 		Glyph g = copy ();
 		undo_list.add (g);
-
-		print ("\n\n");
-		print_layers (g.layers);
 
 		if (clear_redo) {
 			redo_list.clear ();

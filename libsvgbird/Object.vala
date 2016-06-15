@@ -231,7 +231,7 @@ public abstract class Object : GLib.Object {
 		cr.set_matrix (object_matrix);
 	}
 	
-	public virtual void update_boundaries () {	
+	public virtual void update_boundaries (Matrix view_matrix) {	
 	}
 }
 
