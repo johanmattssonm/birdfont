@@ -338,9 +338,9 @@ public class Glyph : FontDisplay {
 	}
 
 	public bool boundaries (out double x1, out double y1, out double x2, out double y2) {
-		var paths = get_all_paths ();
+		var objects = get_visible_objects ();
 
-		if (paths.size == 0) {
+		if (objects.size == 0) {
 			x1 = 0;
 			y1 = 0;
 			x2 = 0;
@@ -353,29 +353,35 @@ public class Glyph : FontDisplay {
 		y1 = CANVAS_MAX;
 		y2 = CANVAS_MIN;
 
-		foreach (Path p in paths) {
-			p.update_region_boundaries ();
-
-			if (p.points.size > 1) {
-				if (p.xmin < x1) {
-					x1 = p.xmin;
+		foreach (SvgBird.Object object in objects) {
+			object.update_boundaries ();
+			
+			if (object is PathObject) {
+				PathObject path = (PathObject) object;
+				
+				if (path.get_path ().points.size <= 1) {
+					continue;
 				}
+			}
+			
+			if (object.xmin < x1) {
+				x1 = object.xmin;
+			}
 
-				if (p.xmax > x2) {
-					x2 = p.xmax;
-				}
+			if (object.xmax > x2) {
+				x2 = object.xmax;
+			}
 
-				if (p.ymin < y1) {
-					y1 = p.ymin;
-				}
+			if (object.ymin < y1) {
+				y1 = object.ymin;
+			}
 
-				if (p.ymax > y2) {
-					y2 = p.ymax;
-				}
+			if (object.ymax > y2) {
+				y2 = object.ymax;
 			}
 		}
 
-		return x1 != double.MAX;
+		return x1 != CANVAS_MAX;
 	}
 
 	public void selection_boundaries (out double x, out double y, out double w, out double h) {
@@ -386,21 +392,21 @@ public class Glyph : FontDisplay {
 		px2 = -10000;
 		py2 = -10000;
 
-		foreach (SvgBird.Object p in active_paths) {
-			if (p.xmin < px) {
-				px = p.xmin;
+		foreach (SvgBird.Object object in active_paths) {
+			if (object.xmin < px) {
+				px = object.xmin;
 			}
 
-			if (p.ymin < py) {
-				py = p.ymin;
+			if (object.ymin < py) {
+				py = object.ymin;
 			}
 
-			if (p.xmax > px2) {
-				px2 = p.xmax;
+			if (object.xmax > px2) {
+				px2 = object.xmax;
 			}
 
-			if (p.ymax > py2) {
-				py2 = p.ymax;
+			if (object.ymax > py2) {
+				py2 = object.ymax;
 			}
 		}
 
