@@ -26,42 +26,42 @@ public class EmbeddedSvg : SvgBird.Object {
 	public double x { get; set; }
 	public double y { get; set; }
 
-	public override double left {
+	public override double left { 
 		get {
-			return x;
+			return x + drawing.left;
+		}
+		
+		set {
+		}
+	}
+	
+	public override double right { 
+		get {
+			return x + drawing.right;
 		}
 		
 		set {
 		}
 	}
 
-	public override double right {
-		get {
-			return x + drawing.width;
-		}
-
-		set {
-		}
-	}
-	
 	public override double top {
 		get {
-			return y - drawing.height;
+			return drawing.top - y;
 		}
-
+		
 		set {
 		}
 	}
 
 	public override double bottom {
 		get {
-			return y;
+			return drawing.bottom - y;
 		}
-
+		
 		set {
 		}
 	}
-			
+		
 	public EmbeddedSvg (SvgDrawing drawing) {
 		this.drawing = drawing;
 	}
@@ -71,8 +71,8 @@ public class EmbeddedSvg : SvgBird.Object {
 	}
 
 	public override bool is_over (double x, double y) {
-		return (this.x <= x <= this.x + drawing.width) 
-			&& (this.y - drawing.height <= y <= this.y);
+		return (xmin <= x <= xmax) 
+			&& (ymin <= y <= ymax);
 	}
 	
 	public void draw_embedded_svg (Context cr) {

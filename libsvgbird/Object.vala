@@ -72,29 +72,33 @@ public abstract class Object : GLib.Object {
 
 	public double ymin {
 		get {
-			return top - boundaries_height;
+			return -top - boundaries_height;
 		}
 		
 		set {
-			top = value + boundaries_height;
+			top = boundaries_height - value;
 		}
 	}
 
 	public double ymax {
 		get {
-			return top;
+			return -top;
 		}
 		
 		set {
-			top = value;
+			top = -value;
 		}
 	}
 
+	// FIXME: DELETE
 	public virtual double rotation { get; set; }
 	public virtual double stroke { get; set; }
 	public virtual LineCap line_cap { get; set; default = LineCap.BUTT; }
 	public virtual bool fill { get; set; }
-		
+	
+	public const double CANVAS_MAX = 100000;
+	public const double CANVAS_MIN = -100000;
+	
 	public Object () {	
 	}
 
@@ -226,7 +230,9 @@ public abstract class Object : GLib.Object {
 		object_matrix.multiply (object_matrix, view_matrix);
 		cr.set_matrix (object_matrix);
 	}
-					
+	
+	public virtual void update_boundaries () {	
+	}
 }
 
 }

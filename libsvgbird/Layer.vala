@@ -31,6 +31,40 @@ public class Layer : Object {
 		transforms = new SvgTransforms ();
 	}
 	
+	public void update_boundaries () {
+		top = CANVAS_MAX;
+		bottom = CANVAS_MIN;
+		left = CANVAS_MAX;
+		right = CANVAS_MIN;
+
+		foreach (Object object in objects) {
+			if (object is Layer) {
+				Layer sublayer = (Layer) object;
+				sublayer.update_boundaries ();
+			}
+			
+			if (object.boundaries_height > 0.000001 
+				&& object.boundaries_width > 0.000001) {
+				
+				if (object.top < top) {
+					top = object.top;
+				}
+
+				if (object.bottom > bottom) {
+					bottom = object.bottom;
+				}
+				
+				if (object.left < left) {
+					left = object.left;
+				}
+
+				if (object.right > right) {
+					right = object.right;
+				}
+			}
+		}
+	}
+	
 	public void draw (Context cr) {
 		cr.save ();
 		apply_transform (cr);
@@ -81,14 +115,17 @@ public class Layer : Object {
 		
 	public void add_layer (Layer layer) {
 		objects.add (layer);
+		update_boundaries ();
 	}
 	
 	public void add_object (Object object) {
 		objects.add (object);
+		update_boundaries ();
 	}
 
 	public void remove (Object o) {
 		objects.remove (o);
+		update_boundaries ();
 	}
 	
 	public void remove_layer (Layer layer) {
@@ -100,6 +137,8 @@ public class Layer : Object {
 				sublayer.remove_layer (layer);
 			}
 		}
+		
+		update_boundaries ();
 	}
 	
 	public static void copy_layer (Layer from, Layer to) {

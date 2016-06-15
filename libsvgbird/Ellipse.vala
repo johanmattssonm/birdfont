@@ -23,7 +23,43 @@ public class Ellipse : Object {
 	public double cy = 0;
 	public double rx = 0;
 	public double ry = 0;
+
+	public override double left {
+		get {
+			return cx - rx - style.stroke_width / 2;
+		}
+		
+		set {
+		}
+	}
+
+	public override double right  {
+		get {
+			return cx + rx + style.stroke_width / 2;
+		}
+		
+		set {
+		}
+	}
 	
+	public override double top  {
+		get {
+			return cy - ry - style.stroke_width / 2;
+		}
+		
+		set {
+		}
+	}
+	
+	public override double bottom  {
+		get {
+			return cy + ry + style.stroke_width / 2;
+		}
+		
+		set {
+		}
+	}
+		
 	public Ellipse () {
 	}
 	
@@ -59,9 +95,6 @@ public class Ellipse : Object {
 	public override Object copy () {
 		Ellipse e = new Ellipse ();
 		Object.copy_attributes (this, e);
-		
-		print (@"cy $(cy)\n");
-		
 		e.cx = cx;
 		e.cy = cy;
 		e.rx = rx;

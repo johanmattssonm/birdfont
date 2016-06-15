@@ -51,7 +51,7 @@ public class SvgDrawing : Object {
 
 	public override double left {
 		get {
-			return x;
+			return root_layer.left;
 		}
 
 		set {
@@ -60,7 +60,7 @@ public class SvgDrawing : Object {
 
 	public override double right {
 		get {
-			return x + width;
+			return root_layer.right;
 		}
 		
 		set {
@@ -69,7 +69,7 @@ public class SvgDrawing : Object {
 
 	public override double top {
 		get {
-			return y;
+			return root_layer.top;
 		}
 		
 		set {
@@ -78,7 +78,7 @@ public class SvgDrawing : Object {
 
 	public override double bottom {
 		get {
-			return y + height;
+			return root_layer.bottom;
 		}
 		
 		set {

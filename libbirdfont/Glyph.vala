@@ -2459,7 +2459,10 @@ public class Glyph : FontDisplay {
 		return g2;
 	}
 	
-	// FIXME: convert everything to the new SvgBird.Object code
+	public Gee.ArrayList<SvgBird.Object> get_active_objects () {
+		return active_paths;
+	}
+	
 	public Gee.ArrayList<Path> get_active_paths () {
 		Gee.ArrayList<Path> paths = new Gee.ArrayList<Path> ();
 		
@@ -2567,7 +2570,7 @@ public class Glyph : FontDisplay {
 		px2 = CANVAS_MIN;
 		py2 = CANVAS_MIN;
 		
-		foreach (Path p in get_active_paths ()) {
+		foreach (SvgBird.Object p in get_active_objects ()) {
 			if (px > p.xmin) {
 				px = p.xmin;
 			} 
