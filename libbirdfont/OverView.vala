@@ -507,7 +507,9 @@ public class OverView : FontDisplay {
 			return selected_item;
 		}
 
-		return visible_items.get (selected);
+		OverViewItem item = visible_items.get (selected);
+		item.selected = true;
+		return item;
 	}
 	
 	int get_items_per_row () {
