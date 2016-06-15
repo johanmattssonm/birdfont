@@ -1145,6 +1145,15 @@ public class OverView : FontDisplay {
 			if (o.get_name () == name) {
 				selected = i;
 				selected_item = get_selected_item ();
+
+				if (selected_item.y > allocation.height - OverViewItem.height) {
+					view_offset_y -= (selected_item.y + OverViewItem.height) - allocation.height;
+				}
+
+				if (selected_item.y < 0) {
+					view_offset_y = 0;
+				}		
+
 				return true;
 			}
 			
