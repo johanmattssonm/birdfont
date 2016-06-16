@@ -93,8 +93,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		glyph_canvas_area = new GlyphCanvasArea (MainWindow.glyph_canvas);
 
 		html_canvas = new WebView ();
-		html_canvas.get_settings ().enable_default_context_menu = false;
-		
 		html_box = new ScrolledWindow (null, null);
 		html_box.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
 		html_box.add (html_canvas);
