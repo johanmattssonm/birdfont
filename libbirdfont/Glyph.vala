@@ -353,31 +353,25 @@ public class Glyph : FontDisplay {
 		y1 = CANVAS_MAX;
 		y2 = CANVAS_MIN;
 
-		foreach (SvgBird.Object object in objects) {
-			object.update_boundaries (Matrix.identity ());
+		foreach (Layer layer in layers.get_sublayers ()) {
+			layer.update_boundaries (Matrix.identity ());
 			
-			if (object is PathObject) {
-				PathObject path = (PathObject) object;
-				
-				if (path.get_path ().points.size <= 1) {
-					continue;
-				}
-			}
+			print (@"layer.right: $(layer.right)\n");
 			
-			if (object.xmin < x1) {
-				x1 = object.xmin;
+			if (layer.xmin < x1) {
+				x1 = layer.xmin;
 			}
 
-			if (object.xmax > x2) {
-				x2 = object.xmax;
+			if (layer.xmax > x2) {
+				x2 = layer.xmax;
 			}
 
-			if (object.ymin < y1) {
-				y1 = object.ymin;
+			if (layer.ymin < y1) {
+				y1 = layer.ymin;
 			}
 
-			if (object.ymax > y2) {
-				y2 = object.ymax;
+			if (layer.ymax > y2) {
+				y2 = layer.ymax;
 			}
 		}
 	

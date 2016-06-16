@@ -4492,7 +4492,7 @@ namespace WebKit {
 		public void go_forward ();
 		public bool go_to_back_forward_item (WebKit.WebHistoryItem item);
 		public bool has_selection ();
-		public void load_html_string (string content, string base_uri);
+		public void load_html (string content, string base_uri);
 		public void load_request (WebKit.NetworkRequest request);
 		public void load_string (string content, string mime_type, string encoding, string base_uri);
 		public void load_uri (string uri);
