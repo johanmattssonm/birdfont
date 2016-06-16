@@ -93,13 +93,11 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		glyph_canvas_area = new GlyphCanvasArea (MainWindow.glyph_canvas);
 
 		html_canvas = new WebView ();
-		WebKit.set_cache_model (CacheModel.DOCUMENT_VIEWER);
 		html_canvas.get_settings ().enable_default_context_menu = false;
 		
 		html_box = new ScrolledWindow (null, null);
 		html_box.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
 		html_box.add (html_canvas);
-		html_canvas.set_editable (true);
 		
 		MainWindow.get_tab_bar ().signal_tab_selected.connect ((f, tab) => {
 			string uri = "";
@@ -113,7 +111,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 				html = Preview.get_html_with_absolute_paths ();
 										
 				try {	
-					html_canvas.load_html_string (html, uri);
+					html_canvas.load_html (html, uri);
 				} catch (Error e) {
 					warning (e.message);
 					warning ("Failed to load html into canvas.");
