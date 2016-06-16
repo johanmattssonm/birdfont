@@ -13,6 +13,7 @@
 */
 
 using Cairo;
+using Math;
 
 namespace SvgBird {
 
@@ -32,6 +33,10 @@ public class Layer : Object {
 	}
 	
 	public override void update_boundaries (Matrix view_matrix) {
+		if (objects.size == 0) {
+			return;
+		}
+		
 		top = CANVAS_MAX;
 		bottom = CANVAS_MIN;
 		left = CANVAS_MAX;
@@ -41,84 +46,13 @@ public class Layer : Object {
 		layer_matrix.multiply (layer_matrix, view_matrix);
 
 		foreach (Object object in objects) {
-			if (object is Layer) {
-				Layer sublayer = (Layer) object;
-				sublayer.update_boundaries (layer_matrix);
-			}
-			
-			if (object.boundaries_height > 0.000001 
-				&& object.boundaries_width > 0.000001) {
+			object.update_boundaries (layer_matrix);
 
-				Matrix object_matrix = object.transforms.get_matrix ();
-				object_matrix.multiply (object_matrix, layer_matrix);
-				
-				double x0, x1, x2, x3;
-				double y0, y1, y2, y3;
-				
-				x0 = object.left;
-				y0 = object.top;
-				x1 = object.right;
-				y1 = object.top;
-				x2 = object.right;
-				y2 = object.bottom;
-				x3 = object.left;
-				y3 = object.bottom;
-
-				object_matrix.transform_point (ref x0, ref y0);
-				object_matrix.transform_point (ref x1, ref y1);
-				object_matrix.transform_point (ref x2, ref y2);
-				object_matrix.transform_point (ref x3, ref y3);
-
-				left = min (left, x0, x1, x2, x3);
-				right = max (right, x0, x1, x2, x3);
-				top = min (top, y0, y1, y2, y3);
-				bottom = max (bottom, y0, y1, y2, y3);
-			}
+			left = fmin (left, object.left);
+			right = fmax (right, object.right);
+			top = fmin (top, object.top);
+			bottom = fmax (bottom, object.bottom);
 		}
-	}
-	
-	static double min (double x0, double x1, double x2, double x3, double x4) {
-		double r = x0;
-
-		if (x1 < r) {
-			r = x1;
-		}
-
-		if (x2 < r) {
-			r = x2;
-		}
-
-		if (x3 < r) {
-			r = x3;
-		}
-
-		if (x4 < r) {
-			r = x4;
-		}
-		
-		return r;
-	}
-
-	static double max (double x0, double x1, double x2, double x3, double x4) {
-		double r = x0;
-
-		if (x1 > r) {
-			r = x1;
-		}
-
-		if (x2 > r) {
-			r = x2;
-		}
-
-		if (x3 > r) {
-			r = x3;
-		}
-
-		if (x4 > r) {
-			r = x4;
-		}
-		
-		return r;
 	}
 	
 	public void draw (Context cr) {
