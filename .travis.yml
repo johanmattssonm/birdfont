@@ -8,7 +8,7 @@ script:
   - sudo apt-get install -qq libsqlite3-dev
   - sudo apt-get install -qq libxmlbird-dev
   - sudo apt-get install -qq libgee-dev 
-  - sudo apt-get install -qq libwebkit2gtk-3.0-dev
+  - sudo apt-get install -qq libwebkit2gtk-dev
   - sudo apt-get install -qq libnotify-dev
   - sudo apt-get install -qq valac-0.30
   - sudo apt-get install -qq python3
