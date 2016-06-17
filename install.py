@@ -107,6 +107,7 @@ install ('resources/linux/birdfont_window_icon.png', '/share/birdfont', 644)
 install ('resources/linux/birdfont.desktop', '/share/applications', 644)
 install ('resources/ucd.sqlite', '/share/birdfont', 644)
 install ('resources/codepages.sqlite', '/share/birdfont', 644)
+install ('resources/Roboto-Regular.ttf', '/share/birdfont', 644)
 
 install ('resources/linux/256x256/birdfont.png', '/share/icons/hicolor/256x256/apps', 644)
 install ('resources/linux/128x128/birdfont.png', '/share/icons/hicolor/128x128/apps', 644)

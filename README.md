@@ -20,12 +20,11 @@ packages with a -dev or -devel affix:
 
     valac
     python3-doit
-    font-roboto
     libxmlbird-dev
-    libgee-dev
+    libgee-0.8-dev
     libglib2.0-dev 
     libgtk-3-dev 
-    libwebkitgtk-3.0-dev 
+    libwebkit2gtk-3.0-dev 
     libnotify-dev
     libsqlite3-dev
 
