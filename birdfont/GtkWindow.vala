@@ -501,9 +501,9 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			thread = Thread.create<void*> (this.saving_thread, true);
 		} catch (GLib.Error e) {
 			warning (e.message);
-		}
+		}		
 	}
-	
+
 	public void* saving_thread () {
 		BirdFont.get_current_font ().save ();
 		MenuTab.stop_background_thread ();
