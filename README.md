@@ -19,12 +19,12 @@ Install vala and all required libraries, they are most likely in
 packages with a -dev or -devel affix:
 
     valac
-    font-roboto
     python3-doit
-    libgee-dev
+    libxmlbird-dev
+    libgee-0.8-dev
     libglib2.0-dev 
     libgtk-3-dev 
-    libwebkitgtk-3.0-dev 
+    libwebkit2gtk-3.0-dev 
     libnotify-dev
     libsqlite3-dev
     libxmlbird-dev

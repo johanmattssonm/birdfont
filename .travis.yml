@@ -1,6 +1,6 @@
-language: c
-compiler: gcc
-before_install:
+dist: trusty
+
+script:
   - sudo add-apt-repository ppa:vala-team/ppa -y
   - sudo add-apt-repository ppa:birdfont-team/birdfont -y
   - sudo apt-get update -qq
@@ -9,11 +9,10 @@ before_install:
   - sudo apt-get install -qq libsqlite3-dev
   - sudo apt-get install -qq libxmlbird-dev
   - sudo apt-get install -qq libgee-dev 
-  - sudo apt-get install -qq libwebkitgtk-3.0-dev
+  - sudo apt-get install -qq libwebkit2gtk-3.0-dev
   - sudo apt-get install -qq libnotify-dev
   - sudo apt-get install -qq valac-0.30
   - sudo apt-get install -qq python3
 
-script:
   - python3 ./configure --nonnull
   - python3 ./scripts/linux_build.py

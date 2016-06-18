@@ -2,7 +2,7 @@
 
 [CCode (lower_case_cprefix = "webkit_")]
 namespace WebKit {
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMAttr : WebKit.DOMNode, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMAttr ();
@@ -18,14 +18,14 @@ namespace WebKit {
 		public bool specified { get; }
 		public string value { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMBarInfo : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMBarInfo ();
 		public bool get_visible ();
 		public bool visible { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMBlob : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMBlob ();
@@ -36,12 +36,12 @@ namespace WebKit {
 		[NoAccessorMethod]
 		public string type { owned get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMCDATASection : WebKit.DOMText, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMCDATASection ();
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMCSSRule : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMCSSRule ();
@@ -59,7 +59,7 @@ namespace WebKit {
 		[NoAccessorMethod]
 		public uint type { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMCSSRuleList : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMCSSRuleList ();
@@ -69,7 +69,7 @@ namespace WebKit {
 		public unowned WebKit.DOMCSSRule item (ulong index);
 		public ulong length { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMCSSStyleDeclaration : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMCSSStyleDeclaration ();
@@ -101,7 +101,7 @@ namespace WebKit {
 		public ulong length { get; }
 		public WebKit.DOMCSSRule parent_rule { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMCSSStyleSheet : WebKit.DOMStyleSheet {
 		[CCode (has_construct_function = false)]
 		protected DOMCSSStyleSheet ();
@@ -123,7 +123,7 @@ namespace WebKit {
 		public WebKit.DOMCSSRule owner_rule { get; }
 		public WebKit.DOMCSSRuleList rules { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMCSSValue : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMCSSValue ();
@@ -136,7 +136,7 @@ namespace WebKit {
 		public string css_text { get; set; }
 		public uint css_value_type { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMCharacterData : WebKit.DOMNode, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMCharacterData ();
@@ -151,12 +151,12 @@ namespace WebKit {
 		public string data { get; set; }
 		public ulong length { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMComment : WebKit.DOMCharacterData, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMComment ();
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMConsole : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMConsole ();
@@ -165,15 +165,15 @@ namespace WebKit {
 		public void time (string title);
 		public WebKit.DOMMemoryInfo memory { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	[Compact]
 	public class DOMCustom {
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	[Compact]
 	public class DOMCustomClass {
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMDOMApplicationCache : WebKit.DOMObject, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMDOMApplicationCache ();
@@ -185,7 +185,7 @@ namespace WebKit {
 		public void update () throws GLib.Error;
 		public uint status { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMDOMImplementation : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMDOMImplementation ();
@@ -200,7 +200,7 @@ namespace WebKit {
 		[CCode (cname = "webkit_dom_dom_implementation_has_feature")]
 		public bool has_feature (string feature, string version);
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMDOMMimeType : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMDOMMimeType ();
@@ -216,7 +216,7 @@ namespace WebKit {
 		[NoAccessorMethod]
 		public string type { owned get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMDOMMimeTypeArray : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMDOMMimeTypeArray ();
@@ -228,7 +228,7 @@ namespace WebKit {
 		public unowned WebKit.DOMDOMMimeType named_item (string name);
 		public ulong length { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMDOMPlugin : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMDOMPlugin ();
@@ -249,7 +249,7 @@ namespace WebKit {
 		public ulong length { get; }
 		public string name { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMDOMPluginArray : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMDOMPluginArray ();
@@ -263,7 +263,7 @@ namespace WebKit {
 		public void refresh (bool reload);
 		public ulong length { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMDOMSelection : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMDOMSelection ();
@@ -328,7 +328,7 @@ namespace WebKit {
 		[NoAccessorMethod]
 		public string type { owned get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMDOMSettableTokenList : WebKit.DOMDOMTokenList {
 		[CCode (has_construct_function = false)]
 		protected DOMDOMSettableTokenList ();
@@ -338,7 +338,7 @@ namespace WebKit {
 		public void set_value (string value);
 		public string value { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMDOMStringList : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMDOMStringList ();
@@ -350,12 +350,12 @@ namespace WebKit {
 		public unowned string item (ulong index);
 		public ulong length { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMDOMStringMap : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMDOMStringMap ();
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMDOMTokenList : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMDOMTokenList ();
@@ -373,7 +373,7 @@ namespace WebKit {
 		public bool toggle (string token) throws GLib.Error;
 		public ulong length { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMDOMWindow : WebKit.DOMObject, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMDOMWindow ();
@@ -593,14 +593,14 @@ namespace WebKit {
 		public WebKit.DOMDOMWindow top { owned get; set; }
 		public WebKit.DOMDOMWindow window { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMDatabase : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMDatabase ();
 		public unowned string get_version ();
 		public string version { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMDocument : WebKit.DOMNode, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMDocument ();
@@ -718,14 +718,14 @@ namespace WebKit {
 		public bool xml_standalone { get; set; }
 		public string xml_version { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMDocumentFragment : WebKit.DOMNode, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMDocumentFragment ();
 		public unowned WebKit.DOMElement query_selector (string selectors) throws GLib.Error;
 		public unowned WebKit.DOMNodeList query_selector_all (string selectors) throws GLib.Error;
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMDocumentType : WebKit.DOMNode, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMDocumentType ();
@@ -742,7 +742,7 @@ namespace WebKit {
 		public string public_id { get; }
 		public string system_id { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMElement : WebKit.DOMNode, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMElement ();
@@ -815,12 +815,12 @@ namespace WebKit {
 		public WebKit.DOMCSSStyleDeclaration style { get; }
 		public string tag_name { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMEntityReference : WebKit.DOMNode, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMEntityReference ();
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMEvent : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMEvent ();
@@ -853,11 +853,11 @@ namespace WebKit {
 		[NoAccessorMethod]
 		public string type { owned get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	[Compact]
 	public class DOMEventTargetClass {
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMFile : WebKit.DOMBlob {
 		[CCode (has_construct_function = false)]
 		protected DOMFile ();
@@ -868,7 +868,7 @@ namespace WebKit {
 		public uint64 file_size { get; }
 		public string name { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMFileList : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMFileList ();
@@ -876,13 +876,13 @@ namespace WebKit {
 		public unowned WebKit.DOMFile item (ulong index);
 		public ulong length { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMGeolocation : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMGeolocation ();
 		public void clear_watch (long watch_id);
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLAnchorElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLAnchorElement ();
@@ -991,7 +991,7 @@ namespace WebKit {
 		[NoAccessorMethod]
 		public string type { owned get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLAppletElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLAppletElement ();
@@ -1051,7 +1051,7 @@ namespace WebKit {
 		public long vspace { get; set; }
 		public string width { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLAreaElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLAreaElement ();
@@ -1117,12 +1117,12 @@ namespace WebKit {
 		public string shape { get; set; }
 		public string target { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLAudioElement : WebKit.DOMHTMLMediaElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLAudioElement ();
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLBRElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLBRElement ();
@@ -1132,7 +1132,7 @@ namespace WebKit {
 		public void set_clear (string value);
 		public string clear { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLBaseElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLBaseElement ();
@@ -1147,7 +1147,7 @@ namespace WebKit {
 		public string href { get; set; }
 		public string target { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLBaseFontElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLBaseFontElement ();
@@ -1167,7 +1167,7 @@ namespace WebKit {
 		public string face { get; set; }
 		public long size { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLBodyElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLBodyElement ();
@@ -1202,7 +1202,7 @@ namespace WebKit {
 		public string text { get; set; }
 		public string v_link { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLButtonElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLButtonElement ();
@@ -1280,7 +1280,7 @@ namespace WebKit {
 		public string value { get; set; }
 		public bool will_validate { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLCanvasElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLCanvasElement ();
@@ -1295,7 +1295,7 @@ namespace WebKit {
 		public long height { get; set; }
 		public long width { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLCollection : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLCollection ();
@@ -1307,7 +1307,7 @@ namespace WebKit {
 		public unowned WebKit.DOMNode named_item (string name);
 		public ulong length { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLDListElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLDListElement ();
@@ -1317,7 +1317,7 @@ namespace WebKit {
 		public void set_compact (bool value);
 		public bool compact { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLDetailsElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLDetailsElement ();
@@ -1327,7 +1327,7 @@ namespace WebKit {
 		public void set_open (bool value);
 		public bool open { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLDirectoryElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLDirectoryElement ();
@@ -1337,7 +1337,7 @@ namespace WebKit {
 		public void set_compact (bool value);
 		public bool compact { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLDivElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLDivElement ();
@@ -1347,7 +1347,7 @@ namespace WebKit {
 		public void set_align (string value);
 		public string align { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLDocument : WebKit.DOMDocument, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLDocument ();
@@ -1418,7 +1418,7 @@ namespace WebKit {
 		public string vlink_color { get; set; }
 		public long width { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLElement : WebKit.DOMElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLElement ();
@@ -1513,7 +1513,7 @@ namespace WebKit {
 		public string title { get; set; }
 		public string webkitdropzone { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLEmbedElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLEmbedElement ();
@@ -1545,7 +1545,7 @@ namespace WebKit {
 		public string type { owned get; set; }
 		public long width { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLFieldSetElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLFieldSetElement ();
@@ -1566,7 +1566,7 @@ namespace WebKit {
 		public WebKit.DOMValidityState validity { get; }
 		public bool will_validate { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLFontElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLFontElement ();
@@ -1586,7 +1586,7 @@ namespace WebKit {
 		public string face { get; set; }
 		public string size { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLFormElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLFormElement ();
@@ -1652,7 +1652,7 @@ namespace WebKit {
 		public bool no_validate { get; set; }
 		public string target { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLFrameElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLFrameElement ();
@@ -1709,7 +1709,7 @@ namespace WebKit {
 		public string src { get; set; }
 		public long width { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLFrameSetElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLFrameSetElement ();
@@ -1724,7 +1724,7 @@ namespace WebKit {
 		public string cols { get; set; }
 		public string rows { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLHRElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLHRElement ();
@@ -1749,7 +1749,7 @@ namespace WebKit {
 		public string size { get; set; }
 		public string width { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLHeadElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLHeadElement ();
@@ -1759,7 +1759,7 @@ namespace WebKit {
 		public void set_profile (string value);
 		public string profile { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLHeadingElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLHeadingElement ();
@@ -1769,7 +1769,7 @@ namespace WebKit {
 		public void set_align (string value);
 		public string align { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLHtmlElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLHtmlElement ();
@@ -1784,7 +1784,7 @@ namespace WebKit {
 		public string manifest { get; set; }
 		public string version { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLIFrameElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLIFrameElement ();
@@ -1850,7 +1850,7 @@ namespace WebKit {
 		public string src { get; set; }
 		public string width { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLImageElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLImageElement ();
@@ -1940,7 +1940,7 @@ namespace WebKit {
 		public long x { get; }
 		public long y { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLInputElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLInputElement ();
@@ -2159,7 +2159,7 @@ namespace WebKit {
 		public double value_as_number { get; set; }
 		public bool will_validate { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLIsIndexElement : WebKit.DOMHTMLInputElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLIsIndexElement ();
@@ -2172,7 +2172,7 @@ namespace WebKit {
 		public WebKit.DOMHTMLFormElement form { get; }
 		public string prompt { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLKeygenElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLKeygenElement ();
@@ -2223,7 +2223,7 @@ namespace WebKit {
 		public WebKit.DOMValidityState validity { get; }
 		public bool will_validate { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLLIElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLLIElement ();
@@ -2235,7 +2235,7 @@ namespace WebKit {
 		public string type { owned get; set; }
 		public long value { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLLabelElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLLabelElement ();
@@ -2256,7 +2256,7 @@ namespace WebKit {
 		public WebKit.DOMHTMLFormElement form { get; }
 		public string html_for { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLLegendElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLLegendElement ();
@@ -2274,7 +2274,7 @@ namespace WebKit {
 		public string align { get; set; }
 		public WebKit.DOMHTMLFormElement form { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLLinkElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLLinkElement ();
@@ -2324,7 +2324,7 @@ namespace WebKit {
 		[NoAccessorMethod]
 		public string type { owned get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLMapElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLMapElement ();
@@ -2337,7 +2337,7 @@ namespace WebKit {
 		public WebKit.DOMHTMLCollection areas { get; }
 		public string name { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLMarqueeElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLMarqueeElement ();
@@ -2401,7 +2401,7 @@ namespace WebKit {
 		public ulong vspace { get; set; }
 		public string width { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLMediaElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLMediaElement ();
@@ -2525,7 +2525,7 @@ namespace WebKit {
 		public bool webkit_has_closed_captions { get; }
 		public bool webkit_preserves_pitch { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLMenuElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLMenuElement ();
@@ -2535,7 +2535,7 @@ namespace WebKit {
 		public void set_compact (bool value);
 		public bool compact { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLMetaElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLMetaElement ();
@@ -2560,7 +2560,7 @@ namespace WebKit {
 		public string name { get; set; }
 		public string scheme { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLModElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLModElement ();
@@ -2575,7 +2575,7 @@ namespace WebKit {
 		public string cite { get; set; }
 		public string date_time { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLOListElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLOListElement ();
@@ -2592,7 +2592,7 @@ namespace WebKit {
 		[NoAccessorMethod]
 		public string type { owned get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLObjectElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLObjectElement ();
@@ -2693,7 +2693,7 @@ namespace WebKit {
 		public string width { get; set; }
 		public bool will_validate { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLOptGroupElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLOptGroupElement ();
@@ -2708,7 +2708,7 @@ namespace WebKit {
 		public bool disabled { get; set; }
 		public string label { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLOptionElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLOptionElement ();
@@ -2747,7 +2747,7 @@ namespace WebKit {
 		public string text { get; }
 		public string value { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLOptionsCollection : WebKit.DOMHTMLCollection {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLOptionsCollection ();
@@ -2757,7 +2757,7 @@ namespace WebKit {
 		public void set_selected_index (long value);
 		public long selected_index { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLParagraphElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLParagraphElement ();
@@ -2767,7 +2767,7 @@ namespace WebKit {
 		public void set_align (string value);
 		public string align { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLParamElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLParamElement ();
@@ -2789,7 +2789,7 @@ namespace WebKit {
 		public string value { get; set; }
 		public string value_type { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLPreElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLPreElement ();
@@ -2804,7 +2804,7 @@ namespace WebKit {
 		public long width { get; set; }
 		public bool wrap { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLQuoteElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLQuoteElement ();
@@ -2814,7 +2814,7 @@ namespace WebKit {
 		public void set_cite (string value);
 		public string cite { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLScriptElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLScriptElement ();
@@ -2856,7 +2856,7 @@ namespace WebKit {
 		[NoAccessorMethod]
 		public string type { owned get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLSelectElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLSelectElement ();
@@ -2938,7 +2938,7 @@ namespace WebKit {
 		public string value { get; set; }
 		public bool will_validate { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLStyleElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLStyleElement ();
@@ -2958,7 +2958,7 @@ namespace WebKit {
 		[NoAccessorMethod]
 		public string type { owned get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLTableCaptionElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLTableCaptionElement ();
@@ -2968,7 +2968,7 @@ namespace WebKit {
 		public void set_align (string value);
 		public string align { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLTableCellElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLTableCellElement ();
@@ -3046,7 +3046,7 @@ namespace WebKit {
 		public string v_align { get; set; }
 		public string width { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLTableColElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLTableColElement ();
@@ -3081,7 +3081,7 @@ namespace WebKit {
 		public string v_align { get; set; }
 		public string width { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLTableElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLTableElement ();
@@ -3168,7 +3168,7 @@ namespace WebKit {
 		public WebKit.DOMHTMLTableSectionElement t_head { get; set; }
 		public string width { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLTableRowElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLTableRowElement ();
@@ -3211,7 +3211,7 @@ namespace WebKit {
 		public long section_row_index { get; }
 		public string v_align { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLTableSectionElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLTableSectionElement ();
@@ -3243,7 +3243,7 @@ namespace WebKit {
 		public WebKit.DOMHTMLCollection rows { get; }
 		public string v_align { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLTextAreaElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLTextAreaElement ();
@@ -3353,7 +3353,7 @@ namespace WebKit {
 		public string value { get; set; }
 		public bool will_validate { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLTitleElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLTitleElement ();
@@ -3363,7 +3363,7 @@ namespace WebKit {
 		public void set_text (string value);
 		public string text { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLUListElement : WebKit.DOMHTMLElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLUListElement ();
@@ -3375,7 +3375,7 @@ namespace WebKit {
 		[NoAccessorMethod]
 		public string type { owned get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHTMLVideoElement : WebKit.DOMHTMLMediaElement, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMHTMLVideoElement ();
@@ -3419,7 +3419,7 @@ namespace WebKit {
 		public bool webkit_supports_fullscreen { get; }
 		public ulong width { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMHistory : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMHistory ();
@@ -3429,7 +3429,7 @@ namespace WebKit {
 		public void go (long distance);
 		public ulong length { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMLocation : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMLocation ();
@@ -3437,14 +3437,14 @@ namespace WebKit {
 		public unowned string get_parameter (string name);
 		public string origin { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMMediaError : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMMediaError ();
 		public ushort get_code ();
 		public uint code { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMMediaList : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMMediaList ();
@@ -3457,7 +3457,7 @@ namespace WebKit {
 		public ulong length { get; }
 		public string media_text { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMMediaQueryList : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMMediaQueryList ();
@@ -3466,7 +3466,7 @@ namespace WebKit {
 		public bool matches { get; }
 		public string media { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMMemoryInfo : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMMemoryInfo ();
@@ -3477,12 +3477,12 @@ namespace WebKit {
 		public ulong total_js_heap_size { get; }
 		public ulong used_js_heap_size { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMMessagePort : WebKit.DOMObject, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMMessagePort ();
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMMouseEvent : WebKit.DOMUIEvent {
 		[CCode (has_construct_function = false)]
 		protected DOMMouseEvent ();
@@ -3520,7 +3520,7 @@ namespace WebKit {
 		public long x { get; }
 		public long y { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMNamedNodeMap : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMNamedNodeMap ();
@@ -3534,7 +3534,7 @@ namespace WebKit {
 		public unowned WebKit.DOMNode set_named_item_ns (WebKit.DOMNode node) throws GLib.Error;
 		public ulong length { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMNavigator : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMNavigator ();
@@ -3571,7 +3571,7 @@ namespace WebKit {
 		public string vendor { get; }
 		public string vendor_sub { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMNode : WebKit.DOMObject, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMNode ();
@@ -3629,13 +3629,13 @@ namespace WebKit {
 		public WebKit.DOMNode previous_sibling { get; }
 		public string text_content { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMNodeFilter : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMNodeFilter ();
 		public short accept_node (WebKit.DOMNode n);
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMNodeIterator : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMNodeIterator ();
@@ -3655,7 +3655,7 @@ namespace WebKit {
 		public WebKit.DOMNode root { get; }
 		public ulong what_to_show { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMNodeList : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMNodeList ();
@@ -3663,14 +3663,14 @@ namespace WebKit {
 		public unowned WebKit.DOMNode item (ulong index);
 		public ulong length { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMObject : GLib.Object {
 		public void* coreObject;
 		[CCode (has_construct_function = false)]
 		protected DOMObject ();
 		public void* core_object { construct; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMProcessingInstruction : WebKit.DOMNode, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMProcessingInstruction ();
@@ -3682,7 +3682,7 @@ namespace WebKit {
 		public WebKit.DOMStyleSheet sheet { get; }
 		public string target { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMRange : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMRange ();
@@ -3725,7 +3725,7 @@ namespace WebKit {
 		public long start_offset { get; }
 		public string text { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMScreen : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMScreen ();
@@ -3746,7 +3746,7 @@ namespace WebKit {
 		public ulong pixel_depth { get; }
 		public ulong width { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMStorage : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMStorage ();
@@ -3758,7 +3758,7 @@ namespace WebKit {
 		public void set_item (string key, string data) throws GLib.Error;
 		public ulong length { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMStyleMedia : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMStyleMedia ();
@@ -3766,7 +3766,7 @@ namespace WebKit {
 		[NoAccessorMethod]
 		public string type { owned get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMStyleSheet : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMStyleSheet ();
@@ -3786,7 +3786,7 @@ namespace WebKit {
 		[NoAccessorMethod]
 		public string type { owned get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMStyleSheetList : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMStyleSheetList ();
@@ -3794,7 +3794,7 @@ namespace WebKit {
 		public unowned WebKit.DOMStyleSheet item (ulong index);
 		public ulong length { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMText : WebKit.DOMCharacterData, WebKit.DOMEventTarget {
 		[CCode (has_construct_function = false)]
 		protected DOMText ();
@@ -3803,7 +3803,7 @@ namespace WebKit {
 		public unowned WebKit.DOMText split_text (ulong offset) throws GLib.Error;
 		public string whole_text { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMTimeRanges : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMTimeRanges ();
@@ -3812,7 +3812,7 @@ namespace WebKit {
 		public float start (ulong index) throws GLib.Error;
 		public ulong length { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMTreeWalker : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMTreeWalker ();
@@ -3835,7 +3835,7 @@ namespace WebKit {
 		public WebKit.DOMNode root { get; }
 		public ulong what_to_show { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMUIEvent : WebKit.DOMEvent {
 		[CCode (has_construct_function = false)]
 		protected DOMUIEvent ();
@@ -3869,7 +3869,7 @@ namespace WebKit {
 		public WebKit.DOMDOMWindow view { get; }
 		public long which { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMValidityState : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMValidityState ();
@@ -3892,7 +3892,7 @@ namespace WebKit {
 		public bool valid { get; }
 		public bool value_missing { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMWebKitAnimation : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMWebKitAnimation ();
@@ -3929,7 +3929,7 @@ namespace WebKit {
 		public string name { get; }
 		public bool paused { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMWebKitAnimationList : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMWebKitAnimationList ();
@@ -3939,7 +3939,7 @@ namespace WebKit {
 		public unowned WebKit.DOMWebKitAnimation item (ulong index);
 		public ulong length { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMWebKitPoint : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMWebKitPoint ();
@@ -3954,21 +3954,21 @@ namespace WebKit {
 		public float x { get; set; }
 		public float y { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMXPathExpression : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMXPathExpression ();
 		[CCode (cname = "webkit_dom_xpath_expression_evaluate")]
 		public unowned WebKit.DOMXPathResult evaluate (WebKit.DOMNode context_node, ushort type, WebKit.DOMXPathResult in_result) throws GLib.Error;
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMXPathNSResolver : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMXPathNSResolver ();
 		[CCode (cname = "webkit_dom_xpath_ns_resolver_lookup_namespace_uri")]
 		public unowned string lookup_namespace_uri (string prefix);
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class DOMXPathResult : WebKit.DOMObject {
 		[CCode (has_construct_function = false)]
 		protected DOMXPathResult ();
@@ -3998,7 +3998,7 @@ namespace WebKit {
 		public ulong snapshot_length { get; }
 		public string string_value { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class Download : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public Download (WebKit.NetworkRequest request);
@@ -4025,12 +4025,12 @@ namespace WebKit {
 		public uint64 total_size { get; }
 		public virtual signal bool error (int p0, int p1, string p2);
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class GeolocationPolicyDecision : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected GeolocationPolicyDecision ();
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class HitTestResult : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected HitTestResult ();
@@ -4045,7 +4045,7 @@ namespace WebKit {
 		[NoAccessorMethod]
 		public string media_uri { owned get; construct; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class IconDatabase : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected IconDatabase ();
@@ -4057,7 +4057,7 @@ namespace WebKit {
 		public string path { get; set; }
 		public virtual signal void icon_loaded (WebKit.WebFrame p0, string p1);
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class NetworkRequest : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public NetworkRequest (string uri);
@@ -4067,7 +4067,7 @@ namespace WebKit {
 		public Soup.Message message { get; construct; }
 		public string uri { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class NetworkResponse : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public NetworkResponse (string uri);
@@ -4077,7 +4077,7 @@ namespace WebKit {
 		public Soup.Message message { get; construct; }
 		public string uri { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class SecurityOrigin : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected SecurityOrigin ();
@@ -4094,13 +4094,13 @@ namespace WebKit {
 		public uint64 web_database_quota { get; set; }
 		public uint64 web_database_usage { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class SoupAuthDialog : GLib.Object, Soup.SessionFeature {
 		[CCode (has_construct_function = false)]
 		protected SoupAuthDialog ();
 		public virtual signal unowned Gtk.Widget current_toplevel (Soup.Message message);
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class ViewportAttributes : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected ViewportAttributes ();
@@ -4134,7 +4134,7 @@ namespace WebKit {
 		[NoAccessorMethod]
 		public int width { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class WebBackForwardList : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected WebBackForwardList ();
@@ -4157,7 +4157,7 @@ namespace WebKit {
 		[CCode (has_construct_function = false)]
 		public WebBackForwardList.with_web_view (WebKit.WebView web_view);
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class WebDataSource : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public WebDataSource ();
@@ -4173,7 +4173,7 @@ namespace WebKit {
 		[CCode (has_construct_function = false)]
 		public WebDataSource.with_request (WebKit.NetworkRequest request);
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class WebDatabase : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected WebDatabase ();
@@ -4191,7 +4191,7 @@ namespace WebKit {
 		public WebKit.SecurityOrigin security_origin { get; construct; }
 		public uint64 size { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class WebFrame : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public WebFrame (WebKit.WebView web_view);
@@ -4231,7 +4231,7 @@ namespace WebKit {
 		public virtual signal bool scrollbars_policy_changed ();
 		public virtual signal void title_changed (string p0);
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class WebHistoryItem : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public WebHistoryItem ();
@@ -4250,7 +4250,7 @@ namespace WebKit {
 		public string title { get; }
 		public string uri { get; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class WebInspector : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected WebInspector ();
@@ -4273,7 +4273,7 @@ namespace WebKit {
 		public virtual signal unowned WebKit.WebView inspect_web_view (WebKit.WebView p0);
 		public virtual signal bool show_window ();
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class WebNavigationAction : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected WebNavigationAction ();
@@ -4290,7 +4290,7 @@ namespace WebKit {
 		public WebKit.WebNavigationReason reason { get; set construct; }
 		public string target_frame { get; construct; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class WebPlugin : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected WebPlugin ();
@@ -4302,7 +4302,7 @@ namespace WebKit {
 		public void set_enabled (bool p2);
 		public bool enabled { get; set; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class WebPluginDatabase : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected WebPluginDatabase ();
@@ -4311,14 +4311,14 @@ namespace WebKit {
 		public static void plugins_list_free (GLib.SList p1);
 		public void refresh ();
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	[Compact]
 	public class WebPluginMIMEType {
 		public weak string description;
 		public weak string extensions;
 		public weak string name;
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class WebPolicyDecision : GLib.Object {
 		[CCode (has_construct_function = false)]
 		protected WebPolicyDecision ();
@@ -4326,7 +4326,7 @@ namespace WebKit {
 		public void ignore ();
 		public void use ();
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class WebResource : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public WebResource (string data, ssize_t size, string uri, string mime_type, string encoding, string frame_name);
@@ -4340,7 +4340,7 @@ namespace WebKit {
 		public string mime_type { get; }
 		public string uri { get; construct; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class WebSettings : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public WebSettings ();
@@ -4445,7 +4445,7 @@ namespace WebKit {
 		[NoAccessorMethod]
 		public float zoom_step { get; set construct; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class WebView : Gtk.Container, Atk.Implementor, Gtk.Buildable {
 		[CCode (has_construct_function = false, type = "GtkWidget*")]
 		public WebView ();
@@ -4603,7 +4603,7 @@ namespace WebKit {
 		public virtual signal bool web_view_ready ();
 		public virtual signal void window_object_cleared (WebKit.WebFrame frame, void* context, void* window_object);
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public class WebWindowFeatures : GLib.Object {
 		[CCode (has_construct_function = false)]
 		public WebWindowFeatures ();
@@ -4629,13 +4629,13 @@ namespace WebKit {
 		[NoAccessorMethod]
 		public int y { get; set construct; }
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public interface DOMEventTarget : GLib.Object {
 		public abstract bool add_event_listener (string eventName, GLib.Callback handler, bool bubble, void* userData);
 		public abstract void dispatch_event (WebKit.DOMEvent event) throws GLib.Error;
 		public abstract bool remove_event_listener (string eventName, GLib.Callback handler, bool bubble);
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public interface SpellChecker : GLib.Object {
 		public abstract void check_spelling_of_string (string str, int misspelling_location, int misspelling_length);
 		public abstract unowned string get_autocorrect_suggestions_for_misspelled_word (string word);
@@ -4644,20 +4644,20 @@ namespace WebKit {
 		public abstract void learn_word (string word);
 		public abstract void update_spell_checking_languages (string languages);
 	}
-	[CCode (cheader_filename = "webkit/webkit.h", cprefix = "WEBKIT_CACHE_MODEL_")]
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_CACHE_MODEL_")]
 	public enum CacheModel {
 		DEFAULT,
 		DOCUMENT_VIEWER,
 		WEB_BROWSER,
 		DOCUMENT_BROWSER
 	}
-	[CCode (cheader_filename = "webkit/webkit.h", cprefix = "WEBKIT_DOWNLOAD_ERROR_")]
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_DOWNLOAD_ERROR_")]
 	public enum DownloadError {
 		CANCELLED_BY_USER,
 		DESTINATION,
 		NETWORK
 	}
-	[CCode (cheader_filename = "webkit/webkit.h", cprefix = "WEBKIT_DOWNLOAD_STATUS_")]
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_DOWNLOAD_STATUS_")]
 	public enum DownloadStatus {
 		ERROR,
 		CREATED,
@@ -4665,13 +4665,13 @@ namespace WebKit {
 		CANCELLED,
 		FINISHED
 	}
-	[CCode (cheader_filename = "webkit/webkit.h", cprefix = "WEBKIT_EDITING_BEHAVIOR_")]
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_EDITING_BEHAVIOR_")]
 	public enum EditingBehavior {
 		MAC,
 		WINDOWS,
 		UNIX
 	}
-	[CCode (cheader_filename = "webkit/webkit.h", cprefix = "WEBKIT_HIT_TEST_RESULT_CONTEXT_")]
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_HIT_TEST_RESULT_CONTEXT_")]
 	[Flags]
 	public enum HitTestResultContext {
 		DOCUMENT,
@@ -4681,13 +4681,13 @@ namespace WebKit {
 		SELECTION,
 		EDITABLE
 	}
-	[CCode (cheader_filename = "webkit/webkit.h", cprefix = "WEBKIT_INSERT_ACTION_")]
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_INSERT_ACTION_")]
 	public enum InsertAction {
 		TYPED,
 		PASTED,
 		DROPPED
 	}
-	[CCode (cheader_filename = "webkit/webkit.h", cprefix = "WEBKIT_LOAD_")]
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_LOAD_")]
 	public enum LoadStatus {
 		PROVISIONAL,
 		COMMITTED,
@@ -4695,13 +4695,13 @@ namespace WebKit {
 		FIRST_VISUALLY_NON_EMPTY_LAYOUT,
 		FAILED
 	}
-	[CCode (cheader_filename = "webkit/webkit.h", cprefix = "WEBKIT_NAVIGATION_RESPONSE_")]
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_NAVIGATION_RESPONSE_")]
 	public enum NavigationResponse {
 		ACCEPT,
 		IGNORE,
 		DOWNLOAD
 	}
-	[CCode (cheader_filename = "webkit/webkit.h", cprefix = "WEBKIT_NETWORK_ERROR_")]
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_NETWORK_ERROR_")]
 	public enum NetworkError {
 		FAILED,
 		TRANSPORT,
@@ -4709,7 +4709,7 @@ namespace WebKit {
 		CANCELLED,
 		FILE_DOES_NOT_EXIST
 	}
-	[CCode (cheader_filename = "webkit/webkit.h", cprefix = "WEBKIT_PLUGIN_ERROR_")]
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_PLUGIN_ERROR_")]
 	public enum PluginError {
 		FAILED,
 		CANNOT_FIND_PLUGIN,
@@ -4718,7 +4718,7 @@ namespace WebKit {
 		CONNECTION_CANCELLED,
 		WILL_HANDLE_LOAD
 	}
-	[CCode (cheader_filename = "webkit/webkit.h", cprefix = "WEBKIT_POLICY_ERROR_")]
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_POLICY_ERROR_")]
 	public enum PolicyError {
 		FAILED,
 		CANNOT_SHOW_MIME_TYPE,
@@ -4726,12 +4726,12 @@ namespace WebKit {
 		FRAME_LOAD_INTERRUPTED_BY_POLICY_CHANGE,
 		CANNOT_USE_RESTRICTED_PORT
 	}
-	[CCode (cheader_filename = "webkit/webkit.h", cprefix = "WEBKIT_SELECTION_AFFINITY_")]
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_SELECTION_AFFINITY_")]
 	public enum SelectionAffinity {
 		UPSTREAM,
 		DOWNSTREAM
 	}
-	[CCode (cheader_filename = "webkit/webkit.h", cprefix = "WEBKIT_WEB_NAVIGATION_REASON_")]
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_WEB_NAVIGATION_REASON_")]
 	public enum WebNavigationReason {
 		LINK_CLICKED,
 		FORM_SUBMITTED,
@@ -4740,7 +4740,7 @@ namespace WebKit {
 		FORM_RESUBMITTED,
 		OTHER
 	}
-	[CCode (cheader_filename = "webkit/webkit.h", cprefix = "WEBKIT_WEB_VIEW_TARGET_INFO_")]
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_WEB_VIEW_TARGET_INFO_")]
 	public enum WebViewTargetInfo {
 		HTML,
 		TEXT,
@@ -4748,7 +4748,7 @@ namespace WebKit {
 		URI_LIST,
 		NETSCAPE_URL
 	}
-	[CCode (cheader_filename = "webkit/webkit.h", cprefix = "WEBKIT_WEB_VIEW_VIEW_MODE_")]
+	[CCode (cheader_filename = "webkit2/webkit2.h", cprefix = "WEBKIT_WEB_VIEW_VIEW_MODE_")]
 	public enum WebViewViewMode {
 		WINDOWED,
 		FLOATING,
@@ -4756,62 +4756,62 @@ namespace WebKit {
 		MAXIMIZED,
 		MINIMIZED
 	}
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public const int MAJOR_VERSION;
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public const int MICRO_VERSION;
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public const int MINOR_VERSION;
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public const int USER_AGENT_MAJOR_VERSION;
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public const int USER_AGENT_MINOR_VERSION;
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public static unowned string application_cache_get_database_directory_path ();
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public static uint application_cache_get_maximum_size ();
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public static void application_cache_set_maximum_size (uint size);
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public static bool check_version (uint major, uint minor, uint micro);
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public static void geolocation_policy_allow (WebKit.GeolocationPolicyDecision decision);
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public static void geolocation_policy_deny (WebKit.GeolocationPolicyDecision decision);
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public static WebKit.CacheModel get_cache_model ();
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public static unowned Soup.Session get_default_session ();
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public static uint64 get_default_web_database_quota ();
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public static unowned WebKit.IconDatabase get_icon_database ();
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public static unowned GLib.Object get_text_checker ();
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public static unowned string get_web_database_directory_path ();
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public static unowned WebKit.WebPluginDatabase get_web_plugin_database ();
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public static uint major_version ();
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public static uint micro_version ();
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public static uint minor_version ();
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public static GLib.Quark network_error_quark ();
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public static GLib.Quark plugin_error_quark ();
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public static GLib.Quark policy_error_quark ();
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public static void remove_all_web_databases ();
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public static void set_cache_model (WebKit.CacheModel cache_model);
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public static void set_default_web_database_quota (uint64 defaultQuota);
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public static void set_text_checker (GLib.Object checker);
-	[CCode (cheader_filename = "webkit/webkit.h")]
+	[CCode (cheader_filename = "webkit2/webkit2.h")]
 	public static void set_web_database_directory_path (string path);
 }
