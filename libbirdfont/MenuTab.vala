@@ -89,7 +89,7 @@ public class MenuTab : FontDisplay {
 			GlyphCanvas.redraw ();			
 			return false;
 		});
-		idle.attach (null);
+		idle.attach (MainContext.default ());
 	}
 	
 	public static bool validate_metadata () {

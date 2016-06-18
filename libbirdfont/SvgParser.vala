@@ -155,7 +155,7 @@ public class SvgParser {
 			PathObject path = new PathObject.for_path (p);
 			glyph.add_object (path);
 			glyph.add_active_object (null, path); // FIXME: groups
-			path.update_region_boundaries ();
+			path.update_boundaries (Cairo.Matrix.identity ());
 		}
 		
 		glyph.close_path ();	

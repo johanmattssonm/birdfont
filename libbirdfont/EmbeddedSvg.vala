@@ -25,49 +25,18 @@ public class EmbeddedSvg : SvgBird.Object {
 	
 	public double x { get; set; }
 	public double y { get; set; }
-
-	public override double left { 
-		get {
-			return x + drawing.left;
-		}
-		
-		set {
-		}
-	}
-	
-	public override double right { 
-		get {
-			return x + drawing.right;
-		}
-		
-		set {
-		}
-	}
-
-	public override double top {
-		get {
-			return drawing.top - y;
-		}
-		
-		set {
-		}
-	}
-
-	public override double bottom {
-		get {
-			return drawing.bottom - y;
-		}
-		
-		set {
-		}
-	}
 		
 	public EmbeddedSvg (SvgDrawing drawing) {
 		this.drawing = drawing;
 	}
 
-	public override void update_region_boundaries () {
-		drawing.update_region_boundaries ();
+	public override void update_boundaries (Matrix view_matrix) {
+		drawing.update_boundaries (view_matrix);
+		
+		left = x + drawing.left;
+		right = x + drawing.right;
+		top = -y + drawing.top;
+		bottom = -y + drawing.bottom;
 	}
 
 	public override bool is_over (double x, double y) {
@@ -88,6 +57,7 @@ public class EmbeddedSvg : SvgBird.Object {
 	public override void move (double dx, double dy) {
 		x += dx;
 		y += dy;
+		move_bounding_box (dx, -dy);
 	}
 	
 	public override void rotate (double theta, double xc, double yc) {

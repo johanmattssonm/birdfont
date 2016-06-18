@@ -64,9 +64,6 @@ public class Rectangle : Object {
 		x += dx;
 		y += dy;
 	}
-	
-	public override void update_region_boundaries () {
-	}
 
 	public override void rotate (double theta, double xc, double yc) {
 	}
@@ -95,6 +92,74 @@ public class Rectangle : Object {
 
 	public override string to_string () {
 		return "Rectangle";
+	}
+
+	public override void update_boundaries (Matrix view_matrix) {
+		Matrix object_matrix = transforms.get_matrix ();
+		object_matrix.multiply (object_matrix, view_matrix);
+
+		double x0, x1, x2, x3;
+		double y0, y1, y2, y3;
+
+		double half_stroke_width = style.stroke_width / 2;
+		
+		x0 = x - half_stroke_width;
+		y0 = y - half_stroke_width;
+
+		x1 = x + width + half_stroke_width;
+		y1 = y - half_stroke_width;
+
+		x2 = x + width + half_stroke_width;
+		y2 = y + height + half_stroke_width;
+
+		x3 = x - half_stroke_width;
+		y3 = y + height + half_stroke_width;
+		
+		object_matrix.transform_point (ref x0, ref y0);
+		object_matrix.transform_point (ref x1, ref y1);
+		object_matrix.transform_point (ref x2, ref y2);
+		object_matrix.transform_point (ref x3, ref y3);
+		
+		top = min (y0, y1, y2, y3);
+		bottom = max (y0, y1, y2, y3);
+		left = min (x0, x1, x2, x3);
+		right = max (x0, x1, x2, x3);
+	}
+	
+	double min (double x0, double x1, double x2, double x3) {
+		double m = x0;
+		
+		if (x1 < m) {
+			m = x1;
+		}
+		
+		if (x2 < m) {
+			m = x2;
+		}
+		
+		if (x3 < m) {
+			m = x3;
+		}
+		
+		return m;
+	}
+	
+	double max (double x0, double x1, double x2, double x3) {
+		double m = x0;
+		
+		if (x1 > m) {
+			m = x1;
+		}
+		
+		if (x2 > m) {
+			m = x2;
+		}
+		
+		if (x3 > m) {
+			m = x3;
+		}
+
+		return m;
 	}
 }
 

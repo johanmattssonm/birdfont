@@ -555,7 +555,7 @@ public class ResizeTool : Tool {
 				Path p = ((PathObject) path).get_path ();
 				SvgParser.apply_matrix (p, 1, 0, s, 1, 0, 0);
 				p.skew = skew;
-				path.update_region_boundaries ();
+				path.update_boundaries (Matrix.identity ());
 			}
 		}
 		

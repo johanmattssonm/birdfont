@@ -49,43 +49,13 @@ public class SvgDrawing : Object {
 	public double svg_width = 0;
 	public double svg_height = 0;
 
-	public override double left {
-		get {
-			return root_layer.left;
-		}
-
-		set {
-		}
-	}
-
-	public override double right {
-		get {
-			return root_layer.right;
-		}
+	public override void update_boundaries (Matrix view_matrix) {
+		root_layer.update_boundaries (view_matrix);
 		
-		set {
-		}
-	}
-
-	public override double top {
-		get {
-			return root_layer.top;
-		}
-		
-		set {
-		}
-	}
-
-	public override double bottom {
-		get {
-			return root_layer.bottom;
-		}
-		
-		set {
-		}
-	}
-
-	public override void update_region_boundaries () {
+		left = x + root_layer.left;
+		right = x + root_layer.right;
+		top = y + root_layer.top;
+		bottom = y + root_layer.bottom;
 	}
 	
 	public override bool is_over (double x, double y) {
@@ -116,6 +86,7 @@ public class SvgDrawing : Object {
 	public override void move (double dx, double dy) {
 		x += dx;
 		y += dy;
+		move_bounding_box (dx, dy);
 	}
 	
 	public override void rotate (double theta, double xc, double yc) {

@@ -70,7 +70,6 @@ public class PathObject : SvgBird.Object {
 	public PathObject () {
 		base ();
 		path = new Path ();
-		update_region_boundaries ();
 	}
 
 	public PathObject.create_copy (PathObject p) {
@@ -114,7 +113,7 @@ public class PathObject : SvgBird.Object {
 		return path;
 	}
 
-	public override void update_region_boundaries () {
+	public override void update_boundaries (Matrix matrix) {
 		xmin = Glyph.CANVAS_MAX;
 		xmax = Glyph.CANVAS_MIN;
 		ymin = Glyph.CANVAS_MAX;

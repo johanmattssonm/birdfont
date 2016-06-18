@@ -43,9 +43,6 @@ public class Polygon : Object {
 	public override void move (double dx, double dy) {
 	}
 	
-	public override void update_region_boundaries () {
-	}
-
 	public override void rotate (double theta, double xc, double yc) {
 	}
 	

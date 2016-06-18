@@ -114,15 +114,21 @@ public abstract class Object : GLib.Object {
 		return open;
 	}
 
-	public abstract void update_region_boundaries ();
 	public abstract bool is_over (double x, double y);
 	public abstract void draw_outline (Context cr);
 
 	public abstract Object copy ();
-	public abstract void move (double dx, double dy);
 	public abstract void rotate (double theta, double xc, double yc);
 	public abstract bool is_empty ();
 	public abstract void resize (double ratio_x, double ratio_y);
+	public abstract void move (double dx, double dy);
+	
+	public virtual void move_bounding_box (double dx, double dy) {
+		top += dy;
+		bottom += dy;
+		left += dx;
+		right += dx;
+	}
 
 	public static void copy_attributes (Object from, Object to) {
 		to.open = from.open;
