@@ -53,8 +53,6 @@ public class Gradient : GLib.Object {
 		g.href = href;	
 		transforms = transforms.copy ();
 		
-		print (@"$(this)\n");
-		
 		return g;
 	}
 	

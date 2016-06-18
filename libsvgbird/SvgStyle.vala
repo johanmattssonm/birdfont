@@ -284,10 +284,32 @@ public class SvgStyle : GLib.Object {
 				
 				if (k == "padding") {
 					parse_padding_shorthand (v);
+				} else if (k == "margin") {
+					parse_margin_shorthand (v);
 				} else {
 					style.set (k, v);
 				}
 			}
+		}
+	}
+	
+	void parse_margin_shorthand (string arguments) {
+		string[] args = StyleSheet.replace_whitespace (arguments).split (" ");
+		
+		if (args.length > 0) {
+			style.set ("margin-top", args[0]);
+		}
+		
+		if (args.length > 1) {
+			style.set ("margin-right", args[1]);
+		}
+
+		if (args.length > 2) {
+			style.set ("margin-bottom", args[2]);
+		}
+
+		if (args.length > 3) {
+			style.set ("margin-left", args[3]);
 		}
 	}
 	
