@@ -348,32 +348,14 @@ public class Glyph : FontDisplay {
 			return false;
 		}
 
-		x1 = CANVAS_MAX;
-		x2 = CANVAS_MIN;
-		y1 = CANVAS_MAX;
-		y2 = CANVAS_MIN;
+		layers.update_boundaries (Matrix.identity ());
 
-		foreach (Layer layer in layers.get_sublayers ()) {
-			layer.update_boundaries (Matrix.identity ());
-			
-			if (layer.xmin < x1) {
-				x1 = layer.xmin;
-			}
+		x1 = layers.xmin;
+		x2 = layers.xmax;
+		y1 = layers.ymin;
+		y2 = layers.ymax;
 
-			if (layer.xmax > x2) {
-				x2 = layer.xmax;
-			}
-
-			if (layer.ymin < y1) {
-				y1 = layer.ymin;
-			}
-
-			if (layer.ymax > y2) {
-				y2 = layer.ymax;
-			}
-		}
-	
-		return x1 != CANVAS_MAX;
+		return x1 != SvgBird.Object.CANVAS_MAX;
 	}
 
 	public void selection_boundaries (out double x, out double y, out double w, out double h) {
@@ -665,7 +647,7 @@ public class Glyph : FontDisplay {
 	public double get_left_side_bearing () {
 		double x1, y1, x2, y2;
 
-		if (get_boundaries (out x1, out y1, out x2, out y2)) {
+		if (boundaries (out x1, out y1, out x2, out y2)) {
 			return x1 - left_limit;
 		} else {
 			return right_limit - left_limit;
@@ -675,122 +657,10 @@ public class Glyph : FontDisplay {
 	public double get_right_side_bearing () {
 		double x1, y1, x2, y2;
 
-		if (get_boundaries (out x1, out y1, out x2, out y2)) {
+		if (boundaries (out x1, out y1, out x2, out y2)) {
 			return right_limit - x2;
 		} else {
 			return right_limit - left_limit;
-		}
-	}
-
-	public bool get_boundaries (out double x1, out double y1,
-		out double x2, out double y2) {
-
-		double max_x, min_x, max_y, min_y;
-		PathList pl;
-		var objects = get_visible_objects ();
-
-		if (objects.size == 0) {
-			x1 = 0;
-			y1 = 0;
-			x2 = 0;
-			y2 = 0;
-			return false;
-		}
-
-		max_x = CANVAS_MIN;
-		min_x = CANVAS_MAX;
-		max_y = CANVAS_MIN;
-		min_y = CANVAS_MAX;
-
-		foreach (SvgBird.Object object in objects) {
-
-			if (object is PathObject) {
-				PathObject o = (PathObject) object;
-				
-				if (object.stroke > 0) {
-					pl = o.get_path ().get_stroke_fast ();
-
-					foreach (Path part in pl.paths) {
-						boundaries_for_path (part, ref min_x, ref max_x, ref min_y, ref max_y);
-					}
-				} else {
-					boundaries_for_path (o.get_path (), ref min_x, ref max_x, ref min_y, ref max_y);
-				}
-			} else {
-				boundaries_for_object (object, ref min_x, ref max_x, ref min_y, ref max_y);
-			}
-		}
-
-		x1 = min_x;
-		y1 = max_y;
-		x2 = max_x;
-		y2 = min_y;
-
-		return true;
-	}
-
-	void boundaries_for_object (SvgBird.Object object, 
-		ref double min_x, ref double max_x,
-		ref double min_y, ref double max_y) {
-		max_x = object.xmax;
-		min_x = object.xmin;
-		max_y = object.ymax;
-		min_y = object.ymin;
-
-		if (object is PathObject) {
-			PathObject o = (PathObject) object;
-			boundaries_for_path (o.get_path (), 
-				ref max_x, ref min_x,
-				ref max_y, ref min_y);
-		}
-	}
-
-	void boundaries_for_path (Path path,
-		ref double min_x, ref double max_x,
-		ref double min_y, ref double max_y) {
-
-		double max_x2, max_y2, min_x2, min_y2;
-
-		max_x2 = max_x;
-		min_x2 = min_x;
-		max_y2 = max_y;
-		min_y2 = min_y;
-
-		// FIXME: Optimize
-		path.all_of_path ((x, y, t) => {
-			if (x > max_x2) {
-				max_x2 = x;
-			}
-
-			if (y > max_y2) {
-				max_y2 = y;
-			}
-
-			if (x < min_x2) {
-				min_x2 = x;
-			}
-
-			if (y < min_y2) {
-				min_y2 = y;
-			}
-
-			return true;
-		});
-
-		if (max_x2 > max_x) {
-			max_x = max_x2;
-		}
-		
-		if (min_x2 < min_x) {
-			min_x = min_x2;
-		}
-		
-		if (max_y2 < max_y) {
-			max_y = max_y2;
-		}
-		
-		if (min_x2 < min_y) {
-			min_y = min_y2;
 		}
 	}
 

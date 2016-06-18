@@ -167,13 +167,13 @@ public class Line : GLib.Object {
 					parsed_value = double.parse (submitted_value);
 					
 					if (lsb) {
-						if (glyph.get_boundaries (out x1, out y1, out x2, out y2)) {
+						if (glyph.boundaries (out x1, out y1, out x2, out y2)) {
 							parsed_value = x1 - parsed_value;
 						} else {
 							parsed_value = glyph.right_limit - parsed_value;
 						}
 					} else if (rsb) {
-						if (glyph.get_boundaries (out x1, out y1, out x2, out y2)) {
+						if (glyph.boundaries (out x1, out y1, out x2, out y2)) {
 							parsed_value += x2;
 						} else {
 							parsed_value = glyph.left_limit - parsed_value;
