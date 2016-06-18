@@ -20,10 +20,18 @@ namespace SvgBird {
 public class Defs {
 	public Gee.ArrayList<ClipPath> clip_paths = new Gee.ArrayList<ClipPath> ();
 	public Gee.ArrayList<Gradient> gradients = new Gee.ArrayList<Gradient> ();
+	public Gee.ArrayList<RadialGradient> radial_gradients = new Gee.ArrayList<RadialGradient> ();
+	public Gee.ArrayList<LinearGradient> linear_gradients = new Gee.ArrayList<LinearGradient> ();
 	public StyleSheet style_sheet = new StyleSheet ();
 
-	public void add (Gradient g) {
+	public void add_linear_gradient (LinearGradient g) {
 		gradients.add (g);
+		linear_gradients.add (g);
+	}
+
+	public void add_radial_gradient (RadialGradient g) {
+		gradients.add (g);
+		radial_gradients.add (g);
 	}
 
 	public ClipPath? get_clip_path_for_url (string? url) {
@@ -116,9 +124,17 @@ public class Defs {
 		Defs d = new Defs ();
 		
 		foreach (Gradient g in gradients) {
-			d.add (g);
+			d.gradients.add (g);
 		}
-		
+
+		foreach (RadialGradient g in radial_gradients) {
+			d.radial_gradients.add (g);
+		}
+
+		foreach (LinearGradient g in linear_gradients) {
+			d.linear_gradients.add (g);
+		}
+				
 		d.style_sheet = style_sheet.shallow_copy ();
 		
 		return d;
@@ -128,7 +144,16 @@ public class Defs {
 		Defs d = new Defs ();
 		
 		foreach (Gradient g in gradients) {
-			d.add (g.copy ());
+			Gradient gradient_copy = g.copy ();
+			d.gradients.add (gradient_copy);
+			
+			if (gradient_copy is LinearGradient) {
+				d.linear_gradients.add ((LinearGradient) gradient_copy);
+			}
+
+			if (gradient_copy is RadialGradient) {
+				d.radial_gradients.add ((RadialGradient) gradient_copy);
+			}
 		}
 		
 		d.style_sheet = style_sheet.copy ();

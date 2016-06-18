@@ -210,12 +210,23 @@ public abstract class Object : GLib.Object {
 	public void apply_gradient (Context cr, Gradient? gradient) {
 		Cairo.Pattern pattern;
 		Gradient g;
+		LinearGradient linear;
+		RadialGradient radial;
 		
 		if (gradient != null) {
 			g = (!) gradient;
-			
-			pattern = new Cairo.Pattern.linear (g.x1, g.y1, g.x2, g.y2);
 
+			if (g is LinearGradient) {
+				linear = (LinearGradient) g;
+				pattern = new Cairo.Pattern.linear (linear.x1, linear.y1, linear.x2, linear.y2);
+			} else if (g is RadialGradient) {
+				radial = (RadialGradient) g;
+				pattern = new Cairo.Pattern.radial (radial.cx, radial.cy, 0, radial.cx, radial.cy, radial.r);	
+			} else {
+				warning ("Unknown gradient.");
+				pattern = new Cairo.Pattern.linear (0, 0, 0, 0);
+			}
+			
 			Matrix gradient_matrix = g.get_matrix ();
 			gradient_matrix.invert ();
 			pattern.set_matrix (gradient_matrix);

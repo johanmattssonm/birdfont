@@ -99,7 +99,7 @@ public class Path : GLib.Object {
 
 	public Color? color = null;
 	public Color? stroke_color = null;
-	public Gradient? gradient = null;
+	public LinearGradient? gradient = null;
 
 	public Path () {	
 	}
@@ -757,7 +757,7 @@ public class Path : GLib.Object {
 		}
 
 		if (gradient != null) {
-			new_path.gradient = ((!) gradient).copy ();
+			new_path.gradient = (LinearGradient)((!) gradient).copy ();
 		}
 		
 		if (color != null) {
@@ -998,7 +998,7 @@ public class Path : GLib.Object {
 		}
 		
 		if (gradient != null) {
-			Gradient g = (!) gradient;
+			LinearGradient g = (!) gradient;
 			g.x1 += delta_x;
 			g.x2 += delta_x;
 			g.y1 += delta_y;

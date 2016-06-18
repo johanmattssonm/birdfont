@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2015 Johan Mattsson
+	Copyright (C) 2015 2016 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -17,29 +17,23 @@ using Math;
 
 namespace SvgBird {
 
-public class Gradient : GLib.Object {
+public class LinearGradient : Gradient {
 	public double x1;
 	public double y1;
 	public double x2;
 	public double y2;
 
-	public Gee.ArrayList<Stop> stops;
-	
-	public string id = "";
-	public string? href = null;
-	public SvgTransforms transforms;
-
-	public Gradient () {
+	public LinearGradient () {
+		base ();
 		x1 = 0;
 		y1 = 0;
 		x2 = 0;
 		y2 = 0;
-		stops = new Gee.ArrayList<Stop> ();
-		transforms = new SvgTransforms ();
 	}
 	
-	public Gradient copy () {
-		Gradient g = new Gradient ();
+	public override Gradient copy () {
+		LinearGradient g = new LinearGradient ();
+		
 		g.x1 = x1;
 		g.y1 = y1;
 		g.x2 = x2;
@@ -48,21 +42,13 @@ public class Gradient : GLib.Object {
 		foreach (Stop s in stops) {
 			g.stops.add (s.copy ());
 		}
-	
-		g.id = id;
-		g.href = href;	
-		transforms = transforms.copy ();
+		
+		copy_gradient (this, g);
 		
 		return g;
 	}
 	
-	public void copy_stops (Gradient g) {
-		foreach (Stop stop in g.stops) {
-			stops.add (stop.copy ());
-		}
-	}
-	
-	public string to_string () {
+	public override string to_string () {
 		StringBuilder description = new StringBuilder ();
 		description.append (@"Gradient $(id): ");
 		description.append (@"x1=$x1, y1=$y1, x2=$x2, y2=$y2");
@@ -73,10 +59,6 @@ public class Gradient : GLib.Object {
 		}
 		
 		return description.str;
-	}
-	
-	public Matrix get_matrix () {
-		return transforms.get_matrix ();
 	}
 }
 

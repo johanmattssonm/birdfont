@@ -101,11 +101,12 @@ public class SvgFile : GLib.Object {
 
 	void parse_defs (SvgDrawing drawing, XmlElement tag) {
 		foreach (XmlElement t in tag) {
-			// FIXME: radial
 			string name = t.get_name ();
 			
 			if (name == "linearGradient") {
 				parse_linear_gradient (drawing, t);
+			} else if (name == "radialGradient") {
+				parse_radial_gradient (drawing, t);
 			} else if (name == "clipPath") {
 				parse_clip_path (drawing, t);
 			}
@@ -135,10 +136,62 @@ public class SvgFile : GLib.Object {
 		
 	}
 
-	void parse_linear_gradient (SvgDrawing drawing, XmlElement tag) {
-		Gradient gradient = new Gradient ();
+	void parse_radial_gradient (SvgDrawing drawing, XmlElement tag) {
+		RadialGradient gradient = new RadialGradient ();
 		
-		drawing.defs.add (gradient);
+		drawing.defs.add_radial_gradient (gradient);
+		
+		foreach (Attribute attr in tag.get_attributes ()) {
+			string name = attr.get_name ();
+			
+			// FIXME: gradientUnits
+			
+			if (name == "gradientTransform") {
+				gradient.transforms = parse_transform (attr.get_content ());
+			}
+
+			if (name == "href") {
+				gradient.href = attr.get_content ();
+			}
+
+			if (name == "cx") {
+				gradient.cx = parse_number (attr.get_content ());
+			}
+
+			if (name == "cy") {	
+				gradient.cy = parse_number (attr.get_content ());
+			}
+			
+			if (name == "fx") {
+				gradient.fx = parse_number (attr.get_content ());
+			}
+
+			if (name == "fy") {
+				gradient.fy = parse_number (attr.get_content ());
+			}
+
+			if (name == "r") {
+				gradient.r = parse_number (attr.get_content ());
+			}
+
+			if (name == "id") {
+				gradient.id = attr.get_content ();
+			}
+		}
+		
+		foreach (XmlElement t in tag) {
+			string name = t.get_name ();
+			
+			if (name == "stop") {
+				parse_stop (gradient, t);
+			}
+		}
+	}
+
+	void parse_linear_gradient (SvgDrawing drawing, XmlElement tag) {
+		LinearGradient gradient = new LinearGradient ();
+		
+		drawing.defs.add_linear_gradient (gradient);
 		
 		foreach (Attribute attr in tag.get_attributes ()) {
 			string name = attr.get_name ();
@@ -175,7 +228,6 @@ public class SvgFile : GLib.Object {
 		}
 		
 		foreach (XmlElement t in tag) {
-			// FIXME: radial
 			string name = t.get_name ();
 			
 			if (name == "stop") {

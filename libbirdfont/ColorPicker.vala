@@ -39,7 +39,7 @@ public class ColorPicker : Tool {
 	public Color stroke_color = new Color (0, 0, 0, 1);
 	public Color fill_color = new Color (0, 0, 0, 1);
 	
-	public Gradient gradient = new Gradient ();
+	public LinearGradient gradient = new LinearGradient ();
 	bool update_gradient = false; 
 	int bars;
 	Stop current_stop = new Stop ();
@@ -77,7 +77,7 @@ public class ColorPicker : Tool {
 		});
 	}
 	
-	public void set_gradient (Gradient g, Stop stop, bool update_gradient) {
+	public void set_gradient (LinearGradient g, Stop stop, bool update_gradient) {
 		gradient = g;
 		this.update_gradient = update_gradient;
 		current_stop = stop;
