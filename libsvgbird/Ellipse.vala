@@ -67,32 +67,6 @@ public class Ellipse : Object {
 		return "Ellipse";
 	}
 
-	public override void update_boundaries (Matrix view_matrix) {
-		Matrix object_matrix = transforms.get_matrix ();
-		object_matrix.multiply (object_matrix, view_matrix);
-
-		double radius_x = rx + style.stroke_width / 2;
-		double radius_y = ry + style.stroke_width / 2;
-		
-		double px, py;
-		
-		top = CANVAS_MAX;
-		bottom = CANVAS_MIN;
-		left = CANVAS_MAX;
-		right = CANVAS_MIN;
-		
-		for (double a = 0; a < 2 * PI; a += (2 * PI) / 20) {
-			px = cx + radius_x * cos (a);
-			py = cy + radius_y * sin (a);
-			
-			object_matrix.transform_point (ref px, ref py);
-			
-			top = fmin (top, py);
-			bottom = fmax (bottom, py);
-			left = fmin (left, px);
-			right = fmax (right, px);
-		}
-	}
 }
 
 }

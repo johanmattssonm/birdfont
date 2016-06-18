@@ -29,6 +29,8 @@ public class Polygon : Object {
 	}
 	
 	public override void draw_outline (Context cr) {
+		return_if_fail (points.size % 2 == 0);
+		
 		if (points.size > 2) {
 			cr.move_to (points.data[0].value, points.data[1].value);
 			
@@ -63,6 +65,7 @@ public class Polygon : Object {
 	public override string to_string () {
 		return "Polygon";
 	}
+
 }
 
 }

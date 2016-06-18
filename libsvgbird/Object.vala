@@ -237,7 +237,28 @@ public abstract class Object : GLib.Object {
 		cr.set_matrix (object_matrix);
 	}
 	
-	public virtual void update_boundaries (Matrix view_matrix) {	
+	public virtual void update_boundaries (Matrix view_matrix) {
+		ImageSurface surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, 1, 1);
+		Context context = new Cairo.Context (surface);
+		
+		Matrix object_matrix = transforms.get_matrix ();
+		object_matrix.multiply (object_matrix, view_matrix);
+		context.set_matrix (object_matrix);
+		
+		draw_outline (context);
+		
+		double x0, y0, x1, y1;
+		
+		if (style.stroke_width == 0) {
+			context.path_extents (out x0, out y0, out x1, out y1);
+		} else {
+			context.stroke_extents (out x0, out y0, out x1, out y1);
+		}
+		
+		left = x0;
+		top = y0;
+		right = x1;
+		bottom = y1;
 	}
 }
 
