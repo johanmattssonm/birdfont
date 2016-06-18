@@ -117,7 +117,7 @@ public class OverView : FontDisplay {
 		if (default_character_set) {
 			IdleSource idle = new IdleSource ();
 
-			idle.set_callback (() => {			
+			idle.set_callback (() => {
 				use_default_character_set ();
 				selected_canvas ();
 				return false;
