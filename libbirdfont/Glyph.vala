@@ -356,8 +356,6 @@ public class Glyph : FontDisplay {
 		foreach (Layer layer in layers.get_sublayers ()) {
 			layer.update_boundaries (Matrix.identity ());
 			
-			print (@"layer.right: $(layer.right)\n");
-			
 			if (layer.xmin < x1) {
 				x1 = layer.xmin;
 			}

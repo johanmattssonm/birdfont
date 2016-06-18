@@ -21,7 +21,7 @@ public static int main (string[] arg) {
 	GtkWindow native_window;
 	MainWindow window;
 	BirdFont.BirdFont birdfont;
-
+	
 	birdfont = new BirdFont.BirdFont ();
 	birdfont.init (arg, null, "birdfont", null);
 	Gtk.init (ref arg);
@@ -33,9 +33,7 @@ public static int main (string[] arg) {
 	native_window.init ();
 
 	BirdFont.BirdFont.load_font_from_command_line ();
-	
 	Gtk.main ();
+	
 	return 0;
 }
-
-

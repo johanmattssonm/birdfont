@@ -44,14 +44,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	Scrollbar scrollbar;
 	bool scrollbar_supress_signal = false;
 	
-	/** Text input and callbacks. */
-	public static bool text_input_is_active = false;
-	TextListener text_listener = new TextListener ("", "", "");
-	Label text_input_label;
-	Entry text_entry;
-	Box text_box;
-	Gtk.Button submit_text_button;
-	
 	ToolboxCanvas toolbox;
 	
 	Task background_task = new Task(idle);
@@ -65,10 +57,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	}
 	
 	public void init () {
-		Notify.init ("Fonts have been exported.");
-		
-		clipboard = Clipboard.get_for_display (get_display (), Gdk.SELECTION_CLIPBOARD);
-
 		Signal.connect(this, "notify::is-active", (GLib.Callback) window_focus, null);
 
 		scrollbar.value_changed.connect (() => {
@@ -133,29 +121,9 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		canvas_box.pack_start (glyph_canvas_area, true, true, 0);
 		canvas_box.pack_start (html_box, true, true, 0);
 		canvas_box.pack_start (scrollbar, false, true, 0);
-
-		submit_text_button = new Gtk.Button ();
-		submit_text_button.set_label ("Submit");
-		text_input_label = new Label ("   " + "Text");
-		text_entry = new Entry ();
-		text_box = new Box (Orientation.HORIZONTAL, 6);
-		text_box.pack_start (text_input_label, false, false, 0);
-		text_box.pack_start (text_entry, true, true, 0);
-		text_box.pack_start (submit_text_button, false, false, 0);
-
-		text_entry.changed.connect (() => {
-			text_listener.signal_text_input (text_entry.text);
-		});
-
-		submit_text_button.clicked.connect (() => {
-			text_listener.signal_submit (text_entry.text);
-			text_input_is_active = false;
-		});
-		
 		tab_box = new Box (Orientation.VERTICAL, 0);
 		
 		tab_box.pack_start (new TabbarCanvas (MainWindow.get_tab_bar ()), false, false, 0);
-		tab_box.pack_start (text_box, false, false, 5);	
 		tab_box.pack_start (canvas_box, true, true, 0);
 
 		toolbox = new ToolboxCanvas (MainWindow.get_toolbox ()); 
@@ -166,7 +134,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		Box vbox = new Box (Orientation.VERTICAL, 0);
 		vbox.pack_start(list_box, true, true, 0);
 		add (vbox);
-		
+
 		try {
 			set_icon_from_file ((!) SearchPaths.find_file (null, "birdfont_window_icon.png").get_path ());
 		} catch (GLib.Error e) {
@@ -174,18 +142,13 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		}
 
 		key_press_event.connect ((t, event) => {
-			if (!GtkWindow.text_input_is_active) {
-				GtkWindow.reset_modifier (event.state);
-				TabContent.key_press (event.keyval);
-			}
-			
+			TabContent.key_press (event.keyval);
+
 			return false;
 		});
 		
 		key_release_event.connect ((t, event) => {
-			if (!GtkWindow.text_input_is_active) {
-				TabContent.key_release (event.keyval);
-			}
+			TabContent.key_release (event.keyval);
 			
 			return false;
 		});
@@ -194,13 +157,10 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			GlyphCanvas.redraw ();
 		});
 		
-		show_all ();
-		
 		scrollbar.set_visible (false);
-
-		hide_text_input ();
 		
-		MainWindow.open_recent_files_tab ();
+		show_all ();
+		MainWindow.open_recent_files_tab ();		
 	}
 
 	public void window_focus (void* data) {
@@ -429,26 +389,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		return fn;
 	}
 	
-	public void hide_text_input () {
-		text_listener = new TextListener ("", "", "");
-		text_box.hide ();
-		text_input_is_active = false;
-	}
-	
-	public void set_text_listener (TextListener listener) {
-		text_listener = listener;
-		text_input_label.set_text ("   " + listener.label);
-		submit_text_button.set_label (listener.button_label);
-		text_box.show ();
-		text_entry.set_text (listener.default_text);
-		text_entry.activate.connect (() => {
-			text_listener.signal_submit (text_entry.text);
-			text_input_is_active = false;
-		});
-		text_entry.grab_focus ();
-		text_input_is_active = true;
-	}
-	
 	public bool convert_to_png (string from, string to) {
 		Pixbuf pixbuf;
 		string folder;
@@ -644,20 +584,10 @@ class TabbarCanvas : DrawingArea {
 
 		draw.connect ((t, e)=> {
 			Gtk.Allocation alloc;
-			Context cr;
-			StyleContext context;
-			Gdk.RGBA color;
-						
+			Context cr;						
+									
 			cr = cairo_create (get_window ());
 			get_allocation (out alloc);
-
-			context = get_style_context ();
-			context.add_class (STYLE_CLASS_BUTTON);
-			color = context.get_background_color (Gtk.StateFlags.NORMAL);
-			
-			if (color.alpha > 0) {
-				tabbar.set_background_color (color.red, color.green, color.blue);
-			}
 						
 			tabbar.draw (cr, alloc.width, alloc.height);
 			return true;
