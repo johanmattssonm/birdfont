@@ -127,7 +127,7 @@ public class MoveTool : Tool {
 			moved = true;
 
 			delta_x = -dx;
-			delta_y = dy;
+			delta_y = -dy;
 			
 			foreach (SvgBird.Object object in glyph.active_paths) {
 				object.move (delta_x, delta_y);
