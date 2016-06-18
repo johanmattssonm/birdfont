@@ -869,7 +869,7 @@ public class TabBar : GLib.Object {
 		}
 		
 		if (processing) {
-			timer = new TimeoutSource (50);
+			timer = new TimeoutSource (250);
 			timer.set_callback (() => {
 				wheel_rotation += 0.008 * 2 * Math.PI;
 				

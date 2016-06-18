@@ -43,8 +43,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	
 	Scrollbar scrollbar;
 	bool scrollbar_supress_signal = false;
-		
-	Gtk.Window tooltip_window = new Gtk.Window ();
 	
 	ToolboxCanvas toolbox;
 	
@@ -59,6 +57,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	}
 	
 	public void init () {
+		Notify.init ("BirdFont");
 		Signal.connect(this, "notify::is-active", (GLib.Callback) window_focus, null);
 
 		scrollbar.value_changed.connect (() => {
