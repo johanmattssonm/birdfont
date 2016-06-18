@@ -57,6 +57,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	}
 	
 	public void init () {
+		Notify.init ("BirdFont");
 		Signal.connect(this, "notify::is-active", (GLib.Callback) window_focus, null);
 
 		scrollbar.value_changed.connect (() => {
