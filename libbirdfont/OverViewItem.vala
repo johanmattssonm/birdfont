@@ -102,7 +102,7 @@ public class OverViewItem : GLib.Object {
 		
 		g = ((!) glyphs).get_current ();
 		
-		if (g.overview_thumbnail != null) {
+		if (likely (g.overview_thumbnail != null)) {
 			cache = g.overview_thumbnail;
 			return;
 		}
@@ -135,6 +135,8 @@ public class OverViewItem : GLib.Object {
 		c.restore ();
 		
 		cache = s;
+		g.overview_thumbnail = s;
+		
 		GlyphCanvas.redraw ();
 	}
 

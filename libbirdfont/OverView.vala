@@ -421,8 +421,17 @@ public class OverView : FontDisplay {
 		OverViewItem.margin = OverViewItem.DEFAULT_MARGIN * z;
 		update_item_list ();
 		OverViewItem.reset_label ();
-		GlyphCanvas.redraw ();
 		Preferences.set ("overview_zoom", @"$zoom");
+
+		Font font = BirdFont.get_current_font ();
+		for (int index = 0; index < font.length (); index++) {
+			GlyphCollection? glyphs = font.get_glyph_collection_index ((uint32) index);
+			return_if_fail (glyphs != null);
+			GlyphCollection g = (!) glyphs;
+			g.get_current ().overview_thumbnail = null;
+		}
+		
+		GlyphCanvas.redraw ();
 	}
 	
 	public override void zoom_min () {
