@@ -1269,9 +1269,12 @@ public class OverView : FontDisplay {
 	}
 
 	public void open_overview_item (OverViewItem i) {
+		return_if_fail (!is_null (i));
+		
 		if (i.glyphs != null) {
 			open_glyph_signal ((!) i.glyphs);
-			((!) i.glyphs).get_current ().close_path ();
+			GlyphCollection gc = (!) i.glyphs;
+			gc.get_current ().close_path ();
 		} else {
 			open_new_glyph_signal (i.character);
 		}
@@ -1405,7 +1408,20 @@ public class OverView : FontDisplay {
 	}
 	
 	public void open_current_glyph () {
-		open_overview_item (selected_item);
+		// keep this object even if open_glyph_signal closes the display
+		this.ref ();
+		 
+		selected_item = get_selected_item ();
+		if (selected_item.glyphs != null) {
+			open_glyph_signal ((!) selected_item.glyphs);
+			GlyphCollection? gc2 = selected_item.glyphs;
+			GlyphCollection gc = (!) selected_item.glyphs;
+			gc.get_current ().close_path ();
+		} else {
+			open_new_glyph_signal (selected_item.character);
+		}
+		
+		this.unref ();
 	}
 
 	public override void update_scrollbar () {

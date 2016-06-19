@@ -54,7 +54,8 @@ public class OtfFeatureTable : Table {
 			
 			gs.selected_glyph.connect ((gc) => {
 				glyph_collection = gc;
-				replacement_glyph = null;		
+				replacement_glyph = null;
+				Tool.yield ();		
 				MainWindow.get_tab_bar ().select_tab_name (get_name ());
 			});
 			
@@ -63,7 +64,8 @@ public class OtfFeatureTable : Table {
 			GlyphSelection gs = new GlyphSelection ();
 			
 			gs.selected_glyph.connect ((gc) => {
-				replacement_glyph = gc;		
+				replacement_glyph = gc;
+				Tool.yield ();		
 				MainWindow.get_tab_bar ().select_tab_name (get_name ());
 			});
 			
