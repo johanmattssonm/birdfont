@@ -129,6 +129,16 @@ public class OverView : FontDisplay {
 		update_item_list ();
 		update_scrollbar ();
 		reset_zoom ();
+		
+		string? zoom = Preferences.get ("overview_zoom");
+		
+		if (zoom != null) {
+			string z = (!) zoom;
+			
+			if (z != "") {
+				set_zoom (double.parse (z));
+			}			
+		}
 	}
 
 	public Glyph? get_selected_glyph () {
@@ -411,7 +421,8 @@ public class OverView : FontDisplay {
 		OverViewItem.margin = OverViewItem.DEFAULT_MARGIN * z;
 		update_item_list ();
 		OverViewItem.reset_label ();
-		GlyphCanvas.redraw ();	
+		GlyphCanvas.redraw ();
+		Preferences.set ("overview_zoom", @"$zoom");
 	}
 	
 	public override void zoom_min () {
