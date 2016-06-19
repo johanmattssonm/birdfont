@@ -366,7 +366,7 @@ public class MoveTool : Tool {
 		PenTool.reset_stroke ();
 		update_selection_boundaries ();
 		objects_moved ();
-		glyph.redraw_area (0, 0, glyph.allocation.width, glyph.allocation.height);
+		GlyphCanvas.redraw ();
 	}
 
 	static void tie_path_to_ttf_grid (Path p) {

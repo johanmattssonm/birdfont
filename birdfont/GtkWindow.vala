@@ -60,6 +60,8 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		Notify.init ("BirdFont");
 		Signal.connect(this, "notify::is-active", (GLib.Callback) window_focus, null);
 
+		clipboard = Clipboard.get_for_display (get_display (), Gdk.SELECTION_CLIPBOARD);
+
 		scrollbar.value_changed.connect (() => {
 			double p;
 			

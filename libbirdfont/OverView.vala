@@ -1670,6 +1670,9 @@ public class OverView : FontDisplay {
 		}
 		
 		f.touch ();
+		
+		update_item_list ();
+		GlyphCanvas.redraw ();
 	}
 	
 	public class OverViewUndoItem {
