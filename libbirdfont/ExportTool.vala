@@ -419,7 +419,7 @@ os.put_string (
 		<span class="capstosmallcaps">OTF</span> features, 
 		<span class="swashes">like swashes </span>
 		<span class="alternates">alternates &amp; </span>
-		<span class="smallcaps">small caps</span>, can be added 
+		small caps, can be added 
 		to the font.</span>
 	</p>
 </div>

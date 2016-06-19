@@ -51,8 +51,9 @@ public class SvgTable : OtfTable {
 					svg.append ("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n");
 		
 					foreach (EmbeddedSvg embedded in embedded_svg) {
-						svg.append ("<svg>");
+						svg.append ("""<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">""");
 						svg.append ("\n\n");
+						
 						svg.append ("<g id=");
 						svg.append ("\"");
 						svg.append ("glyph");
@@ -226,7 +227,6 @@ public class SvgTable : OtfTable {
 			fd.add_ushort (entry.glyph_id); // end
 			fd.add_ulong (document_offset); // offset
 			fd.add_ulong (entry.data.length_with_padding ()); // length
-
 			document_offset += entry.data.length_with_padding ();
 		}
 
