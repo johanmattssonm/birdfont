@@ -137,6 +137,16 @@ public class OverView : FontDisplay {
 		update_item_list ();
 		update_scrollbar ();
 		reset_zoom ();
+		
+		string? zoom = Preferences.get ("overview_zoom");
+		
+		if (zoom != null) {
+			string z = (!) zoom;
+			
+			if (z != "") {
+				set_zoom (double.parse (z));
+			}			
+		}
 	}
 
 	public Glyph? get_selected_glyph () {
@@ -418,7 +428,17 @@ public class OverView : FontDisplay {
 		OverViewItem.margin = OverViewItem.DEFAULT_MARGIN * z;
 		update_item_list ();
 		OverViewItem.reset_label ();
-		GlyphCanvas.redraw ();	
+		Preferences.set ("overview_zoom", @"$zoom");
+
+		Font font = BirdFont.get_current_font ();
+		for (int index = 0; index < font.length (); index++) {
+			GlyphCollection? glyphs = font.get_glyph_collection_index ((uint32) index);
+			return_if_fail (glyphs != null);
+			GlyphCollection g = (!) glyphs;
+			g.get_current ().overview_thumbnail = null;
+		}
+		
+		GlyphCanvas.redraw ();
 	}
 	
 	public override void zoom_min () {
@@ -1289,9 +1309,12 @@ public class OverView : FontDisplay {
 	}
 
 	public void open_overview_item (OverViewItem i) {
+		return_if_fail (!is_null (i));
+		
 		if (i.glyphs != null) {
 			open_glyph_signal ((!) i.glyphs);
-			((!) i.glyphs).get_current ().close_path ();
+			GlyphCollection gc = (!) i.glyphs;
+			gc.get_current ().close_path ();
 		} else {
 			open_new_glyph_signal (i.character);
 		}
@@ -1426,7 +1449,20 @@ public class OverView : FontDisplay {
 	}
 	
 	public void open_current_glyph () {
-		open_overview_item (selected_item);
+		// keep this object even if open_glyph_signal closes the display
+		this.ref ();
+		 
+		selected_item = get_selected_item ();
+		if (selected_item.glyphs != null) {
+			open_glyph_signal ((!) selected_item.glyphs);
+			GlyphCollection? gc2 = selected_item.glyphs;
+			GlyphCollection gc = (!) selected_item.glyphs;
+			gc.get_current ().close_path ();
+		} else {
+			open_new_glyph_signal (selected_item.character);
+		}
+		
+		this.unref ();
 	}
 
 	public override void update_scrollbar () {
@@ -1691,6 +1727,9 @@ public class OverView : FontDisplay {
 		}
 		
 		f.touch ();
+		
+		update_item_list ();
+		GlyphCanvas.redraw ();
 	}
 	
 	public class OverViewUndoItem {

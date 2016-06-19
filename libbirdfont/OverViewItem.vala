@@ -109,7 +109,7 @@ public class OverViewItem : GLib.Object {
 		
 		g = ((!) glyphs).get_current ();
 		
-		if (g.overview_thumbnail != null) {
+		if (likely (g.overview_thumbnail != null)) {
 			cache = g.overview_thumbnail;
 			return;
 		}
@@ -141,6 +141,8 @@ public class OverViewItem : GLib.Object {
 		c.restore ();
 		
 		cache = s;
+		g.overview_thumbnail = s;
+		
 		GlyphCanvas.redraw ();
 	}
 
@@ -150,6 +152,7 @@ public class OverViewItem : GLib.Object {
 		Context c;
 
 		scale_box = width / DEFAULT_WIDTH;
+		adjust_scale ();
 
 		s = Screen.create_background_surface ((int) width, (int) height - 20);
 		c = new Context (s);

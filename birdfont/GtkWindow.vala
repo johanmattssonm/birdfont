@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012 2013 2014 2015 Johan Mattsson
+	Copyright (C) 2012 2013 2014 2015 2016 Johan Mattsson
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -59,6 +59,8 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	public void init () {
 		Notify.init ("BirdFont");
 		Signal.connect(this, "notify::is-active", (GLib.Callback) window_focus, null);
+
+		clipboard = Clipboard.get_for_display (get_display (), Gdk.SELECTION_CLIPBOARD);
 
 		scrollbar.value_changed.connect (() => {
 			double p;
