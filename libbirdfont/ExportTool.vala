@@ -173,14 +173,14 @@ public class ExportTool : GLib.Object {
 			string fn;
 			int i;
 			
-			if (fd is Glyph) {
+			if (fd is GlyphTab || fd is Glyph) {
 				glyph = MainWindow.get_current_glyph ();
 			} else if (fd is OverView) {
 				OverView overview = MainWindow.get_overview ();
 				Glyph? g = overview.get_selected_glyph ();
 				
 				if (g == null) {
-					warning("No glyhp selected in overview.");
+					warning("No glyph selected in overview.");
 					return;
 				}
 				
@@ -192,6 +192,7 @@ public class ExportTool : GLib.Object {
 			name = glyph.get_name ();
 			
 			if (selected_file == null) {
+				warning ("No selected file.");
 				return;
 			}
 			
@@ -212,7 +213,6 @@ public class ExportTool : GLib.Object {
 				glyph_svg = export_to_string (glyph, false);
 				os = new DataOutputStream (file.create(FileCreateFlags.REPLACE_DESTINATION));
 				os.put_string (glyph_svg);
-		
 			} catch (Error e) {
 				stderr.printf (@"Export \"$svg_file\" \n");
 				critical (@"$(e.message)");
