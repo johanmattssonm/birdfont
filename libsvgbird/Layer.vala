@@ -32,9 +32,9 @@ public class Layer : Object {
 		transforms = new SvgTransforms ();
 	}
 	
-	public override void update_boundaries (Matrix view_matrix) {
+	public override bool update_boundaries (Matrix view_matrix) {
 		if (objects.size == 0) {
-			return;
+			return false;
 		}
 		
 		top = CANVAS_MAX;
@@ -46,13 +46,17 @@ public class Layer : Object {
 		layer_matrix.multiply (layer_matrix, view_matrix);
 
 		foreach (Object object in objects) {
-			object.update_boundaries (layer_matrix);
-
-			left = fmin (left, object.left);
-			right = fmax (right, object.right);
-			top = fmin (top, object.top);
-			bottom = fmax (bottom, object.bottom);
+			bool has_size = object.update_boundaries (layer_matrix);
+			
+			if (has_size) {
+				left = fmin (left, object.left);
+				right = fmax (right, object.right);
+				top = fmin (top, object.top);
+				bottom = fmax (bottom, object.bottom);
+			}
 		}
+		
+		return boundaries_width != 0;
 	}
 	
 	public void draw (Context cr) {

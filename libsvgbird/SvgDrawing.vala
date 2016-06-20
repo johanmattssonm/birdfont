@@ -49,13 +49,15 @@ public class SvgDrawing : Object {
 	public double svg_width = 0;
 	public double svg_height = 0;
 
-	public override void update_boundaries (Matrix view_matrix) {
+	public override bool update_boundaries (Matrix view_matrix) {
 		root_layer.update_boundaries (view_matrix);
 		
 		left = x + root_layer.left;
 		right = x + root_layer.right;
 		top = y + root_layer.top;
 		bottom = y + root_layer.bottom;
+		
+		return true;
 	}
 	
 	public override bool is_over (double x, double y) {

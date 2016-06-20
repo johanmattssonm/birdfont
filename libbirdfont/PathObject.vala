@@ -113,7 +113,11 @@ public class PathObject : SvgBird.Object {
 		return path;
 	}
 
-	public override void update_boundaries (Matrix matrix) {
+	public override bool update_boundaries (Matrix matrix) {
+		if (path.points.size < 2) {
+			return false;
+		}
+		
 		xmin = Glyph.CANVAS_MAX;
 		xmax = Glyph.CANVAS_MIN;
 		ymin = Glyph.CANVAS_MAX;
@@ -125,6 +129,8 @@ public class PathObject : SvgBird.Object {
 		xmax = path.xmax;
 		ymin = path.ymin;
 		ymax = path.ymax;
+		
+		return true;
 	}
 
 	public override void rotate (double theta, double xc, double yc) {

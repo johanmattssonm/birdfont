@@ -247,8 +247,9 @@ public abstract class Object : GLib.Object {
 		object_matrix.multiply (object_matrix, view_matrix);
 		cr.set_matrix (object_matrix);
 	}
-	
-	public virtual void update_boundaries (Matrix view_matrix) {
+
+	/** @return true if the object has an area. */
+	public virtual bool update_boundaries (Matrix view_matrix) {
 		ImageSurface surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, 1, 1);
 		Context context = new Cairo.Context (surface);
 		
@@ -270,6 +271,8 @@ public abstract class Object : GLib.Object {
 		top = y0;
 		right = x1;
 		bottom = y1;
+		
+		return boundaries_width != 0;
 	}
 }
 

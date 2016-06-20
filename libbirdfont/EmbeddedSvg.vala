@@ -30,13 +30,15 @@ public class EmbeddedSvg : SvgBird.Object {
 		this.drawing = drawing;
 	}
 
-	public override void update_boundaries (Matrix view_matrix) {
+	public override bool update_boundaries (Matrix view_matrix) {
 		drawing.update_boundaries (view_matrix);
 		
 		left = x + drawing.left;
 		right = x + drawing.right;
 		top = -y + drawing.top;
 		bottom = -y + drawing.bottom;
+		
+		return true;
 	}
 
 	public override bool is_over (double x, double y) {
