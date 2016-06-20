@@ -121,7 +121,7 @@ public class ExportSettings : TableLayout {
 		svg.updated.connect ((c) => {
 			Font f = BirdFont.get_current_font ();
 			string v = c ? "true" : "false";
-			f.settings.set_setting ("export_eot", v);
+			f.settings.set_setting ("export_svg", v);
 		});
 		svg.checked = export_svg_setting (font);
 		svg.margin_bottom = margin;
