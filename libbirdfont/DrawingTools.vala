@@ -1667,6 +1667,7 @@ public class DrawingTools : ToolCollection  {
 		stroke_expander.redraw ();
 		MainWindow.get_toolbox ().update_expanders ();
 	}
+
 }
 
 }

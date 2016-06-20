@@ -526,12 +526,9 @@ public class Glyph : FontDisplay {
 		
 		DrawingTools.update_layers ();
 		MainWindow.get_toolbox ().update_expanders ();
-		
-		print(@"PRECOPY $(name)\n");
-		print_layers (layers);
-//		layers = (Layer) layers.copy (); // FIXME: DELETE
-		print("\n");
-		print_layers (layers);
+
+		Tool current_tool = MainWindow.get_toolbox ().get_current_tool ();
+		current_tool.select_action (current_tool);
 	}
 
 	void update_zoom_bar () {
