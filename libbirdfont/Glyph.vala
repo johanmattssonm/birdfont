@@ -492,6 +492,9 @@ public class Glyph : FontDisplay {
 		
 		DrawingTools.update_layers ();
 		MainWindow.get_toolbox ().update_expanders ();
+
+		Tool current_tool = MainWindow.get_toolbox ().get_current_tool ();
+		current_tool.select_action (current_tool);
 	}
 
 	void update_zoom_bar () {
