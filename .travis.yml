@@ -1,4 +1,4 @@
-dist: wily
+dist: trusty
 
 script:
   - sudo add-apt-repository ppa:vala-team/ppa -y
@@ -9,7 +9,7 @@ script:
   - sudo apt-get install -qq libsqlite3-dev
   - sudo apt-get install -qq libxmlbird-dev
   - sudo apt-get install -qq libgee-dev 
-  - sudo apt-get install -qq libwebkit2gtk-4.0-dev
+  - sudp apt-get install libwebkit2gtk-4.0-dev/xenial
   - sudo apt-get install -qq libnotify-dev
   - sudo apt-get install -qq valac-0.30
   - sudo apt-get install -qq python3
