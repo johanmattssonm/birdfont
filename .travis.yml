@@ -1,4 +1,4 @@
-dist: trusty
+dist: wily
 
 script:
   - sudo add-apt-repository ppa:vala-team/ppa -y
