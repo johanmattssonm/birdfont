@@ -1587,9 +1587,13 @@ public class Glyph : FontDisplay {
 		}
 
 		if (show_orientation_arrow) {
-			foreach (Path p in get_visible_paths ()) {
-				if (p.stroke == 0) {
-					p.draw_orientation_arrow (cr, orientation_arrow_opacity);
+			foreach (SvgBird.Object o in active_paths) {
+				if (o is PathObject) {
+					Path p = ((PathObject) o).get_path ();
+					
+					if (p.stroke == 0) {
+						p.draw_orientation_arrow (cr, orientation_arrow_opacity);
+					}
 				}
 			}
 		}
