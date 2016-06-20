@@ -96,12 +96,7 @@ public class MoveTool : Tool {
 			}
 			
 			foreach (SvgBird.Object p in g.active_paths) {
-				if (p is PathObject) {
-					LayerUtils.remove_path (g.layers, ((PathObject) p).get_path ());
-				} else {
-					g.layers.remove (p);
-				}
-				
+				g.layers.remove (p);
 				g.update_view ();
 			}
 

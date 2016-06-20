@@ -115,6 +115,14 @@ public class Layer : Object {
 
 	public void remove (Object o) {
 		objects.remove (o);
+		
+		foreach (Object object in objects) {
+			if (object is Layer) {
+				Layer sublayer = (Layer) object;
+				sublayer.remove (o);;
+			}
+		}
+		
 		update_boundaries (Matrix.identity ());
 	}
 	
