@@ -12,10 +12,7 @@ script:
   - sudo apt-get install -qq libnotify-dev
   - sudo apt-get install -qq valac-0.30
   - sudo apt-get install -qq python3
-  - sudo add-apt-repository "deb http://se.archive.ubuntu.com/ubuntu/ xenial main restricted"
-  - sudo apt-get update -qq
-  - sudo apt-get --only-upgrade install -qq libwebkit2gtk-4.0-dev
-
+  - sudo apt-get install -qq libwebkit2gtk-3.0-dev
 
   - python3 ./configure --nonnull
   - python3 ./scripts/linux_build.py
