@@ -1663,8 +1663,9 @@ public class DrawingTools : ToolCollection  {
 		line_cap_butt.visible = StrokeTool.add_stroke;
 		line_cap_round.visible = StrokeTool.add_stroke;
 		line_cap_square.visible = StrokeTool.add_stroke;
-		MainWindow.get_toolbox ().update_expanders ();
+		stroke_expander.clear_cache ();
 		stroke_expander.redraw ();
+		MainWindow.get_toolbox ().update_expanders ();
 	}
 }
 
