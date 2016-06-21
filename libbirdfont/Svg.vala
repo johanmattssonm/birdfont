@@ -83,13 +83,13 @@ public class Svg {
 		}
 
 		if (!p.is_open ()) {
-			m = p.points.get (0);	
+			m = p.get_first_point ();	
 			add_abs_next ((!) n, m, svg, g, do_glyph);
 			close_path (svg);
 		}
 	}
 
-	private static void add_abs_next (EditPoint start, EditPoint end, StringBuilder svg, Glyph g, bool do_glyph) {
+	public static void add_abs_next (EditPoint start, EditPoint end, StringBuilder svg, Glyph g, bool do_glyph) {
 		if (start.right_handle.type == PointType.LINE_QUADRATIC) {
 			add_abs_line_to (start, end, svg, g, do_glyph);
 		} else if (start.right_handle.type == PointType.LINE_CUBIC && end.left_handle.type == PointType.LINE_CUBIC) {
@@ -119,7 +119,7 @@ public class Svg {
 		}
 	}
 		
-	private static void close_path (StringBuilder svg) {
+	public static void close_path (StringBuilder svg) {
 		svg.append ("z");
 	}	
 	

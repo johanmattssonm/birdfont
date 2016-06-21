@@ -636,7 +636,7 @@ public class SvgFile : GLib.Object {
 		param = param.replace (",", " ");
 		
 		while (param.index_of ("  ") > -1) {
-			param.replace ("  ", " ");
+			param = param.replace ("  ", " ");
 		}
 			
 		return param.strip();			
