@@ -45,21 +45,24 @@ public class Layer : Object {
 		Matrix layer_matrix = transforms.get_matrix ();
 		layer_matrix.multiply (layer_matrix, view_matrix);
 
+		base.update_boundaries (view_matrix);
+
 		foreach (Object object in objects) {
-			bool has_size = object.update_boundaries (layer_matrix);
-			
-			if (has_size) {
-				left = fmin (left, object.left);
-				right = fmax (right, object.right);
-				top = fmin (top, object.top);
-				bottom = fmax (bottom, object.bottom);
-			}
+			object.update_boundaries (layer_matrix);
 		}
 		
 		return boundaries_width != 0;
 	}
 	
 	public void draw (Context cr) {
+		draw_layer (cr, true);
+	}
+
+	public override void draw_outline (Context cr) {
+		draw_layer (cr, false);
+	}
+	
+	private void draw_layer (Context cr, bool paint) {
 		cr.save ();
 		apply_transform (cr);
 		
@@ -79,24 +82,19 @@ public class Layer : Object {
 			
 			if (object is Layer) {
 				Layer sublayer = (Layer) object;
-				sublayer.draw (cr);		
+				
+				if (paint) {
+					sublayer.draw (cr);
+				} else {
+					sublayer.draw_outline (cr);
+				}
 			} else {
 				object.draw_outline (cr);
-				object.paint (cr);
+				
+				if (paint) {
+					object.paint (cr);
+				}
 			}
-			cr.restore ();
-		}
-		
-		cr.restore ();
-	}
-
-	public override void draw_outline (Context cr) {
-		apply_transform (cr);
-		
-		foreach (Object object in objects) {
-			cr.save ();
-			object.apply_transform (cr);
-			object.draw_outline (cr);
 			cr.restore ();
 		}
 		

@@ -253,10 +253,8 @@ public abstract class Object : GLib.Object {
 		ImageSurface surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, 1, 1);
 		Context context = new Cairo.Context (surface);
 		
-		Matrix object_matrix = transforms.get_matrix ();
-		object_matrix.multiply (object_matrix, view_matrix);
-		context.set_matrix (object_matrix);
-		
+		context.set_matrix (view_matrix);
+		apply_transform (context);
 		draw_outline (context);
 		
 		double x0, y0, x1, y1;

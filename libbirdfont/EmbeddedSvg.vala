@@ -23,16 +23,16 @@ public class EmbeddedSvg : SvgBird.Object {
 	public string svg_data = "";
 	public SvgDrawing drawing = new SvgDrawing ();
 	
-	public double x { get; set; }
-	public double y { get; set; }
-		
+	public double x;
+	public double y;
+	
 	public EmbeddedSvg (SvgDrawing drawing) {
 		this.drawing = drawing;
 	}
 
 	public override bool update_boundaries (Matrix view_matrix) {
 		drawing.update_boundaries (view_matrix);
-		
+
 		left = x + drawing.left;
 		right = x + drawing.right;
 		top = -y + drawing.top;

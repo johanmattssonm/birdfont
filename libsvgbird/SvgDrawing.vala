@@ -52,20 +52,21 @@ public class SvgDrawing : Object {
 	public override bool update_boundaries (Matrix view_matrix) {
 		root_layer.update_boundaries (view_matrix);
 		
-		left = x + root_layer.left;
-		right = x + root_layer.right;
-		top = y + root_layer.top;
-		bottom = y + root_layer.bottom;
-		
+		left = root_layer.left;
+		right = root_layer.right;
+		top = root_layer.top;
+		bottom = root_layer.bottom;
+
 		return true;
 	}
-	
+
 	public override bool is_over (double x, double y) {
 		return (this.x <= x <= this.x + width) 
 			&& (this.y <= y <= this.y + height);
 	}
 
 	public void draw (Context cr) {
+		apply_transform (cr);
 		root_layer.draw (cr);
 	}
 		
@@ -78,8 +79,6 @@ public class SvgDrawing : Object {
 		SvgBird.Object.copy_attributes (this, drawing);
 		drawing.root_layer = (Layer) root_layer.copy ();
 		drawing.defs = defs.copy ();
-		drawing.x = x;
-		drawing.y = y;
 		drawing.width = width;
 		drawing.height = height;
 		return drawing;

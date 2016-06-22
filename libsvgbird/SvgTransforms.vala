@@ -19,6 +19,9 @@ namespace SvgBird {
 public class SvgTransforms : GLib.Object {
 	public Gee.ArrayList<SvgTransform> transforms;
 	
+	public double x = 0;
+	public double y = 0;
+	
 	public SvgTransforms () {
 		transforms = new Gee.ArrayList<SvgTransform> ();
 	}
@@ -40,13 +43,9 @@ public class SvgTransforms : GLib.Object {
 	public Matrix get_matrix () {
 		Matrix matrix = Matrix.identity ();
 		
-		if (transforms.size == 0) {
-			return Matrix.identity ();
-		}
+		matrix.translate (x, y);
 		
-		matrix = transforms.get (0).get_matrix ();
-		
-		for (int i = 1; i < transforms.size; i++) {
+		for (int i = 0; i < transforms.size; i++) {
 			matrix.multiply (matrix, transforms.get (i).get_matrix ());
 		}
 		
@@ -55,6 +54,10 @@ public class SvgTransforms : GLib.Object {
 	
 	public string to_string () {
 		StringBuilder sb = new StringBuilder ();
+		
+		if (x != 0 || y != 0) {
+			sb.append (@"$(TransformType.TRANSLATE): $x,$y ");
+		}
 		
 		foreach (SvgTransform t in transforms) {
 			sb.append (t.to_string ());
