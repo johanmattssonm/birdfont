@@ -32,8 +32,8 @@
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="move layer down" />
 	<action key="e" ctrl="true" alt="false" command="false" shift="false" action="export" />
 	<action key="E" ctrl="true" alt="false" command="false" shift="true" action="export glyph as svg" />
-	<action key="i" ctrl="true" alt="false" command="false" shift="false" action="import svg file" />
-	<action key="" ctrl="false" alt="false" command="false" shift="false" action="import svg folder" />
+	<action key="i" ctrl="true" alt="false" command="false" shift="false" action="import svg file color" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="import svg folder color" />
 	<action key="b" ctrl="true" alt="false" command="false" shift="false" action="import background image" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="export settings" />
 	<action key="p" ctrl="true" alt="false" command="false" shift="false" action="preview" />
@@ -55,6 +55,7 @@
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="settings" />
 	<action key="d" ctrl="true" alt="false" command="false" shift="false" action="name and description" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="birdfont version" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="help" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="new_font" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="open_font" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="save_font" />
@@ -79,13 +80,13 @@
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="x_coordinate" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="y_coordinate" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="rotation" />
-	<action key="" ctrl="false" alt="false" command="false" shift="false" action="skew" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="width" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="height" />
 	<action key="w" ctrl="false" alt="false" command="false" shift="false" action="tie_point" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="symmetric" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="create_line" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="reverse_path" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="svg_to_birdfont" />
 	<action key="c" ctrl="false" alt="false" command="false" shift="false" action="close_path" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="move_layer" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="flip_vertical" />
@@ -133,9 +134,13 @@
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="export_fonts" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="generate_html_document" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="skew_overview" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="transform_slant" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="resize_overview" />
-	<action key="" ctrl="false" alt="false" command="false" shift="false" action="transform" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="transform_size" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="alternate" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="curve_orientation" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="master_size" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="new_master" />
+	<action key="" ctrl="false" alt="false" command="false" shift="false" action="insert_glyph_from_overview_in_spacing_class" />
 	<action key="" ctrl="false" alt="false" command="false" shift="false" action="select_background" />
 </bindings>
