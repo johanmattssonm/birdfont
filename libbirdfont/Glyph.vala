@@ -308,6 +308,16 @@ public class Glyph : FontDisplay {
 		}
 	}
 
+	public bool has_active_path_objects () {
+		foreach (SvgBird.Object object in active_paths) {
+			if (object is PathObject) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
 	public bool active_paths_contains (SvgBird.Object object) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 

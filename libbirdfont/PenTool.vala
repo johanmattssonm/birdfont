@@ -1836,7 +1836,9 @@ public class PenTool : Tool {
 		Glyph g = MainWindow.get_current_glyph ();
 		PathObject path;
 		
-		if (g.active_paths.size == 0) {
+		print ("Insert\n");
+		
+		if (!g.has_active_path_objects ()) {
 			np = new Path ();
 			g.add_path (np);
 			np.stroke = stroke ? StrokeTool.stroke_width : 0;
@@ -1865,7 +1867,11 @@ public class PenTool : Tool {
 				np.stroke = PenTool.path_stroke_width;
 			}
 			
+			path = new PathObject.for_path (np);
+			g.add_active_object (null, path);
+			
 			PenTool.active_path = np;
+			PenTool.selected_path = np;
 		}
 
 		g.clear_active_paths ();
