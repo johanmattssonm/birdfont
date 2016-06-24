@@ -23,9 +23,6 @@ public class SvgDrawing : Object {
 	public Layer root_layer = new Layer ();
 	public Defs defs = new Defs ();
 
-	public double x = 0;
-	public double y = 0;
-	
 	public double width {
 		get {			
 			return svg_width;
@@ -49,8 +46,9 @@ public class SvgDrawing : Object {
 	public double svg_width = 0;
 	public double svg_height = 0;
 
-	public override bool update_boundaries (Matrix view_matrix) {
-		root_layer.update_boundaries (view_matrix);
+	public override bool update_boundaries (Context cr) {
+		apply_transform (cr);
+		root_layer.update_boundaries (cr);
 		
 		left = root_layer.left;
 		right = root_layer.right;
@@ -61,8 +59,7 @@ public class SvgDrawing : Object {
 	}
 
 	public override bool is_over (double x, double y) {
-		return (this.x <= x <= this.x + width) 
-			&& (this.y <= y <= this.y + height);
+		return false;
 	}
 
 	public void draw (Context cr) {
@@ -85,9 +82,6 @@ public class SvgDrawing : Object {
 	}
 	
 	public override void move (double dx, double dy) {
-		x += dx;
-		y += dy;
-		move_bounding_box (dx, dy);
 	}
 	
 	public override void rotate (double theta, double xc, double yc) {
@@ -101,7 +95,7 @@ public class SvgDrawing : Object {
 	}
 
 	public override string to_string () {
-		return @"SvgDrawing x: $x, y: $y, width: $width, height: $height";
+		return @"SvgDrawing width: $width, height: $height";
 	}
 }
 

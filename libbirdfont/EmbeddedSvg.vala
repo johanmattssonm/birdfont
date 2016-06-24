@@ -30,14 +30,14 @@ public class EmbeddedSvg : SvgBird.Object {
 		this.drawing = drawing;
 	}
 
-	public override bool update_boundaries (Matrix view_matrix) {
-		drawing.update_boundaries (view_matrix);
-
+	public override bool update_boundaries (Context context) {
+		drawing.update_boundaries (context);
+		
 		left = x + drawing.left;
 		right = x + drawing.right;
 		top = -y + drawing.top;
 		bottom = -y + drawing.bottom;
-		
+	
 		return true;
 	}
 
@@ -54,6 +54,8 @@ public class EmbeddedSvg : SvgBird.Object {
 	}
 	
 	public override void draw_outline (Context cr) {
+		cr.translate (x, -y);
+		drawing.draw_outline (cr);
 	}
 	
 	public override void move (double dx, double dy) {

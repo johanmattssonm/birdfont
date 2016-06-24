@@ -249,29 +249,39 @@ public abstract class Object : GLib.Object {
 	}
 
 	/** @return true if the object has an area. */
-	public virtual bool update_boundaries (Matrix view_matrix) {
-		ImageSurface surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, 1, 1);
-		Context context = new Cairo.Context (surface);
-		
-		context.set_matrix (view_matrix);
-		apply_transform (context);
-		draw_outline (context);
-		
+	public virtual bool update_boundaries (Context context) {
 		double x0, y0, x1, y1;
+
+		context.set_line_width (style.stroke_width);
+		draw_outline (context);
+
+		context.save ();
 		
-		if (style.stroke_width == 0) {
-			context.path_extents (out x0, out y0, out x1, out y1);
-		} else {
+		Matrix m = Matrix.identity ();
+		context.set_matrix (m);
+		
+		if (style.stroke_width > 0) {	
 			context.stroke_extents (out x0, out y0, out x1, out y1);
+		} else {
+			context.path_extents (out x0, out y0, out x1, out y1);
 		}
+		
+		context.restore ();
 		
 		left = x0;
 		top = y0;
 		right = x1;
 		bottom = y1;
-		
+				
 		return boundaries_width != 0;
 	}
+
+	public virtual bool update_boundaries_for_object () {
+		ImageSurface surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, 1, 1);
+		Context context = new Cairo.Context (surface);
+		return update_boundaries (context);
+	}
+
 }
 
 }

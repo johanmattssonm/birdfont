@@ -88,6 +88,13 @@ public class PathObject : SvgBird.Object {
 	
 	public override void draw_outline (Context cr) {
 		// drawing is handled in Glyph.draw_bird_font_paths
+		
+		if (path.stroke > 0) {
+			//draw_path_list (path.get_completed_stroke (), cr);
+			draw_path_list (path.get_stroke_fast (), cr);
+		} else {
+			path.draw_path (cr);
+		}
 	}
 	
 	public void draw_path (Context cr) {
@@ -113,24 +120,12 @@ public class PathObject : SvgBird.Object {
 		return path;
 	}
 
-	public override bool update_boundaries (Matrix matrix) {
+	public override bool update_boundaries (Context cr) {
 		if (path.points.size < 2) {
 			return false;
 		}
 		
-		xmin = Glyph.CANVAS_MAX;
-		xmax = Glyph.CANVAS_MIN;
-		ymin = Glyph.CANVAS_MAX;
-		ymax = Glyph.CANVAS_MIN;
-
-		path.update_region_boundaries ();
-		
-		xmin = path.xmin;
-		xmax = path.xmax;
-		ymin = path.ymin;
-		ymax = path.ymax;
-		
-		return true;
+		return base.update_boundaries (cr);
 	}
 
 	public override void rotate (double theta, double xc, double yc) {

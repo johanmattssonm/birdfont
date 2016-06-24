@@ -348,7 +348,7 @@ public class Glyph : FontDisplay {
 			return false;
 		}
 
-		layers.update_boundaries (Matrix.identity ());
+		layers.update_boundaries_for_object ();
 
 		x1 = layers.xmin;
 		x2 = layers.xmax;

@@ -31,25 +31,45 @@ public class Layer : Object {
 		objects = new ObjectGroup ();
 		transforms = new SvgTransforms ();
 	}
-	
-	public override bool update_boundaries (Matrix view_matrix) {
+
+
+	public override bool update_boundaries (Context cr) {
 		if (objects.size == 0) {
 			return false;
 		}
-		
+
 		top = CANVAS_MAX;
 		bottom = CANVAS_MIN;
 		left = CANVAS_MAX;
 		right = CANVAS_MIN;
 
-		Matrix layer_matrix = transforms.get_matrix ();
-		layer_matrix.multiply (layer_matrix, view_matrix);
-
-		base.update_boundaries (view_matrix);
+		cr.save ();
+		apply_transform (cr);
 
 		foreach (Object object in objects) {
-			object.update_boundaries (layer_matrix);
+			bool has_size = false;
+
+			cr.save ();
+
+			if (object is Layer) {
+				Layer sublayer = (Layer) object;
+				has_size = sublayer.update_boundaries (cr);
+			} else {
+				object.apply_transform (cr);
+				has_size = object.update_boundaries (cr);
+			}
+			
+			if (has_size) {
+				left = fmin (left, object.left);
+				right = fmax (right, object.right);
+				top = fmin (top, object.top);
+				bottom = fmax (bottom, object.bottom);
+			}
+
+			cr.restore ();
 		}
+		
+		cr.restore ();
 		
 		return boundaries_width != 0;
 	}
@@ -73,7 +93,6 @@ public class Layer : Object {
 
 		foreach (Object object in objects) {
 			cr.save ();
-			object.apply_transform (cr);
 						
 			if (object.clip_path != null) {
 				ClipPath clipping = (!) object.clip_path;
@@ -89,6 +108,7 @@ public class Layer : Object {
 					sublayer.draw_outline (cr);
 				}
 			} else {
+				object.apply_transform (cr);
 				object.draw_outline (cr);
 				
 				if (paint) {
@@ -107,12 +127,12 @@ public class Layer : Object {
 		
 	public void add_layer (Layer layer) {
 		objects.add (layer);
-		update_boundaries (Matrix.identity ());
+		update_boundaries_for_object ();
 	}
 	
 	public void add_object (Object object) {
 		objects.add (object);
-		update_boundaries (Matrix.identity ());
+		update_boundaries_for_object ();
 	}
 
 	public void remove (Object o) {
@@ -125,7 +145,7 @@ public class Layer : Object {
 			}
 		}
 		
-		update_boundaries (Matrix.identity ());
+		update_boundaries_for_object ();
 	}
 	
 	public void remove_layer (Layer layer) {
@@ -138,7 +158,7 @@ public class Layer : Object {
 			}
 		}
 		
-		update_boundaries (Matrix.identity ());
+		update_boundaries_for_object ();
 	}
 	
 	public static void copy_layer (Layer from, Layer to) {
