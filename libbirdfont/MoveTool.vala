@@ -499,7 +499,6 @@ public class MoveTool : Tool {
 	}
 
 	public void convert_svg_to_monochrome () {
-		Font font = BirdFont.get_current_font ();
 		ObjectGroup embedded_paths;
 		Glyph glyph = MainWindow.get_current_glyph ();
 		
@@ -516,7 +515,6 @@ public class MoveTool : Tool {
 	}
 
 	public void convert_glyph_to_monochrome (Glyph glyph) {
-		Font font = BirdFont.get_current_font ();
 		ObjectGroup embedded_paths;
 		
 		embedded_paths = new ObjectGroup ();
