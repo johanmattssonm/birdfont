@@ -275,36 +275,25 @@ public class Glyph : FontDisplay {
 		active_paths.clear ();
 	}
 
-	public void add_active_path (Layer? group, Path? p) {
-		if (p != null) {
-			PathObject path = new PathObject.for_path ((!) p);
-			add_active_object (group, path);
-		} else {
-			add_active_object (group, null);
-		}
+	public void add_active_path (Path p) {
+		PathObject path = new PathObject.for_path ((!) p);
+		add_active_object (path);
 	}
 	
-	// FIXME: delete group
-	public void add_active_object (Layer? group, SvgBird.Object? o) {
-		SvgBird.Object object;
-
-		if (o != null) {
-			object = (!) o;
-
-			if (!active_paths_contains (object)) {
-				active_paths.add (object);
+	public void add_active_object (SvgBird.Object object) {
+		if (!active_paths_contains (object)) {
+			active_paths.add (object);
+		}
+		
+		if (object is PathObject) {
+			PathObject path = (PathObject) object;
+			if (Toolbox.get_move_tool ().is_selected ()) {
+				if (path.get_path ().stroke > 0) {
+					Toolbox.set_object_stroke (path.get_path ().stroke);
+				}
 			}
 			
-			if (object is PathObject) {
-				PathObject path = (PathObject) object;
-				if (Toolbox.get_move_tool ().is_selected ()) {
-					if (path.get_path ().stroke > 0) {
-						Toolbox.set_object_stroke (path.get_path ().stroke);
-					}
-				}
-				
-				PenTool.active_path = path.get_path ();
-			}
+			PenTool.active_path = path.get_path ();
 		}
 	}
 
@@ -866,7 +855,7 @@ public class Glyph : FontDisplay {
 			path.create_list ();
 			
 			PathObject object = new PathObject.for_path (path);
-			add_active_object (null, object);
+			add_active_object (object);
 		}
 
 		if (remaining_points.paths.size > 0) {
@@ -981,7 +970,7 @@ public class Glyph : FontDisplay {
 	public void set_active_path (Path p) {
 		p.reopen ();
 		clear_active_paths ();
-		add_active_object (null, new PathObject.for_path (p));
+		add_active_object (new PathObject.for_path (p));
 	}
 
 	/** Move view port centrum to this coordinate. */
@@ -1875,7 +1864,7 @@ public class Glyph : FontDisplay {
 
 		clear_active_paths ();
 		foreach (SvgBird.Object p in g.active_paths) {
-			add_active_object (null, p);
+			add_active_object (p);
 		}
 
 		redraw_area (0, 0, allocation.width, allocation.height);

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012 2014 Johan Mattsson
+	Copyright (C) 2012 2014 2016 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -146,7 +146,9 @@ public class ClipTool : Tool {
 		if (bf_clipboard_data) {
 			import_birdfont_clipboard (data, paste_guide_lines, false);
 		} else if (data != "") {
-			SvgParser.import_svg_data (data, SvgFormat.INKSCAPE);
+			//SvgParser.import_svg_data (data, SvgFormat.INKSCAPE);
+			print (@"$data\n\n");
+			SvgParser.import_svg_color_data (data);
 		}
 		
 		((!)destination).update_view ();	
@@ -423,7 +425,7 @@ public class ClipTool : Tool {
 			foreach (Path p in glyph.get_visible_paths ()) {
 				PenTool.clear_directions ();
 				destination.add_path (p);
-				destination.add_active_path (null, p);
+				destination.add_active_path (p);
 			}
 			
 			if (paste_guide_lines) {
@@ -450,7 +452,7 @@ public class ClipTool : Tool {
 		if (path.points.size > 0) {
 			PenTool.clear_directions ();
 			glyph.add_path (path);
-			glyph.add_active_path (null, path);
+			glyph.add_active_path (path);
 			path.update_region_boundaries ();
 		}
 		

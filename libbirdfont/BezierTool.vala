@@ -175,7 +175,7 @@ public class BezierTool : Tool {
 				current_path.recalculate_linear_handles_for_point (current_point);
 				set_point_type ();
 				g.clear_active_paths ();
-				g.add_active_path (null, current_path);
+				g.add_active_path (current_path);
 				GlyphCanvas.redraw ();
 				state = MOVE_POINT;
 			} else {
@@ -282,7 +282,7 @@ public class BezierTool : Tool {
 			current_path.recalculate_linear_handles_for_point (current_point);
 			set_point_type ();
 			g.clear_active_paths ();
-			g.add_active_path (null, current_path);
+			g.add_active_path (current_path);
 			
 			GlyphCanvas.redraw ();
 			state = MOVE_POINT;

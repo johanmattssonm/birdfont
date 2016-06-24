@@ -232,7 +232,7 @@ public class StrokeTool : GLib.Object {
 		foreach (Path p in new_paths.paths) {
 			PathObject path = new PathObject.for_path (p);
 			g.add_object (path);
-			g.add_active_object (null, path);
+			g.add_active_object (path);
 		}
 		
 		PenTool.update_orientation ();

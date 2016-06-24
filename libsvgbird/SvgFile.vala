@@ -693,6 +693,8 @@ public class SvgFile : GLib.Object {
 
 		// all instructions are padded
 
+		// FIXME: Inscape and Illustrator discrepancies
+
 		for (int i = 0; i < points_size; i++) {
 			// FIXME: add more types
 			if (bezier_points[i].type == 'M') {

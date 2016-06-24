@@ -202,7 +202,7 @@ public class MoveTool : Tool {
 			if (selected && KeyBindings.has_shift ()) {
 				glyph.active_paths.remove (object);
 			} else {
-				glyph.add_active_object (null, object);
+				glyph.add_active_object (object);
 			}			
 		} else if (!KeyBindings.has_shift ()) {
 			glyph.clear_active_paths ();
@@ -238,7 +238,7 @@ public class MoveTool : Tool {
 		foreach (SvgBird.Object p in glyph.get_objects_in_current_layer ()) {
 			if (p.xmin > x1 && p.xmax < x2 && p.ymin < y1 && p.ymax > y2) {
 				if (!p.is_empty ()) {
-					glyph.add_active_object (null, p);
+					glyph.add_active_object (p);
 				}
 			}
 		}
@@ -471,7 +471,7 @@ public class MoveTool : Tool {
 		g.clear_active_paths ();
 		foreach (SvgBird.Object p in g.get_objects_in_current_layer ()) {
 			if (!p.is_empty ()) {
-				g.add_active_object (null, p);
+				g.add_active_object (p);
 			}
 		}
 		

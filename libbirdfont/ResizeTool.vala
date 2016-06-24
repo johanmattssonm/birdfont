@@ -369,7 +369,7 @@ public class ResizeTool : Tool {
 			glyph.clear_active_paths ();
 			
 			foreach (SvgBird.Object path in glyph.get_visible_objects ()) {
-				glyph.add_active_object (null, path);
+				glyph.add_active_object (path);
 			}
 		}
 		
@@ -544,7 +544,7 @@ public class ResizeTool : Tool {
 			glyph.clear_active_paths ();
 			
 			foreach (SvgBird.Object path in glyph.get_visible_objects ()) {
-				glyph.add_active_object (null, path);
+				glyph.add_active_object (path);
 			}
 		}
 

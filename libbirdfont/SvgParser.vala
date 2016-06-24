@@ -62,9 +62,26 @@ public class SvgParser {
 		fc.add_extension ("svg");
 		MainWindow.file_chooser (t_("Import"), fc, FileChooser.LOAD);
 	}
+	
+	public static void import_svg_color_data (string svg_data) {
+		Glyph glyph = MainWindow.get_current_glyph ();
+		EmbeddedSvg drawing = SvgParser.parse_embedded_svg_data (svg_data);
+		glyph.add_object (drawing);
+
+		Font font = BirdFont.get_current_font ();
 		
+		drawing.x = glyph.left_limit;
+		drawing.y = font.top_position - font.base_line;
+		
+		drawing.update_boundaries_for_object ();
+		
+		glyph.clear_active_paths ();
+		glyph.add_active_object (drawing);
+	}
+	
 	public static void import_color_svg (Glyph glyph, string path) {
-		EmbeddedSvg drawing = SvgParser.parse_embedded_svg_file (path);
+		EmbeddedSvg drawing = SvgParser.parse_embedded_svg_data (path);
+		
 		glyph.add_object (drawing);
 		drawing.update_boundaries_for_object ();
 		
@@ -153,7 +170,7 @@ public class SvgParser {
 		foreach (Path p in path_list.paths) {
 			PathObject path = new PathObject.for_path (p);
 			glyph.add_object (path);
-			glyph.add_active_object (null, path); // FIXME: groups
+			glyph.add_active_object (path); // FIXME: groups
 			path.update_boundaries_for_object ();
 		}
 		
