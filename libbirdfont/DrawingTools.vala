@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012 2013 2014 2015 Johan Mattsson
+	Copyright (C) 2012 2013 2014 2015 2016 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -102,7 +102,7 @@ public class DrawingTools : ToolCollection  {
 	Tool move_layer;
 	Tool flip_vertical;
 	Tool flip_horizontal;
-	Tool full_height_tool;
+	Tool monochrome_tool;
 	
 	public ZoomBar zoom_bar;
 
@@ -569,13 +569,12 @@ public class DrawingTools : ToolCollection  {
 		reverse_path_tool = new OrientationTool ("reverse_path", t_("Create counter from outline"));
 		draw_tool_modifiers.add_tool (reverse_path_tool);
 
-		full_height_tool = new Tool ("full_height", t_("Scale object to font top/baseline"));
-		full_height_tool.select_action.connect ((self) => {
-				resize_tool.full_height ();
-				GlyphCanvas.redraw ();
+		monochrome_tool = new Tool ("svg_to_birdfont", t_("Convert SVG file to monochrome glyph"));
+		monochrome_tool.select_action.connect ((self) => {
+			move_tool.convert_svg_to_monochrome ();
 		});
 
-		draw_tool_modifiers.add_tool (full_height_tool);
+		draw_tool_modifiers.add_tool (monochrome_tool);
 
 		// close path
 		close_path_tool = new Tool ("close_path", t_("Close path"));
@@ -1322,7 +1321,7 @@ public class DrawingTools : ToolCollection  {
 		height.set_tool_visibility (false);
 		
 		reverse_path_tool.set_tool_visibility (false);
-		full_height_tool.set_tool_visibility (false);
+		monochrome_tool.set_tool_visibility (false);
 		move_layer.set_tool_visibility (false);
 		flip_vertical.set_tool_visibility (false);
 		flip_horizontal.set_tool_visibility (false);
@@ -1394,7 +1393,7 @@ public class DrawingTools : ToolCollection  {
 		flip_vertical.set_tool_visibility (true);
 		flip_horizontal.set_tool_visibility (true);
 
-		full_height_tool.set_tool_visibility (true);
+		monochrome_tool.set_tool_visibility (true);
 	}
 	
 	public override void reset_selection (Tool current_tool) {

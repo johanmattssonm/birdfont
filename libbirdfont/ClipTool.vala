@@ -146,8 +146,6 @@ public class ClipTool : Tool {
 		if (bf_clipboard_data) {
 			import_birdfont_clipboard (data, paste_guide_lines, false);
 		} else if (data != "") {
-			//SvgParser.import_svg_data (data, SvgFormat.INKSCAPE);
-			print (@"$data\n\n");
 			SvgParser.import_svg_color_data (data);
 		}
 		

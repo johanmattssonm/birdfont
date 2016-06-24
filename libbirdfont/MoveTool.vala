@@ -497,6 +497,31 @@ public class MoveTool : Tool {
 		cr.stroke ();
 		cr.restore ();
 	}
+
+	public void convert_svg_to_monochrome () {
+		Font font = BirdFont.get_current_font ();
+		Glyph glyph = MainWindow.get_current_glyph ();
+		Gee.ArrayList<EmbeddedSvg> embedded_paths;
+		embedded_paths = new Gee.ArrayList<EmbeddedSvg> ();
+
+		foreach (SvgBird.Object object in glyph.active_paths) {
+			if (object is EmbeddedSvg) {
+				embedded_paths.add ((EmbeddedSvg) object);
+			}
+		}	
+			
+		foreach (EmbeddedSvg svg in embedded_paths) {
+			glyph.clear_active_paths ();
+			PathList path_list = SvgParser.import_svg_data (svg.svg_data);
+			glyph.delete_object (svg);
+			
+			foreach (Path path in path_list.paths) {
+				path.move (svg.x - glyph.left_limit, svg.y - font.top_position);
+			}
+		}
+
+		GlyphCanvas.redraw ();
+	}
 }
 
 }

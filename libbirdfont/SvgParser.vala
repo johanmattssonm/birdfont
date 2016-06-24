@@ -135,7 +135,7 @@ public class SvgParser {
 		MainWindow.file_chooser (t_("Import"), fc, FileChooser.LOAD | FileChooser.DIRECTORY);
 	}
 	
-	public static void import_svg_data (string xml_data, SvgFormat format = SvgFormat.NONE) {
+	public static PathList import_svg_data (string xml_data, SvgFormat format = SvgFormat.NONE) {
 		PathList path_list = new PathList ();
 		Glyph glyph; 
 		string[] lines = xml_data.split ("\n");
@@ -174,7 +174,9 @@ public class SvgParser {
 			path.update_boundaries_for_object ();
 		}
 		
-		glyph.close_path ();	
+		glyph.close_path ();
+		
+		return path_list;
 	}
 	
 	public static string replace (string content, string start, string stop, string replacement) {
