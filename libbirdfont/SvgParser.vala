@@ -66,6 +66,12 @@ public class SvgParser {
 	public static void import_color_svg (Glyph glyph, string path) {
 		EmbeddedSvg drawing = SvgParser.parse_embedded_svg_file (path);
 		glyph.add_object (drawing);
+		drawing.update_boundaries_for_object ();
+		
+		Font font = BirdFont.get_current_font ();
+		
+		drawing.x = glyph.left_limit;
+		drawing.y = font.top_position - font.base_line;
 	}
 	
 	public static void import_folder (SvgType type) {

@@ -36,8 +36,10 @@ public class ExportTool : GLib.Object {
 
 	public static string export_to_string (Glyph glyph, bool only_selected_paths) {
 		string name;
-		StringBuilder s;
-
+		StringBuilder s;	
+		Font font;
+		
+		font = BirdFont.get_current_font ();
 		name = XmlParser.encode (glyph.get_name ());
 		s = new StringBuilder ();
 		
@@ -50,7 +52,7 @@ public class ExportTool : GLib.Object {
 	x="0px"
 	y="0px"
 	width=""" + "\"" + @"$(glyph.get_width ())" + """px" 
-	height=""" + "\"" + @"$(glyph.get_height ())" + """px">
+	height=""" + "\"" + @"$(font.top_position - font.bottom_position)" + """px">
 """);
 		
 		s.append (@"<g id=\"$(name)\">\n");
