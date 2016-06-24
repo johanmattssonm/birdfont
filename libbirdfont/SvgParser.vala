@@ -136,8 +136,12 @@ public class SvgParser {
 	}
 	
 	public static PathList import_svg_data (string xml_data, SvgFormat format = SvgFormat.NONE) {
+		Glyph glyph = MainWindow.get_current_glyph ();
+		return import_svg_data_in_glyph (xml_data, glyph, format);
+	}
+	
+	public static PathList import_svg_data_in_glyph (string xml_data, Glyph glyph, SvgFormat format = SvgFormat.NONE) {
 		PathList path_list = new PathList ();
-		Glyph glyph; 
 		string[] lines = xml_data.split ("\n");
 		bool has_format = false;
 		SvgParser parser = new SvgParser ();
@@ -166,7 +170,6 @@ public class SvgParser {
 		XmlTree xml_tree = new XmlTree (xml_data);
 		path_list = parser.parse_svg_file (xml_tree.get_root ());
 	
-		glyph = MainWindow.get_current_glyph ();
 		foreach (Path p in path_list.paths) {
 			PathObject path = new PathObject.for_path (p);
 			glyph.add_object (path);

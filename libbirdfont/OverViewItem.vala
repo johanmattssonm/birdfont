@@ -423,6 +423,11 @@ public class OverViewItem : GLib.Object {
 	
 	public void clear_cache () {
 		cache = null;
+		
+		if (glyphs != null) {
+			GlyphCollection gc = (!) glyphs;
+			gc.get_current ().overview_thumbnail = null;
+		}
 	}
 	
 	public void draw_label_background (Context cr) {

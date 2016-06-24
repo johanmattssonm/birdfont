@@ -500,27 +500,51 @@ public class MoveTool : Tool {
 
 	public void convert_svg_to_monochrome () {
 		Font font = BirdFont.get_current_font ();
+		ObjectGroup embedded_paths;
 		Glyph glyph = MainWindow.get_current_glyph ();
-		Gee.ArrayList<EmbeddedSvg> embedded_paths;
-		embedded_paths = new Gee.ArrayList<EmbeddedSvg> ();
+		
+		embedded_paths = new ObjectGroup ();
 
 		foreach (SvgBird.Object object in glyph.active_paths) {
 			if (object is EmbeddedSvg) {
-				embedded_paths.add ((EmbeddedSvg) object);
-			}
-		}	
-			
-		foreach (EmbeddedSvg svg in embedded_paths) {
-			glyph.clear_active_paths ();
-			PathList path_list = SvgParser.import_svg_data (svg.svg_data);
-			glyph.delete_object (svg);
-			
-			foreach (Path path in path_list.paths) {
-				path.move (svg.x - glyph.left_limit, svg.y - font.top_position);
+				embedded_paths.add (object);
 			}
 		}
-
+		
+		convert_objects_to_monochrome_glyph (glyph, embedded_paths);
 		GlyphCanvas.redraw ();
+	}
+
+	public void convert_glyph_to_monochrome (Glyph glyph) {
+		Font font = BirdFont.get_current_font ();
+		ObjectGroup embedded_paths;
+		
+		embedded_paths = new ObjectGroup ();
+
+		foreach (SvgBird.Object object in glyph.get_visible_objects ()) {
+			if (object is EmbeddedSvg) {
+				embedded_paths.add (object);
+			}
+		}
+		
+		convert_objects_to_monochrome_glyph (glyph, embedded_paths);
+	}
+
+	public void convert_objects_to_monochrome_glyph (Glyph glyph, ObjectGroup embedded_paths) {
+		Font font = BirdFont.get_current_font ();
+
+		foreach (SvgBird.Object object in embedded_paths) {
+			if (object is EmbeddedSvg) {
+				EmbeddedSvg svg = (EmbeddedSvg) object;
+				glyph.clear_active_paths ();
+				PathList path_list = SvgParser.import_svg_data_in_glyph (svg.svg_data, glyph);
+				glyph.delete_object (svg);
+				
+				foreach (Path path in path_list.paths) {
+					path.move (svg.x - glyph.left_limit, svg.y - font.top_position);
+				}
+			}
+		}
 	}
 }
 

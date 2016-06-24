@@ -18,7 +18,8 @@ namespace BirdFont {
 
 public enum Transform {
 	SLANT,
-	SIZE
+	SIZE,
+	SVG_TO_TTF
 }
 
 public class OverviewTools : ToolCollection  {
@@ -188,6 +189,19 @@ public class OverviewTools : ToolCollection  {
 		Tool search_glyph = new Tool ("search", t_("Search"));
 		search_glyph.select_action.connect (search_for_glyph);
 		glyph_expander.add_tool (search_glyph);
+
+		Tool convert_to_ttf = new Tool ("svg_to_birdfont_overview", t_("Convert SVG file to monochrome glyph"));
+		convert_to_ttf.set_icon ("svg_to_birdfont");
+		
+		convert_to_ttf.select_action.connect ((self) => {
+			process_transform (Transform.SVG_TO_TTF);
+			self.set_selected (false);
+			BirdFont.get_current_font ().touch ();
+		});
+		
+		convert_to_ttf.selected = false;
+		convert_to_ttf.set_persistent (false);
+		glyph_expander.add_tool (convert_to_ttf);
 		
 		SpinButton master_size;
 		current_master_size = 0;
@@ -321,10 +335,15 @@ public class OverviewTools : ToolCollection  {
 						DrawingTools.resize_tool.resize_glyph (g, scale, scale, false);
 					}
 				}
+				
+				if (transform == Transform.SVG_TO_TTF) {
+					DrawingTools.move_tool.convert_glyph_to_monochrome (gc.get_current ());
+				}
 			}
 		}
 		
 		foreach (OverViewItem item in o.visible_items) {
+			item.clear_cache ();
 			item.draw_glyph_from_font ();	
 		}
 		
