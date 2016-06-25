@@ -487,7 +487,7 @@ public class KerningDisplay : FontDisplay {
 	}
 	
 	public override void selected_canvas () {
-		KeyBindings.set_require_modifier (true);		
+		KeyBindings.set_require_modifier (true);
 	}
 	
 	public void add_kerning_class (int index) {

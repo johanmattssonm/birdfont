@@ -231,6 +231,7 @@ public class TableLayout : FontDisplay {
 	}
 	
 	public override void selected_canvas () {
+		KeyBindings.set_require_modifier (true);
 		update_scrollbar ();
 		GlyphCanvas.redraw ();
 	}
