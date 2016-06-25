@@ -247,6 +247,10 @@ public class TableLayout : FontDisplay {
 		scroll = percent * h;
 		GlyphCanvas.redraw ();
 	}
+
+	public override bool needs_modifier () {
+		return true;
+	}
 }
 
 }
