@@ -231,6 +231,7 @@ public class TableLayout : FontDisplay {
 	}
 	
 	public override void selected_canvas () {
+		KeyBindings.set_require_modifier (true);
 		update_scrollbar ();
 		GlyphCanvas.redraw ();
 	}
@@ -245,6 +246,10 @@ public class TableLayout : FontDisplay {
 		double h = content_height - allocation.height;
 		scroll = percent * h;
 		GlyphCanvas.redraw ();
+	}
+
+	public override bool needs_modifier () {
+		return true;
 	}
 }
 
