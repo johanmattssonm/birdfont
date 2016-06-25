@@ -537,7 +537,7 @@ public class DrawingTools : ToolCollection  {
 					
 					if (!p.path.is_open () || !end_point) {
 						p.point.set_reflective_handles (!symmetrical);
-						p.point.process_symmetrical_handles ();
+						p.point.get_right_handle ().process_symmetrical_handle ();
 						
 						if (symmetrical) {
 							ep.point.set_tie_handle (false);

@@ -815,7 +815,7 @@ public class PenTool : Tool {
 				GridTool.tie_coordinate (ref coordinate_x, ref coordinate_y);
 				delta_coordinate_x = coordinate_x - last_point_x;
 				delta_coordinate_y = coordinate_y - last_point_y;			
-				selected_handle.move_to_coordinate (selected_handle.x + delta_coordinate_x, selected_handle.y + delta_coordinate_y);
+				selected_handle.move_delta_coordinate (delta_coordinate_x, delta_coordinate_y);
 			} else if (GridTool.has_ttf_grid ()) {
 				coordinate_x = Glyph.path_coordinate_x (x);
 				coordinate_y = Glyph.path_coordinate_y (y);
@@ -826,8 +826,8 @@ public class PenTool : Tool {
 			} else {
 				coordinate_x = Glyph.path_coordinate_x (x);
 				coordinate_y = Glyph.path_coordinate_y (y);
-				selected_handle.x = coordinate_x;
-				selected_handle.y = coordinate_y;
+				
+				selected_handle.move_to_coordinate (coordinate_x, coordinate_y);
 				
 				if (on_axis) {
 					double tied_x = 0;
@@ -835,9 +835,8 @@ public class PenTool : Tool {
 					 
 					PointTool.tie_angle (selected_handle.parent.x, selected_handle.parent.y,
 							coordinate_x, coordinate_y, out tied_x, out tied_y);
-							
-					selected_handle.x = tied_x;
-					selected_handle.y = tied_y;
+					
+					selected_handle.move_to_coordinate (tied_x, tied_y);
 				}
 			}
 
@@ -1243,7 +1242,7 @@ public class PenTool : Tool {
 				// alt+click creates a point with symmetrical handles
 				if (KeyBindings.has_alt () || KeyBindings.has_ctrl ()) {
 					selected_point.set_reflective_handles (true);
-					selected_point.process_symmetrical_handles ();
+					selected_point.get_right_handle ().process_symmetrical_handle ();
 					GlyphCanvas.redraw ();
 				}
 			}

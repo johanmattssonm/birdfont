@@ -48,7 +48,7 @@ public class EditPointHandle : GLib.Object {
 			}
 
 			if (parent.reflective_point) {
-				parent.process_symmetrical_handles ();
+				process_symmetrical_handle ();
 			}
 			
 			process_connected_handle ();
@@ -75,7 +75,7 @@ public class EditPointHandle : GLib.Object {
 			}
 
 			if (parent.reflective_point) {
-				parent.process_symmetrical_handles ();
+				process_symmetrical_handle ();
 			}
 			
 			process_connected_handle ();
