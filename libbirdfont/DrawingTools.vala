@@ -1088,6 +1088,7 @@ public class DrawingTools : ToolCollection  {
 				zoom_tool.store_current_view ();
 				glyph_canvas.get_current_display ().reset_zoom ();
 				glyph_canvas.redraw_area(0, 0, GlyphCanvas.allocation.width, GlyphCanvas.allocation.height);
+				self.set_selected (false);
 			});
 		zoombar_tool.add_tool (reset_zoom);
 		reset_zoom.set_tool_visibility (false);
@@ -1096,6 +1097,7 @@ public class DrawingTools : ToolCollection  {
 		full_glyph.select_action.connect((self) => {
 			zoom_tool.store_current_view ();
 			zoom_tool.zoom_full_glyph ();
+			self.set_selected (false);
 		});
 		zoombar_tool.add_tool (full_glyph);
 
@@ -1103,6 +1105,7 @@ public class DrawingTools : ToolCollection  {
 		zoom_boundaries.select_action.connect((self) => {
 			zoom_tool.store_current_view ();
 			glyph_canvas.get_current_display ().zoom_max ();
+			self.set_selected (false);
 		});
 		zoombar_tool.add_tool (zoom_boundaries);
 
@@ -1113,18 +1116,21 @@ public class DrawingTools : ToolCollection  {
 				ZoomTool.zoom_full_background_image ();
 				glyph_canvas.redraw_area(0, 0, GlyphCanvas.allocation.width, GlyphCanvas.allocation.height);
 			}
+			self.set_selected (false);
 		});
 		zoombar_tool.add_tool (zoom_bg);
 
 		Tool zoom_prev = new Tool ("prev", t_("Previous view"));
 		zoom_prev.select_action.connect((self) => {
 			zoom_tool.previous_view ();
+			self.set_selected (false);
 		});
 		zoombar_tool.add_tool (zoom_prev);
 
 		Tool zoom_next = new Tool ("next", t_("Next view"));
 		zoom_next.select_action.connect((self) => {
 			zoom_tool.next_view ();
+			self.set_selected (false);
 		});
 		zoombar_tool.add_tool (zoom_next); // view_tools
 		zoom_next.set_tool_visibility (false);
