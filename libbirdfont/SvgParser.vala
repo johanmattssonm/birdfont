@@ -243,7 +243,11 @@ public class SvgParser {
 
 			if (t.get_name () == "line") {
 				parse_line (t, pl);
-			}			
+			}
+
+			if (t.get_name () == "rect") {
+				parse_rect (t, pl);
+			}
 		}
 		
 		return LayerUtils.get_all_paths (pl);
@@ -803,7 +807,7 @@ public class SvgParser {
 		}
 		
 		npl.apply_style (style);
-		append_paths (layer, npl);
+		append_paths (layer, npl);		
 	}
 	
 	private void parse_polygon (XmlElement tag, Layer layer) {
