@@ -46,15 +46,9 @@ public class Line : Object {
 
 	public override void move (double dx, double dy) {
 	}
-	
-	public override void rotate (double theta, double xc, double yc) {
-	}
-	
+
 	public override bool is_empty () {
 		return false;
-	}
-	
-	public override void resize (double ratio_x, double ratio_y) {
 	}
 	
 	public override Object copy () {

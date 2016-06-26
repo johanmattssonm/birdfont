@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013 2015 Johan Mattsson
+	Copyright (C) 2013 2015 2016 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -32,7 +32,9 @@ public class ResizeTool : Tool {
 	static double selection_box_height = 0;
 	static double selection_box_center_x = 0;
 	static double selection_box_center_y = 0;
-
+	static double selection_box_left = 0;
+	static double selection_box_top = 0;
+	
 	static bool rotate_path = false;
 	static double last_rotate_y;
 	static double rotation = 0;
@@ -97,7 +99,7 @@ public class ResizeTool : Tool {
 
 			if (glyph.active_paths.size > 0) {
 				last_path = glyph.active_paths.get (glyph.active_paths.size - 1);
-				last_rotate = last_path.rotation;
+				last_rotate = last_path.transforms.rotation;
 			}
 					
 			rotation = last_rotate;
@@ -127,7 +129,9 @@ public class ResizeTool : Tool {
 					PathObject path = (PathObject) p;
 					path.get_path ().create_full_stroke ();
 				}
-			}
+				
+				p.transforms.collapse_transforms ();
+			}			
 		});
 		
 		move_action.connect ((self, x, y)	 => {
@@ -145,7 +149,6 @@ public class ResizeTool : Tool {
 
 			if (rotate_path) {
 				rotate (x, y);
-				update_selection_box ();
 			}
 
 			if (move_paths 
@@ -235,26 +238,26 @@ public class ResizeTool : Tool {
 
 	public void rotate_selected_paths (double angle, double cx, double cy) {
 		Glyph glyph = MainWindow.get_current_glyph ();  
-		double dx, dy, xc2, yc2, w, h;
 		SvgBird.Object last_path;
+		double x, y;
+		
+		glyph.layers.update_boundaries_for_object ();
 		
 		foreach (SvgBird.Object p in glyph.active_paths) {
-			p.rotate (angle, cx, cy);
+			if (p is EmbeddedSvg) {
+				EmbeddedSvg svg = (EmbeddedSvg) p;
+				x = selection_box_left - svg.x + selection_box_width / 2;
+				y = selection_box_top + svg.y + selection_box_height / 2;
+				p.transforms.rotate (angle, x, y);
+			} else {
+				x = selection_box_left + selection_box_width / 2;
+				y = selection_box_top + selection_box_height / 2;
+				p.transforms.rotate (angle, x, y);
+			}
 		}
 
-		MoveTool.get_selection_box_boundaries (out xc2, out yc2, out w, out h); 
-
-		dx = -(xc2 - cx);
-		dy = -(yc2 - cy);
-		
-		foreach (SvgBird.Object p in glyph.active_paths) {
-			p.move (dx, dy);
-		}
-		
 		last_rotate = rotation;
-		
-		MoveTool.update_selection_boundaries ();
-		
+
 		if (glyph.active_paths.size > 0) {
 			last_path = glyph.active_paths.get (glyph.active_paths.size - 1);
 			
@@ -272,20 +275,15 @@ public class ResizeTool : Tool {
 	
 	/** Move rotate handle to pixel x,y. */
 	void rotate (double x, double y) {
-		double cx, cy, xc, yc, a, b;		
+		double a, b;		
 		
-		cx = Glyph.reverse_path_coordinate_x (selection_box_center_x);
-		cy = Glyph.reverse_path_coordinate_y (selection_box_center_y);
-		xc = selection_box_center_x;
-		yc = selection_box_center_y;
+		a = Glyph.path_coordinate_x (x) - selection_box_center_x;
+		b = selection_box_center_y - Glyph.path_coordinate_y (y);
 		
-		a = x - cx;
-		b = y - cy;
-		
-		rotation = atan (b / a);
-		
-		if (a < 0) {
-			rotation += PI;
+		rotation = atan2 (b, a);
+
+		if (a == 0) {
+			rotation = b > 0 ? PI / 2 : -PI / 2;
 		}
 		
 		rotate_selected_paths (rotation - last_rotate, selection_box_center_x, selection_box_center_y);
@@ -377,7 +375,7 @@ public class ResizeTool : Tool {
 		
 		// resize paths
 		foreach (SvgBird.Object selected_path in glyph.active_paths) {
-			selected_path.resize (ratio_x, ratio_y);
+			selected_path.transforms.resize (ratio_x, ratio_y);
 		}
 		
 		// move paths relative to the updated xmin and xmax
@@ -388,7 +386,7 @@ public class ResizeTool : Tool {
 		foreach (SvgBird.Object selected_path in glyph.active_paths) {
 			selected_path.move (dx, dy);			
 		}
-		
+
 		if (glyph.active_paths.size > 0) {
 			update_selection_box ();
 			objects_resized (selection_box_width, selection_box_height);
@@ -409,7 +407,7 @@ public class ResizeTool : Tool {
 		MoveTool.update_boundaries_for_selection ();
 		MoveTool.get_selection_box_boundaries (out selection_box_center_x,
 				out selection_box_center_y, out selection_box_width,
-				out selection_box_height);
+				out selection_box_height, out selection_box_left, out selection_box_top);
 	}
 
 	/** Move resize handle to pixel x,y. */
@@ -440,44 +438,6 @@ public class ResizeTool : Tool {
 			last_resize_x = px;
 			last_resize_y = py;
 		}
-	}
-	
-	public void full_height () {
-		double xc, yc, w, h;
-		Glyph glyph = MainWindow.get_current_glyph ();
-		Font font = BirdFont.get_current_font ();
-		
-		MoveTool.update_boundaries_for_selection ();
-		MoveTool.get_selection_box_boundaries (out xc, out yc, out w, out h);
-
-		//compute scale
-		double descender = font.base_line - (yc - h / 2);
-		
-		if (descender < 0) {
-			descender = 0;
-		}
-		
-		double font_height = font.top_position - font.base_line;
-		double scale = font_height / (h - descender);
-		
-		resize_selected_paths (scale, scale);
-		PenTool.reset_stroke ();
-
-		MoveTool.update_boundaries_for_selection ();
-		font.touch ();
-
-		MoveTool.get_selection_box_boundaries (out selection_box_center_x,
-											   out selection_box_center_y,
-											   out selection_box_width,
-											   out selection_box_height);
-		
-		DrawingTools.move_tool.move_to_baseline ();
-
-		foreach (SvgBird.Object path in glyph.active_paths) {
-			path.move (0, -descender * scale);
-		}
-		
-		objects_resized (selection_box_width, selection_box_height);
 	}
 
 	void get_selection_min (out double x, out double y) {

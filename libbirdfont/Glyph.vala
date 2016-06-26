@@ -1527,7 +1527,7 @@ public class Glyph : FontDisplay {
 		if (!draw_control_points) {
 			foreach (SvgBird.Object object in get_visible_objects ()) {
 				if (object is PathObject
-					&& object.stroke > 0) {
+					&& object.style.stroke_width > 0) {
 						
 					has_path = true;
 					PathObject object_path = (PathObject) object;				
@@ -1547,7 +1547,7 @@ public class Glyph : FontDisplay {
 		if (!draw_control_points) {
 			foreach (SvgBird.Object object in get_visible_objects ()) {
 				if (object is PathObject
-					&& object.stroke == 0) {
+					&& object.style.stroke_width == 0) {
 						
 					has_path = true;
 					PathObject object_path = (PathObject) object;				

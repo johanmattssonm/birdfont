@@ -18,8 +18,6 @@ using Math;
 namespace SvgBird {
 
 public abstract class Object : GLib.Object {
-	bool open = false;
-	
 	public bool visible = true;
 	public SvgStyle style = new SvgStyle ();
 	public SvgTransforms transforms = new SvgTransforms ();
@@ -27,10 +25,6 @@ public abstract class Object : GLib.Object {
 	public string id = "";
 	public string css_class = "";
 	
-	public virtual Color? color { get; set; } // FIXME: keep this in svg style
-	public virtual Color? stroke_color { get; set; }
-	public virtual Gradient? gradient { get; set; }
-
 	/** Path boundaries */
 	public virtual double left { get; set; }
 	public virtual double right { get; set; }
@@ -90,12 +84,6 @@ public abstract class Object : GLib.Object {
 		}
 	}
 
-	// FIXME: DELETE
-	public virtual double rotation { get; set; }
-	public virtual double stroke { get; set; }
-	public virtual LineCap line_cap { get; set; default = LineCap.BUTT; }
-	public virtual bool fill { get; set; }
-	
 	public const double CANVAS_MAX = 100000;
 	public const double CANVAS_MIN = -100000;
 	
@@ -103,24 +91,13 @@ public abstract class Object : GLib.Object {
 	}
 
 	public Object.create_copy (Object o) {	
-		open = o.open;
-	}
-		
-	public void set_open (bool open) {
-		this.open = open;
 	}
 	
-	public bool is_open () {
-		return open;
-	}
-
 	public abstract bool is_over (double x, double y);
 	public abstract void draw_outline (Context cr);
 
 	public abstract Object copy ();
-	public abstract void rotate (double theta, double xc, double yc);
 	public abstract bool is_empty ();
-	public abstract void resize (double ratio_x, double ratio_y);
 	public abstract void move (double dx, double dy);
 	
 	public virtual void move_bounding_box (double dx, double dy) {
@@ -131,35 +108,10 @@ public abstract class Object : GLib.Object {
 	}
 
 	public static void copy_attributes (Object from, Object to) {
-		to.open = from.open;
-
-		if (from.color != null) {
-			to.color = ((!) from.color).copy ();
-		} else {
-			to.color = null;
-		}
-		
-		if (from.stroke_color != null) {
-			to.stroke_color = ((!) from.stroke_color).copy ();
-		} else {
-			to.stroke_color = null;
-		}
-		
-		if (to.gradient != null) {
-			to.gradient = ((!) from.gradient).copy ();
-		} else {
-			to.gradient = null;
-		}
-		
-		to.xmax = from.xmax;
-		to.xmin = from.xmin;
-		to.ymax = from.ymax;
-		to.ymin = from.ymin;
-		
-		to.rotation = from.rotation;
-		to.stroke = from.stroke;
-		to.line_cap = from.line_cap;
-		to.fill = from.fill;
+		to.left = from.left;
+		to.right = from.right;
+		to.top = from.top;
+		to.bottom = from.bottom;
 		
 		to.style = from.style.copy ();
 		to.transforms = from.transforms.copy ();
@@ -244,10 +196,10 @@ public abstract class Object : GLib.Object {
 		Matrix view_matrix = cr.get_matrix ();
 		Matrix object_matrix = transforms.get_matrix ();
 		
-		object_matrix.multiply (object_matrix, view_matrix);
+		object_matrix.multiply (object_matrix, view_matrix);		
 		cr.set_matrix (object_matrix);
 	}
-
+	
 	/** @return true if the object has an area. */
 	public virtual bool update_boundaries (Context context) {
 		double x0, y0, x1, y1;
@@ -276,6 +228,7 @@ public abstract class Object : GLib.Object {
 		return boundaries_width != 0;
 	}
 
+	// FIXME: store view matrix
 	public virtual bool update_boundaries_for_object () {
 		ImageSurface surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, 1, 1);
 		Context context = new Cairo.Context (surface);

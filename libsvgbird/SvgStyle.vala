@@ -24,6 +24,7 @@ public class SvgStyle : GLib.Object {
 	public Color? fill = null;
 	public Gradient? stroke_gradient = null;
 	public Gradient? fill_gradient = null;
+	public LineCap line_cap = LineCap.BUTT;
 
 	public double stroke_width = 0;
 

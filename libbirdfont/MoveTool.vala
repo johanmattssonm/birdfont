@@ -29,10 +29,12 @@ public class MoveTool : Tool {
 	static double selection_y = 0;	
 	static bool group_selection= false;
 	
-	public static static double selection_box_width = 0;
-	public static static double selection_box_height = 0;
-	public static static double selection_box_center_x = 0;
-	public static static double selection_box_center_y = 0;
+	public static double selection_box_width = 0;
+	public static double selection_box_height = 0;
+	public static double selection_box_center_x = 0;
+	public static double selection_box_center_y = 0;
+	public static double selection_box_left = 0;
+	public static double selection_box_top = 0;
 	
 	public signal void selection_changed ();
 	public signal void objects_moved ();
@@ -249,15 +251,16 @@ public class MoveTool : Tool {
 	public static void update_selection_boundaries () {
 		get_selection_box_boundaries (out selection_box_center_x,
 			out selection_box_center_y, out selection_box_width,
-			out selection_box_height);	
+			out selection_box_height, out selection_box_left, 
+			out selection_box_top);	
 	}
 
 	public void move_to_baseline () {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		Font font = BirdFont.get_current_font ();
-		double x, y, w, h;
+		double x, y, w, h, l, t;
 		
-		get_selection_box_boundaries (out x, out y, out w, out h);
+		get_selection_box_boundaries (out x, out y, out w, out h, out l, out t);
 		
 		foreach (SvgBird.Object path in glyph.active_paths) {
 			path.move (glyph.left_limit - x + w / 2, font.base_line - y + h / 2);
@@ -268,7 +271,9 @@ public class MoveTool : Tool {
 		GlyphCanvas.redraw ();
 	}
 	
-	public static void get_selection_box_boundaries (out double x, out double y, out double w, out double h) {
+	public static void get_selection_box_boundaries (out double x, out double y, out double w, out double h,
+		out double left, out double top) {
+			
 		double px, py, px2, py2;
 		Glyph glyph = MainWindow.get_current_glyph ();
 		
@@ -276,11 +281,21 @@ public class MoveTool : Tool {
 		py = 10000;
 		px2 = -10000;
 		py2 = -10000;
+		top = 10000;
+		left = 10000;
 		
 		foreach (SvgBird.Object o in glyph.active_paths) {
 			if (o is PathObject) {
 				Path p = ((PathObject) o).get_path ();
 				p.update_region_boundaries ();
+			}
+			
+			if (top > o.top) {
+				top = o.top;
+			}
+
+			if (left > o.left) {
+				left = o.left;
 			}
 			
 			if (px > o.xmin) {
@@ -410,11 +425,7 @@ public class MoveTool : Tool {
 	
 	public static void update_boundaries_for_selection () {
 		Glyph glyph = MainWindow.get_current_glyph ();
-		foreach (SvgBird.Object o in glyph.active_paths) {
-			if (o is PathObject) {
-				((PathObject)o).get_path ().update_region_boundaries ();
-			}
-		}
+		glyph.layers.update_boundaries_for_object ();
 	}
 	
 	public static void flip_vertical () {
@@ -426,7 +437,7 @@ public class MoveTool : Tool {
 	}
 
 	public static void flip (bool vertical) {
-		double xc, yc, xc2, yc2, w, h;		
+		double xc, yc, xc2, yc2, w, h, l, t;
 		double dx, dy;
 		Glyph glyph = MainWindow.get_current_glyph ();  
 		
@@ -450,7 +461,7 @@ public class MoveTool : Tool {
 			}
 		}
 
-		get_selection_box_boundaries (out xc2, out yc2, out w, out h); 
+		get_selection_box_boundaries (out xc2, out yc2, out w, out h, out l, out t); 
 
 		dx = -(xc2 - xc);
 		dy = -(yc2 - yc);

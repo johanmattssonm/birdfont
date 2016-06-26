@@ -57,7 +57,7 @@ public class PathObject : SvgBird.Object {
 		}
 	}
 	
-	public override double stroke {
+	public double stroke {
 		get {
 			return path.stroke;
 		}
@@ -98,11 +98,16 @@ public class PathObject : SvgBird.Object {
 	}
 	
 	public void draw_path (Context cr) {
+		cr.save ();
+		apply_transform (cr);
+		
 		if (path.stroke > 0) {
 			draw_path_list (path.get_completed_stroke (), cr);
 		} else {
 			path.draw_path (cr);
 		}
+		
+		cr.restore ();
 	}
 
 	public static void draw_path_list (PathList pl, Context cr) {
@@ -128,17 +133,8 @@ public class PathObject : SvgBird.Object {
 		return base.update_boundaries (cr);
 	}
 
-	public override void rotate (double theta, double xc, double yc) {
-		path.rotate (theta, xc, yc);
-	}
-	
 	public override bool is_empty () {
 		return path.points.size == 0;
-	}
-	
-	public override void resize (double ratio_x, double ratio_y) {
-		path.resize (ratio_x, ratio_y);
-		path.reset_stroke ();
 	}
 	
 	public override SvgBird.Object copy () {

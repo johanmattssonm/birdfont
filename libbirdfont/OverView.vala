@@ -1455,7 +1455,6 @@ public class OverView : FontDisplay {
 		selected_item = get_selected_item ();
 		if (selected_item.glyphs != null) {
 			open_glyph_signal ((!) selected_item.glyphs);
-			GlyphCollection? gc2 = selected_item.glyphs;
 			GlyphCollection gc = (!) selected_item.glyphs;
 			gc.get_current ().close_path ();
 		} else {

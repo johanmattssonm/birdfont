@@ -31,6 +31,17 @@ public class SvgTransform : GLib.Object {
 	public SvgTransform () {
 	}
 
+	public SvgTransform.for_matrix (Matrix matrix) {
+		type = TransformType.MATRIX;
+
+		arguments.add (matrix.xx);
+		arguments.add (matrix.yx);
+		arguments.add (matrix.xy);
+		arguments.add (matrix.yy);
+		arguments.add (matrix.x0);
+		arguments.add (matrix.y0);
+	}
+
 	public SvgTransform copy () {
 		SvgTransform transform = new SvgTransform ();
 		transform.type = type;

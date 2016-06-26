@@ -390,7 +390,7 @@ public class DrawingTools : ToolCollection  {
 			
 			if (glyph.active_paths.size > 0) {
 				last_path = glyph.active_paths.get (glyph.active_paths.size - 1);
-				resize_tool.rotate_selected_paths (angle - last_path.rotation, x, y);		
+				resize_tool.rotate_selected_paths (angle - last_path.transforms.rotation, x, y);		
 			}
 			
 			GlyphCanvas.redraw ();
@@ -805,12 +805,12 @@ public class DrawingTools : ToolCollection  {
 		
 			if (StrokeTool.add_stroke) {
 				foreach (SvgBird.Object p in g.active_paths) {
-					p.stroke = StrokeTool.stroke_width;
-					p.line_cap = StrokeTool.line_cap;
+					p.style.stroke_width = StrokeTool.stroke_width;
+					p.style.line_cap = StrokeTool.line_cap;
 				}
 			} else {
 				foreach (SvgBird.Object p in g.active_paths) {
-					p.stroke = 0;
+					p.style.stroke_width = 0;
 				}	
 			}
 			
@@ -845,7 +845,7 @@ public class DrawingTools : ToolCollection  {
 					
 			if (tool && StrokeTool.add_stroke) {
 				foreach (SvgBird.Object p in g.active_paths) {
-					p.stroke = StrokeTool.stroke_width;
+					p.style.stroke_width = StrokeTool.stroke_width;
 					
 					if (p is PathObject) {
 						Path path = ((PathObject) p).get_path ();
@@ -887,7 +887,7 @@ public class DrawingTools : ToolCollection  {
 			g.store_undo_state ();
 			
 			foreach (SvgBird.Object p in g.active_paths) {
-				p.line_cap = SvgBird.LineCap.BUTT;
+				p.style.line_cap = SvgBird.LineCap.BUTT;
 				
 				if (p is PathObject) {
 					((PathObject) p).get_path ().reset_stroke ();
@@ -914,7 +914,7 @@ public class DrawingTools : ToolCollection  {
 			g.store_undo_state ();
 			
 			foreach (SvgBird.Object p in g.active_paths) {
-				p.line_cap = SvgBird.LineCap.ROUND;
+				p.style.line_cap = SvgBird.LineCap.ROUND;
 				
 				if (p is PathObject) {
 					((PathObject) p).get_path ().reset_stroke ();
@@ -942,7 +942,7 @@ public class DrawingTools : ToolCollection  {
 			g.store_undo_state ();
 			
 			foreach (SvgBird.Object p in g.active_paths) {
-				p.line_cap = SvgBird.LineCap.SQUARE;
+				p.style.line_cap = SvgBird.LineCap.SQUARE;
 
 				if (p is PathObject) {
 					((PathObject) p).get_path ().reset_stroke ();
@@ -1277,7 +1277,7 @@ public class DrawingTools : ToolCollection  {
 		Glyph g = MainWindow.get_current_glyph ();
 		
 		foreach (SvgBird.Object p in g.active_paths) {
-			if (p.stroke > 0) {
+			if (p.style.stroke_width > 0) {
 				stroke = true;
 			}
 		}

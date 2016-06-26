@@ -49,12 +49,12 @@ public class EmbeddedSvg : SvgBird.Object {
 	public void draw_embedded_svg (Context cr) {
 		cr.save ();
 		cr.translate (Glyph.xc () + x, Glyph.yc () - y);
+		apply_transform (cr);
 		drawing.draw (cr);
 		cr.restore ();
 	}
 	
 	public override void draw_outline (Context cr) {
-		cr.translate (x, -y);
 		drawing.draw_outline (cr);
 	}
 	
@@ -64,18 +64,10 @@ public class EmbeddedSvg : SvgBird.Object {
 		move_bounding_box (dx, -dy);
 	}
 	
-	public override void rotate (double theta, double xc, double yc) {
-		drawing.rotate (theta, xc, yc);
-	}
-	
 	public override bool is_empty () {
 		return drawing.is_empty ();
 	}
 	
-	public override void resize (double ratio_x, double ratio_y) {
-		drawing.resize (ratio_x, ratio_y);
-	}
-
 	public override SvgBird.Object copy () {
 		EmbeddedSvg svg = new EmbeddedSvg ((SvgDrawing) drawing.copy ());
 		SvgBird.Object.copy_attributes (this, svg);

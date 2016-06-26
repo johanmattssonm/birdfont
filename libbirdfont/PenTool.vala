@@ -1055,11 +1055,14 @@ public class PenTool : Tool {
 				// don't use set point to reflective to on open ends
 				reflective = true;
 				foreach (SvgBird.Object path in MainWindow.get_current_glyph ().active_paths) {
-					if (path.is_open () && !path.is_empty () && path is PathObject) {
+					if (!path.is_empty () && path is PathObject) {
 						Path p = ((PathObject) path).get_path ();
-						if (selected_handle.parent == p.get_first_point ()	
-							|| selected_handle.parent == p.get_last_point ()) {
-							reflective = false;
+						
+						if (p.is_open ()) {						
+							if (selected_handle.parent == p.get_first_point ()	
+								|| selected_handle.parent == p.get_last_point ()) {
+								reflective = false;
+							}
 						}
 					}
 				}
@@ -1834,8 +1837,6 @@ public class PenTool : Tool {
 		bool stroke = StrokeTool.add_stroke;
 		Glyph g = MainWindow.get_current_glyph ();
 		PathObject path;
-		
-		print ("Insert\n");
 		
 		if (!g.has_active_path_objects ()) {
 			np = new Path ();

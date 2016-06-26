@@ -17,13 +17,53 @@ using Cairo;
 namespace SvgBird {
 
 public class SvgTransforms : GLib.Object {
+	public Matrix rotation_matrix;
 	public Gee.ArrayList<SvgTransform> transforms;
 	
 	public double x = 0;
 	public double y = 0;
+	public double rotation = 0;
+	public double scale_x = 1;
+	public double scale_y = 1;
 	
 	public SvgTransforms () {
 		transforms = new Gee.ArrayList<SvgTransform> ();
+		rotation_matrix = Matrix.identity ();
+	}
+
+	public void collapse_transforms () {
+		SvgTransform transform = new SvgTransform.for_matrix (rotation_matrix);
+		add (transform);
+		
+		rotation_matrix = Matrix.identity ();
+		rotation = 0;
+		
+		Matrix collapsed = get_matrix ();
+		SvgTransform transform_transform = new SvgTransform.for_matrix (collapsed);
+		transforms.clear ();
+		add (transform_transform);
+	}
+
+	public void rotate (double theta, double x, double y) {
+		rotation += theta;
+		
+		while (rotation > 2 * Math.PI) {
+			rotation -= 2 * Math.PI;
+		}
+
+		while (rotation < -2 * Math.PI) {
+			rotation += 2 * Math.PI;
+		}
+
+		rotation_matrix = Matrix.identity ();
+		rotation_matrix.translate (x, y);
+		rotation_matrix.rotate (rotation);
+		rotation_matrix.translate (-x, -y);
+	}
+
+	public void resize (double x, double y) {
+		scale_x += x;
+		scale_y += y;
 	}
 
 	public SvgTransforms copy () {
@@ -41,24 +81,21 @@ public class SvgTransforms : GLib.Object {
 	}
 	
 	public Matrix get_matrix () {
-		Matrix matrix = Matrix.identity ();
-		
-		matrix.translate (x, y);
+		Matrix transformation_matrix = Matrix.identity ();
 		
 		for (int i = 0; i < transforms.size; i++) {
-			matrix.multiply (matrix, transforms.get (i).get_matrix ());
+			Matrix part = transforms.get (i).get_matrix ();
+			transformation_matrix.multiply (transformation_matrix, part);
 		}
-		
-		return matrix;
+
+		transformation_matrix.multiply (transformation_matrix, rotation_matrix);
+
+		return transformation_matrix;
 	}
 	
 	public string to_string () {
 		StringBuilder sb = new StringBuilder ();
-		
-		if (x != 0 || y != 0) {
-			sb.append (@"$(TransformType.TRANSLATE): $x,$y ");
-		}
-		
+
 		foreach (SvgTransform t in transforms) {
 			sb.append (t.to_string ());
 			sb.append (" ");
