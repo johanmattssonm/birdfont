@@ -283,13 +283,10 @@ public class MoveTool : Tool {
 		py2 = -10000;
 		top = 10000;
 		left = 10000;
+
+		glyph.layers.update_boundaries_for_object ();
 		
 		foreach (SvgBird.Object o in glyph.active_paths) {
-			if (o is PathObject) {
-				Path p = ((PathObject) o).get_path ();
-				p.update_region_boundaries ();
-			}
-			
 			if (top > o.top) {
 				top = o.top;
 			}

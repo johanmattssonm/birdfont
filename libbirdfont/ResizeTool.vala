@@ -128,16 +128,6 @@ public class ResizeTool : Tool {
 				if (object is PathObject) {
 					PathObject path = (PathObject) object;
 					Path p = path.get_path ();
-					
-					/*
-					Matrix matrix = Matrix.identity ();
-					matrix.scale (1, -1);
-					matrix.multiply (matrix, object.transforms.get_matrix ());
-					matrix.invert ();
-					p.transform (matrix);
-					object.transforms.clear ();
-					*/
-					
 					p.create_full_stroke ();
 				} else {
 					object.transforms.collapse_transforms ();
@@ -150,12 +140,10 @@ public class ResizeTool : Tool {
 			
 			if (resize_path_proportional && can_resize (x, y)) {
 				resize_proportional (x, y);
-				update_selection_box ();
 			}
 
 			if (resize_width && can_resize (x, y)) {
 				resize_horizontal (x, y);
-				update_selection_box ();
 			}
 
 			if (rotate_path) {
@@ -167,8 +155,7 @@ public class ResizeTool : Tool {
 				|| resize_path_proportional
 				|| resize_width) {
 				
-				glyph = MainWindow.get_current_glyph ();
-				
+				glyph = MainWindow.get_current_glyph ();				
 				GlyphCanvas.redraw ();
 			}
 			
@@ -371,11 +358,7 @@ public class ResizeTool : Tool {
 	
 	public void resize_glyph (Glyph glyph, double ratio_x,
 			double ratio_y, bool selected = true) {
-					
-		double resize_pos_x = 0;
-		double resize_pos_y = 0;
-		double selection_minx, selection_miny, dx, dy;
-		
+
 		if (!selected) {
 			glyph.clear_active_paths ();
 			
@@ -384,24 +367,24 @@ public class ResizeTool : Tool {
 			}
 		}
 		
-		get_selection_min (out resize_pos_x, out resize_pos_y);
-		
-		// resize paths
-		foreach (SvgBird.Object selected_path in glyph.active_paths) {
-			selected_path.transforms.resize (ratio_x, ratio_y);
-		}
-		
-		// move paths relative to the updated xmin and xmax
-		get_selection_min (out selection_minx, out selection_miny);
-		dx = resize_pos_x - selection_minx;
-		dy = resize_pos_y - selection_miny;
-		
-		foreach (SvgBird.Object selected_path in glyph.active_paths) {
-			selected_path.move (dx, dy);			
+		foreach (SvgBird.Object p in glyph.active_paths) {
+			if (p is EmbeddedSvg) {
+				EmbeddedSvg svg = (EmbeddedSvg) p;
+				x = selection_box_left - svg.x;
+				y = selection_box_top + svg.y + selection_box_height;
+				p.transforms.resize (ratio_x, ratio_y, x, y);
+			} else if (p is PathObject) {
+				Path path = ((PathObject) p).get_path ();
+				x = selection_box_center_x - selection_box_width / 2;
+				y = selection_box_center_y - selection_box_height / 2;
+				SvgTransforms transform = new SvgTransforms ();
+				transform.resize (ratio_x, ratio_y, x, y);
+				Matrix matrix = transform.get_matrix ();
+				path.transform (matrix);
+			}
 		}
 
 		if (glyph.active_paths.size > 0) {
-			update_selection_box ();
 			objects_resized (selection_box_width, selection_box_height);
 		}
 
@@ -414,6 +397,8 @@ public class ResizeTool : Tool {
 			glyph.remove_lines ();
 			glyph.add_help_lines ();
 		}
+
+		update_selection_box ();
 	}
 
 	public static void update_selection_box () {
@@ -450,21 +435,6 @@ public class ResizeTool : Tool {
 			resize_selected_paths (ratio, 1);
 			last_resize_x = px;
 			last_resize_y = py;
-		}
-	}
-
-	void get_selection_min (out double x, out double y) {
-		Glyph glyph = MainWindow.get_current_glyph ();
-		x = double.MAX;
-		y = double.MAX;
-		foreach (SvgBird.Object p in glyph.active_paths) {
-			if (p.xmin < x) {
-				x = p.xmin;
-			}
-			
-			if (p.ymin < y) {
-				y = p.ymin;
-			}
 		}
 	}
 

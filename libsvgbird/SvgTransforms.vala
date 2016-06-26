@@ -18,6 +18,7 @@ namespace SvgBird {
 
 public class SvgTransforms : GLib.Object {
 	public Matrix rotation_matrix;
+	public Matrix size_matrix;
 	public Gee.ArrayList<SvgTransform> transforms;
 	
 	public double x = 0;
@@ -29,25 +30,38 @@ public class SvgTransforms : GLib.Object {
 	public SvgTransforms () {
 		transforms = new Gee.ArrayList<SvgTransform> ();
 		rotation_matrix = Matrix.identity ();
+		size_matrix = Matrix.identity ();
 	}
 
 	public void collapse_transforms () {
-		SvgTransform transform = new SvgTransform.for_matrix (rotation_matrix);
-		add (transform);
+		SvgTransform rotation_transform = new SvgTransform.for_matrix (rotation_matrix);
+		add (rotation_transform);
 		
 		rotation_matrix = Matrix.identity ();
 		rotation = 0;
+
+		SvgTransform size_transform = new SvgTransform.for_matrix (size_matrix);
+		add (size_transform);
+
+		size_matrix = Matrix.identity ();
+		scale_x = 1;
+		scale_y = 1;
 		
 		Matrix collapsed = get_matrix ();
-		SvgTransform transform_transform = new SvgTransform.for_matrix (collapsed);
+		SvgTransform collapsed_transform = new SvgTransform.for_matrix (collapsed);
 		clear ();
-		add (transform_transform);
+		add (collapsed_transform);
 	}
 
 	public void clear () {
 		transforms.clear ();
+		
 		rotation_matrix = Matrix.identity ();
 		rotation = 0;
+		
+		size_matrix = Matrix.identity ();
+		scale_x = 1;
+		scale_y = 1;
 	}
 
 	public void rotate (double theta, double x, double y) {
@@ -67,9 +81,18 @@ public class SvgTransforms : GLib.Object {
 		rotation_matrix.translate (-x, -y);
 	}
 
-	public void resize (double x, double y) {
-		scale_x += x;
-		scale_y += y;
+	public void resize (double ratio_x, double ratio_y, double x, double y) {
+		scale_x *= ratio_x;
+		scale_y *= ratio_y;
+
+		if (scale_x <= 0 || scale_y <= 0) {
+			return;
+		}
+
+		size_matrix = Matrix.identity ();
+		size_matrix.translate (x, y);
+		size_matrix.scale (scale_x, scale_y);
+		size_matrix.translate (-x, -y);
 	}
 
 	public SvgTransforms copy () {
@@ -95,6 +118,7 @@ public class SvgTransforms : GLib.Object {
 		}
 
 		transformation_matrix.multiply (transformation_matrix, rotation_matrix);
+		transformation_matrix.multiply (transformation_matrix, size_matrix);
 
 		return transformation_matrix;
 	}

@@ -80,15 +80,22 @@ public class SvgParser {
 	}
 	
 	public static void import_color_svg (Glyph glyph, string path) {
-		EmbeddedSvg drawing = SvgParser.parse_embedded_svg_data (path);
+		string xml_data;
 		
-		glyph.add_object (drawing);
-		drawing.update_boundaries_for_object ();
-		
-		Font font = BirdFont.get_current_font ();
-		
-		drawing.x = glyph.left_limit;
-		drawing.y = font.top_position - font.base_line;
+		try {
+			FileUtils.get_contents (path, out xml_data);
+			EmbeddedSvg drawing = SvgParser.parse_embedded_svg_data (xml_data);
+			
+			glyph.add_object (drawing);
+			drawing.update_boundaries_for_object ();
+			
+			Font font = BirdFont.get_current_font ();
+			
+			drawing.x = glyph.left_limit;
+			drawing.y = font.top_position - font.base_line;
+		} catch (GLib.Error e) {
+			warning (e.message);
+		}
 	}
 	
 	public static void import_folder (SvgType type) {
@@ -1602,6 +1609,8 @@ public class SvgParser {
 		XmlTree tree = new XmlTree (xml_data);
 		SvgDrawing drawing = new SvgDrawing ();	
 		SvgFile svg_file = new SvgFile (); 
+
+		print (xml_data);
 
 		XmlElement root = tree.get_root ();
 		drawing = svg_file.parse_svg_file (root);
