@@ -146,13 +146,21 @@ public class SvgStyle : GLib.Object {
 	}
 	
 	public bool has_stroke () {
-		bool s = true;
+		bool has_stroke = true;
 		
 		if (style.has_key ("stroke")) {
-			s = style.get ("stroke") != "none";
+			has_stroke = style.get ("stroke") != "none";
 		}
-				
-		return stroke_width > 0 && s;
+		
+		if (stroke != null) {
+			Color c = (!) stroke;
+			
+			if (c.a == 0) {
+				return false;
+			}
+		}
+		
+		return stroke_width > 0 && has_stroke;
 	}
 		
 	public double get_stroke_width () {

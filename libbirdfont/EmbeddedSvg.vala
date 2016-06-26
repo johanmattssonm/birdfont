@@ -94,8 +94,6 @@ public class EmbeddedSvg : SvgBird.Object {
 		
 		svg.append ("</svg>\n");
 		
-		print (svg.str);
-		
 		return svg.str;
 	}
 

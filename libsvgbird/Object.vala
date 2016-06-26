@@ -203,22 +203,29 @@ public abstract class Object : GLib.Object {
 	/** @return true if the object has an area. */
 	public virtual bool update_boundaries (Context context) {
 		double x0, y0, x1, y1;
+		bool has_stroke = style.has_stroke ();
 
-		context.set_line_width (style.stroke_width);
+		if (has_stroke) {
+			context.set_line_width (style.stroke_width);
+		} else {
+			context.set_line_width (0);
+		}
+		
 		draw_outline (context);
 
 		context.save ();
 		
-		Matrix m = Matrix.identity ();
-		context.set_matrix (m);
-		
-		if (style.stroke_width > 0) {	
+		if (has_stroke) {	
 			context.stroke_extents (out x0, out y0, out x1, out y1);
 		} else {
 			context.path_extents (out x0, out y0, out x1, out y1);
 		}
 		
 		context.restore ();
+		
+		Matrix m = context.get_matrix ();
+		m.transform_point (ref x0, ref y0);
+		m.transform_point (ref x1, ref y1);
 		
 		left = x0;
 		top = y0;

@@ -92,7 +92,7 @@ public class SvgParser {
 			Font font = BirdFont.get_current_font ();
 			
 			drawing.x = glyph.left_limit;
-			drawing.y = font.top_position - font.base_line;
+			drawing.y = font.top_limit - font.base_line;
 		} catch (GLib.Error e) {
 			warning (e.message);
 		}
@@ -1609,8 +1609,6 @@ public class SvgParser {
 		XmlTree tree = new XmlTree (xml_data);
 		SvgDrawing drawing = new SvgDrawing ();	
 		SvgFile svg_file = new SvgFile (); 
-
-		print (xml_data);
 
 		XmlElement root = tree.get_root ();
 		drawing = svg_file.parse_svg_file (root);
