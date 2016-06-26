@@ -263,6 +263,7 @@ public class SvgTable : OtfTable {
 		
 		svg.append ("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n");
 		svg.append ("""<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">""");
+		svg.append ("\n");
 		
 		Glyph g = glyphs.get_current ();
 		Font font = OpenFontFormatWriter.get_current_font ();

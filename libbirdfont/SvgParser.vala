@@ -217,6 +217,10 @@ public class SvgParser {
 				parse_layer (t, pl);
 			}
 
+			if (t.get_name () == "svg") {
+				parse_layer (t, pl);
+			}
+			
 			if (t.get_name () == "switch") {
 				parse_layer (t, pl);
 			}
@@ -283,7 +287,13 @@ public class SvgParser {
 				parse_layer (t, layer);
 				pl.objects.add (layer);
 			}
-			
+
+			if (t.get_name () == "svg") {
+				layer = new Layer ();
+				parse_layer (t, layer);
+				pl.objects.add (layer);
+			}
+				
 			if (t.get_name () == "polygon") {
 				parse_polygon (t, pl);
 			}

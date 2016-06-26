@@ -109,6 +109,17 @@ public class SvgTransforms : GLib.Object {
 		
 		return sb.str;
 	}
+	
+	public string get_xml () {
+		StringBuilder svg = new StringBuilder ();
+		
+		foreach (SvgTransform transform in transforms) {
+			svg.append (transform.get_xml ());
+			svg.append (";");
+		}
+		
+		return svg.str;
+	}
 }
 
 }

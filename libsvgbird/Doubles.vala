@@ -85,6 +85,23 @@ public class Doubles : GLib.Object {
 		
 		return data[index].value;
 	}
+
+	public string get_string (int i) {
+		return round (get_double (i));
+	}
+
+	public static string round (double p) {
+		string v = p.to_string ();
+		char[] c = new char [501];
+		
+		v = p.format (c, "%3.15f");
+		
+		if (v.index_of ("e") != -1) {	
+			return "0.0";
+		}
+		
+		return v;
+	}
 }
 
 }

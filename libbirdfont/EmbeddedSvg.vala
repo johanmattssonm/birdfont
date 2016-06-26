@@ -80,6 +80,44 @@ public class EmbeddedSvg : SvgBird.Object {
 	public override string to_string () {
 		return "Embedded SVG";
 	}
+
+	public string get_transformed_svg_data () {
+		StringBuilder svg = new StringBuilder ();
+		
+		svg.append ("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n");
+		svg.append ("""<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">""");
+		svg.append ("\n");
+		
+		svg.append (@"<g transform=\"$(transforms.get_xml ())\">\n");
+		svg.append (remove_xml_header (svg_data));
+		svg.append ("</g>\n");
+		
+		svg.append ("</svg>\n");
+		
+		print (svg.str);
+		
+		return svg.str;
+	}
+
+	public string remove_xml_header (string xml_data) {
+		string xml = xml_data;
+		
+		int start = xml.index_of ("<?");
+		while (start > -1) {
+			int end = xml.index_of ("?>");
+			
+			if (end == -1) {
+				return xml;
+			}
+			
+			end += "?>".length;
+			
+			xml = xml.substring (start, end);
+			start = xml.index_of ("<?");
+		}
+		
+		return xml;
+	}
 }
 
 }

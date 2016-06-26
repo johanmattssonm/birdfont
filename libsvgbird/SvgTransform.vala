@@ -101,6 +101,42 @@ public class SvgTransform : GLib.Object {
 		
 		return matrix;
 	}
+
+	public string get_xml () {
+		if (type == TransformType.SCALE) {
+			if (arguments.size == 1) {
+				string s = arguments.get_string (0);
+				return @"scale ($s)";
+			} else if (arguments.size == 2) {
+				string s0 = arguments.get_string (0);
+				string s1 = arguments.get_string (1);
+				return @"scale ($s0, $s1)";
+			}
+		} else if (type == TransformType.TRANSLATE) {
+			if (arguments.size == 1) {
+				string s = arguments.get_string (0);
+				return @"translate ($s)";
+			} else if (arguments.size == 2) {
+				string s0 = arguments.get_string (0);
+				string s1 = arguments.get_string (1);
+				return @"translate ($s0, $s1)";
+			}
+		} else if (type == TransformType.MATRIX) {
+			if (arguments.size == 6) {
+				string s0 = arguments.get_string (0);
+				string s1 = arguments.get_string (1);
+				string s2 = arguments.get_string (2);
+				string s3 = arguments.get_string (3);					
+				string s4 = arguments.get_string (4);
+				string s5 = arguments.get_string (5);
+				return @"matrix ($s0, $s1, $s2, $s3, $s4, $s5)";
+			}
+		}
+		
+		warning ("Invalid transform.");
+		
+		return "";
+	}
 }
 
 }
