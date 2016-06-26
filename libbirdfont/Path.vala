@@ -2761,6 +2761,42 @@ public class Path : GLib.Object {
 				ep.get_right_handle ().x, ep.get_right_handle ().y);
 		}
 	}
+
+	public void transform (Matrix matrix) {
+		double x, y;
+		EditPointHandle handle;
+		
+		foreach (EditPoint point in points) {
+			x = point.x;
+			y = point.y;
+			
+			matrix.transform_point (ref x, ref y);
+			
+			point.independent_x = x;
+			point.independent_y = y;
+			
+			handle = point.get_right_handle ();
+			
+			x = handle.x;
+			y = handle.y;
+			
+			matrix.transform_point (ref x, ref y);
+			
+			handle.independent_x = x;
+			handle.independent_y = y;
+
+			handle = point.get_left_handle ();
+			
+			x = handle.x;
+			y = handle.y;
+			
+			matrix.transform_point (ref x, ref y);
+			
+			handle.independent_x = x;
+			handle.independent_y = y;
+
+		}
+	}
 }
 
 }

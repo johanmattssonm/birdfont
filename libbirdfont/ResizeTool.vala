@@ -124,13 +124,24 @@ public class ResizeTool : Tool {
 			update_selection_box ();
 			GlyphCanvas.redraw ();
 			
-			foreach (SvgBird.Object p in MainWindow.get_current_glyph ().active_paths) {
-				if (p is PathObject) {
-					PathObject path = (PathObject) p;
-					path.get_path ().create_full_stroke ();
+			foreach (SvgBird.Object object in MainWindow.get_current_glyph ().active_paths) {
+				if (object is PathObject) {
+					PathObject path = (PathObject) object;
+					Path p = path.get_path ();
+					
+					/*
+					Matrix matrix = Matrix.identity ();
+					matrix.scale (1, -1);
+					matrix.multiply (matrix, object.transforms.get_matrix ());
+					matrix.invert ();
+					p.transform (matrix);
+					object.transforms.clear ();
+					*/
+					
+					p.create_full_stroke ();
+				} else {
+					object.transforms.collapse_transforms ();
 				}
-				
-				p.transforms.collapse_transforms ();
 			}			
 		});
 		
@@ -249,10 +260,12 @@ public class ResizeTool : Tool {
 				x = selection_box_left - svg.x + selection_box_width / 2;
 				y = selection_box_top + svg.y + selection_box_height / 2;
 				p.transforms.rotate (angle, x, y);
-			} else {
-				x = selection_box_left + selection_box_width / 2;
-				y = selection_box_top + selection_box_height / 2;
-				p.transforms.rotate (angle, x, y);
+			} else if (p is PathObject) {
+				Path path = ((PathObject) p).get_path ();
+				SvgTransforms transform = new SvgTransforms ();
+				transform.rotate (-angle, selection_box_center_x, selection_box_center_y);
+				Matrix matrix = transform.get_matrix ();
+				path.transform (matrix);
 			}
 		}
 

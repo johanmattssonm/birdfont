@@ -40,8 +40,14 @@ public class SvgTransforms : GLib.Object {
 		
 		Matrix collapsed = get_matrix ();
 		SvgTransform transform_transform = new SvgTransform.for_matrix (collapsed);
-		transforms.clear ();
+		clear ();
 		add (transform_transform);
+	}
+
+	public void clear () {
+		transforms.clear ();
+		rotation_matrix = Matrix.identity ();
+		rotation = 0;
 	}
 
 	public void rotate (double theta, double x, double y) {
