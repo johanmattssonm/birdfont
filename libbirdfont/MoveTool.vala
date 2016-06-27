@@ -284,8 +284,6 @@ public class MoveTool : Tool {
 		top = 10000;
 		left = 10000;
 
-		glyph.layers.update_boundaries_for_object ();
-		
 		foreach (SvgBird.Object o in glyph.active_paths) {
 			if (top > o.top) {
 				top = o.top;

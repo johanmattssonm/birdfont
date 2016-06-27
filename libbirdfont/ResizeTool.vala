@@ -35,6 +35,11 @@ public class ResizeTool : Tool {
 	static double selection_box_left = 0;
 	static double selection_box_top = 0;
 	
+	static double resized_width = 0;
+	static double resized_height = 0;
+	static double resized_top = 0;
+	static double resized_left = 0;
+		
 	static bool rotate_path = false;
 	static double last_rotate_y;
 	static double rotation = 0;
@@ -207,14 +212,14 @@ public class ResizeTool : Tool {
 	}
 
 	public static void get_resize_handle_position (out double px, out double py) {
-		px = Glyph.reverse_path_coordinate_x (selection_box_center_x + selection_box_width / 2);
-		py = Glyph.reverse_path_coordinate_y (selection_box_center_y + selection_box_height / 2);
+		px = Glyph.reverse_path_coordinate_x (resized_left + resized_width);
+		py = Glyph.reverse_path_coordinate_y (-resized_top);
 	}
 
 	public static void get_horizontal_reseize_handle_position (out double px, out double py) {
-		px = Glyph.reverse_path_coordinate_x (selection_box_center_x + selection_box_width / 2);
+		px = Glyph.reverse_path_coordinate_x (resized_left + resized_width);
 		px += 40;
-		py = Glyph.reverse_path_coordinate_y (selection_box_center_y);
+		py = Glyph.reverse_path_coordinate_y (-resized_top - resized_width / 2);
 	}
 
 	public static double get_rotated_handle_length () {
@@ -384,9 +389,10 @@ public class ResizeTool : Tool {
 				path.transform (matrix);
 			}
 		}
-
+		
 		if (glyph.active_paths.size > 0) {
-			objects_resized (selection_box_width, selection_box_height);
+			update_resized_boundaries ();
+			objects_resized (resized_width, resized_height);
 		}
 
 		if (!selected) {
@@ -401,10 +407,43 @@ public class ResizeTool : Tool {
 	}
 
 	public static void update_selection_box () {
+		update_resized_boundaries ();
 		MoveTool.update_boundaries_for_selection ();
 		MoveTool.get_selection_box_boundaries (out selection_box_center_x,
 				out selection_box_center_y, out selection_box_width,
 				out selection_box_height, out selection_box_left, out selection_box_top);
+	}
+
+	static void update_resized_boundaries () {
+		Glyph glyph = MainWindow.get_current_glyph ();
+		
+		double left = 10000;
+		double top = 10000;
+		double bottom = -10000;
+		double right = -10000;
+
+		foreach (SvgBird.Object o in glyph.active_paths) {
+			if (top > o.top) {
+				top = o.top;
+			}
+
+			if (left > o.left) {
+				left = o.left;
+			}
+
+			if (right < o.right) {
+				right = o.right;
+			}
+
+			if (bottom < o.bottom) {
+				bottom = o.bottom;
+			}
+		}
+
+		resized_top = top;
+		resized_left = left;		
+		resized_width = right - left;
+		resized_height = bottom - top;
 	}
 
 	/** Move resize handle to pixel x,y. */

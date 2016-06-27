@@ -432,7 +432,7 @@ public class DrawingTools : ToolCollection  {
 			GlyphCanvas.redraw ();
 		});
 		draw_tool_modifiers.add_tool (width);
-
+		
 		// height
 		height = new SpinButton ("height", t_("Height"));
 		height.set_big_number (true);
