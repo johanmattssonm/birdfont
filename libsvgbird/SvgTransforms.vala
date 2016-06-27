@@ -22,6 +22,7 @@ public class SvgTransforms : GLib.Object {
 	public Gee.ArrayList<SvgTransform> transforms;
 	
 	public double rotation = 0;
+	public double total_rotation = 0;
 	public double scale_x = 1;
 	public double scale_y = 1;
 	
@@ -64,6 +65,7 @@ public class SvgTransforms : GLib.Object {
 
 	public void rotate (double theta, double x, double y) {
 		rotation += theta;
+		total_rotation += theta;
 		
 		while (rotation > 2 * Math.PI) {
 			rotation -= 2 * Math.PI;
@@ -71,6 +73,14 @@ public class SvgTransforms : GLib.Object {
 
 		while (rotation < -2 * Math.PI) {
 			rotation += 2 * Math.PI;
+		}
+
+		while (total_rotation > 2 * Math.PI) {
+			total_rotation -= 2 * Math.PI;
+		}
+
+		while (total_rotation < -2 * Math.PI) {
+			total_rotation += 2 * Math.PI;
 		}
 
 		rotation_matrix = Matrix.identity ();

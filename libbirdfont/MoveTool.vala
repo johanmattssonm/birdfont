@@ -169,7 +169,6 @@ public class MoveTool : Tool {
 		if (glyph.active_paths.size > 0) {
 			selection_changed ();
 			objects_moved ();
-			DrawingTools.resize_tool.signal_objects_rotated ();
 			
 			foreach (SvgBird.Object o in glyph.active_paths) {
 				if (o is PathObject) {

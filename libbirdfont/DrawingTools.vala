@@ -390,10 +390,40 @@ public class DrawingTools : ToolCollection  {
 			
 			if (glyph.active_paths.size > 0) {
 				last_path = glyph.active_paths.get (glyph.active_paths.size - 1);
-				resize_tool.rotate_selected_paths (angle - last_path.transforms.rotation, x, y);		
+				
+				double last_angle;
+				
+				if (last_path is PathObject) {
+					last_angle = ((PathObject) last_path).get_path ().rotation;
+				} else {
+					last_angle = last_path.transforms.total_rotation;
+				}
+				
+				double r = angle - last_angle;
+				resize_tool.rotate_selected_paths (r, x, y);
 			}
 			
 			GlyphCanvas.redraw ();
+		});
+		
+		move_tool.selection_changed.connect (() => {
+			Glyph glyph = MainWindow.get_current_glyph ();
+			SvgBird.Object path;
+			
+			if (glyph.active_paths.size > 0) {
+				path = glyph.active_paths.get (glyph.active_paths.size - 1);
+
+				double angle;
+				
+				if (path is PathObject) {
+					angle = ((PathObject) path).get_path ().rotation;
+				} else {
+					angle = path.transforms.total_rotation;
+				}
+				
+				angle *= 180 / PI;
+				rotation.set_value_round (angle, true, false);
+			}
 		});
 		
 		resize_tool.objects_rotated.connect ((angle) => {

@@ -43,7 +43,7 @@ public class ResizeTool : Tool {
 	static bool rotate_path = false;
 	static double last_rotate_y;
 	static double rotation = 0;
-	static double last_rotate = 0;
+	public static double last_rotate = 0;
 	
 	public double last_skew = 0;
 	
@@ -63,6 +63,24 @@ public class ResizeTool : Tool {
 		horizontal_handle = new Text ("resize_handle_horizontal", 60);
 		horizontal_handle.load_font ("icons.bf");
 		Theme.text_color (horizontal_handle, "Highlighted 1");
+	
+		DrawingTools.move_tool.selection_changed.connect (() => {
+			Glyph glyph = MainWindow.get_current_glyph ();
+			SvgBird.Object path;
+			
+			if (glyph.active_paths.size > 0) {
+				path = glyph.active_paths.get (glyph.active_paths.size - 1);
+				
+				if (path is PathObject) {
+					last_rotate = ((PathObject) path).get_path ().rotation;
+				} else {
+					last_rotate = path.transforms.total_rotation;
+				}
+			}
+			
+			rotation = last_rotate;
+			update_resized_boundaries ();
+		});
 	
 		select_action.connect((self) => {
 		});
@@ -235,13 +253,8 @@ public class ResizeTool : Tool {
 		return d;
 	}
 
-	public void signal_objects_rotated () {
-		objects_rotated (rotation * (180 / PI));
-	}
-
 	public void rotate_selected_paths (double angle, double cx, double cy) {
 		Glyph glyph = MainWindow.get_current_glyph ();  
-		SvgBird.Object last_path;
 		double x, y;
 		
 		glyph.layers.update_boundaries_for_object ();
@@ -252,20 +265,21 @@ public class ResizeTool : Tool {
 				x = selection_box_left - svg.x + selection_box_width / 2;
 				y = selection_box_top + svg.y + selection_box_height / 2;
 				p.transforms.rotate (angle, x, y);
+				rotation = p.transforms.total_rotation;
 			} else if (p is PathObject) {
 				Path path = ((PathObject) p).get_path ();
 				SvgTransforms transform = new SvgTransforms ();
 				transform.rotate (-angle, selection_box_center_x, selection_box_center_y);
 				Matrix matrix = transform.get_matrix ();
 				path.transform (matrix);
+				path.rotation += angle;
+				rotation = path.rotation;
 			}
 		}
 
 		last_rotate = rotation;
 
 		if (glyph.active_paths.size > 0) {
-			last_path = glyph.active_paths.get (glyph.active_paths.size - 1);
-			
 			if (rotation > PI) {
 				rotation -= 2 * PI;
 			}
@@ -274,7 +288,7 @@ public class ResizeTool : Tool {
 				last_rotate -= 2 * PI;
 			}
 			
-			signal_objects_rotated ();
+			objects_rotated (rotation * (180 / PI));
 		}
 	}
 	
