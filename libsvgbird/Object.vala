@@ -86,6 +86,8 @@ public abstract class Object : GLib.Object {
 
 	public const double CANVAS_MAX = 100000;
 	public const double CANVAS_MIN = -100000;
+
+	Matrix boundary_matrix = Matrix.identity ();
 	
 	public Object () {	
 	}
@@ -215,18 +217,16 @@ public abstract class Object : GLib.Object {
 
 		context.save ();
 		
-		if (has_stroke) {	
+		context.set_matrix (Matrix.identity ());
+		
+		if (has_stroke) {
 			context.stroke_extents (out x0, out y0, out x1, out y1);
 		} else {
-			context.path_extents (out x0, out y0, out x1, out y1);
+			context.fill_extents (out x0, out y0, out x1, out y1);
 		}
-		
+			
 		context.restore ();
-		
-		Matrix m = context.get_matrix ();
-		m.transform_point (ref x0, ref y0);
-		m.transform_point (ref x1, ref y1);
-		
+
 		left = x0;
 		top = y0;
 		right = x1;
@@ -235,7 +235,6 @@ public abstract class Object : GLib.Object {
 		return boundaries_width != 0;
 	}
 
-	// FIXME: store view matrix
 	public virtual bool update_boundaries_for_object () {
 		ImageSurface surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, 1, 1);
 		Context context = new Cairo.Context (surface);

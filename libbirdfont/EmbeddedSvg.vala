@@ -110,7 +110,7 @@ public class EmbeddedSvg : SvgBird.Object {
 			
 			end += "?>".length;
 			
-			xml = xml.substring (start, end);
+			xml = xml.substring (0, start) + xml.substring (end);
 			start = xml.index_of ("<?");
 		}
 		

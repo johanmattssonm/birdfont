@@ -75,7 +75,7 @@ public class SvgTable : OtfTable {
 						svg.append (">");
 						svg.append ("\n\n");
 
-						append_svg_glyph (svg, embedded.svg_data, glyphs);
+						append_svg_glyph (svg, embedded, glyphs);
 
 						svg.append ("</g>\n");
 						svg.append ("\n\n");
@@ -122,14 +122,16 @@ public class SvgTable : OtfTable {
 		return svg;
 	}
 		
-	void append_svg_glyph (StringBuilder svg, string svg_data, GlyphCollection glyphs) {
+	void append_svg_glyph (StringBuilder svg, EmbeddedSvg embedded, GlyphCollection glyphs) {
 		Gee.ArrayList<Tag> layer_content;
 		Gee.ArrayList<Tag> svg_tags;
 		Gee.ArrayList<Tag> meta;
 		XmlParser xml;
 		Tag svg_root_tag;
 		Font font;
+		string svg_data;
 		
+		svg_data = embedded.get_transformed_svg_data ();
 		font = OpenFontFormatWriter.get_current_font ();
 		
 		layer_content = new Gee.ArrayList<Tag> ();
@@ -275,7 +277,6 @@ public class SvgTable : OtfTable {
 
 		foreach (Path p in paths.paths) {
 			p.add_hidden_double_points ();
-			
 			
 			int i = 0;
 			EditPoint? n = null;

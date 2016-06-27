@@ -2796,6 +2796,8 @@ public class Path : GLib.Object {
 			handle.independent_y = y;
 
 		}
+		
+		update_region_boundaries ();
 	}
 }
 

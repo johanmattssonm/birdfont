@@ -373,6 +373,7 @@ public class ResizeTool : Tool {
 				x = selection_box_left - svg.x;
 				y = selection_box_top + svg.y + selection_box_height;
 				p.transforms.resize (ratio_x, ratio_y, x, y);
+				glyph.layers.update_boundaries_for_object ();
 			} else if (p is PathObject) {
 				Path path = ((PathObject) p).get_path ();
 				x = selection_box_center_x - selection_box_width / 2;
@@ -397,8 +398,6 @@ public class ResizeTool : Tool {
 			glyph.remove_lines ();
 			glyph.add_help_lines ();
 		}
-
-		update_selection_box ();
 	}
 
 	public static void update_selection_box () {

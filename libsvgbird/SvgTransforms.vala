@@ -21,8 +21,6 @@ public class SvgTransforms : GLib.Object {
 	public Matrix size_matrix;
 	public Gee.ArrayList<SvgTransform> transforms;
 	
-	public double x = 0;
-	public double y = 0;
 	public double rotation = 0;
 	public double scale_x = 1;
 	public double scale_y = 1;
@@ -117,8 +115,8 @@ public class SvgTransforms : GLib.Object {
 			transformation_matrix.multiply (transformation_matrix, part);
 		}
 
-		transformation_matrix.multiply (transformation_matrix, rotation_matrix);
 		transformation_matrix.multiply (transformation_matrix, size_matrix);
+		transformation_matrix.multiply (transformation_matrix, rotation_matrix);
 
 		return transformation_matrix;
 	}
@@ -136,10 +134,15 @@ public class SvgTransforms : GLib.Object {
 	
 	public string get_xml () {
 		StringBuilder svg = new StringBuilder ();
+		bool first = true;
 		
 		foreach (SvgTransform transform in transforms) {
+			if (!first) {
+				svg.append (" ");
+			}
+			
 			svg.append (transform.get_xml ());
-			svg.append (";");
+			first = false;
 		}
 		
 		return svg.str;
