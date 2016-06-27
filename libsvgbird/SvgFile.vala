@@ -490,7 +490,7 @@ public class SvgFile : GLib.Object {
 	}
 	
 	// FIXME: reverse order?
-	public SvgTransforms parse_transform (string transforms) {
+	public static SvgTransforms parse_transform (string transforms) {
 		string[] functions;
 		string transform = transforms;
 		SvgTransforms transform_functions;
@@ -535,7 +535,7 @@ public class SvgFile : GLib.Object {
 		return transform_functions;
 	}
 
-	private SvgTransform matrix (string function) {
+	private static SvgTransform matrix (string function) {
 		string parameters = get_transform_parameters (function);
 		string[] p = parameters.split (" ");
 		SvgTransform transform = new SvgTransform ();
@@ -588,7 +588,7 @@ public class SvgFile : GLib.Object {
 		return n;
 	}
 	
-	private SvgTransform scale (string function) {
+	private static SvgTransform scale (string function) {
 		string parameters = get_transform_parameters (function);
 		string[] p = parameters.split (" ");
 		SvgTransform transform = new SvgTransform ();
@@ -605,7 +605,7 @@ public class SvgFile : GLib.Object {
 		return transform;
 	}
 	
-	private SvgTransform translate (string function) {
+	private static SvgTransform translate (string function) {
 		string parameters = get_transform_parameters (function);
 		string[] p = parameters.split (" ");
 		SvgTransform transform = new SvgTransform ();
@@ -622,7 +622,7 @@ public class SvgFile : GLib.Object {
 		return transform;
 	}
 
-	private string get_transform_parameters (string function) {
+	private static string get_transform_parameters (string function) {
 		int i;
 		string param = "";
 		

@@ -86,8 +86,6 @@ public abstract class Object : GLib.Object {
 
 	public const double CANVAS_MAX = 100000;
 	public const double CANVAS_MIN = -100000;
-
-	Matrix boundary_matrix = Matrix.identity ();
 	
 	public Object () {	
 	}

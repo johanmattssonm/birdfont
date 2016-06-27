@@ -26,7 +26,7 @@ class BirdFontFile : GLib.Object {
 	Font font;
 	
 	public static const int FORMAT_MAJOR = 2;
-	public static const int FORMAT_MINOR = 2;
+	public static const int FORMAT_MINOR = 3;
 	
 	public static const int MIN_FORMAT_MAJOR = 0;
 	public static const int MIN_FORMAT_MINOR = 0;
@@ -462,8 +462,9 @@ class BirdFontFile : GLib.Object {
 		if (xml.validate ()) {
 			os.put_string (@"<embedded ");
 			os.put_string (@"type=\"svg\" ");
-			os.put_string (@"x=\"$(round (svg.x))\"");
-			os.put_string (@"y=\"$(round (svg.y))\"");
+			os.put_string (@"x=\"$(round (svg.x))\" ");
+			os.put_string (@"y=\"$(round (svg.y))\" ");
+			os.put_string (@"transform=\"$(svg.transforms.get_xml ())\"");
 			os.put_string (@">\n");
 			
 			Tag tag = xml.get_root_tag ();
@@ -982,7 +983,7 @@ class BirdFontFile : GLib.Object {
 		}
 		
 		font.format_major = int.parse (v[0]);
-		font.format_major = int.parse (v[1]);
+		font.format_minor = int.parse (v[1]);
 	}
 	
 	public void parse_images (Tag tag) {
@@ -1498,6 +1499,7 @@ class BirdFontFile : GLib.Object {
 		string type = "";
 		double x = 0;
 		double y = 0;
+		string transform = "";
 		
 		foreach (Attribute attribute in tag.get_attributes ()) {
 			if (attribute.get_name () == "x") {
@@ -1511,10 +1513,15 @@ class BirdFontFile : GLib.Object {
 			if (attribute.get_name () == "type") {
 				type = attribute.get_content ();
 			}
+			
+			if (attribute.get_name () == "transform") {
+				transform = attribute.get_content ();
+			}
 		}
 		
 		if (type == "svg") {
 			EmbeddedSvg svg = SvgParser.parse_embedded_svg_data (tag.get_content ());
+			svg.transforms = SvgFile.parse_transform (transform);
 			svg.x = x;
 			svg.y = y;
 			layer.add_object (svg);
