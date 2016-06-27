@@ -88,7 +88,16 @@ public class EmbeddedSvg : SvgBird.Object {
 		svg.append ("""<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">""");
 		svg.append ("\n");
 		
-		svg.append (@"<g transform=\"$(transforms.get_xml ())\">\n");
+		svg.append ("<g");
+		
+		string transforms = transforms.get_xml ();
+		
+		if (transforms != "") {
+			svg.append (@" transform=\"$(transforms)\"");
+		}
+		
+		svg.append (">\n");
+		
 		svg.append (remove_xml_header (svg_data));
 		svg.append ("</g>\n");
 		
