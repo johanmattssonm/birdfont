@@ -241,7 +241,7 @@ public class ResizeTool : Tool {
 	public static void get_horizontal_reseize_handle_position (out double px, out double py) {
 		px = Glyph.reverse_path_coordinate_x (resized_left + resized_width);
 		px += 40;
-		py = Glyph.reverse_path_coordinate_y (-resized_top - resized_width / 2);
+		py = Glyph.reverse_path_coordinate_y (-resized_top - resized_height / 2);
 	}
 
 	public static double get_rotated_handle_length () {

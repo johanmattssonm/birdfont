@@ -247,7 +247,7 @@ public class MoveTool : Tool {
 		selection_changed ();
 	}
 	
-	public static void update_selection_boundaries () {
+	public static void update_selection_boundaries () {		
 		get_selection_box_boundaries (out selection_box_center_x,
 			out selection_box_center_y, out selection_box_width,
 			out selection_box_height, out selection_box_left, 
@@ -423,50 +423,60 @@ public class MoveTool : Tool {
 	}
 	
 	public static void flip_vertical () {
-		flip (true);
+		DrawingTools.move_tool.flip (true);
 	}
 	
 	public static void flip_horizontal () {
-		flip (false);
+		DrawingTools.move_tool.flip (false);
 	}
 
-	public static void flip (bool vertical) {
-		double xc, yc, xc2, yc2, w, h, l, t;
-		double dx, dy;
+	public void flip (bool vertical) {
 		Glyph glyph = MainWindow.get_current_glyph ();  
 		
-		update_selection_boundaries ();
+		update_selection_boundaries ();		
 		
-		xc = selection_box_center_x;
-		yc = selection_box_center_y;
+		foreach (SvgBird.Object object in glyph.active_paths) {
+			Matrix matrix = Matrix.identity ();
+			double x = 0;
+			double y = 0;
+			
+			if (object is EmbeddedSvg) {
+				EmbeddedSvg svg = (EmbeddedSvg) object;
+				x = selection_box_left - svg.x + selection_box_width / 2;
+				y = selection_box_top + svg.y + selection_box_height / 2;
+			} else {			
+				x = selection_box_center_x;
+				y = selection_box_center_y;
+			}
+			
+			matrix.translate (x, y);
 
-		foreach (SvgBird.Object p in glyph.active_paths) {
-			if (p is PathObject) {
-				Path path = ((PathObject) p).get_path ();
-				
-				// FIXME: move to object
-				if (vertical) {
-					path.flip_vertical ();
-				} else {
-					path.flip_horizontal ();
-				}
-				
+			if (vertical) {
+				matrix.scale (1, -1);
+			} else {
+				matrix.scale (-1, 1);
+			}
+
+			matrix.translate (-x, -y);
+			
+			SvgTransform transform = new SvgTransform.for_matrix (matrix);
+			object.transforms.add (transform);
+			object.transforms.collapse_transforms ();
+			
+			if (object is PathObject) {
+				Path path = ((PathObject) object).get_path ();
+				Matrix m = object.transforms.get_matrix ();
+				object.transforms.clear ();
+				path.transform (m);
 				path.reverse ();
+				object.move (0, 0);
 			}
 		}
 
-		get_selection_box_boundaries (out xc2, out yc2, out w, out h, out l, out t); 
-
-		dx = -(xc2 - xc);
-		dy = -(yc2 - yc);
-		
-		foreach (SvgBird.Object p in glyph.active_paths) {
-			p.move (dx, dy);
-		}
-		
 		update_selection_boundaries ();
-		PenTool.reset_stroke ();
+		objects_moved ();
 		
+		PenTool.reset_stroke ();
 		BirdFont.get_current_font ().touch ();
 	}
 	
