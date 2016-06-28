@@ -543,7 +543,7 @@ def make_birdfont_test(target_binary, deps):
 		$(pkg-config --libs cairo) \
 		$(pkg-config --libs glib-2.0) \
 		$(pkg-config --libs xmlbird) \
-		-L./build -L./build/bin -l birdgems -l svgbird\
+		-L./build -L./build/bin -l birdgems -l svgbird \
         -o build/bin/""" + target_binary
 
     test = Builder('birdfont-test',
@@ -596,7 +596,7 @@ def make_birdui(target_binary, deps):
 			$(pkg-config --libs gobject-2.0) \
 			$(pkg-config --libs xmlbird) \
 			$(pkg-config --libs """ + config.GEE + """) \
-			-L ./build/bin -l m -l svgbird \
+			-L./build -L./build/bin -l m -l svgbird \
 			-o build/bin/""" + target_binary
 
     libbirdgems = Builder('birdui',

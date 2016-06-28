@@ -35,7 +35,7 @@ class BoxLayout : Component {
 
 	public override void draw (Context cairo) {
 		cairo.save ();
-		cairo.translate (padded_x, padded_y);
+		cairo.translate (x, y);
 		clip (cairo);
 		
 		foreach (Component component in components) {

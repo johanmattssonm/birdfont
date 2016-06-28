@@ -25,25 +25,25 @@ public abstract class Component : GLib.Object {
 	
 	public double padded_width {
 		get {
-			return width + get_padding_top () + get_padding_bottom ();
+			return width + get_padding_left () + get_padding_right ();
 		}
 	}
 	
 	public double padded_height { 
 		get {
-			return height + get_padding_left () + get_padding_right ();
+			return height + get_padding_top () + get_padding_bottom ();
 		}
 	}
 
 	public double padded_x {
 		get {
-			return x + get_padding_top ();
+			return x + get_padding_left ();
 		}
 	}
 	
 	public double padded_y { 
 		get {
-			return y + get_padding_left ();
+			return y + get_padding_top ();
 		}
 	}
 	
@@ -62,8 +62,8 @@ public abstract class Component : GLib.Object {
 	Defs defs = new Defs ();
 	protected SvgStyle style = new SvgStyle ();
 
-	string? css_class = null;
-	string? id = null;
+	public string? css_class = null;
+	public string? id = null;
 
 	Overflow overflow = Overflow.VISIBLE;
 
