@@ -64,23 +64,8 @@ public class ResizeTool : Tool {
 		horizontal_handle.load_font ("icons.bf");
 		Theme.text_color (horizontal_handle, "Highlighted 1");
 	
-		DrawingTools.move_tool.selection_changed.connect (() => {
-			Glyph glyph = MainWindow.get_current_glyph ();
-			SvgBird.Object path;
-			
-			if (glyph.active_paths.size > 0) {
-				path = glyph.active_paths.get (glyph.active_paths.size - 1);
-				
-				if (path is PathObject) {
-					last_rotate = ((PathObject) path).get_path ().rotation;
-				} else {
-					last_rotate = path.transforms.total_rotation;
-				}
-			}
-			
-			rotation = last_rotate;
-			update_resized_boundaries ();
-		});
+		DrawingTools.move_tool.selection_changed.connect (update_position);
+		DrawingTools.move_tool.objects_moved.connect (update_position);
 	
 		select_action.connect((self) => {
 		});
@@ -227,6 +212,25 @@ public class ResizeTool : Tool {
 		key_press_action.connect ((self, keyval) => {
 			DrawingTools.move_tool.key_down (keyval);
 		});
+	}
+
+	public void update_position () {
+		Glyph glyph = MainWindow.get_current_glyph ();
+		SvgBird.Object path;
+		
+		if (glyph.active_paths.size > 0) {
+			path = glyph.active_paths.get (glyph.active_paths.size - 1);
+			
+			if (path is PathObject) {
+				last_rotate = ((PathObject) path).get_path ().rotation;
+			} else {
+				last_rotate = path.transforms.total_rotation;
+			}
+		}
+		
+		rotation = last_rotate;
+		update_selection_box ();
+		update_resized_boundaries ();
 	}
 
 	public static void get_resize_handle_position (out double px, out double py) {
