@@ -835,12 +835,18 @@ public class DrawingTools : ToolCollection  {
 		
 			if (StrokeTool.add_stroke) {
 				foreach (SvgBird.Object p in g.active_paths) {
-					p.style.stroke_width = StrokeTool.stroke_width;
-					p.style.line_cap = StrokeTool.line_cap;
+					if (p is PathObject) {
+						Path path = ((PathObject) p).get_path ();
+						path.stroke = StrokeTool.stroke_width;
+						path.line_cap = StrokeTool.line_cap;
+					}
 				}
 			} else {
 				foreach (SvgBird.Object p in g.active_paths) {
-					p.style.stroke_width = 0;
+					if (p is PathObject) {
+						Path path = ((PathObject) p).get_path ();
+						path.stroke = 0;
+					}
 				}	
 			}
 			
@@ -875,10 +881,9 @@ public class DrawingTools : ToolCollection  {
 					
 			if (tool && StrokeTool.add_stroke) {
 				foreach (SvgBird.Object p in g.active_paths) {
-					p.style.stroke_width = StrokeTool.stroke_width;
-					
 					if (p is PathObject) {
 						Path path = ((PathObject) p).get_path ();
+						path.stroke = StrokeTool.stroke_width;
 						path.reset_stroke ();
 					}
 				}
@@ -944,10 +949,10 @@ public class DrawingTools : ToolCollection  {
 			g.store_undo_state ();
 			
 			foreach (SvgBird.Object p in g.active_paths) {
-				p.style.line_cap = SvgBird.LineCap.ROUND;
-				
 				if (p is PathObject) {
-					((PathObject) p).get_path ().reset_stroke ();
+					Path path = ((PathObject) p).get_path ();
+					path.line_cap = SvgBird.LineCap.ROUND;
+					path.reset_stroke ();
 				}
 			}
 			
@@ -962,6 +967,7 @@ public class DrawingTools : ToolCollection  {
 						
 			GlyphCanvas.redraw ();
 		});
+		
 		stroke_expander.add_tool (line_cap_round);	
 
 		line_cap_square = new Tool ("line_cap_square", t_("Square line cap"));
@@ -972,10 +978,10 @@ public class DrawingTools : ToolCollection  {
 			g.store_undo_state ();
 			
 			foreach (SvgBird.Object p in g.active_paths) {
-				p.style.line_cap = SvgBird.LineCap.SQUARE;
-
 				if (p is PathObject) {
-					((PathObject) p).get_path ().reset_stroke ();
+					Path path = ((PathObject) p).get_path ();
+					path.line_cap = SvgBird.LineCap.SQUARE;
+					path.reset_stroke ();
 				}
 			}
 			
