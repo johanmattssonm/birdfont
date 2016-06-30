@@ -86,7 +86,7 @@ def make_birdfont(target_binary, deps):
 		--pkg libnotify \
 		--pkg xmlbird \
 		--pkg libbirdfont \
-		--pkg libsvgbird \
+		--pkg svgbird \
         """
         
     cc_command = config.CC + " " + config.CFLAGS.get("birdfont", "") + """ \
@@ -146,8 +146,8 @@ def make_birdfont_export(target_binary, deps):
 		--pkg cairo \
 		--pkg xmlbird \
 		--pkg libsvgbird \
-		--pkg libbirdfont \
-		--pkg libsvgbird \
+		--pkg svgbird \
+		--pkg svgbird \
         """
 
     cc_command = config.CC + " " + config.CFLAGS.get("birdfont-export", "") + """ \
@@ -202,7 +202,7 @@ def make_birdfont_import(target_binary, deps):
 		--pkg cairo \
 		--pkg xmlbird \
 		--pkg libbirdfont \
-		--pkg libsvgbird \
+		--pkg svgbird \
         """
         
     cc_command = config.CC + " " + config.CFLAGS.get("birdfont-import", "") + """ \
@@ -257,7 +257,7 @@ def make_birdfont_autotrace(target_binary, deps):
 		--pkg cairo \
 		--pkg xmlbird \
 		--pkg libbirdfont \
-		--pkg libsvgbird \
+		--pkg svgbird \
         """
         
     cc_command = config.CC + " " + config.CFLAGS.get("birdfont-autotrace", "") + """ \
@@ -319,7 +319,7 @@ def make_libbirdfont(target_binary, deps):
         --pkg cairo \
         --pkg xmlbird \
         --pkg libbirdgems \
-        --pkg libsvgbird \
+        --pkg svgbird \
         --pkg sqlite3 \
         --pkg gdk-pixbuf-2.0 \
         """
@@ -537,7 +537,7 @@ def make_birdfont_test(target_binary, deps):
 		--pkg cairo \
 		--pkg xmlbird \
 		--pkg libbirdfont \
-		--pkg libsvgbird \
+		--pkg svgbird \
         """
 
     cc_command = config.CC + " " + config.CFLAGS.get("birdfont-test", "") + """ \
