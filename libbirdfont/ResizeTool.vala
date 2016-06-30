@@ -278,6 +278,7 @@ public class ResizeTool : Tool {
 				path.transform (matrix);
 				path.rotation += angle;
 				rotation = path.rotation;
+				path.reset_stroke ();
 			}
 		}
 
@@ -405,6 +406,7 @@ public class ResizeTool : Tool {
 				transform.resize (ratio_x, ratio_y, x, y);
 				Matrix matrix = transform.get_matrix ();
 				path.transform (matrix);
+				path.reset_stroke ();
 			}
 		}
 		
@@ -554,6 +556,7 @@ public class ResizeTool : Tool {
 				Path p = ((PathObject) path).get_path ();
 				SvgParser.apply_matrix (p, 1, 0, s, 1, 0, 0);
 				p.skew = skew;
+				p.reset_stroke ();
 				path.update_boundaries_for_object ();
 			}
 		}
