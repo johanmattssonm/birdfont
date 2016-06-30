@@ -534,7 +534,7 @@ public static File get_child (File folder, string file_name) {
 
 	name = file_name;
 	if (unlikely (BirdFont.win32 && file_name.index_of ("\\") != -1)) {
-		warning (@"File name contains path separator: $file_name, Directory: $f");
+		warning (@"File name contains path separator: $file_name, Directory: $folder_path");
 		name = name.substring (name.last_index_of ("\\")).replace ("\\", "");
 	}
 
@@ -542,7 +542,7 @@ public static File get_child (File folder, string file_name) {
 		folder_path += separator;
 	}
 
-	printd (@"File in Directory: $f Name: $n\n");
+	printd (@"File in Directory: $folder_path Name: $name\n");
 
 	return File.new_for_path (folder_path + name);
 }
