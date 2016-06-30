@@ -386,7 +386,7 @@ def make_libsvgbird(target_binary, deps):
         --pkg gio-2.0 \
         --pkg cairo \
         --pkg xmlbird \
-        --vapi=./build/svgbird.vapi \
+        --vapi=./svgbird.vapi \
         """
 
     cc_command = config.CC + " " + config.CFLAGS.get("libsvgbird", "") + """ \

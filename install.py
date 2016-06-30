@@ -225,6 +225,6 @@ if options.apport == "True":
 #install development files
 if options.development:
 	install ('build/libsvgbird/svgbird.h', '/include', 644)
-	install ('build/svgbird.vapi', '/share/vala/vapi', 644)
+	install ('svgbird.vapi', '/share/vala/vapi', 644)
 	install ('svgbird.deps', '/share/vala/vapi', 644)
 	install ('build/svgbird.pc', libdir + '/pkgconfig', 644)
