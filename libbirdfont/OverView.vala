@@ -1710,6 +1710,10 @@ public class OverView : FontDisplay {
 		update_item_list ();
 		GlyphCanvas.redraw ();
 	}
+
+	public override bool needs_modifier () {
+		return true;
+	}
 	
 	public class OverViewUndoItem {
 		public AlternateSets alternate_sets = new AlternateSets ();
