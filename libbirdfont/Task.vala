@@ -69,8 +69,6 @@ public class Task : GLib.Object {
 		}
 		
 		task ();
-		
-		warning ("Task is done.");
 	}
 
 	public void* perform_task() {

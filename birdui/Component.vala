@@ -67,6 +67,11 @@ public abstract class Component : GLib.Object {
 
 	Overflow overflow = Overflow.VISIBLE;
 
+	public Component.empty (double width, double height) {
+		this.width = width;
+		this.height = height;
+	}
+
 	public Component.load (string file_name, double width, double height) {
 		this.width = width;
 		this.height = height;

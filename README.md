@@ -7,8 +7,8 @@ export SVG, EOT and TTF fonts.
 
     Author: Johan Mattsson and others see AUTHORS for full attribution.
     License: GNU GPL v3
-    Webpage: http://birdfont.org
-    Bugtracker: http://birdfont.org/bugtracker/my_view_page.php
+    Webpage: https://birdfont.org
+    Bugtracker: https://birdfont.org/bugtracker/my_view_page.php
 
 [![Build Status](https://travis-ci.org/johanmattssonm/birdfont.svg)]
 (https://travis-ci.org/johanmattssonm/birdfont)
@@ -29,7 +29,7 @@ packages with a -dev or -devel affix:
     libsqlite3-dev
     libxmlbird-dev
 
-XML Bird is available from [birdfont.org][xmlbird].
+XML Bird is available from [https://birdfont.org][xmlbird].
 
 BirdFont have two build systems, one python script that builds all
 binaries at once and one dependency based build system that uses
@@ -63,6 +63,6 @@ Windows and Mac binaries can be downloaded from
 http://birdfont.org Many Linux distributions have packages of
 Birdfont in their repositories. There is a BSD package in OpenBSD.
 
-[birdfont]: http://birdfont.org/images/birdfont_logo2.png "Birdfont logo"
-[xmlbird]: http://birdfont.org/xmlbird.php "XML Bird – XML Parser for programs written in VALA"
+[birdfont]: https://birdfont.org/images/birdfont_logo2.png "Birdfont logo"
+[xmlbird]: https://birdfont.org/xmlbird.php "XML Bird – XML Parser for programs written in VALA"
 

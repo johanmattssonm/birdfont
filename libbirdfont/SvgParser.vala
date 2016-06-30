@@ -402,8 +402,14 @@ public class SvgParser {
 		
 		foreach (EditPoint ep in path.points) {
 			apply_matrix_on_handle (ep.get_right_handle (), a, b, c, d, e, f);
-			apply_matrix_on_handle (ep.get_left_handle (), a, b, c, d, e, f);
-
+			
+			EditPointHandle left = ep.get_left_handle ();
+			if (left.type == PointType.QUADRATIC || left.type == PointType.LINE_QUADRATIC) {
+				ep.get_right_handle ().process_connected_handle ();
+			} else {				
+				apply_matrix_on_handle (left, a, b, c, d, e, f);
+			}
+			
 			ep.independent_y = font.top_position - ep.independent_y;
 			ep.independent_x -= glyph.left_limit;
 			

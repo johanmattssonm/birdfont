@@ -22,7 +22,7 @@ int main (string[] args) {
 	window.set_title ("UI Bird");
 	window.destroy.connect (Gtk.main_quit);
 	
-	UI layout = new UI ("test.ui", 700, 200);
+	UI layout = new UI.for_file ("test.ui", 700, 200);
 	
 	layout.print_tree ();
 	

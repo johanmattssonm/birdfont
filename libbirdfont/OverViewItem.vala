@@ -93,6 +93,15 @@ public class OverViewItem : GLib.Object {
 		draw_background ();	
 	}
 
+	public void clear_cache () {
+		cache = null;
+		
+		if (glyphs != null) {
+			Glyph g = ((!) glyphs).get_current ();
+			g.overview_thumbnail = null;
+		}
+	}
+
 	public void draw_glyph_from_font () {
 		if (glyphs == null) {
 			return;
@@ -419,15 +428,6 @@ public class OverViewItem : GLib.Object {
 	
 	bool has_menu () {
 		return glyphs != null;
-	}
-	
-	public void clear_cache () {
-		cache = null;
-		
-		if (glyphs != null) {
-			GlyphCollection gc = (!) glyphs;
-			gc.get_current ().overview_thumbnail = null;
-		}
 	}
 	
 	public void draw_label_background (Context cr) {
