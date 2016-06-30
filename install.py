@@ -49,7 +49,6 @@ def install (file, dir, mode):
 	print ("install: " + f)
 	run ('install -d ' + dest + prefix + dir)
 	run ('install -m ' + str(mode) + ' ' + file + ' ' + dest + prefix + dir + '/')
-	installed.write (f + "\n")
 
 def install_root (file, dir, mode):
 	f = getDestRoot (file, dir)
@@ -61,7 +60,6 @@ def link (dir, file, linkname):
 	f = getDest (linkname, dir)
 	print ("install link: " + f)
 	run ('cd ' + dest + prefix + dir + ' && ln -sf ' + file + ' ' + linkname)
-	installed.write (f + "\n")
 	
 if not os.path.exists ("build/configured"):
 	print ("Project is not configured")
@@ -74,6 +72,7 @@ parser.add_option ("-n", "--manpages-directory", dest="mandir", help="put man pa
 parser.add_option ("-l", "--libdir", dest="libdir", help="path to directory for shared libraries (lib or lib64).")
 parser.add_option ("-c", "--skip-command-line-tools", dest="nocli", help="don't install command line tools")
 parser.add_option ("-a", "--apport", dest="apport", help="install apport scripts", default=True)
+parser.add_option ('-v', '--development', dest='development', action="store_true", help='install development files', metavar='DEVELOPMENT')
 
 (options, args) = parser.parse_args()
 
@@ -92,10 +91,6 @@ else:
 
 prefix = config.PREFIX
 dest = options.dest
-
-# create uninstall file
-installed = open ('build/installed', 'w')
-installed.write ('build/installed\n')
 
 # install it:
 install ('resources/icons.bf', '/share/birdfont', 644)
@@ -144,7 +139,7 @@ else:
 	libdir = options.libdir
 
 if "openbsd" in sys.platform:
-        install ('build/bin/libbirdfont.so.' + '${LIBbirdfont_VERSION}', '/lib', 644)
+	install ('build/bin/libbirdfont.so.' + '${LIBbirdfont_VERSION}', '/lib', 644)
 elif os.path.isfile ('build/bin/libbirdfont.so.' + version.SO_VERSION):
 	install ('build/bin/libbirdfont.so.' + version.SO_VERSION, libdir, 644)
 	link (libdir, 'libbirdfont.so.' + version.SO_VERSION, ' libbirdfont.so.' + version.SO_VERSION_MAJOR)
@@ -179,9 +174,25 @@ else:
 	print ("Can't find libbirdgems, version: " + version.LIBBIRDGEMS_SO_VERSION)
 	exit (1)
 
-	
-#manpages
+if "openbsd" in sys.platform:
+        install ('build/bin/libsvgbird.so.' + '${LIBsvgbird_VERSION}', '/lib', 644)
+elif os.path.isfile ('build/bin/libsvgbird.so.' + version.LIBSVGBIRD_SO_VERSION):
+        install ('build/bin/libsvgbird.so.' + version.LIBSVGBIRD_SO_VERSION, libdir, 644)
+        link (libdir, 'libsvgbird.so.' + version.LIBSVGBIRD_SO_VERSION, ' libsvgbird.so.' + version.LIBSVGBIRD_SO_VERSION_MAJOR)
+        link (libdir, 'libsvgbird.so.' + version.LIBSVGBIRD_SO_VERSION, ' libsvgbird.so')
+elif os.path.isfile ('build/libsvgbird.so.' + version.LIBSVGBIRD_SO_VERSION):
+        install ('build/libsvgbird.so.' + version.LIBSVGBIRD_SO_VERSION, libdir, 644)
+        link (libdir, 'libsvgbird.so.' + version.LIBSVGBIRD_SO_VERSION, ' libsvgbird.so.' + version.LIBSVGBIRD_SO_VERSION_MAJOR)
+        link (libdir, 'libsvgbird.so.' + version.LIBSVGBIRD_SO_VERSION, ' libsvgbird.so')
+elif os.path.isfile ('build/bin/libsvgbird.' + version.LIBSVGBIRD_SO_VERSION + '.dylib'):
+        install ('build/bin/libsvgbird.' + version.LIBSVGBIRD_SO_VERSION + '.dylib', libdir, 644)
+        link (libdir, 'libsvgbird.' + version.LIBSVGBIRD_SO_VERSION + '.dylib', ' libsvgbird.dylib.' + version.LIBSVGBIRD_SO_VERSION_MAJOR)
+        link (libdir, 'libsvgbird.' + version.LIBSVGBIRD_SO_VERSION + '.dylib', ' libsvgbird.dylib')
+else:
+	print ("Can't find libsvgbird, version: " + version.LIBSVGBIRD_SO_VERSION)
+	exit (1)
 
+#manpages
 if not nogzip:
     install ('build/birdfont.1.gz', mandir, 644)
 
@@ -211,4 +222,9 @@ if options.apport == "True":
 	install ('resources/source_birdfont.py', '/share/apport/package-hooks', 644)
 	install_root ('resources/birdfont-crashdb.conf', '/etc/apport/crashdb.conf.d', 644)
 
-installed.close ()
+#install development files
+if options.development:
+	install ('build/libsvgbird/svgbird.h', '/include', 644)
+	install ('build/svgbird.vapi', '/share/vala/vapi', 644)
+	install ('svgbird.deps', '/share/vala/vapi', 644)
+	install ('build/svgbird.pc', libdir + '/pkgconfig', 644)

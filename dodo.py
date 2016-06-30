@@ -369,6 +369,8 @@ def task_libbirdfont():
     yield make_libbirdfont('libbirdfont.so.' + SO_VERSION, ['libbirdgems.so', 'libsvgbird.so'])
 
 def make_libsvgbird(target_binary, deps):
+    global version
+	
     valac_command = config.VALAC + """\
         -C \
         --vapidir=./ \
@@ -384,6 +386,7 @@ def make_libsvgbird(target_binary, deps):
         --pkg gio-2.0 \
         --pkg cairo \
         --pkg xmlbird \
+        --vapi=./build/svgbird.vapi \
         """
 
     cc_command = config.CC + " " + config.CFLAGS.get("libsvgbird", "") + """ \
@@ -419,8 +422,23 @@ def make_libsvgbird(target_binary, deps):
                          target_binary,
                          link_name,
                          deps)
-			
+    
+    f = open('./build/svgbird.pc', 'w+')
+    f.write("""prefix=""" + config.PREFIX + """
+exec_prefix=${prefix}
+includedir=${prefix}/include
+libdir=${exec_prefix}/lib
+
+Name: svgbird
+Description: SVG library
+Version: """ + version.LIBSVGBIRD_VERSION + """
+Cflags: -I${includedir}
+Libs: -L${libdir} -lsvgbird
+Requires: cairo, gobject-2.0, glib-2.0
+""")
+
     yield libsvgbird.build()
+
 
 def task_libsvgbird():
     yield make_libsvgbird('libsvgbird.so.' + LIBSVGBIRD_SO_VERSION, [])

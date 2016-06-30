@@ -518,33 +518,33 @@ public static void warn_if_test (string message) {
 
 /** Obtain a handle to a file in a folder. */
 public static File get_child (File folder, string file_name) {
-	string f;
-	string s;
-	string n;
+	string folder_path;
+	string separator;
+	string name;
 
 	// avoid drive letter problems on windows
 
-	f = (!) folder.get_path ();
+	folder_path = (!) folder.get_path ();
 
 #if LINUX
-	s = "/";
+	separator = "/";
 #else
-	s = (BirdFont.win32) ? "\\" : "/";
+	separator = (BirdFont.win32) ? "\\" : "/";
 #endif
 
-	n = file_name;
+	name = file_name;
 	if (unlikely (BirdFont.win32 && file_name.index_of ("\\") != -1)) {
 		warning (@"File name contains path separator: $file_name, Directory: $f");
-		n = n.substring (n.last_index_of ("\\")).replace ("\\", "");
+		name = name.substring (name.last_index_of ("\\")).replace ("\\", "");
 	}
 
-	if (!f.has_suffix (s)) {
-		f += s;
+	if (!folder_path.has_suffix (separator)) {
+		folder_path += separator;
 	}
 
 	printd (@"File in Directory: $f Name: $n\n");
 
-	return File.new_for_path (f + n);
+	return File.new_for_path (folder_path + name);
 }
 
 public static void set_drawing_callbacks (Drawing callbacks) {
