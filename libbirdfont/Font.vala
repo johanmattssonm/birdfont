@@ -188,8 +188,19 @@ public class Font : GLib.Object {
 	}
 
 	public void add_default_characters () {
-		add_glyph_collection (get_notdef_character ());
-		add_glyph_collection (get_space ());
+		GlyphCollection notdef, space;
+		
+		notdef = get_notdef_character ();
+		
+		if (!has_glyph (notdef.get_name ()) {
+			add_glyph_collection (notdef);
+		}
+		
+		space = get_space ();
+		
+		if (!has_glyph (space.get_name ()) {
+			add_glyph_collection (space);
+		}
 	}
 	
 	public Alternate? get_alternate (string glyph_name, string tag) {
