@@ -146,7 +146,7 @@ def make_birdfont_export(target_binary, deps):
 		--pkg cairo \
 		--pkg xmlbird \
 		--pkg svgbird \
-		--pkg svgbird \
+		--pkg libbirdfont \
 		--pkg svgbird \
         """
 
