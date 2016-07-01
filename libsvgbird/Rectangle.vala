@@ -44,12 +44,15 @@ public class Rectangle : Object {
 	}
 	
 	public void draw_rounded_corners (Context cr) {
+		cr.save ();
 		cr.new_path ();
+		cr.translate (-rx, -ry);
 		elliptical_arc (cr, x + width - rx, y + ry, -PI / 2, 0);
 		elliptical_arc (cr, x + width - rx, y + height - ry, 0, PI / 2);
 		elliptical_arc (cr, x + rx, y + height - ry, PI / 2, PI);
 		elliptical_arc (cr, x + rx, y + ry, PI, PI + PI / 2);
 		cr.close_path ();
+		cr.restore ();
 	}
 	
 	public void elliptical_arc (Context cr, double x, double y, double angle_start, double angle_stop) {

@@ -26,10 +26,45 @@ public class SvgStyle : GLib.Object {
 	public Gradient? fill_gradient = null;
 	public LineCap line_cap = LineCap.BUTT;
 
-	public double padding_top = 0;
-	public double padding_right = 0;
-	public double padding_bottom = 0;
-	public double padding_left = 0;
+	public double padding_top {
+		get {
+			return SvgFile.parse_number (get_css_property ("padding-top"));
+		}
+		
+		set {
+			set_style ("padding-top", Doubles.round (value) + "px");
+		}
+	}
+	
+	public double padding_right {
+		get {
+			return SvgFile.parse_number (get_css_property ("padding-right"));
+		}
+		
+		set {
+			set_style ("padding-right", Doubles.round (value) + "px");
+		}
+	}
+	
+	public double padding_bottom {
+		get {
+			return SvgFile.parse_number (get_css_property ("padding-bottom"));
+		}
+		
+		set {
+			set_style ("padding-bottom", Doubles.round (value) + "px");
+		}
+	}
+	
+	public double padding_left {
+		get {
+			return SvgFile.parse_number (get_css_property ("padding-left"));
+		}
+		
+		set {
+			set_style ("padding-left", Doubles.round (value) + "px");
+		}
+	}
 
 	public double stroke_width = 0;
 
@@ -243,7 +278,7 @@ public class SvgStyle : GLib.Object {
 		return s;
 	}
 	
-	static void set_style_properties (Defs? d, SvgStyle s) {
+	public static void set_style_properties (Defs? d, SvgStyle s) {
 		double fill_opacity = 1;
 		double stroke_opacity = 1;
 
@@ -277,11 +312,6 @@ public class SvgStyle : GLib.Object {
 			Color color = (!) s.stroke;
 			color.a = stroke_opacity;
 		}
-		
-		s.padding_bottom = SvgFile.parse_number (s.get_css_property ("padding-bottom"));
-		s.padding_top = SvgFile.parse_number (s.get_css_property ("padding-top"));
-		s.padding_left = SvgFile.parse_number (s.get_css_property ("padding-left"));
-		s.padding_right = SvgFile.parse_number (s.get_css_property ("padding-right"));
 	}
 	
 	void parse_key_value_pairs (string svg_style) {

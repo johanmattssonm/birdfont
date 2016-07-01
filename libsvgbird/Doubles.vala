@@ -94,7 +94,7 @@ public class Doubles : GLib.Object {
 		string v = p.to_string ();
 		char[] c = new char [501];
 		
-		v = p.format (c, "%3.15f");
+		v = p.format (c, "%3.5f");
 		
 		if (v.index_of ("e") != -1) {	
 			return "0.0";
