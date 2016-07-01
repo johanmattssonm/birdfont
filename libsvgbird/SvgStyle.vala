@@ -26,11 +26,16 @@ public class SvgStyle : GLib.Object {
 	public Gradient? fill_gradient = null;
 	public LineCap line_cap = LineCap.BUTT;
 
+	public double padding_top = 0;
+	public double padding_right = 0;
+	public double padding_bottom = 0;
+	public double padding_left = 0;
+
 	public double stroke_width = 0;
 
 	private static Gee.HashMap<string, string>? inheritance;
 	private static Mutex inheritance_mutex = new Mutex ();
-	
+			
 	public SvgStyle () {
 	}
 	
@@ -271,7 +276,12 @@ public class SvgStyle : GLib.Object {
 		if (s.stroke != null) {
 			Color color = (!) s.stroke;
 			color.a = stroke_opacity;
-		}		
+		}
+		
+		s.padding_bottom = SvgFile.parse_number (s.get_css_property ("padding-bottom"));
+		s.padding_top = SvgFile.parse_number (s.get_css_property ("padding-top"));
+		s.padding_left = SvgFile.parse_number (s.get_css_property ("padding-left"));
+		s.padding_right = SvgFile.parse_number (s.get_css_property ("padding-right"));
 	}
 	
 	void parse_key_value_pairs (string svg_style) {
