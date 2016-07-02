@@ -192,7 +192,7 @@ public abstract class Object : GLib.Object {
 		}
 	}
 	
-	public void apply_transform (Context cr) {
+	public virtual void apply_transform (Context cr) {
 		Matrix view_matrix = cr.get_matrix ();
 		Matrix object_matrix = transforms.get_matrix ();
 		

@@ -44,6 +44,10 @@ public class SvgFile : GLib.Object {
 			if (attr.get_name () == "height") {
 				drawing.height = parse_number (attr.get_content ());
 			}
+
+			if (attr.get_name () == "viewBox") {
+				drawing.view_box = parse_view_box (attr.get_content ());
+			}
 		}
 				
 		foreach (XmlElement t in svg_tag) {
@@ -53,6 +57,11 @@ public class SvgFile : GLib.Object {
 				parse_layer (drawing.root_layer, style, t);
 			}
 
+			if (name == "svg") {
+				SvgDrawing embedded = parse_svg_file (t);
+				drawing.root_layer.add_object (embedded);
+			}
+			
 			if (name == "defs") {
 				parse_defs (drawing, t);
 			}
@@ -67,6 +76,28 @@ public class SvgFile : GLib.Object {
 		set_object_properties (drawing, new SvgStyle (), svg_tag);
 		
 		return drawing;
+	}
+
+	ViewBox? parse_view_box (string parameters) {
+		string arguments = parameters.replace (",", " ");
+		
+		while (arguments.index_of ("  ") > -1) {
+			arguments = arguments.replace ("  ", " ");
+		}
+		
+		string[] view_box_parameters = arguments.split (" ");
+		
+		if (view_box_parameters.length != 4) {
+			warning ("Expecting four arguments in view box.");
+			return null;
+		}
+
+		double minx = parse_number (view_box_parameters[0]);
+		double miny = parse_number (view_box_parameters[1]);
+		double width = parse_number (view_box_parameters[2]);
+		double height = parse_number (view_box_parameters[3]);
+		
+		return new ViewBox (minx, miny, width, height);
 	}
 
 	private void parse_layer (Layer layer, SvgStyle parent_style, XmlElement tag) {		
@@ -310,6 +341,12 @@ public class SvgFile : GLib.Object {
 		if (name == "line") {
 			parse_line (layer, parent_style, tag);
 		}
+		
+		if (name == "svg") {
+			SvgDrawing embedded = parse_svg_file (tag);
+			layer.add_object (embedded);
+		}
+
 	}
 
 	private void parse_polygon (Layer layer, SvgStyle parent_style, XmlElement tag) {
@@ -1408,7 +1445,6 @@ public class SvgFile : GLib.Object {
 		
 		return data;
 	}
-
 }
 
 }

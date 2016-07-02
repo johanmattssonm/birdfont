@@ -22,6 +22,7 @@ namespace SvgBird {
 public class SvgDrawing : Object {
 	public Layer root_layer = new Layer ();
 	public Defs defs = new Defs ();
+	public ViewBox? view_box = null;
 
 	public double width {
 		get {			
@@ -62,13 +63,31 @@ public class SvgDrawing : Object {
 		return false;
 	}
 
+	void apply_view_box (Context cr) {
+		if (view_box != null) {
+			ViewBox box = (!) view_box;
+			cr.translate (box.minx, box.miny);
+			cr.scale (width / box.width, height / box.height);
+		}
+	}
+
+	public override void apply_transform (Context cr) {
+		apply_view_box (cr);
+		base.apply_transform (cr);
+	}
+
 	public void draw (Context cr) {
+		cr.save ();
 		apply_transform (cr);
 		root_layer.draw (cr);
+		cr.restore ();
 	}
 		
 	public override void draw_outline (Context cr) {
+		cr.save ();
+		apply_transform (cr);
 		root_layer.draw_outline (cr);
+		cr.restore ();
 	}
 	
 	public override Object copy () {
