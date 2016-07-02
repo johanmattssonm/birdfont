@@ -46,7 +46,7 @@ public class SvgFile : GLib.Object {
 			}
 
 			if (attr.get_name () == "viewBox") {
-				drawing.view_box = parse_view_box (attr.get_content ());
+				drawing.view_box = parse_view_box (attr.get_content (), svg_tag);
 			}
 		}
 				
@@ -78,8 +78,26 @@ public class SvgFile : GLib.Object {
 		return drawing;
 	}
 
-	ViewBox? parse_view_box (string parameters) {
+	ViewBox? parse_view_box (string parameters, XmlElement tag) {
 		string arguments = parameters.replace (",", " ");
+		string aspect_ratio = "";
+		bool slice = false;
+		
+		foreach (Attribute attribute in tag.get_attributes ()) {
+			if (attribute.get_name () == "preserveAspectRatio") {
+				aspect_ratio = attribute.get_content ();
+				
+				string[] preserveSettings = aspect_ratio.split (" ");
+				
+				if (preserveSettings.length >= 1) {
+					aspect_ratio = preserveSettings[0];
+				}
+				
+				if (preserveSettings.length >= 2) {
+					slice = preserveSettings[1] == "slice";
+				}
+			}
+		}
 		
 		while (arguments.index_of ("  ") > -1) {
 			arguments = arguments.replace ("  ", " ");
@@ -97,7 +115,32 @@ public class SvgFile : GLib.Object {
 		double width = parse_number (view_box_parameters[2]);
 		double height = parse_number (view_box_parameters[3]);
 		
-		return new ViewBox (minx, miny, width, height);
+		uint alignment = ViewBox.XMID_YMID;
+		aspect_ratio = aspect_ratio.up ();
+		
+		if (aspect_ratio == "NONE") {
+			alignment = ViewBox.NONE;
+		} else if (aspect_ratio == "XMIN_YMIN") {
+			alignment = ViewBox.XMIN_YMIN;
+		} else if (aspect_ratio == "XMID_YMIN") {
+			alignment = ViewBox.XMIN_YMIN;
+		} else if (aspect_ratio == "XMAX_YMIN") {
+			alignment = ViewBox.XMIN_YMIN;
+		} else if (aspect_ratio == "XMIN_YMID") {
+			alignment = ViewBox.XMIN_YMIN;
+		} else if (aspect_ratio == "XMID_YMID") {
+			alignment = ViewBox.XMIN_YMIN;
+		} else if (aspect_ratio == "XMAX_YMID") {
+			alignment = ViewBox.XMIN_YMIN;
+		} else if (aspect_ratio == "XMIN_YMAX") {
+			alignment = ViewBox.XMIN_YMIN;
+		} else if (aspect_ratio == "XMID_YMAX") {
+			alignment = ViewBox.XMIN_YMIN;
+		} else if (aspect_ratio == "XMAX_YMAX") {
+			alignment = ViewBox.XMIN_YMIN;
+		}
+		
+		return new ViewBox (minx, miny, width, height, alignment, slice);
 	}
 
 	private void parse_layer (Layer layer, SvgStyle parent_style, XmlElement tag) {		

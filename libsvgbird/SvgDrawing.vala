@@ -66,8 +66,47 @@ public class SvgDrawing : Object {
 	void apply_view_box (Context cr) {
 		if (view_box != null) {
 			ViewBox box = (!) view_box;
+			double scale_x = 1;
+			double scale_y = 1;
+			double scale = 1;
+			
 			cr.translate (box.minx, box.miny);
-			cr.scale (width / box.width, height / box.height);
+			scale_x = width / box.width;
+			scale_y = height / box.height;
+			
+			bool scale_width = height * box.width > width * box.height;
+			
+			if (box.alignment == ViewBox.NONE) {	
+				cr.scale (scale_x, scale_y);
+			} else if (scale_width && box.slice) {
+				scale = scale_x;
+				cr.scale (scale, scale);
+			} else {
+				scale = scale_y;
+				cr.scale (scale, scale);
+			}
+			
+			if (!box.slice) {
+				if ((box.alignment & ViewBox.XMID) > 0) {
+					cr.translate ((box.width - width) / 2, 0);
+				} else if ((box.alignment & ViewBox.XMAX) > 0) {
+					cr.translate (box.width - width, 0);
+				}
+
+				if ((box.alignment & ViewBox.YMID) > 0) {
+					cr.translate (0, (box.height - height) / 2);
+				} else if ((box.alignment & ViewBox.YMAX) > 0) {
+					cr.translate (0, box.height - height);
+				}
+			} else {
+				Layer layer = new Layer ();
+				Rectangle rectangle = new Rectangle ();
+				rectangle.width = box.width;
+				rectangle.height = box.height;
+				layer.add_object (rectangle);
+				ClipPath clip = new ClipPath (layer);
+				clip_path = clip;
+			}
 		}
 	}
 
@@ -84,10 +123,7 @@ public class SvgDrawing : Object {
 	}
 		
 	public override void draw_outline (Context cr) {
-		cr.save ();
-		apply_transform (cr);
 		root_layer.draw_outline (cr);
-		cr.restore ();
 	}
 	
 	public override Object copy () {
