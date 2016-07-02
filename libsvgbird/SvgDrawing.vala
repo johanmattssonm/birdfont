@@ -88,15 +88,15 @@ public class SvgDrawing : Object {
 			
 			if (!box.slice) {
 				if ((box.alignment & ViewBox.XMID) > 0) {
-					cr.translate ((box.width - width) / 2, 0);
+					cr.translate (((box.width - width) * scale) / 2, 0);
 				} else if ((box.alignment & ViewBox.XMAX) > 0) {
-					cr.translate (box.width - width, 0);
+					cr.translate ((box.width - width) * scale, 0);
 				}
 
 				if ((box.alignment & ViewBox.YMID) > 0) {
-					cr.translate (0, (box.height - height) / 2);
+					cr.translate (0, ((box.height - height) * scale) / 2);
 				} else if ((box.alignment & ViewBox.YMAX) > 0) {
-					cr.translate (0, box.height - height);
+					cr.translate (0, (box.height - height) * scale);
 				}
 			} else {
 				Layer layer = new Layer ();
