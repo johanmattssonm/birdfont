@@ -64,49 +64,48 @@ public class SvgDrawing : Object {
 	}
 
 	void apply_view_box (Context cr) {
+		double scale_x = 1;
+		double scale_y = 1;
+		double scale = 1;
+
 		if (view_box != null) {
 			ViewBox box = (!) view_box;
-			double scale_x = 1;
-			double scale_y = 1;
-			double scale = 1;
 			
 			cr.translate (box.minx, box.miny);
 			scale_x = width / box.width;
 			scale_y = height / box.height;
 			
-			bool scale_width = height * box.width > width * box.height;
+			bool scale_width = scale_x > scale_y;
 			
-			if (box.alignment == ViewBox.NONE) {	
-				cr.scale (scale_x, scale_y);
-			} else if (scale_width && box.slice) {
-				scale = scale_x;
-				cr.scale (scale, scale);
-			} else {
+			if (scale_width) {
 				scale = scale_y;
-				cr.scale (scale, scale);
+			} else {
+				scale = scale_x;
 			}
 			
-			if (!box.slice) {
+			if (box.preserve_aspect_ratio) {
 				if ((box.alignment & ViewBox.XMID) > 0) {
-					cr.translate (((box.width - width) * scale) / 2, 0);
+					cr.translate ((width - box.width * scale) / 2, 0);
 				} else if ((box.alignment & ViewBox.XMAX) > 0) {
-					cr.translate ((box.width - width) * scale, 0);
+					cr.translate ((width - box.width * scale), 0);
 				}
 
 				if ((box.alignment & ViewBox.YMID) > 0) {
-					cr.translate (0, ((box.height - height) * scale) / 2);
+					cr.translate ((height - box.height * scale) / 2, 0);
 				} else if ((box.alignment & ViewBox.YMAX) > 0) {
-					cr.translate (0, (box.height - height) * scale);
+					cr.translate ((height - box.height * scale), 0);
 				}
-			} else {
-				Layer layer = new Layer ();
-				Rectangle rectangle = new Rectangle ();
-				rectangle.width = box.width;
-				rectangle.height = box.height;
-				layer.add_object (rectangle);
-				ClipPath clip = new ClipPath (layer);
-				clip_path = clip;
 			}
+
+			if (!box.preserve_aspect_ratio) {
+				cr.scale (scale_x, scale_y);
+			} else if (scale_width) {
+				scale = scale_y;
+				cr.scale (scale, scale);
+			} else {
+				scale = scale_x;
+				cr.scale (scale, scale);
+			}	
 		}
 	}
 

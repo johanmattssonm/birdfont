@@ -47,8 +47,10 @@ public class ViewBox : GLib.Object {
 	public uint alignment;
 	public bool slice;
 
+	public bool preserve_aspect_ratio;
+
 	public ViewBox (double minx, double miny, double width, double height,
-		uint alignment, bool slice) {
+		uint alignment, bool slice, bool preserve_aspect_ratio) {
 			
 		this.minx = minx;
 		this.miny = miny;
@@ -57,6 +59,7 @@ public class ViewBox : GLib.Object {
 		
 		this.alignment = alignment;
 		this.slice = slice;
+		this.preserve_aspect_ratio = preserve_aspect_ratio;
 	}
 	
 }

@@ -81,7 +81,8 @@ public class SvgFile : GLib.Object {
 	ViewBox? parse_view_box (string parameters, XmlElement tag) {
 		string arguments = parameters.replace (",", " ");
 		string aspect_ratio = "";
-		bool slice = false;
+		bool slice = true;
+		bool preserve_aspect_ratio = true;
 		
 		foreach (Attribute attribute in tag.get_attributes ()) {
 			if (attribute.get_name () == "preserveAspectRatio") {
@@ -96,6 +97,8 @@ public class SvgFile : GLib.Object {
 				if (preserveSettings.length >= 2) {
 					slice = preserveSettings[1] == "slice";
 				}
+				
+				preserve_aspect_ratio = false;
 			}
 		}
 		
@@ -120,27 +123,27 @@ public class SvgFile : GLib.Object {
 		
 		if (aspect_ratio == "NONE") {
 			alignment = ViewBox.NONE;
-		} else if (aspect_ratio == "XMIN_YMIN") {
+		} else if (aspect_ratio == "XMINYMIN") {
 			alignment = ViewBox.XMIN_YMIN;
-		} else if (aspect_ratio == "XMID_YMIN") {
+		} else if (aspect_ratio == "XMINYMIN") {
 			alignment = ViewBox.XMIN_YMIN;
-		} else if (aspect_ratio == "XMAX_YMIN") {
+		} else if (aspect_ratio == "XMAXYMIN") {
 			alignment = ViewBox.XMIN_YMIN;
-		} else if (aspect_ratio == "XMIN_YMID") {
+		} else if (aspect_ratio == "XMINYMID") {
 			alignment = ViewBox.XMIN_YMIN;
-		} else if (aspect_ratio == "XMID_YMID") {
+		} else if (aspect_ratio == "XMIDYMID") {
 			alignment = ViewBox.XMIN_YMIN;
-		} else if (aspect_ratio == "XMAX_YMID") {
+		} else if (aspect_ratio == "XMAXYMID") {
 			alignment = ViewBox.XMIN_YMIN;
-		} else if (aspect_ratio == "XMIN_YMAX") {
+		} else if (aspect_ratio == "XMINYMAX") {
 			alignment = ViewBox.XMIN_YMIN;
-		} else if (aspect_ratio == "XMID_YMAX") {
+		} else if (aspect_ratio == "XMIDYMAX") {
 			alignment = ViewBox.XMIN_YMIN;
-		} else if (aspect_ratio == "XMAX_YMAX") {
+		} else if (aspect_ratio == "XMAXYMAX") {
 			alignment = ViewBox.XMIN_YMIN;
 		}
 		
-		return new ViewBox (minx, miny, width, height, alignment, slice);
+		return new ViewBox (minx, miny, width, height, alignment, slice, preserve_aspect_ratio);
 	}
 
 	private void parse_layer (Layer layer, SvgStyle parent_style, XmlElement tag) {		
