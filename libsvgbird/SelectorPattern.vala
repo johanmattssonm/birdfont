@@ -35,6 +35,26 @@ public class SelectorPattern : GLib.Object {
 		}
 	}
 
+	public bool has_id () {
+		foreach (SelectorTag tag in tags) {
+			if (tag.id != null) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	public bool has_class () {
+		foreach (SelectorTag tag in tags) {
+			if (tag.css_class != null) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
 	public string to_string () {
 		StringBuilder s = new StringBuilder ();
 		
@@ -82,7 +102,9 @@ public class SelectorPattern : GLib.Object {
 				if (!is_immediately_following (tag, previous)) {
 					return false;
 				}
-			} else if (!pattern.match (tag, id, css_class)) {
+			} 
+			
+			if (!pattern.match (tag, id, css_class)) {
 				return false;
 			}
 		}

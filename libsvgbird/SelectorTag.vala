@@ -20,8 +20,8 @@ namespace SvgBird {
 /** A part of a CSS selector pattern. */
 public class SelectorTag : GLib.Object {
 	public string name;
-	string? id = null;
-	string? css_class = null;
+	public string? id = null;
+	public string? css_class = null;
 	Gee.ArrayList<AttributePattern>? attribute_patterns = null;
 
 	public SelectorTag.empty () {

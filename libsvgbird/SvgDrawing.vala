@@ -24,28 +24,8 @@ public class SvgDrawing : Object {
 	public Defs defs = new Defs ();
 	public ViewBox? view_box = null;
 
-	public double width {
-		get {			
-			return svg_width;
-		}
-		
-		set {
-			svg_width = value;
-		}
-	}
-
-	public double height {
-		get {			
-			return svg_height;
-		}
-		
-		set {
-			svg_height = value;
-		}
-	}
-	
-	public double svg_width = 0;
-	public double svg_height = 0;
+	public double width = 0;
+	public double height = 0;
 
 	public override bool update_boundaries (Context cr) {
 		apply_transform (cr);

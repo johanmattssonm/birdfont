@@ -20,6 +20,7 @@ namespace SvgBird {
 
 public class StyleSheet : GLib.Object {
 	
+	public string css_data { get; set; default = ""; }
 	public Gee.ArrayList<Selector> styles = new Gee.ArrayList<Selector> ();
 	
 	public StyleSheet () {
@@ -59,12 +60,26 @@ public class StyleSheet : GLib.Object {
 				css_class = attribute.get_content ();
 			}
 		}
-		
+
 		foreach (Selector selector in styles) {
-			if (selector.match (tag, id, css_class)) {
+			if (selector.match_tag (tag, id, css_class)) {
 				style.apply (selector.style);
 			}
 		}
+
+		foreach (Selector selector in styles) {
+			if (selector.match_class (tag, id, css_class)) {
+				style.apply (selector.style);
+			}
+		}
+		
+		foreach (Selector selector in styles) {
+			if (selector.match_id (tag, id, css_class)) {
+				style.apply (selector.style);
+			}
+		}
+		
+		SvgStyle.set_style_properties (null, style);
 	}
 	
 	public void merge (StyleSheet style_sheet) {
@@ -72,11 +87,15 @@ public class StyleSheet : GLib.Object {
 			styles.add (selector.copy ());
 		}
 	}
-	
+
 	public static StyleSheet parse (Defs defs, XmlElement style_tag) {
+		return parse_css_data (defs, style_tag.get_content ());
+	}
+	
+	public static StyleSheet parse_css_data (Defs defs, string css_data) {
 		StyleSheet style_sheet = new StyleSheet ();
-		string css = style_tag.get_content ();
-		css = get_cdata (css);
+		string css = get_cdata (css_data);
+		style_sheet.css_data = css;
 		css = add_separators (css);
 		css = replace_whitespace (css);
 		
