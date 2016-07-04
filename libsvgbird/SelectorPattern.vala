@@ -23,7 +23,7 @@ public class SelectorPattern : GLib.Object {
 
 	public SelectorPattern.empty () {
 	}
-
+	
 	public SelectorPattern (string pattern) {
 		string p = pattern.strip ();
 		string[] elements = p.split (" ");
@@ -33,6 +33,36 @@ public class SelectorPattern : GLib.Object {
 				tags.add (new SelectorTag (element));
 			}
 		}
+	}
+
+	public SelectorPattern get_id_patterns () {
+		SelectorPattern pattern = new SelectorPattern.empty ();
+		foreach (SelectorTag tag in tags) {
+			if (tag.id != null) {
+				pattern.tags.add (tag);
+			}
+		}
+		return pattern;
+	}
+
+	public SelectorPattern get_class_patterns () {
+		SelectorPattern pattern = new SelectorPattern.empty ();
+		foreach (SelectorTag tag in tags) {
+			if (tag.css_class != null) {
+				pattern.tags.add (tag);
+			}
+		}
+		return pattern;
+	}
+
+	public SelectorPattern get_pseudo_class_patterns () {
+		SelectorPattern pattern = new SelectorPattern.empty ();
+		foreach (SelectorTag tag in tags) {
+			if (tag.pseudo_class != null) {
+				pattern.tags.add (tag);
+			}
+		}
+		return pattern;
 	}
 
 	public bool has_id () {
@@ -55,6 +85,16 @@ public class SelectorPattern : GLib.Object {
 		return false;
 	}
 
+	public bool has_pseudo_class () {
+		foreach (SelectorTag tag in tags) {
+			if (tag.pseudo_class != null) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	public string to_string () {
 		StringBuilder s = new StringBuilder ();
 		
@@ -78,7 +118,11 @@ public class SelectorPattern : GLib.Object {
 		return pattern;
 	}
 	
-	public bool match (XmlElement tag, string? id, string? css_class) {
+	public bool match (XmlElement tag, string? id, string? css_class, string? pseudo_class) {
+		if (tag.get_name () == "") {
+			return false;
+		}
+		
 		for (int i = tags.size - 1; i >= 0; i--) {
 			SelectorTag pattern = tags.get (i);
 						
@@ -104,7 +148,7 @@ public class SelectorPattern : GLib.Object {
 				}
 			} 
 			
-			if (!pattern.match (tag, id, css_class)) {
+			if (!pattern.match (tag, id, css_class, pseudo_class)) {
 				return false;
 			}
 		}

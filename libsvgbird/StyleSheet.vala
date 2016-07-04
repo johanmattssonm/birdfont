@@ -47,7 +47,7 @@ public class StyleSheet : GLib.Object {
 		return style_sheet;
 	}
 	
-	public void apply_style (XmlElement tag, SvgStyle style) {
+	public void apply_style (XmlElement tag, SvgStyle style, string? pseudo_class) {
 		string? id = null;
 		string? css_class = null;
 		
@@ -62,20 +62,32 @@ public class StyleSheet : GLib.Object {
 		}
 
 		foreach (Selector selector in styles) {
-			if (selector.match_tag (tag, id, css_class)) {
-				style.apply (selector.style);
-			}
-		}
-
-		foreach (Selector selector in styles) {
-			if (selector.match_class (tag, id, css_class)) {
+			if (selector.match_tag (tag, id, css_class, pseudo_class)) {
 				style.apply (selector.style);
 			}
 		}
 		
-		foreach (Selector selector in styles) {
-			if (selector.match_id (tag, id, css_class)) {
-				style.apply (selector.style);
+		if (css_class != null) {
+			foreach (Selector selector in styles) {
+				if (selector.match_class (tag, id, css_class, pseudo_class)) {
+					style.apply (selector.style);
+				}
+			}
+		}
+
+		if (id != null) {
+			foreach (Selector selector in styles) {
+				if (selector.match_id (tag, id, css_class, pseudo_class)) {
+					style.apply (selector.style);
+				}
+			}
+		}
+
+		if (pseudo_class != null) {
+			foreach (Selector selector in styles) {
+				if (selector.match_pseudo_class (tag, id, css_class, pseudo_class)) {
+					style.apply (selector.style);
+				}
 			}
 		}
 		

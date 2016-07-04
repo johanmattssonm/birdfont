@@ -34,7 +34,7 @@ public class SvgFile : GLib.Object {
 		drawing = new SvgDrawing ();
 
 		SvgStyle style = new SvgStyle ();
-		SvgStyle.parse (drawing.defs, style, svg_tag);
+		SvgStyle.parse (drawing.defs, style, svg_tag, null);
 
 		foreach (Attribute attr in svg_tag.get_attributes ()) {	
 			if (attr.get_name () == "width") {
@@ -315,7 +315,7 @@ public class SvgFile : GLib.Object {
 
 	void parse_stop (Gradient gradient, XmlElement tag) {
 		SvgStyle parent_style = new SvgStyle (); // not inherited
-		SvgStyle style = SvgStyle.parse (drawing.defs, parent_style, tag);
+		SvgStyle style = SvgStyle.parse (drawing.defs, parent_style, tag, null);
 		Stop stop = new Stop ();
 		
 		gradient.stops.add (stop);
@@ -428,7 +428,7 @@ public class SvgFile : GLib.Object {
 		
 		object.clip_path = get_clip_path (attributes);
 		object.transforms = get_transform (attributes);
-		object.style = SvgStyle.parse (drawing.defs, parent_style, tag);
+		object.style = SvgStyle.parse (drawing.defs, parent_style, tag, null);
 		object.visible = is_visible (tag); // FIXME: add style fill none
 	}
 		

@@ -557,7 +557,7 @@ public class SvgParser {
 			}
 		}
 		
-		style = SvgStyle.parse (null, style, tag);
+		style = SvgStyle.parse (null, style, tag, null);
 		
 		if (hidden) {
 			return;
@@ -625,7 +625,7 @@ public class SvgParser {
 			}
 		}
 		
-		style = SvgStyle.parse (null, style, tag);
+		style = SvgStyle.parse (null, style, tag, null);
 		
 		if (hidden) {
 			return;
@@ -691,7 +691,7 @@ public class SvgParser {
 			}
 		}
 		
-		style = SvgStyle.parse (null, style, tag);
+		style = SvgStyle.parse (null, style, tag, null);
 		
 		if (hidden) {
 			return;
@@ -769,7 +769,7 @@ public class SvgParser {
 			}
 		}
 		
-		style = SvgStyle.parse (null, style, tag);
+		style = SvgStyle.parse (null, style, tag, null);
 		
 		if (hidden) {
 			return;
@@ -867,7 +867,7 @@ public class SvgParser {
 			}
 		}
 
-		style = SvgStyle.parse (null, style, tag);
+		style = SvgStyle.parse (null, style, tag, null);
 		
 		if (hidden) {
 			return path_list;
@@ -907,7 +907,7 @@ public class SvgParser {
 			}
 		}
 		
-		style = SvgStyle.parse (null, style, tag);
+		style = SvgStyle.parse (null, style, tag, null);
 		
 		if (hidden) {
 			return;

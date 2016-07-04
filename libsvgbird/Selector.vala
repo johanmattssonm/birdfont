@@ -21,6 +21,7 @@ public class Selector : GLib.Object {
 	
 	Gee.ArrayList<SelectorPattern> tag_patterns = new Gee.ArrayList<SelectorPattern> ();
 	Gee.ArrayList<SelectorPattern> class_patterns = new Gee.ArrayList<SelectorPattern> ();
+	Gee.ArrayList<SelectorPattern> pseudo_class_patterns = new Gee.ArrayList<SelectorPattern> ();
 	Gee.ArrayList<SelectorPattern> id_patterns = new Gee.ArrayList<SelectorPattern> ();
 	
 	public SvgStyle style { get; set; }
@@ -32,13 +33,20 @@ public class Selector : GLib.Object {
 			SelectorPattern p = new SelectorPattern (selector_patterns[i]);
 			
 			if (p.has_id ()) {
-				id_patterns.add (p);
+				SelectorPattern id = p.get_id_patterns ();
+				id_patterns.add (id);
 			}
 			
 			if (p.has_class ()) {
-				class_patterns.add (p);
+				SelectorPattern css_class = p.get_class_patterns ();
+				class_patterns.add (css_class);
 			}
 
+			if (p.has_pseudo_class ()) {
+				SelectorPattern pseudo_class = p.get_pseudo_class_patterns ();
+				pseudo_class_patterns.add (pseudo_class);
+			}
+			
 			tag_patterns.add (p);
 		}
 
@@ -58,6 +66,10 @@ public class Selector : GLib.Object {
 		
 		foreach (SelectorPattern pattern in selector.id_patterns) {
 			id_patterns.add (pattern.copy ());
+		}
+		
+		foreach (SelectorPattern pattern in selector.pseudo_class_patterns) {
+			pseudo_class_patterns.add (pattern.copy ());
 		}
 	}
 	
@@ -79,9 +91,9 @@ public class Selector : GLib.Object {
 		return new Selector.copy_constructor (this);
 	}
 	
-	public bool match_tag (XmlElement tag, string? id, string? css_class) {
+	public bool match_tag (XmlElement tag, string? id, string? css_class, string? psedo_class) {
 		foreach (SelectorPattern pattern in tag_patterns) {
-			if (pattern.match (tag, id, css_class)) {
+			if (pattern.match (tag, id, css_class, psedo_class)) {
 				return true;
 			}
 		}
@@ -89,9 +101,9 @@ public class Selector : GLib.Object {
 		return false;
 	}
 	
-	public bool match_id (XmlElement tag, string? id, string? css_class) {
+	public bool match_id (XmlElement tag, string? id, string? css_class, string? psedo_class) {
 		foreach (SelectorPattern pattern in id_patterns) {
-			if (pattern.match (tag, id, css_class)) {
+			if (pattern.match (tag, id, css_class, psedo_class)) {
 				return true;
 			}
 		}
@@ -99,9 +111,19 @@ public class Selector : GLib.Object {
 		return false;
 	}
 	
-	public bool match_class (XmlElement tag, string? id, string? css_class) {
+	public bool match_class (XmlElement tag, string? id, string? css_class, string? psedo_class) {
 		foreach (SelectorPattern pattern in class_patterns) {
-			if (pattern.match (tag, id, css_class)) {
+			if (pattern.match (tag, id, css_class, psedo_class)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public bool match_pseudo_class (XmlElement tag, string? id, string? css_class, string? psedo_class) {
+		foreach (SelectorPattern pattern in pseudo_class_patterns) {
+			if (pattern.match (tag, id, css_class, psedo_class)) {
 				return true;
 			}
 		}

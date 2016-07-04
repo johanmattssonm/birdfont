@@ -22,6 +22,7 @@ public class SelectorTag : GLib.Object {
 	public string name;
 	public string? id = null;
 	public string? css_class = null;
+	public string? pseudo_class = null;
 	Gee.ArrayList<AttributePattern>? attribute_patterns = null;
 
 	public SelectorTag.empty () {
@@ -29,39 +30,38 @@ public class SelectorTag : GLib.Object {
 	
 	public SelectorTag (string pattern) {
 		string tag_pattern = pattern.strip ();
-		int id_separator = tag_pattern.index_of ("#");
-		int class_separator = tag_pattern.index_of (".");
 		int attribute_separator = tag_pattern.index_of ("[");
 
 		if (attribute_separator != -1) {
 			parse_attributes (tag_pattern.substring (attribute_separator));
+			tag_pattern = tag_pattern.substring (0, attribute_separator - "[".length);
 		}
-				
-		if (id_separator != -1) {
-			name = tag_pattern.substring (0, id_separator);
-			
-			id_separator += "#".length;
-			if (attribute_separator == -1) {
-				id = tag_pattern.substring (id_separator);
-			} else {
-				id = tag_pattern.substring (id_separator, attribute_separator - id_separator);
-			}
-		} else if (class_separator != -1) {
-			name = tag_pattern.substring (0, class_separator);
-			
-			class_separator += ".".length;
-			if (attribute_separator == -1) {
-				css_class = tag_pattern.substring (class_separator);
-			} else {
-				css_class = tag_pattern.substring (class_separator, attribute_separator - class_separator);
-			}
-		} else {
-			if (attribute_separator == -1) {
-				name = tag_pattern;
-			} else {
-				css_class = tag_pattern.substring (0, attribute_separator);
-			}
+
+		tag_pattern = create_part (tag_pattern, ":", out pseudo_class);
+		tag_pattern = create_part (tag_pattern, ".", out css_class);
+		tag_pattern = create_part (tag_pattern, "#", out id);
+		name = tag_pattern;
+	}
+	
+	string create_part (string tag_pattern, string separator, out string? part) {
+		int separator_index = tag_pattern.index_of (separator);
+		int separator_length = separator.length;
+	
+		part = null;
+		
+		if (separator_index == -1) {
+			return tag_pattern;
 		}
+		
+		if (separator_index > -1 && separator_index + separator_length < tag_pattern.length) {
+			part = tag_pattern.substring (separator_index + separator_length);
+		}
+		
+		if (separator_index > separator_length) {
+			return tag_pattern.substring (0, separator_index);
+		} 
+		
+		return "";
 	}
 	
 	public SelectorTag copy () {
@@ -70,6 +70,7 @@ public class SelectorTag : GLib.Object {
 		tag.name = name;
 		tag.id = id;
 		tag.css_class = css_class;
+		tag.pseudo_class = pseudo_class;
 		
 		if (attribute_patterns != null) { 
 			foreach (AttributePattern p in (!) attribute_patterns) {
@@ -133,7 +134,7 @@ public class SelectorTag : GLib.Object {
 		return pattern;
 	}
 
-	public bool match (XmlElement tag, string? id, string? css_class) {
+	public bool match (XmlElement tag, string? id, string? css_class, string? pseudo_class) {
 		string tag_name = tag.get_name ();
 		
 		if (this.name != "*" && this.name != "" && tag_name != "") {
@@ -162,6 +163,16 @@ public class SelectorTag : GLib.Object {
 			}
 		}
 		
+		if (this.pseudo_class != null) {
+			if (pseudo_class == null) {
+				return false;
+			} 
+			
+			if (((!) this.pseudo_class) != ((!) pseudo_class)) {
+				return false;
+			}
+		}
+		
 		if (attribute_patterns != null) {
 			foreach (AttributePattern pattern in (!) attribute_patterns) {
 				if (!pattern.match (tag.get_attributes ())) {
@@ -185,6 +196,11 @@ public class SelectorTag : GLib.Object {
 		if (css_class != null) {
 			s.append (".");
 			s.append ((!) css_class);
+		}
+
+		if (pseudo_class != null) {
+			s.append (":");
+			s.append ((!) pseudo_class);
 		}
 		
 		if (attribute_patterns != null) {
