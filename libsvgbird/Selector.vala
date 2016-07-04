@@ -91,9 +91,9 @@ public class Selector : GLib.Object {
 		return new Selector.copy_constructor (this);
 	}
 	
-	public bool match_tag (XmlElement tag, string? id, string? css_class, string? psedo_class) {
+	public bool match_tag (XmlElement tag, string? id, string? css_class, string? pseudo_class) {
 		foreach (SelectorPattern pattern in tag_patterns) {
-			if (pattern.match (tag, id, css_class, psedo_class)) {
+			if (pattern.match (tag, id, css_class, pseudo_class)) {
 				return true;
 			}
 		}
@@ -101,9 +101,9 @@ public class Selector : GLib.Object {
 		return false;
 	}
 	
-	public bool match_id (XmlElement tag, string? id, string? css_class, string? psedo_class) {
+	public bool match_id (XmlElement tag, string? id, string? css_class, string? pseudo_class) {
 		foreach (SelectorPattern pattern in id_patterns) {
-			if (pattern.match (tag, id, css_class, psedo_class)) {
+			if (pattern.match (tag, id, css_class, pseudo_class)) {
 				return true;
 			}
 		}
@@ -111,9 +111,9 @@ public class Selector : GLib.Object {
 		return false;
 	}
 	
-	public bool match_class (XmlElement tag, string? id, string? css_class, string? psedo_class) {
+	public bool match_class (XmlElement tag, string? id, string? css_class, string? pseudo_class) {
 		foreach (SelectorPattern pattern in class_patterns) {
-			if (pattern.match (tag, id, css_class, psedo_class)) {
+			if (pattern.match (tag, id, css_class, pseudo_class)) {
 				return true;
 			}
 		}
@@ -121,9 +121,9 @@ public class Selector : GLib.Object {
 		return false;
 	}
 	
-	public bool match_pseudo_class (XmlElement tag, string? id, string? css_class, string? psedo_class) {
+	public bool match_pseudo_class (XmlElement tag, string? id, string? css_class, string? pseudo_class) {
 		foreach (SelectorPattern pattern in pseudo_class_patterns) {
-			if (pattern.match (tag, id, css_class, psedo_class)) {
+			if (pattern.match (tag, id, css_class, pseudo_class)) {
 				return true;
 			}
 		}

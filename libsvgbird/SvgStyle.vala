@@ -236,7 +236,7 @@ public class SvgStyle : GLib.Object {
 		}
 	}
 	
-	public static SvgStyle parse (Defs? d, SvgStyle inherited, XmlElement tag, string? psedo_class) {
+	public static SvgStyle parse (Defs? d, SvgStyle inherited, XmlElement tag, string? psuedo_class) {
 		SvgStyle s = new SvgStyle ();
 		Attributes attributes = tag.get_attributes ();
 
@@ -245,7 +245,7 @@ public class SvgStyle : GLib.Object {
 		
 		if (d != null) {
 			StyleSheet style_sheet = ((!) d).style_sheet;
-			style_sheet.apply_style (tag, s, psedo_class);
+			style_sheet.apply_style (tag, s, psuedo_class);
 		}
 
 		foreach (Attribute a in attributes) {
