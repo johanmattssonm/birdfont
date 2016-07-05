@@ -46,7 +46,7 @@ public class SvgFile : GLib.Object {
 			}
 
 			if (attr.get_name () == "viewBox") {
-				drawing.view_box = parse_view_box (attr.get_content (), svg_tag);
+				drawing.view_box = parse_view_box (svg_tag);
 			}
 		}
 				
@@ -78,13 +78,18 @@ public class SvgFile : GLib.Object {
 		return drawing;
 	}
 
-	ViewBox? parse_view_box (string parameters, XmlElement tag) {
-		string arguments = parameters.replace (",", " ");
+	public static ViewBox? parse_view_box (XmlElement tag) {
+		string arguments;
+		string parameters = "";
 		string aspect_ratio = "";
 		bool slice = true;
 		bool preserve_aspect_ratio = true;
 		
 		foreach (Attribute attribute in tag.get_attributes ()) {
+			if (attribute.get_name () == "viewBox") {
+				parameters = attribute.get_content ();
+			}
+			
 			if (attribute.get_name () == "preserveAspectRatio") {
 				aspect_ratio = attribute.get_content ();
 				
@@ -101,6 +106,8 @@ public class SvgFile : GLib.Object {
 				preserve_aspect_ratio = false;
 			}
 		}
+		
+		arguments = parameters.replace (",", " ");
 		
 		while (arguments.index_of ("  ") > -1) {
 			arguments = arguments.replace ("  ", " ");

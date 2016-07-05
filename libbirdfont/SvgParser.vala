@@ -221,6 +221,19 @@ public class SvgParser {
 	}
 	
 	private PathList parse_svg_tag (XmlElement tag, Layer pl) {
+		double width = 1;
+		double height = 1;
+
+		foreach (Attribute attribute in tag.get_attributes ()) {	
+			if (attribute.get_name () == "width") {
+				width = parse_double (attribute.get_content ());
+			}
+			
+			if (attribute.get_name () == "height") {
+				height = parse_double (attribute.get_content ());
+			}
+		}
+	
 		foreach (XmlElement t in tag) {
 			
 			if (t.get_name () == "g") {
@@ -264,7 +277,28 @@ public class SvgParser {
 			}
 		}
 		
-		return LayerUtils.get_all_paths (pl);
+		PathList paths = LayerUtils.get_all_paths (pl);
+
+		ViewBox? box = SvgFile.parse_view_box (tag);
+		if (box != null) {
+			ViewBox view_box = (!) box;
+			Cairo.Matrix matrix = Cairo.Matrix.identity ();
+			//
+			double x = 0;
+			double y = 0;
+			to_svg_coordinate (ref x, ref y);
+			
+			//matrix.translate (x, y);
+
+			Cairo.Matrix view_box_matrix = view_box.get_matrix (width, height);
+			view_box_matrix.multiply (view_box_matrix, matrix);
+			
+			//view_box_matrix.scale (1, -1);
+			SvgTransform t = new SvgTransform.for_matrix (view_box_matrix);
+			transform (t.get_xml (), pl);
+		}
+		
+		return paths;
 	}
 	
 	private void parse_layer (XmlElement tag, Layer pl) {
@@ -300,7 +334,7 @@ public class SvgParser {
 
 			if (t.get_name () == "svg") {
 				layer = new Layer ();
-				parse_layer (t, layer);
+				parse_svg_tag (t, layer);
 				pl.objects.add (layer);
 			}
 				
@@ -413,7 +447,7 @@ public class SvgParser {
 				apply_matrix_on_handle (left, a, b, c, d, e, f);
 			}
 			
-			ep.independent_y = font.top_position - ep.independent_y;
+			ep.independent_y = font.top_limit - ep.independent_y;
 			ep.independent_x -= glyph.left_limit;
 			
 			dx = a * ep.independent_x + c * ep.independent_y + e;
@@ -422,7 +456,7 @@ public class SvgParser {
 			ep.independent_x = dx;
 			ep.independent_y = dy;
 			
-			ep.independent_y = font.top_position - ep.independent_y;
+			ep.independent_y = font.top_limit - ep.independent_y;
 			ep.independent_x += glyph.left_limit;
 		}
 	}
@@ -435,7 +469,7 @@ public class SvgParser {
 		Font font = BirdFont.get_current_font ();
 		Glyph glyph = MainWindow.get_current_glyph ();
 
-		h.y = font.top_position - h.y;
+		h.y = font.top_limit - h.y;
 		h.x -= glyph.left_limit;
 		
 		dx = a * h.x + c * h.y + e;
@@ -444,7 +478,7 @@ public class SvgParser {
 		h.x = dx;
 		h.y = dy;
 		
-		h.y = font.top_position - h.y;
+		h.y = font.top_limit - h.y;
 		h.x += glyph.left_limit;
 	}
 
@@ -1128,6 +1162,15 @@ public class SvgParser {
 
 		// TODO: Find out if it is possible to tie handles.
 		return path_list;
+	}
+
+	void to_svg_coordinate (ref double x, ref double y) {
+		Font font = BirdFont.get_current_font ();
+		Glyph glyph = MainWindow.get_current_glyph ();
+		x -= glyph.left_limit;
+		y -= font.base_line;
+		x -= glyph.left_limit;	
+		y -= font.top_limit;
 	}
 
 	void move_and_resize (BezierPoints[] b, int num_b, bool svg_glyph, double units, Glyph glyph) {

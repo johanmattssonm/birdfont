@@ -44,48 +44,12 @@ public class SvgDrawing : Object {
 	}
 
 	void apply_view_box (Context cr) {
-		double scale_x = 1;
-		double scale_y = 1;
-		double scale = 1;
-
 		if (view_box != null) {
 			ViewBox box = (!) view_box;
-			
-			cr.translate (box.minx, box.miny);
-			scale_x = width / box.width;
-			scale_y = height / box.height;
-			
-			bool scale_width = scale_x > scale_y;
-			
-			if (scale_width) {
-				scale = scale_y;
-			} else {
-				scale = scale_x;
-			}
-			
-			if (box.preserve_aspect_ratio) {
-				if ((box.alignment & ViewBox.XMID) > 0) {
-					cr.translate ((width - box.width * scale) / 2, 0);
-				} else if ((box.alignment & ViewBox.XMAX) > 0) {
-					cr.translate ((width - box.width * scale), 0);
-				}
-
-				if ((box.alignment & ViewBox.YMID) > 0) {
-					cr.translate ((height - box.height * scale) / 2, 0);
-				} else if ((box.alignment & ViewBox.YMAX) > 0) {
-					cr.translate ((height - box.height * scale), 0);
-				}
-			}
-
-			if (!box.preserve_aspect_ratio) {
-				cr.scale (scale_x, scale_y);
-			} else if (scale_width) {
-				scale = scale_y;
-				cr.scale (scale, scale);
-			} else {
-				scale = scale_x;
-				cr.scale (scale, scale);
-			}	
+			Matrix view_box_matrix = box.get_matrix (width, height);
+			Matrix view_matrix = cr.get_matrix ();
+			view_box_matrix.multiply (view_box_matrix, view_matrix);		
+			cr.set_matrix (view_box_matrix);
 		}
 	}
 
@@ -112,6 +76,11 @@ public class SvgDrawing : Object {
 		drawing.defs = defs.copy ();
 		drawing.width = width;
 		drawing.height = height;
+		
+		if (view_box != null) {
+			drawing.view_box = ((!) view_box).copy ();
+		}
+		
 		return drawing;
 	}
 	

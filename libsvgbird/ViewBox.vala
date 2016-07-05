@@ -49,6 +49,9 @@ public class ViewBox : GLib.Object {
 
 	public bool preserve_aspect_ratio;
 
+	public ViewBox.empty () {
+	}
+
 	public ViewBox (double minx, double miny, double width, double height,
 		uint alignment, bool slice, bool preserve_aspect_ratio) {
 			
@@ -61,7 +64,71 @@ public class ViewBox : GLib.Object {
 		this.slice = slice;
 		this.preserve_aspect_ratio = preserve_aspect_ratio;
 	}
-	
+
+	public ViewBox copy () {
+		ViewBox box = new ViewBox.empty (); 
+		
+		box.minx = minx;
+		box.miny = miny;
+		box.width = width;
+		box.height = height;
+		
+		box.alignment = alignment;
+		box.slice = slice;
+		box.preserve_aspect_ratio = preserve_aspect_ratio;
+		
+		return box;
+	}
+
+	public Matrix get_matrix (double original_width, double original_height) {
+		double scale_x = 1;
+		double scale_y = 1;
+		double scale = 1;
+
+		Matrix matrix = Matrix.identity ();
+
+		if (original_width == 0  || original_height == 0 || width == 0 || height == 0) {
+			return matrix;
+		}
+		
+		matrix.translate (minx, miny);
+		scale_x = original_width / width;
+		scale_y = original_height / height;
+		
+		bool scale_width = scale_x > scale_y;
+		
+		if (scale_width) {
+			scale = scale_y;
+		} else {
+			scale = scale_x;
+		}
+		
+		if (preserve_aspect_ratio) {
+			if ((alignment & ViewBox.XMID) > 0) {
+				matrix.translate ((original_width - width * scale) / 2, 0);
+			} else if ((alignment & ViewBox.XMAX) > 0) {
+				matrix.translate ((original_width - width * scale), 0);
+			}
+
+			if ((alignment & ViewBox.YMID) > 0) {
+				matrix.translate ((original_height - height * scale) / 2, 0);
+			} else if ((alignment & ViewBox.YMAX) > 0) {
+				matrix.translate ((original_height - height * scale), 0);
+			}
+		}
+
+		if (!preserve_aspect_ratio) {
+			matrix.scale (scale_x, scale_y);
+		} else if (scale_width) {
+			scale = scale_y;
+			matrix.scale (scale, scale);
+		} else {
+			scale = scale_x;
+			matrix.scale (scale, scale);
+		}
+		
+		return matrix;
+	}	
 }
 
 }

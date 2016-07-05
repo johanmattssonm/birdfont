@@ -601,6 +601,7 @@ public class DrawingTools : ToolCollection  {
 
 		monochrome_tool = new Tool ("svg_to_birdfont", t_("Convert SVG file to monochrome glyph"));
 		monochrome_tool.select_action.connect ((self) => {
+			MainWindow.get_current_glyph ().store_undo_state ();
 			move_tool.convert_svg_to_monochrome ();
 		});
 
