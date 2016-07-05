@@ -1149,11 +1149,11 @@ public class SvgParser {
 				b[i].y2 += font.base_line;
 			} else {
 				b[i].x0 += glyph.left_limit;
-				b[i].y0 += font.top_position;
+				b[i].y0 += font.top_limit;
 				b[i].x1 += glyph.left_limit;
-				b[i].y1 += font.top_position;
+				b[i].y1 += font.top_limit;
 				b[i].x2 += glyph.left_limit;
-				b[i].y2 += font.top_position;
+				b[i].y2 += font.top_limit;
 			}
 		}
 	}
