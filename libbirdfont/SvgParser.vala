@@ -216,8 +216,11 @@ public class SvgParser {
 	}
 	
 	private PathList parse_svg_file (XmlElement tag) {
-		Layer pl = new Layer ();
+		Layer layer = new Layer ();
+		return parse_svg_tag (tag, layer);
+	}
 	
+	private PathList parse_svg_tag (XmlElement tag, Layer pl) {
 		foreach (XmlElement t in tag) {
 			
 			if (t.get_name () == "g") {
@@ -225,7 +228,7 @@ public class SvgParser {
 			}
 
 			if (t.get_name () == "svg") {
-				parse_layer (t, pl);
+				parse_svg_tag (t, pl);
 			}
 			
 			if (t.get_name () == "switch") {

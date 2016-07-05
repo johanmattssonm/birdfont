@@ -555,7 +555,7 @@ public class MoveTool : Tool {
 				glyph.delete_object (svg);
 
 				foreach (Path path in path_list.paths) {
-					path.move (svg.x - glyph.left_limit, svg.y - font.top_position);
+					path.move (svg.x - glyph.left_limit, svg.y - font.top_limit);
 				}				
 			}
 		}
