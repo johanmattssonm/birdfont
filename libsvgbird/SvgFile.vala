@@ -870,8 +870,6 @@ public class SvgFile : GLib.Object {
 		}
 
 		if (format == SvgFormat.ILLUSTRATOR) {
-			print ("Remove first");
-			
 			Gee.ArrayList<Points> illustrator_path_data = new Gee.ArrayList<Points> ();
 			
 			foreach (Points p in path_data) {
@@ -914,8 +912,9 @@ public class SvgFile : GLib.Object {
 		return double.parse ((!) s);
 	}
 	
-	// FIXME: rename to instructions
-	public static void get_bezier_points (string point_data, out BezierPoints[] bezier_points, out int points, bool svg_glyph) {
+	public static void get_bezier_points (string point_data, 
+		out BezierPoints[] bezier_points, out int points, bool svg_glyph) {
+			
 		double px = 0;
 		double py = 0;
 		double px2 = 0;

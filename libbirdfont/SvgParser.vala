@@ -158,10 +158,6 @@ public class SvgParser {
 				has_format = true;
 			}
 		}
-		
-		if (format != SvgFormat.NONE) {
-			parser.set_format (format);
-		}
 
 		// parse the file
 		if (!has_format) {
@@ -1138,13 +1134,13 @@ public class SvgParser {
 		}
 		
 		move_and_resize (bezier_points, points, svg_glyph, units, glyph);
-		path_list = create_svg_paths (d, format);
+		path_list = create_svg_paths (d);
 
 		// TODO: Find out if it is possible to tie handles.
 		return path_list;
 	}
 	
-	public PathList create_svg_paths (string path_data, SvgFormat format) {
+	public PathList create_svg_paths (string path_data) {
 		Gee.ArrayList<Points> points_set = SvgFile.parse_points (path_data, format);
 		PathList path_list = new PathList ();
 		
