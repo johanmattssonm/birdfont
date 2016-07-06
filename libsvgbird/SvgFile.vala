@@ -877,7 +877,7 @@ public class SvgFile : GLib.Object {
 			foreach (Points p in path_data) {
 				return_val_if_fail (p.point_data.size % 8 == 0, path_data);
 				
-				if (p.point_data.size > 16) {
+				if (p.point_data.size > 8) {
 					Points illustrator_points = new Points ();
 					
 					illustrator_points.x = p.point_data.get_double (p.point_data.size - 3);
@@ -894,34 +894,7 @@ public class SvgFile : GLib.Object {
 				}
 			}
 			
-			return illustrator_path_data;
-			
-			/*
-			foreach (Points p in path_data) {
-				//p.point_data.remove_first (8);
-				p.point_data.size -= 8;
-				p.point_data.get_double (0)
-				p.point_data.get_double (1)
-			}
-			*/
-			
-			
-			
-			/*EditPoint first = path.delete_first_point ();
-			EditPoint last = path.get_last_point ();
-			handle = last.get_right_handle ();
-			
-			last.get_right_handle ().independent_x = first.get_left_handle ().x;
-			last.get_right_handle ().independent_y = first.get_left_handle ().y;
-			
-			if (points[0].type == POINT_CUBIC && !handle.is_line ()) {
-				handle.set_point_type (PointType.CUBIC);
-				handle.move_to_coordinate (points[0].value, points[1].value);
-			} else {
-				handle.set_point_type (PointType.LINE_CUBIC);
-				path.recalculate_linear_handles_for_point (last);
-			}
-			*/
+			path_data = illustrator_path_data;
 		}
 		
 		return path_data;
