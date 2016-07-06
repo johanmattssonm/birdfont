@@ -14,12 +14,6 @@
 
 namespace SvgBird {
 
-[CCode (cheader_filename="point_value.h")]
-public extern struct PointValue {
-    uchar type;
-    double value;
-}
-
 public static const uchar POINT_NONE = 0;
 public static const uchar POINT_ARC = 1;
 public static const uchar POINT_CUBIC = 2;

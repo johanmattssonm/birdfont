@@ -107,7 +107,7 @@ public class Layer : Object {
 				} else {
 					sublayer.draw_outline (cr);
 				}
-			} else {
+			} else if (object.visible) {
 				object.apply_transform (cr);
 				object.draw_outline (cr);
 				

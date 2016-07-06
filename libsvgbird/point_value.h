@@ -14,8 +14,13 @@
 
 #include<glib.h>
 
+#ifndef __SVGBIRD_POINT_VALUE_H__
+#define __SVGBIRD_POINT_VALUE_H__
+
 typedef union {
 	gdouble value;
 	guchar type;
 } SvgBirdPointValue;
+
+#endif
 

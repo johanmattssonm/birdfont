@@ -77,6 +77,7 @@ def make_birdfont(target_binary, deps):
         --enable-experimental \
         birdfont/*.vala \
 		--vapidir=./ \
+		--pkg svgbirdpoint \
 		--pkg """ + config.GEE + """ \
 		--pkg gio-2.0  \
 		--pkg cairo \
@@ -141,6 +142,7 @@ def make_birdfont_export(target_binary, deps):
         """ + config.VALACFLAGS.get("birdfont-export", "") + """ \
 		birdfont-export/*.vala \
 		--vapidir=./ \
+		--pkg svgbirdpoint \
 		--pkg """ + config.GEE + """ \
 		--pkg gio-2.0  \
 		--pkg cairo \
@@ -197,6 +199,7 @@ def make_birdfont_import(target_binary, deps):
         """ + config.VALACFLAGS.get("birdfont-import", "") + """ \
 		birdfont-import/*.vala \
 		--vapidir=./ \
+		--pkg svgbirdpoint \
 		--pkg """ + config.GEE + """ \
 		--pkg gio-2.0  \
 		--pkg cairo \
@@ -252,6 +255,7 @@ def make_birdfont_autotrace(target_binary, deps):
         """ + config.VALACFLAGS.get("birdfont-autotrace", "") + """ \
 		birdfont-autotrace/*.vala \
 		--vapidir=./ \
+		--pkg svgbirdpoint \
 		--pkg """ + config.GEE + """ \
 		--pkg gio-2.0  \
 		--pkg cairo \
@@ -314,6 +318,7 @@ def make_libbirdfont(target_binary, deps):
         libbirdfont/OpenFontFormat/*.vala \
         libbirdfont/TextRendering/*.vala \
         --pkg posix \
+        --pkg svgbirdpoint \
         --pkg """ + config.GEE + """ \
         --pkg gio-2.0 \
         --pkg cairo \
@@ -382,6 +387,7 @@ def make_libsvgbird(target_binary, deps):
         -H build/libsvgbird/svgbird.h \
         libsvgbird/*.vala \
         --pkg posix \
+        --pkg svgbirdpoint \
         --pkg """ + config.GEE + """ \
         --pkg gio-2.0 \
         --pkg cairo \
@@ -532,6 +538,7 @@ def make_birdfont_test(target_binary, deps):
         --enable-experimental \
         birdfont-test/*.vala \
 		--vapidir=./ \
+		--pkg svgbirdpoint \
 		--pkg """ + config.GEE + """ \
 		--pkg gio-2.0  \
 		--pkg cairo \

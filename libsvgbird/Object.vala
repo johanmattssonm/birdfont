@@ -113,6 +113,7 @@ public abstract class Object : GLib.Object {
 		to.top = from.top;
 		to.bottom = from.bottom;
 		
+		to.visible = from.visible;
 		to.style = from.style.copy ();
 		to.transforms = from.transforms.copy ();
 		
@@ -127,8 +128,8 @@ public abstract class Object : GLib.Object {
 
 	public void paint (Context cr) {
 		Color fill, stroke;
-		bool need_fill = style.fill_gradient != null || style.fill != null;
-		bool need_stroke = style.stroke_gradient != null || style.stroke != null;
+		bool need_fill = (style.fill_gradient != null || style.fill != null);
+		bool need_stroke = (style.stroke_gradient != null || style.stroke != null);
 
 		cr.set_line_width (style.stroke_width);
 		

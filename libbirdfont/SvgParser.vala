@@ -221,8 +221,8 @@ public class SvgParser {
 	}
 	
 	private PathList parse_svg_tag (XmlElement tag, Layer pl) {
-		double width = 1;
-		double height = 1;
+		double width = 0;
+		double height = 0;
 
 		foreach (Attribute attribute in tag.get_attributes ()) {	
 			if (attribute.get_name () == "width") {
@@ -283,17 +283,8 @@ public class SvgParser {
 		if (box != null) {
 			ViewBox view_box = (!) box;
 			Cairo.Matrix matrix = Cairo.Matrix.identity ();
-			//
-			double x = 0;
-			double y = 0;
-			to_svg_coordinate (ref x, ref y);
-			
-			//matrix.translate (x, y);
-
 			Cairo.Matrix view_box_matrix = view_box.get_matrix (width, height);
 			view_box_matrix.multiply (view_box_matrix, matrix);
-			
-			//view_box_matrix.scale (1, -1);
 			SvgTransform t = new SvgTransform.for_matrix (view_box_matrix);
 			transform (t.get_xml (), pl);
 		}
@@ -1157,10 +1148,97 @@ public class SvgParser {
 		if (format == SvgFormat.ILLUSTRATOR) {
 			path_list = create_paths_illustrator (bezier_points, points);
 		} else {
-			path_list = create_paths_inkscape (bezier_points, points);
+			path_list = create_svg_paths_inkscape (d);
 		}
 
 		// TODO: Find out if it is possible to tie handles.
+		return path_list;
+	}
+	
+	public PathList create_svg_paths_inkscape (string path_data) {
+		Gee.ArrayList<Points> points_set = SvgFile.parse_points (path_data);
+		PathList path_list = new PathList ();
+		
+		foreach (Points p in points_set) {
+			Path path = new Path ();
+			
+			PointValue* points = p.point_data.data;
+			EditPoint next = new EditPoint (p.x, -p.y, PointType.CUBIC);
+			EditPointHandle handle;
+
+			if (p.size % 8 != 0) {
+				warning ("Points not padded.");
+				return path_list;
+			}
+			
+			path.add_point (next);
+					
+			for (int i = 0; i < p.size; i += 8) {
+				
+				switch (points[i].type) {
+				case POINT_ARC:
+				/*
+					draw_arc (cr, , points[i + 2].value,
+						points[i + 3].value, points[i + 4].value,
+						points[i + 5].value, points[i + 6].value,
+						points[i + 7].value);
+						*/
+					break;
+				case POINT_CUBIC:
+					handle = next.get_right_handle ();
+					handle.x = points[i + 1].value;
+					handle.y = -points[i + 2].value;
+					handle.type = PointType.CUBIC;
+					
+					next = new EditPoint (points[i + 5].value, -points[i + 6].value, PointType.CUBIC);
+					path.add_point (next);
+					
+					handle = next.get_left_handle ();
+					handle.x = points[i + 3].value;
+					handle.y = -points[i + 4].value;
+					handle.type = PointType.CUBIC;
+
+					handle = next.get_right_handle ();
+					handle.x = p.x;
+					handle.y = -p.y;
+					handle.type = PointType.CUBIC;
+					
+					break;
+				case POINT_LINE:
+					handle = next.get_right_handle ();
+					handle.type = PointType.LINE_CUBIC;
+					
+					next = new EditPoint (points[i + 1].value, -points[i + 2].value, PointType.CUBIC);
+					path.add_point (next);
+					
+					handle = next.get_left_handle ();
+					handle.type = PointType.LINE_CUBIC;
+					
+					break;
+				}
+			}
+			
+			if (p.closed) {
+				path.close ();
+				path.get_first_point ().color = Color.blue ();
+				path.get_last_point ().color = Color.green ();
+			}
+
+			Font font = BirdFont.get_current_font ();
+			Glyph glyph = MainWindow.get_current_glyph ();
+			
+			foreach (EditPoint e in path.points) {
+				e.independent_x += glyph.left_limit;
+				e.independent_y += font.top_limit;
+				e.get_right_handle ().independent_x += glyph.left_limit;
+				e.get_right_handle ().independent_y += font.top_limit;
+				e.get_left_handle ().independent_x += glyph.left_limit;
+				e.get_left_handle ().independent_y += font.top_limit;	
+			}
+			
+			path_list.add (path);
+		}
+		
 		return path_list;
 	}
 

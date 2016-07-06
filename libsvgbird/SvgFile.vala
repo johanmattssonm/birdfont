@@ -436,7 +436,7 @@ public class SvgFile : GLib.Object {
 		object.clip_path = get_clip_path (attributes);
 		object.transforms = get_transform (attributes);
 		object.style = SvgStyle.parse (drawing.defs, parent_style, tag, null);
-		object.visible = is_visible (tag); // FIXME: add style fill none
+		object.visible = is_visible (tag);
 	}
 		
 	ClipPath? get_clip_path (Attributes attributes) {
@@ -773,7 +773,7 @@ public class SvgFile : GLib.Object {
 		layer.add_object (path);
 	}
 
-	public Gee.ArrayList<Points> parse_points (string data) {
+	public static Gee.ArrayList<Points> parse_points (string data) {
 		Gee.ArrayList<Points> path_data = new Gee.ArrayList<Points> ();
 		Points points = new Points ();
 		BezierPoints[] bezier_points;
