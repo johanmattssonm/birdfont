@@ -25,14 +25,26 @@ public class Doubles : GLib.Object {
 		data = new PointValue[capacity];
 	}
 
+	public Doubles.for_capacity (int capacity) {
+		data = new PointValue[capacity];
+		this.capacity = capacity;
+	}
+	
 	~Doubles () {
 		delete data;
 		data = null;
 	}
 	
-	public Doubles.for_capacity (int capacity) {
-		data = new PointValue[capacity];
-		this.capacity = capacity;
+	public void remove_first (int n) {
+		if (size < n) {
+			return;
+		}
+		
+		size -= n;
+		
+		for (int i = 0; i < size; i++) {
+			data[i] = data[i + n];
+		}
 	}
 	
 	void increase_capacity () {
@@ -86,6 +98,20 @@ public class Doubles : GLib.Object {
 		return data[index].value;
 	}
 
+	public uchar get_point_type (int index) {
+		if (unlikely (index < 0)) {
+			warning ("index < 0");
+			return 0;
+		}
+
+		if (unlikely (index >= size)) {
+			warning ("index >= size");
+			return 0;
+		}
+		
+		return data[index].type;
+	}
+	
 	public string get_string (int i) {
 		return round (get_double (i));
 	}

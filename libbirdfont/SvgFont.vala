@@ -13,6 +13,7 @@
 */
 
 using B;
+using SvgBird;
 
 namespace BirdFont {
 

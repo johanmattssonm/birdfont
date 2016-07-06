@@ -18,19 +18,12 @@ using SvgBird;
 
 namespace BirdFont {
 
-public enum SvgFormat {
-	NONE,
-	INKSCAPE,
-	ILLUSTRATOR
-}
-
 public enum SvgType {
 	COLOR,
 	REGULAR
 }
 
 public class SvgParser {
-	
 	SvgFormat format = SvgFormat.ILLUSTRATOR;
 	
 	public SvgParser () {
@@ -142,12 +135,13 @@ public class SvgParser {
 		MainWindow.file_chooser (t_("Import"), fc, FileChooser.LOAD | FileChooser.DIRECTORY);
 	}
 	
-	public static PathList import_svg_data (string xml_data, SvgFormat format = SvgFormat.NONE) {
+	public static PathList import_svg_data (string xml_data) {
 		Glyph glyph = MainWindow.get_current_glyph ();
-		return import_svg_data_in_glyph (xml_data, glyph, format);
+		SvgParser parser = new SvgParser ();
+		return parser.import_svg_data_in_glyph (xml_data, glyph);
 	}
 	
-	public static PathList import_svg_data_in_glyph (string xml_data, Glyph glyph, SvgFormat format = SvgFormat.NONE) {
+	public PathList import_svg_data_in_glyph (string xml_data, Glyph glyph) {
 		PathList path_list = new PathList ();
 		string[] lines = xml_data.split ("\n");
 		bool has_format = false;
@@ -1145,18 +1139,22 @@ public class SvgParser {
 		
 		move_and_resize (bezier_points, points, svg_glyph, units, glyph);
 		
+		/*
 		if (format == SvgFormat.ILLUSTRATOR) {
 			path_list = create_paths_illustrator (bezier_points, points);
 		} else {
-			path_list = create_svg_paths_inkscape (d);
+			
 		}
+		*/
+
+		path_list = create_svg_paths (d, format);
 
 		// TODO: Find out if it is possible to tie handles.
 		return path_list;
 	}
 	
-	public PathList create_svg_paths_inkscape (string path_data) {
-		Gee.ArrayList<Points> points_set = SvgFile.parse_points (path_data);
+	public PathList create_svg_paths (string path_data, SvgFormat format) {
+		Gee.ArrayList<Points> points_set = SvgFile.parse_points (path_data, format);
 		PathList path_list = new PathList ();
 		
 		foreach (Points p in points_set) {
@@ -1166,6 +1164,11 @@ public class SvgParser {
 			EditPoint next = new EditPoint (p.x, -p.y, PointType.CUBIC);
 			EditPointHandle handle;
 
+			if (p.size == 0) {
+				warning ("No points in path.");
+				return path_list;
+			}
+			
 			if (p.size % 8 != 0) {
 				warning ("Points not padded.");
 				return path_list;
@@ -1220,8 +1223,6 @@ public class SvgParser {
 			
 			if (p.closed) {
 				path.close ();
-				path.get_first_point ().color = Color.blue ();
-				path.get_last_point ().color = Color.green ();
 			}
 
 			Font font = BirdFont.get_current_font ();
@@ -1236,19 +1237,11 @@ public class SvgParser {
 				e.get_left_handle ().independent_y += font.top_limit;	
 			}
 			
+			path.recalculate_linear_handles ();
 			path_list.add (path);
 		}
 		
 		return path_list;
-	}
-
-	void to_svg_coordinate (ref double x, ref double y) {
-		Font font = BirdFont.get_current_font ();
-		Glyph glyph = MainWindow.get_current_glyph ();
-		x -= glyph.left_limit;
-		y -= font.base_line;
-		x -= glyph.left_limit;	
-		y -= font.top_limit;
 	}
 
 	void move_and_resize (BezierPoints[] b, int num_b, bool svg_glyph, double units, Glyph glyph) {
@@ -1736,12 +1729,9 @@ public class SvgParser {
 	}
 
 	public static EmbeddedSvg parse_embedded_svg_data (string xml_data) {
-		XmlTree tree = new XmlTree (xml_data);
 		SvgDrawing drawing = new SvgDrawing ();	
 		SvgFile svg_file = new SvgFile (); 
-
-		XmlElement root = tree.get_root ();
-		drawing = svg_file.parse_svg_file (root);
+		drawing = svg_file.parse_svg_data (xml_data);
 		EmbeddedSvg svg = new EmbeddedSvg (drawing);
 		svg.svg_data = xml_data;
 		return svg;

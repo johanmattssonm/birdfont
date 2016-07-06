@@ -18,20 +18,35 @@ using Math;
 
 namespace SvgBird {
 
+public enum SvgFormat {
+	NONE,
+	INKSCAPE,
+	ILLUSTRATOR
+}
+
 public class SvgFile : GLib.Object {
 
 	SvgDrawing drawing;
+	SvgFormat format = SvgFormat.ILLUSTRATOR;
 
 	public SvgFile () {		
 	}
 	
 	public SvgDrawing parse_svg_data (string xml_data) {
 		XmlTree tree = new XmlTree (xml_data);
-		return parse_svg_file (tree.get_root ());
+
+		if (xml_data.index_of ("Illustrator") > -1 || xml_data.index_of ("illustrator") > -1) {
+			format = SvgFormat.ILLUSTRATOR;
+		} else if (xml_data.index_of ("Inkscape") > -1 || xml_data.index_of ("inkscape") > -1) {
+			format = SvgFormat.INKSCAPE;
+		}
+
+		return parse_svg_file (tree.get_root (), format);
 	}
 	
-	public SvgDrawing parse_svg_file (XmlElement svg_tag) {
+	public SvgDrawing parse_svg_file (XmlElement svg_tag, SvgFormat format) {
 		drawing = new SvgDrawing ();
+		this.format = format;
 
 		SvgStyle style = new SvgStyle ();
 		SvgStyle.parse (drawing.defs, style, svg_tag, null);
@@ -58,7 +73,7 @@ public class SvgFile : GLib.Object {
 			}
 
 			if (name == "svg") {
-				SvgDrawing embedded = parse_svg_file (t);
+				SvgDrawing embedded = parse_svg_file (t, format);
 				drawing.root_layer.add_object (embedded);
 			}
 			
@@ -396,7 +411,7 @@ public class SvgFile : GLib.Object {
 		}
 		
 		if (name == "svg") {
-			SvgDrawing embedded = parse_svg_file (tag);
+			SvgDrawing embedded = parse_svg_file (tag, format);
 			layer.add_object (embedded);
 		}
 
@@ -765,7 +780,7 @@ public class SvgFile : GLib.Object {
 
 		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "d") {
-				path.points = parse_points (attr.get_content ());
+				path.points = parse_points (attr.get_content (), format);
 			}
 		}
 		
@@ -773,17 +788,17 @@ public class SvgFile : GLib.Object {
 		layer.add_object (path);
 	}
 
-	public static Gee.ArrayList<Points> parse_points (string data) {
+	public static Gee.ArrayList<Points> parse_points (string data, SvgFormat format) {
 		Gee.ArrayList<Points> path_data = new Gee.ArrayList<Points> ();
 		Points points = new Points ();
 		BezierPoints[] bezier_points;
 		int points_size;
-	
+		
 		get_bezier_points (data, out bezier_points, out points_size, true);
 
+		print (@"format $format\n");
+	
 		// all instructions are padded
-
-		// FIXME: Inscape and Illustrator discrepancies
 
 		for (int i = 0; i < points_size; i++) {
 			// FIXME: add more types
@@ -852,6 +867,61 @@ public class SvgFile : GLib.Object {
 
 		if (points.size > 0) {
 			path_data.add (points);
+		}
+
+		if (format == SvgFormat.ILLUSTRATOR) {
+			print ("Remove first");
+			
+			Gee.ArrayList<Points> illustrator_path_data = new Gee.ArrayList<Points> ();
+			
+			foreach (Points p in path_data) {
+				return_val_if_fail (p.point_data.size % 8 == 0, path_data);
+				
+				if (p.point_data.size > 16) {
+					Points illustrator_points = new Points ();
+					
+					illustrator_points.x = p.point_data.get_double (p.point_data.size - 3);
+					illustrator_points.y = p.point_data.get_double (p.point_data.size - 2);
+						
+					int start = p.point_data.get_point_type (0) == POINT_CUBIC ? 8 : 0;
+					
+					for (int i = start; i < p.point_data.size; i += 1) {
+						illustrator_points.point_data.add (p.point_data.get_double (i));
+					}
+					
+					illustrator_points.closed = p.closed;
+					illustrator_path_data.add (illustrator_points);
+				}
+			}
+			
+			return illustrator_path_data;
+			
+			/*
+			foreach (Points p in path_data) {
+				//p.point_data.remove_first (8);
+				p.point_data.size -= 8;
+				p.point_data.get_double (0)
+				p.point_data.get_double (1)
+			}
+			*/
+			
+			
+			
+			/*EditPoint first = path.delete_first_point ();
+			EditPoint last = path.get_last_point ();
+			handle = last.get_right_handle ();
+			
+			last.get_right_handle ().independent_x = first.get_left_handle ().x;
+			last.get_right_handle ().independent_y = first.get_left_handle ().y;
+			
+			if (points[0].type == POINT_CUBIC && !handle.is_line ()) {
+				handle.set_point_type (PointType.CUBIC);
+				handle.move_to_coordinate (points[0].value, points[1].value);
+			} else {
+				handle.set_point_type (PointType.LINE_CUBIC);
+				path.recalculate_linear_handles_for_point (last);
+			}
+			*/
 		}
 		
 		return path_data;

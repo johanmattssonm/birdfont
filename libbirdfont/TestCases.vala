@@ -13,7 +13,7 @@
 */
 
 using B;
-
+using SvgBird;
 namespace BirdFont {
 
 /** All the things we want to test listed is here. */

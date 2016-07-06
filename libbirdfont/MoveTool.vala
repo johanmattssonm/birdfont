@@ -551,7 +551,8 @@ public class MoveTool : Tool {
 				EmbeddedSvg svg = (EmbeddedSvg) object;
 				glyph.clear_active_paths ();
 				string transformed_svg_data = svg.get_transformed_svg_data ();
-				PathList path_list = SvgParser.import_svg_data_in_glyph (transformed_svg_data, glyph);
+				SvgParser svg_parser = new SvgParser ();
+				PathList path_list = svg_parser.import_svg_data_in_glyph (transformed_svg_data, glyph);
 				glyph.delete_object (svg);
 
 				foreach (Path path in path_list.paths) {
