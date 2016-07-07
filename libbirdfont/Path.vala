@@ -2262,16 +2262,25 @@ public class Path : GLib.Object {
 		}
 		
 		remove_deleted_points ();
-		
+
+		// remove tripple points
+		for (int i = 0; i < points.size + 1; i++) {
+			EditPoint ep = points.get (i % points.size);
+			EditPoint next = points.get ((i + 1) % points.size);
+			EditPoint previous = points.get ((i - 1 + points.size) % points.size);
+			
+			if (Path.distance_to_point (next, ep) < t && Path.distance_to_point (previous, ep) < t) {
+				points.remove (ep);
+				i--;
+			}
+		}
+	
+		// remove points on points
 		for (int i = 0; i < points.size + 1; i++) {
 			EditPoint ep = points.get (i % points.size);
 			n = points.get ((i + 1) % points.size);
-			EditPoint previous = points.get ((i - 1 + points.size) % points.size);
 			
-			if (Path.distance_to_point (n, ep) < t && Path.distance_to_point (previous, ep) < t) {
-				points.remove (ep);
-				i--;
-			} else if (Path.distance_to_point (n, ep) < t) {
+			if (Path.distance_to_point (n, ep) < t) {
 				remove.add (ep);
 			}
 		}

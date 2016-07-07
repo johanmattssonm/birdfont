@@ -801,6 +801,7 @@ public class SvgFile : GLib.Object {
 		// all instructions are padded
 
 		for (int i = 0; i < points_size; i++) {
+			print (@"$(bezier_points[i])\n");
 			// FIXME: add more types
 			if (bezier_points[i].type == 'M') {
 				if (i == 0) {
@@ -878,10 +879,17 @@ public class SvgFile : GLib.Object {
 				if (p.point_data.size > 8) {
 					Points illustrator_points = new Points ();
 					
-					illustrator_points.x = p.point_data.get_double (p.point_data.size - 3);
-					illustrator_points.y = p.point_data.get_double (p.point_data.size - 2);
-						
+					if (p.point_data.get_point_type (p.point_data.size - 8) == POINT_CUBIC) {
+						illustrator_points.x = p.point_data.get_double (p.point_data.size - 3);
+						illustrator_points.y = p.point_data.get_double (p.point_data.size - 2);
+					} else {
+						illustrator_points.x = p.point_data.get_double (p.point_data.size - 7);
+						illustrator_points.y = p.point_data.get_double (p.point_data.size - 6);
+					}
+					
 					int start = p.point_data.get_point_type (0) == POINT_CUBIC ? 8 : 0;
+					
+					start = 0;
 					
 					for (int i = start; i < p.point_data.size; i += 1) {
 						illustrator_points.point_data.add (p.point_data.get_double (i));
