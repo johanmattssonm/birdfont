@@ -9,8 +9,9 @@ from scripts.translations import compile_translations
 from scripts import version
 
 if platform == 'msys':
-	process_tasks(dodo.make_libbirdgems('libbirdgems.dll', []))
 	process_tasks(dodo.make_libbirdgems('libsvgbird.dll', []))
+	process_tasks(dodo.task_svgbird_vapi())
+	process_tasks(dodo.make_libbirdgems('libbirdgems.dll', []))
 	process_tasks(dodo.make_libbirdfont('libbirdfont.dll', ['libbirdgems.dll', 'libsvgbird.dll']))
 	process_tasks(dodo.make_libbirdfont('libbirdfont.dll', ['libbirdgems.dll', 'libsvgbird.dll']))
 	process_tasks(dodo.make_birdfont_test('birdfont-test.exe', 
@@ -20,11 +21,14 @@ elif platform == 'darwin':
 	bird = "libbirdfont." + str(version.SO_VERSION) + '.dylib';
 	svg = "libsvgbird." + str(version.LIBSVGBIRD_SO_VERSION) + '.dylib';
 	process_tasks(dodo.make_libsvgbird(svg, []))
+	process_tasks(dodo.task_svgbird_vapi())
 	process_tasks(dodo.make_libbirdgems(gems, []))
 	process_tasks(dodo.make_libbirdfont(bird, [gems]))
 	process_tasks(dodo.task_man())
 else:
 	process_tasks(dodo.task_libsvgbird())
+	process_tasks(dodo.task_svgbird_vapi())
+	process_tasks(dodo.task_svgbird_vapi())
 	process_tasks(dodo.task_libbirdgems())
 	process_tasks(dodo.task_libbirdfont())
 	process_tasks(dodo.make_birdfont_test('birdfont-test', 

@@ -389,7 +389,7 @@ def make_libsvgbird(target_binary, deps):
         --pkg gio-2.0 \
         --pkg cairo \
         --pkg xmlbird \
-        --vapi=./svgbird.vapi \
+        --vapi=./svgbird_generated.vapi \
         """
 
     cc_command = config.CC + " " + config.CFLAGS.get("libsvgbird", "") + """ \
@@ -450,7 +450,8 @@ def task_svgbird_vapi():
     yield {
 		'name': 'merge svgbird vapi',
 		'file_dep': ['build/libsvgbird/Object.c'],
-		'actions': ['cat svgbirdpoint.vapi >> svgbird.vapi'],
+		'actions': ['cat svgbirdpoint.vapi > svgbird.vapi && cat svgbird_generated.vapi >> svgbird.vapi'],
+		'targets': ['svgbird vapi']
 		}    
 def make_libbirdgems(target_binary, deps):
     valac_command = config.VALAC + """\
