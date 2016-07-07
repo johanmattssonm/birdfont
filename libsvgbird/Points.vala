@@ -43,6 +43,14 @@ public class Points : GLib.Object {
 		p.closed = closed;
 		return p;
 	}
+
+	public double get_double (int index) {
+		return point_data.get_double (index);
+	}
+
+	public uchar get_point_type (int index) {
+		return point_data.get_point_type (index);
+	}
 }
 
 }

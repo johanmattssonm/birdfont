@@ -100,6 +100,8 @@ public abstract class Object : GLib.Object {
 	public abstract bool is_empty ();
 	public abstract void move (double dx, double dy);
 	
+	public Matrix view_matrix = Matrix.identity ();
+	
 	public virtual void move_bounding_box (double dx, double dy) {
 		top += dy;
 		bottom += dy;
@@ -232,6 +234,10 @@ public abstract class Object : GLib.Object {
 		bottom = y1;
 				
 		return boundaries_width != 0;
+	}
+
+	public Matrix get_view_matrix () {
+		return view_matrix;
 	}
 
 	public virtual bool update_boundaries_for_object () {

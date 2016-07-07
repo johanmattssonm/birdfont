@@ -184,8 +184,8 @@ public class CircleTool : Tool {
 		
 		glyph.store_undo_state ();
 		
-		double px =  Glyph.path_coordinate_x (x);
-		double py =  Glyph.path_coordinate_y (y);
+		double px = Glyph.path_coordinate_x (x);
+		double py = Glyph.path_coordinate_y (y);
 		
 		path = create_circle (px, py, 2, DrawingTools.point_type);
 

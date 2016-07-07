@@ -796,12 +796,9 @@ public class SvgFile : GLib.Object {
 		
 		get_bezier_points (data, out bezier_points, out points_size, true);
 
-		print (@"format $format\n");
-	
 		// all instructions are padded
 
 		for (int i = 0; i < points_size; i++) {
-			print (@"$(bezier_points[i])\n");
 			// FIXME: add more types
 			if (bezier_points[i].type == 'M') {
 				if (i == 0) {

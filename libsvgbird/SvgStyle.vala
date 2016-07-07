@@ -108,6 +108,16 @@ public class SvgStyle : GLib.Object {
 		return style.get (p);
 	}
 	
+	public double get_double_property (string property) {
+		string p = property.down ();
+		
+		if (!has_css_property (p)) {
+			return 0;
+		}
+		
+		return SvgFile.parse_number (style.get (p));
+	}
+	
 	public static bool is_inherited (string property) {
 		inheritance_mutex.lock ();
 		if (unlikely (inheritance == null)) {

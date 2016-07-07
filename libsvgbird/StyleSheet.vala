@@ -47,19 +47,20 @@ public class StyleSheet : GLib.Object {
 		return style_sheet;
 	}
 	
-	public void apply_style (XmlElement tag, SvgStyle style, string? pseudo_class) {
-		string? id = null;
-		string? css_class = null;
-		
-		foreach (Attribute attribute in tag.get_attributes ()) {
-			string name = attribute.get_name ();
+	public SvgStyle get_style (string tag_name, string? css_class = null,
+		string? id = null, string? pseudo_class = null) {
 			
-			if (name == "id") {
-				id = attribute.get_content ();
-			} else if (name == "class") {
-				css_class = attribute.get_content ();
-			}
+		SvgStyle style = new SvgStyle ();
+
+		string xml = @"<$(tag_name) />";
+		XmlTree xml_component = new XmlTree (xml);	
+		
+		if (!xml_component.validate ()) {
+			warning (@"Bad tag: $xml");
+			warning (xml);
 		}
+		
+		XmlElement tag = xml_component.get_root ();
 
 		foreach (Selector selector in styles) {
 			if (selector.match_tag (tag, id, css_class, pseudo_class)) {
@@ -91,6 +92,37 @@ public class StyleSheet : GLib.Object {
 			}
 		}
 		
+		SvgStyle.set_style_properties (null, style);
+		
+		return style;
+	}
+	
+	public void apply_style (XmlElement tag, SvgStyle style, string? pseudo_class) {
+		string? id = null;
+		string? css_class = null;
+		string tag_name = tag.get_name ();
+		
+		if (tag.get_name () == "") {
+			warning ("No tag name provided.");
+			
+			if (pseudo_class != null) {
+				warning ((!) pseudo_class);
+			}
+			return;
+		}
+		
+		foreach (Attribute attribute in tag.get_attributes ()) {
+			string name = attribute.get_name ();
+			
+			if (name == "id") {
+				id = attribute.get_content ();
+			} else if (name == "class") {
+				css_class = attribute.get_content ();
+			}
+		}
+
+		SvgStyle new_style = get_style (tag_name, css_class, id, pseudo_class);
+		style.apply (new_style);
 		SvgStyle.set_style_properties (null, style);
 	}
 	

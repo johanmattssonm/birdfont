@@ -53,9 +53,11 @@ public class Layer : Object {
 
 			if (object is Layer) {
 				Layer sublayer = (Layer) object;
+				object.view_matrix = cr.get_matrix ();
 				has_size = sublayer.update_boundaries (cr);
 			} else {
 				object.apply_transform (cr);
+				object.view_matrix = cr.get_matrix ();
 				has_size = object.update_boundaries (cr);
 			}
 			
