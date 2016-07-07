@@ -32,6 +32,8 @@ DOIT_CONFIG = {
         'man',
         'libbirdfont', 
         'libbirdgems', 
+        'libsvgbird',
+        'svgbird_vapi',
         'birdfont', 
         'birdfont-autotrace',
         'birdfont-export',
@@ -77,7 +79,6 @@ def make_birdfont(target_binary, deps):
         --enable-experimental \
         birdfont/*.vala \
 		--vapidir=./ \
-		--pkg svgbirdpoint \
 		--pkg """ + config.GEE + """ \
 		--pkg gio-2.0  \
 		--pkg cairo \
@@ -142,7 +143,6 @@ def make_birdfont_export(target_binary, deps):
         """ + config.VALACFLAGS.get("birdfont-export", "") + """ \
 		birdfont-export/*.vala \
 		--vapidir=./ \
-		--pkg svgbirdpoint \
 		--pkg """ + config.GEE + """ \
 		--pkg gio-2.0  \
 		--pkg cairo \
@@ -199,7 +199,6 @@ def make_birdfont_import(target_binary, deps):
         """ + config.VALACFLAGS.get("birdfont-import", "") + """ \
 		birdfont-import/*.vala \
 		--vapidir=./ \
-		--pkg svgbirdpoint \
 		--pkg """ + config.GEE + """ \
 		--pkg gio-2.0  \
 		--pkg cairo \
@@ -255,7 +254,6 @@ def make_birdfont_autotrace(target_binary, deps):
         """ + config.VALACFLAGS.get("birdfont-autotrace", "") + """ \
 		birdfont-autotrace/*.vala \
 		--vapidir=./ \
-		--pkg svgbirdpoint \
 		--pkg """ + config.GEE + """ \
 		--pkg gio-2.0  \
 		--pkg cairo \
@@ -318,7 +316,6 @@ def make_libbirdfont(target_binary, deps):
         libbirdfont/OpenFontFormat/*.vala \
         libbirdfont/TextRendering/*.vala \
         --pkg posix \
-        --pkg svgbirdpoint \
         --pkg """ + config.GEE + """ \
         --pkg gio-2.0 \
         --pkg cairo \
@@ -448,7 +445,13 @@ Requires: cairo, gobject-2.0, glib-2.0
 
 def task_libsvgbird():
     yield make_libsvgbird('libsvgbird.so.' + LIBSVGBIRD_SO_VERSION, [])
-    
+
+def task_svgbird_vapi():
+    yield {
+		'name': 'merge svgbird vapi',
+		'file_dep': ['build/libsvgbird/Object.c'],
+		'actions': ['cat svgbirdpoint.vapi >> svgbird.vapi'],
+		}    
 def make_libbirdgems(target_binary, deps):
     valac_command = config.VALAC + """\
 		-C \
@@ -538,7 +541,6 @@ def make_birdfont_test(target_binary, deps):
         --enable-experimental \
         birdfont-test/*.vala \
 		--vapidir=./ \
-		--pkg svgbirdpoint \
 		--pkg """ + config.GEE + """ \
 		--pkg gio-2.0  \
 		--pkg cairo \

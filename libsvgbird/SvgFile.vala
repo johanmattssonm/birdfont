@@ -887,9 +887,7 @@ public class SvgFile : GLib.Object {
 						illustrator_points.y = p.point_data.get_double (p.point_data.size - 6);
 					}
 					
-					int start = p.point_data.get_point_type (0) == POINT_CUBIC ? 8 : 0;
-					
-					start = 0;
+					int start = 0;
 					
 					for (int i = start; i < p.point_data.size; i += 1) {
 						illustrator_points.point_data.add (p.point_data.get_double (i));
