@@ -1148,7 +1148,7 @@ public class SvgParser {
 			Path path = new Path ();
 			
 			PointValue* points = p.point_data.data;
-			EditPoint next = new EditPoint (p.x, -p.y, PointType.CUBIC);
+			EditPoint next = new EditPoint ();
 			EditPointHandle handle;
 
 			if (p.size == 0) {
@@ -1161,8 +1161,6 @@ public class SvgParser {
 				return path_list;
 			}
 			
-			path.add_point (next);
-					
 			for (int i = 0; i < p.size; i += 8) {
 				
 				switch (points[i].type) {
@@ -1188,11 +1186,6 @@ public class SvgParser {
 					handle.y = -points[i + 4].value;
 					handle.type = PointType.CUBIC;
 
-					handle = next.get_right_handle ();
-					handle.x = p.x;
-					handle.y = -p.y;
-					handle.type = PointType.CUBIC;
-					
 					break;
 				case POINT_LINE:
 					handle = next.get_right_handle ();

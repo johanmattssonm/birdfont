@@ -36,7 +36,6 @@ public class SvgPath : Object {
 			
 	public override void draw_outline (Context cr) {
 		foreach (Points p in points) {
-			cr.move_to (p.x, p.y);
 			draw_points (cr, p);
 			
 			if (p.closed) {

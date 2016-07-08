@@ -801,19 +801,14 @@ public class SvgFile : GLib.Object {
 		for (int i = 0; i < points_size; i++) {
 			// FIXME: add more types
 			if (bezier_points[i].type == 'M') {
-				if (i == 0) {
-					points.x = bezier_points[i].x0;
-					points.y = bezier_points[i].y0;
-				} else {
-					points.add_type (POINT_LINE);
-					points.add (bezier_points[i].x0);
-					points.add (bezier_points[i].y0);
-					points.add (0);
-					points.add (0);
-					points.add (0);
-					points.add (0);
-					points.add (0);
-				}
+				points.add_type (POINT_LINE);
+				points.add (bezier_points[i].x0);
+				points.add (bezier_points[i].y0);
+				points.add (0);
+				points.add (0);
+				points.add (0);
+				points.add (0);
+				points.add (0);
 			} else if (bezier_points[i].type == 'C') {
 				points.add_type (POINT_CUBIC);
 				points.add (bezier_points[i].x0);
@@ -877,11 +872,23 @@ public class SvgFile : GLib.Object {
 					Points illustrator_points = new Points ();
 					
 					if (p.point_data.get_point_type (p.point_data.size - 8) == POINT_CUBIC) {
-						illustrator_points.x = p.point_data.get_double (p.point_data.size - 3);
-						illustrator_points.y = p.point_data.get_double (p.point_data.size - 2);
+						illustrator_points.insert (0, POINT_LINE);
+						illustrator_points.insert (1, p.point_data.get_double (p.point_data.size - 3));
+						illustrator_points.insert (2, p.point_data.get_double (p.point_data.size - 2));
+						illustrator_points.insert (3, 0);
+						illustrator_points.insert (4, 0);
+						illustrator_points.insert (5, 0);
+						illustrator_points.insert (6, 0);
+						illustrator_points.insert (7, 0);
 					} else {
-						illustrator_points.x = p.point_data.get_double (p.point_data.size - 7);
-						illustrator_points.y = p.point_data.get_double (p.point_data.size - 6);
+						illustrator_points.insert (0, POINT_LINE);
+						illustrator_points.insert (1, p.point_data.get_double (p.point_data.size - 7));
+						illustrator_points.insert (2, p.point_data.get_double (p.point_data.size - 6));
+						illustrator_points.insert (3, 0);
+						illustrator_points.insert (4, 0);
+						illustrator_points.insert (5, 0);
+						illustrator_points.insert (6, 0);
+						illustrator_points.insert (7, 0);
 					}
 					
 					int start = 0;
