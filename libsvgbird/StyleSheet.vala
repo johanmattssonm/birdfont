@@ -54,12 +54,6 @@ public class StyleSheet : GLib.Object {
 
 		string xml = @"<$(tag_name) />";
 		XmlTree xml_component = new XmlTree (xml);	
-		
-		if (!xml_component.validate ()) {
-			warning (@"Bad tag: $xml");
-			warning (xml);
-		}
-		
 		XmlElement tag = xml_component.get_root ();
 
 		foreach (Selector selector in styles) {
