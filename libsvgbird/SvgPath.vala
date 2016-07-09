@@ -36,6 +36,7 @@ public class SvgPath : Object {
 			
 	public override void draw_outline (Context cr) {
 		foreach (Points p in points) {
+			move_to_start (cr, p);
 			draw_points (cr, p);
 			
 			if (p.closed) {
@@ -44,11 +45,33 @@ public class SvgPath : Object {
 		}
 	}
 
+	public void move_to_start (Context cr, Points path) {
+		int size = path.point_data.size;
+		
+		// points are padded up to 8 units
+		return_if_fail (size % 8 == 0);
+		return_if_fail (size >= 8);
+		
+		switch (path.get_point_type (0)) {
+		case POINT_ARC:		
+			cr.move_to (path.get_double (6), path.get_double (7));
+			break;
+		case POINT_CUBIC:
+			cr.move_to (path.get_double (5), path.get_double (6));
+			break;
+		case POINT_LINE:
+			cr.move_to (path.get_double (1), path.get_double (2));
+			break;
+		default:
+			warning (@"Unknown type $(path.get_point_type (0))");
+			break;
+		}
+	}
+
 	public void draw_points (Context cr, Points path) {
 		PointValue* points = path.point_data.data;
 		int size = path.point_data.size;
 		
-		// points are padded up to 8 units
 		return_if_fail (size % 8 == 0);
 		
 		for (int i = 0; i < size; i += 8) {

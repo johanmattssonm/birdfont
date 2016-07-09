@@ -33,6 +33,10 @@ public class Points : GLib.Object {
 	public void set_double (int index, double p) {
 		point_data.set_double (index, p);
 	}
+
+	public void insert_type (int index, uchar t) {
+		point_data.insert_type (index, t);
+	}
 	
 	public void insert (int index, double p) {
 		point_data.insert (index, p);

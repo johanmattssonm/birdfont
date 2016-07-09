@@ -63,27 +63,35 @@ public class Doubles : GLib.Object {
 		data[index].type = t;
 	}
 	
-	public void insert (int position, double p) {
+	public void insert (int index, double p) {
+		insert_element (index);
+		data[index].value = p;
+	}
+	
+	public void insert_type (int index, uchar p) {
+		insert_element (index); 
+		data[index].type = p;
+	}
+	
+	public void insert_element (int index) {
 		if (capacity < size + 1) {
 			increase_capacity ();
 		}
 		
-		if (unlikely (position < 0 || position > size)) {
-			warning (@"Bad poisition $position.");
+		if (unlikely (index < 0 || index > size)) {
+			warning (@"Bad index $index.");
 			return;
 		}
 		
 		PointValue* point_data = new PointValue[capacity];
 		
-		if (position > 0) {
-			Posix.memcpy (point_data, data, sizeof (PointValue) * position);
+		if (index > 0) {
+			Posix.memcpy (point_data, data, sizeof (PointValue) * index);
 		}
 		
-		point_data[position].value = p;
-		
-		if (position < size) {
-			int dest_position = position + 1; 
-			Posix.memcpy (point_data + dest_position, data + position, sizeof (PointValue) * (size - position));
+		if (index < size) {
+			int dest_position = index + 1; 
+			Posix.memcpy (point_data + dest_position, data + index, sizeof (PointValue) * (size - index));
 		}
 		
 		size += 1;

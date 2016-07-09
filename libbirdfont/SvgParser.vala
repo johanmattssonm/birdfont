@@ -1165,6 +1165,7 @@ public class SvgParser {
 				
 				switch (points[i].type) {
 				case POINT_ARC:
+				// FIXME:
 				/*
 					draw_arc (cr, , points[i + 2].value,
 						points[i + 3].value, points[i + 4].value,

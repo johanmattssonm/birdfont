@@ -800,15 +800,18 @@ public class SvgFile : GLib.Object {
 
 		double first_x = 0;
 		double first_y = 0;
+
+		if (points_size > 0) {
+			first_x = bezier_points[0].x0;
+			first_y = bezier_points[0].y0;
+		}
+		
 		for (int i = 0; i < points_size; i++) {
 			// FIXME: add more types
 			if (bezier_points[i].type == 'M') {
-				first_x = bezier_points[i].x0;
-				first_y = bezier_points[i].y0;
-				
 				points.add_type (POINT_LINE);
-				points.add (first_x);
-				points.add (first_y);
+				points.add (bezier_points[i].x0);
+				points.add (bezier_points[i].y0);
 				points.add (0);
 				points.add (0);
 				points.add (0);
@@ -867,6 +870,11 @@ public class SvgFile : GLib.Object {
 				
 				path_data.add (points);
 				points = new Points ();
+				
+				if (i + 1 < points_size) {
+					first_x = bezier_points[i + 1].x0;
+					first_y = bezier_points[i + 1].y0;
+				}
 			} else {
 				string type = (!) bezier_points[i].type.to_string ();
 				warning (@"SVG conversion not implemented for $type");
@@ -887,7 +895,7 @@ public class SvgFile : GLib.Object {
 					Points illustrator_points = new Points ();
 					
 					if (p.point_data.get_point_type (p.point_data.size - 8) == POINT_CUBIC) {
-						illustrator_points.insert (0, POINT_LINE);
+						illustrator_points.insert_type (0, POINT_LINE);
 						illustrator_points.insert (1, p.point_data.get_double (p.point_data.size - 3));
 						illustrator_points.insert (2, p.point_data.get_double (p.point_data.size - 2));
 						illustrator_points.insert (3, 0);
@@ -896,7 +904,7 @@ public class SvgFile : GLib.Object {
 						illustrator_points.insert (6, 0);
 						illustrator_points.insert (7, 0);
 					} else {
-						illustrator_points.insert (0, POINT_LINE);
+						illustrator_points.insert_type (0, POINT_LINE);
 						illustrator_points.insert (1, p.point_data.get_double (p.point_data.size - 7));
 						illustrator_points.insert (2, p.point_data.get_double (p.point_data.size - 6));
 						illustrator_points.insert (3, 0);
