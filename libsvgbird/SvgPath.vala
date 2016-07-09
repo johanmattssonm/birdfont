@@ -81,6 +81,10 @@ public class SvgPath : Object {
 		cr.translate (x, y);
 		cr.rotate (rotation);
 		cr.scale (rx, ry);
+		
+		double start_x = Math.cos (-angle_start);
+		double start_y = Math.sin (-angle_start);
+		cr.move_to (start_x, start_y);
 
 		if (angle_extent > 0) {
 			cr.arc_negative (0, 0, 1, -angle_start, -angle_start - angle_extent);

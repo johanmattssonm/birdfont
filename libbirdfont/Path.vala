@@ -2264,7 +2264,7 @@ public class Path : GLib.Object {
 		remove_deleted_points ();
 
 		// remove tripple points
-		for (int i = 0; i < points.size + 1; i++) {
+		for (int i = 0; i < points.size + 1 && points.size > 0; i++) {
 			EditPoint ep = points.get (i % points.size);
 			EditPoint next = points.get ((i + 1) % points.size);
 			EditPoint previous = points.get ((i - 1 + points.size) % points.size);
@@ -2274,7 +2274,11 @@ public class Path : GLib.Object {
 				i--;
 			}
 		}
-	
+
+		if (points.size == 0) {
+			return;
+		}
+			
 		// remove points on points
 		for (int i = 0; i < points.size + 1; i++) {
 			EditPoint ep = points.get (i % points.size);
