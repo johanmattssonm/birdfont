@@ -48,6 +48,20 @@ public class Doubles : GLib.Object {
 		
 		data[index].value = p;
 	}
+
+	public void set_type (int index, uchar t) {
+		if (unlikely (index < 0)) {
+			warning ("index < 0");
+			return;
+		}
+
+		if (unlikely (index >= size)) {
+			warning ("index >= size");
+			return;
+		}
+		
+		data[index].type = t;
+	}
 	
 	public void insert (int position, double p) {
 		if (capacity < size + 1) {

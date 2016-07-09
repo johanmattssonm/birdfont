@@ -18,11 +18,16 @@ namespace SvgBird {
 
 public class Points : GLib.Object {
 	public Doubles point_data = new Doubles.for_capacity (100);
-	public bool closed = false;
+	public bool closed;
+	
 	public int size {
 		get {
 			return point_data.size;
 		}
+	}
+	
+	public void set_type (int index, uchar p) {
+		point_data.set_type (index, p);
 	}
 	
 	public void set_double (int index, double p) {

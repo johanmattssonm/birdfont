@@ -798,12 +798,17 @@ public class SvgFile : GLib.Object {
 
 		// all instructions are padded
 
+		double first_x = 0;
+		double first_y = 0;
 		for (int i = 0; i < points_size; i++) {
 			// FIXME: add more types
 			if (bezier_points[i].type == 'M') {
+				first_x = bezier_points[i].x0;
+				first_y = bezier_points[i].y0;
+				
 				points.add_type (POINT_LINE);
-				points.add (bezier_points[i].x0);
-				points.add (bezier_points[i].y0);
+				points.add (first_x);
+				points.add (first_y);
 				points.add (0);
 				points.add (0);
 				points.add (0);
@@ -850,6 +855,16 @@ public class SvgFile : GLib.Object {
 				points.add (rotation);
 			} else if (bezier_points[i].type == 'z') {
 				points.closed = true;
+				
+				points.add_type (POINT_LINE);
+				points.add (first_x);
+				points.add (first_y);
+				points.add (0);
+				points.add (0);
+				points.add (0);
+				points.add (0);
+				points.add (0);
+				
 				path_data.add (points);
 				points = new Points ();
 			} else {
