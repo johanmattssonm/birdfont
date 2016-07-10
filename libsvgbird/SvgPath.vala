@@ -130,12 +130,14 @@ public class SvgPath : Object {
 		angle_start %= 2 * Math.PI;
 		angle_extent %= 2 * Math.PI;
 		
-		if (angle_extent > 0) {
-			cr.arc_negative (0, 0, 1, angle_start, angle_start + angle_extent);
-		} else {
-			cr.arc (0, 0, 1, angle_start, angle_start + angle_extent);
+		if (angle_extent.is_normal () && angle_extent.is_normal ()) {
+			if (angle_extent > 0) {
+				cr.arc_negative (0, 0, 1, -angle_start, -angle_start - angle_extent);
+			} else {
+				cr.arc (0, 0, 1, -angle_start, -angle_start - angle_extent);
+			}
 		}
-				
+		
 		cr.restore ();
 	}
 
