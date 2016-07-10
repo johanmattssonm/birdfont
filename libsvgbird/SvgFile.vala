@@ -800,6 +800,8 @@ public class SvgFile : GLib.Object {
 
 		double first_x = 0;
 		double first_y = 0;
+		double last_x = 0;
+		double last_y = 0;
 
 		if (points_size > 0) {
 			first_x = bezier_points[0].x0;
@@ -817,6 +819,8 @@ public class SvgFile : GLib.Object {
 				points.add (0);
 				points.add (0);
 				points.add (0);
+				last_x = bezier_points[i].x0;
+				last_y = bezier_points[i].y0;
 			} else if (bezier_points[i].type == 'C') {
 				points.add_type (POINT_CUBIC);
 				points.add (bezier_points[i].x0);
@@ -826,6 +830,8 @@ public class SvgFile : GLib.Object {
 				points.add (bezier_points[i].x2);
 				points.add (bezier_points[i].y2);
 				points.add (0);
+				last_x = bezier_points[i].x2;
+				last_y = bezier_points[i].y2;
 			} else if (bezier_points[i].type == 'L') {
 				points.add_type (POINT_LINE);
 				points.add (bezier_points[i].x0);
@@ -835,38 +841,34 @@ public class SvgFile : GLib.Object {
 				points.add (0);
 				points.add (0);
 				points.add (0);
+				last_x = bezier_points[i].x0;
+				last_y = bezier_points[i].y0;
 			} else if (bezier_points[i].type == 'A') {
 				BezierPoints b = bezier_points[i];
-				double angle_start;
-				double angle_extent;
-				double center_x;
-				double center_y;
-				double rotation = b.angle;
-								
-				get_arc_arguments (b.x0, b.y0, b.rx, b.ry,
-					b.angle, b.large_arc, b.sweep, b.x1, b.y1,
-					out angle_start, out angle_extent,
-					out center_x, out center_y);
-				
 				points.add_type (POINT_ARC);
-				points.add (center_x);
-				points.add (center_y);
 				points.add (b.rx);
 				points.add (b.ry);
-				points.add (angle_start);
-				points.add (angle_extent); 
-				points.add (rotation);
+				points.add (b.rotation);
+				points.add (b.large_arc ? 1 : 0);
+				points.add (b.sweep ? 1 : 0);
+				points.add (b.x1);
+				points.add (b.y1);
+
+				last_x = bezier_points[i].x1;
+				last_y = bezier_points[i].y1;
 			} else if (bezier_points[i].type == 'z') {
 				points.closed = true;
 				
-				points.add_type (POINT_LINE);
-				points.add (first_x);
-				points.add (first_y);
-				points.add (0);
-				points.add (0);
-				points.add (0);
-				points.add (0);
-				points.add (0);
+				if (fabs (first_x - last_x) > 0.0001 && fabs (first_y - last_y) > 0.0001) { 
+					points.add_type (POINT_LINE);
+					points.add (first_x);
+					points.add (first_y);
+					points.add (0);
+					points.add (0);
+					points.add (0);
+					points.add (0);
+					points.add (0);
+				}
 				
 				path_data.add (points);
 				points = new Points ();
@@ -878,7 +880,7 @@ public class SvgFile : GLib.Object {
 			} else {
 				string type = (!) bezier_points[i].type.to_string ();
 				warning (@"SVG conversion not implemented for $type");
-			}
+			}			
 		}
 
 		if (points.size > 0) {
@@ -1440,7 +1442,7 @@ public class SvgFile : GLib.Object {
 					bezier_points[bi].y1 = cy;
 					bezier_points[bi].rx = arc_rx;
 					bezier_points[bi].ry = arc_ry;
-					bezier_points[bi].angle = arc_rotation;
+					bezier_points[bi].rotation = arc_rotation;
 					bezier_points[bi].large_arc = large_arc == 1;
 					bezier_points[bi].sweep = arc_sweep == 1;
 					bi++;
@@ -1476,7 +1478,7 @@ public class SvgFile : GLib.Object {
 					bezier_points[bi].y1 = cy;
 					bezier_points[bi].rx = arc_rx;
 					bezier_points[bi].ry = arc_ry;
-					bezier_points[bi].angle = arc_rotation;
+					bezier_points[bi].rotation = arc_rotation;
 					bezier_points[bi].large_arc = large_arc == 1;
 					bezier_points[bi].sweep = arc_sweep == 1;
 					bi++;

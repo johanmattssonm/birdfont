@@ -19,6 +19,9 @@ namespace SvgBird {
 public class SvgPath : Object {	
 	public Gee.ArrayList<Points> points = new Gee.ArrayList<Points> ();
 	
+	double pen_position_x = 0;
+	double pen_position_y = 0;
+	
 	public SvgPath () {
 	}
 
@@ -73,7 +76,7 @@ public class SvgPath : Object {
 		int size = path.point_data.size;
 		
 		return_if_fail (size % 8 == 0);
-		
+	
 		for (int i = 0; i < size; i += 8) {
 			switch (points[i].type) {
 			case POINT_ARC:		
@@ -81,38 +84,56 @@ public class SvgPath : Object {
 					points[i + 3].value, points[i + 4].value,
 					points[i + 5].value, points[i + 6].value,
 					points[i + 7].value);
+					
+				pen_position_x = points[i + 6].value;
+				pen_position_y = points[i + 7].value;
 				break;
 			case POINT_CUBIC:
 				cr.curve_to (points[i + 1].value, points[i + 2].value, 
 					points[i + 3].value, points[i + 4].value,
 					points[i + 5].value, points[i + 6].value);
+				
+				pen_position_x = points[i + 5].value;
+				pen_position_y = points[i + 6].value;
 				break;
 			case POINT_LINE:
 				cr.line_to (points[i + 1].value, points[i + 2].value);
+				pen_position_x = points[i + 1].value;
+				pen_position_y = points[i + 2].value;
 				break;
 			}
 		}		
 	}
+				
+	void draw_arc (Context cr,
+		double rx, double ry, double rotation,
+		double large_arc, double sweep,
+		double x, double y) {
 
-	static void draw_arc (Context cr,
-		double x, double y,
-		double rx, double ry,
-		double angle_start, double angle_extent,
-		double rotation) {
-			
+		double angle_start, angle_extent, cx, cy;
+		
+		get_arc_arguments (pen_position_x, pen_position_y, rx, ry,
+					rotation, large_arc > 0, sweep > 0, x, y,
+					out angle_start, out angle_extent,
+					out cx, out cy);
+
 		cr.save ();
-		cr.translate (x, y);
+
+		cr.translate (cx, cy);
 		cr.rotate (rotation);
 		cr.scale (rx, ry);
 		
-		double start_x = Math.cos (-angle_start);
-		double start_y = Math.sin (-angle_start);
+		double start_x = Math.cos (angle_start);
+		double start_y = Math.sin (angle_start);
 		cr.move_to (start_x, start_y);
-
+		
+		angle_start %= 2 * Math.PI;
+		angle_extent %= 2 * Math.PI;
+		
 		if (angle_extent > 0) {
-			cr.arc_negative (0, 0, 1, -angle_start, -angle_start - angle_extent);
+			cr.arc_negative (0, 0, 1, angle_start, angle_start + angle_extent);
 		} else {
-			cr.arc (0, 0, 1, -angle_start, -angle_start - angle_extent);
+			cr.arc (0, 0, 1, angle_start, angle_start + angle_extent);
 		}
 				
 		cr.restore ();

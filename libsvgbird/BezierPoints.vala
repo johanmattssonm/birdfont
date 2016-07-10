@@ -28,14 +28,14 @@ public class BezierPoints {
 	// arc arguments
 	public double rx = 0; 
 	public double ry = 0;
-	public double angle = 0;
+	public double rotation = 0;
 	public bool large_arc = false;
 	public bool sweep = false;
 	// the arc instructions begins at x0, y0 and ends at x1, x1
 
 	public string to_string () {
 		if (svg_type == 'A' || svg_type == 'a') {
-			return @"SVG type:$((!) svg_type.to_string ()) $x0,$y0 $x1,$y1 rx=$rx, ry=$ry, angle=$angle, large_arc=$large_arc, sweep=$sweep)";
+			return @"SVG type:$((!) svg_type.to_string ()) $x0,$y0 $x1,$y1 rx=$rx, ry=$ry, rotation=$rotation, large_arc=$large_arc, sweep=$sweep)";
 		}
 		
 		return @"$((!)type.to_string ()) $x0,$y0 $x1,$y1 $x2,$y2 SVG:$((!)svg_type.to_string ())";

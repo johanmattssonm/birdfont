@@ -1094,7 +1094,7 @@ public class SvgParser {
 				add_arc_points (arc_data, ref arc_index, 
 					instructions[i].x0, instructions[i].y0,
 					instructions[i].rx, instructions[i].ry,
-					instructions[i].angle,
+					instructions[i].rotation,
 					instructions[i].large_arc,
 					instructions[i].sweep,
 					instructions[i].x1, instructions[i].y1);
