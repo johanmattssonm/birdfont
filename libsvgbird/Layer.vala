@@ -44,8 +44,7 @@ public class Layer : Object {
 		right = CANVAS_MIN;
 
 		cr.save ();
-		apply_transform (cr);
-
+		
 		foreach (Object object in objects) {
 			bool has_size = false;
 
@@ -53,6 +52,7 @@ public class Layer : Object {
 
 			if (object is Layer) {
 				Layer sublayer = (Layer) object;
+				sublayer.apply_transform (cr);
 				object.view_matrix = cr.get_matrix ();
 				has_size = sublayer.update_boundaries (cr);
 			} else {
