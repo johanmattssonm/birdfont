@@ -174,7 +174,7 @@ public class SvgFile : GLib.Object {
 
 			if (name == "g") {
 				Layer sublayer = new Layer ();
-				parse_layer (layer, parent_style, t);
+				parse_layer (sublayer, parent_style, t);
 				layer.objects.add (sublayer);
 			}
 

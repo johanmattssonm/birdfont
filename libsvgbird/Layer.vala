@@ -86,7 +86,6 @@ public class Layer : Object {
 	
 	private void draw_layer (Context cr, bool paint) {
 		cr.save ();
-		apply_transform (cr);
 		
 		if (clip_path != null) {
 			ClipPath clipping = (!) clip_path;
@@ -103,6 +102,7 @@ public class Layer : Object {
 			
 			if (object is Layer) {
 				Layer sublayer = (Layer) object;
+				sublayer.apply_transform (cr);
 				
 				if (paint) {
 					sublayer.draw (cr);
