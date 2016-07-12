@@ -147,7 +147,7 @@ public abstract class Object : GLib.Object {
 				cr.fill_preserve ();
 			} else {
 				cr.fill ();
-			}	
+			}
 		}
 
 		if (style.stroke_gradient != null) {
@@ -184,7 +184,13 @@ public abstract class Object : GLib.Object {
 			
 			Matrix gradient_matrix = g.get_matrix ();
 			gradient_matrix.invert ();
+			Matrix object_matrix = transforms.get_matrix ();
+			object_matrix.invert ();
+			gradient_matrix.multiply (gradient_matrix, object_matrix);
+			
 			pattern.set_matrix (gradient_matrix);
+			
+			g.view_matrix = gradient_matrix;
 			
 			foreach (Stop s in g.stops) {
 				Color c = s.color;

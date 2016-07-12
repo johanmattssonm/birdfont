@@ -23,6 +23,7 @@ public abstract class Gradient : GLib.Object {
 	public string id = "";
 	public string? href = null;
 	public SvgTransforms transforms;
+	public Matrix view_matrix = Matrix.identity ();
 
 	public Gradient () {
 		stops = new Gee.ArrayList<Stop> ();
