@@ -25,6 +25,8 @@ public class SvgTransforms : GLib.Object {
 	public double total_rotation = 0;
 	public double scale_x = 1;
 	public double scale_y = 1;
+	public double translate_x = 0;
+	public double translate_y = 0;
 	
 	public SvgTransforms () {
 		transforms = new Gee.ArrayList<SvgTransform> ();
@@ -33,6 +35,11 @@ public class SvgTransforms : GLib.Object {
 	}
 
 	public void collapse_transforms () {
+		Matrix translate_matrix = Matrix.identity ();
+		translate_matrix.translate (translate_x, translate_y);
+		SvgTransform translate_transform = new SvgTransform.for_matrix (translate_matrix);
+		add (translate_transform);
+		
 		SvgTransform rotation_transform = new SvgTransform.for_matrix (rotation_matrix);
 		add (rotation_transform);
 		
@@ -61,6 +68,14 @@ public class SvgTransforms : GLib.Object {
 		size_matrix = Matrix.identity ();
 		scale_x = 1;
 		scale_y = 1;
+		
+		translate_x = 0;
+		translate_y = 0;
+	}
+
+	public void translate (double x, double y) {
+		translate_x += x;
+		translate_y += y;
 	}
 
 	public void rotate (double theta, double x, double y) {
@@ -125,6 +140,7 @@ public class SvgTransforms : GLib.Object {
 			transformation_matrix.multiply (transformation_matrix, part);
 		}
 
+		transformation_matrix.translate (translate_x, translate_y);
 		transformation_matrix.multiply (transformation_matrix, size_matrix);
 		transformation_matrix.multiply (transformation_matrix, rotation_matrix);
 
