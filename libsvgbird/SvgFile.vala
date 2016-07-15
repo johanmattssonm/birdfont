@@ -425,8 +425,17 @@ public class SvgFile : GLib.Object {
 				string data = add_separators (attr.get_content ());
 				string[] point_data = data.split (" ");
 				
-				foreach (string number in point_data) {
-					polygon.points.add (parse_number (number));
+				for (int i = 0; i < point_data.length - 1; i++) {
+					string number_x = point_data[i];
+					string number_y = point_data[i + 1];
+					polygon.points.add_type (POINT_LINE);
+					polygon.points.add (parse_number (number_x));
+					polygon.points.add (parse_number (number_y));
+					polygon.points.add (0);
+					polygon.points.add (0);
+					polygon.points.add (0);
+					polygon.points.add (0);
+					polygon.points.add (0);
 				}
 			}
 		}

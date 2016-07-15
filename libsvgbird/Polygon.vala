@@ -19,7 +19,7 @@ namespace SvgBird {
 
 public class Polygon : Object {
 
-	public Doubles points = new Doubles ();
+	public Points points = new Points ();
 
 	public Polygon () {
 	}
@@ -27,11 +27,11 @@ public class Polygon : Object {
 	public override void draw_outline (Context cr) {
 		return_if_fail (points.size % 2 == 0);
 		
-		if (points.size > 2) {
-			cr.move_to (points.data[0].value, points.data[1].value);
+		if (points.size > 8) {
+			cr.move_to (points.point_data.get_double (0), points.get_double (1));
 			
-			for (int i = 2; i < points.size - 1; i += 2) {
-				cr.line_to (points.data[i].value, points.data[i + 1].value);
+			for (int i = 8; i < points.size - 8; i += 8) {
+				cr.line_to (points.get_double (i + 1), points.get_double (i + 2));
 			}
 			
 			cr.close_path ();
@@ -43,10 +43,8 @@ public class Polygon : Object {
 		
 		to_object_view (ref x, ref y);
 		
-		foreach (Points p in points) {
-			if (SvgPath.is_over_points (p, point_x, point_y)) {
-				inside = !inside;
-			}
+		if (SvgPath.is_over_points (points, x, y)) {
+			inside = !inside;
 		}
 		
 		return inside;

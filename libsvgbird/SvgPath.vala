@@ -77,7 +77,7 @@ public class SvgPath : Object {
 
 				double angle_start, angle_extent, cx, cy;
 				
-				get_arc_arguments (pen_position_x, pen_position_y, rx, ry,
+				get_arc_arguments (previous_x, previous_y, rx, ry,
 							rotation, large_arc > 0, sweep > 0, dest_x, dest_y,
 							out angle_start, out angle_extent,
 							out cx, out cy);
@@ -184,7 +184,7 @@ public class SvgPath : Object {
 		}
 	}
 
-	public void get_start (Points path, out double x, out double y) {
+	public static void get_start (Points path, out double x, out double y) {
 		int size = path.point_data.size;
 		
 		x = 0;
