@@ -28,7 +28,9 @@ public class Ellipse : Object {
 	}
 	
 	public override bool is_over (double x, double y) {
-		return false;
+		double point_x = x - cx;
+		double point_y = y - cy;
+		return (point_x * point_x) / (rx * rx) + (point_y * point_y) / (ry * ry) <= 1;
 	}
 			
 	public override void draw_outline (Context cr) {

@@ -55,8 +55,8 @@ public class SvgDrawing : Object {
 
 	public override void apply_transform (Context cr) {
 		apply_view_box (cr);
-		root_layer.apply_transform (cr);
 		base.apply_transform (cr);
+		root_layer.apply_transform (cr);
 	}
 
 	public void draw (Context cr) {

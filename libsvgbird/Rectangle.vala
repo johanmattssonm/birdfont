@@ -32,7 +32,7 @@ public class Rectangle : Object {
 	}
 	
 	public override bool is_over (double x, double y) {
-		return false;
+		return this.x <= x <= this.x + width && this.y <= y <= this.y + height; 
 	}
 			
 	public override void draw_outline (Context cr) {

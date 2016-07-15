@@ -93,7 +93,10 @@ public abstract class Object : GLib.Object {
 	public Object.create_copy (Object o) {	
 	}
 	
-	public abstract bool is_over (double x, double y);
+	public virtual bool is_over (double x, double y) {
+		return left <= x <= right && top <= y <= bottom; 
+	}
+	
 	public abstract void draw_outline (Context cr);
 
 	public abstract Object copy ();
@@ -126,6 +129,10 @@ public abstract class Object : GLib.Object {
 	
 	public virtual string to_string () {
 		return "Object";
+	}
+
+	public bool is_over_boundaries (double x, double y) {
+		return top <= y <= bottom  && left <= x <= right;
 	}
 
 	public void paint (Context cr) {
@@ -214,6 +221,8 @@ public abstract class Object : GLib.Object {
 		double x0, y0, x1, y1;
 		bool has_stroke = style.has_stroke ();
 
+		apply_transform (context);
+
 		if (has_stroke) {
 			context.set_line_width (style.stroke_width);
 		} else {
@@ -223,15 +232,18 @@ public abstract class Object : GLib.Object {
 		draw_outline (context);
 
 		context.save ();
-		
-		context.set_matrix (Matrix.identity ());
-		
+
 		if (has_stroke) {
 			context.stroke_extents (out x0, out y0, out x1, out y1);
 		} else {
 			context.fill_extents (out x0, out y0, out x1, out y1);
 		}
-			
+		
+		Matrix matrix = context.get_matrix ();
+		matrix.transform_point (ref x0, ref y0);
+		matrix.transform_point (ref x1, ref y1);
+
+		context.fill ();
 		context.restore ();
 
 		left = x0;

@@ -26,7 +26,9 @@ public class Circle : Object {
 	}
 	
 	public override bool is_over (double x, double y) {
-		return false;
+		double dx = x - cx;
+		double dy = y - cy;
+		return Math.sqrt (dx * dx + dy * dy) <= r;
 	}
 			
 	public override void draw_outline (Context cr) {
