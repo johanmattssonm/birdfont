@@ -41,7 +41,21 @@ public class Polygon : Object {
 			cr.close_path ();
 		}		
 	}
-	
+
+	public override bool is_over (double x, double y) {
+		bool inside = false;
+		
+		to_object_view (ref x, ref y);
+		
+		foreach (Points p in points) {
+			if (SvgPath.is_over_points (p, point_x, point_y)) {
+				inside = !inside;
+			}
+		}
+		
+		return inside;
+	}
+		
 	public override void move (double dx, double dy) {
 	}
 	

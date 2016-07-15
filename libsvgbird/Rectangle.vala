@@ -32,6 +32,7 @@ public class Rectangle : Object {
 	}
 	
 	public override bool is_over (double x, double y) {
+		to_object_view (ref x, ref y);
 		return this.x <= x <= this.x + width && this.y <= y <= this.y + height; 
 	}
 			

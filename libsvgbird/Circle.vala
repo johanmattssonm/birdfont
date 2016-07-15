@@ -26,6 +26,7 @@ public class Circle : Object {
 	}
 	
 	public override bool is_over (double x, double y) {
+		to_object_view (ref x, ref y);
 		double dx = x - cx;
 		double dy = y - cy;
 		return Math.sqrt (dx * dx + dy * dy) <= r;

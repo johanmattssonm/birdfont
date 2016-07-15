@@ -39,14 +39,9 @@ public class SvgPath : Object {
 	public override bool is_over (double point_x, double point_y) {
 		bool inside = false;
 		
-		double x = point_x;
-		double y = point_y;
-		
-		Matrix matrix = view_matrix;
-		matrix.invert ();
-		matrix.transform_point (ref x, ref y);
-		
 		if (is_over_boundaries (point_x, point_y)) {
+			to_object_view (ref point_x, ref point_y);
+			
 			foreach (Points p in points) {
 				if (is_over_points (p, point_x, point_y)) {
 					inside = !inside;
@@ -57,7 +52,7 @@ public class SvgPath : Object {
 		return inside;
 	}
 	
-	public bool is_over_points (Points p, double point_x, double point_y) {
+	public static bool is_over_points (Points p, double point_x, double point_y) {
 		double previous_x;
 		double previous_y;
 		bool inside = false;
@@ -136,7 +131,6 @@ public class SvgPath : Object {
 		if  ((next_y > point_y) != (prev_y > point_y) 
 			&& point_x < (prev_x - next_x) * (point_y - next_y) / (prev_y - next_y) + next_x) {
 			inside = !inside;
-			print (@"flip\n");
 		}
 	}
 			

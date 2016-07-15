@@ -27,7 +27,7 @@ public class Polyline : Object {
 	public override bool is_over (double x, double y) {
 		return false;
 	}
-			
+
 	public override void draw_outline (Context cr) {
 		return_if_fail (points.size % 2 == 0);
 		

@@ -97,6 +97,12 @@ public abstract class Object : GLib.Object {
 		return left <= x <= right && top <= y <= bottom; 
 	}
 	
+	public void to_object_view (ref double x, ref double y) {
+		Matrix m = view_matrix;
+		m.invert ();
+		m.transform_point (ref x, ref y);
+	}
+	
 	public abstract void draw_outline (Context cr);
 
 	public abstract Object copy ();

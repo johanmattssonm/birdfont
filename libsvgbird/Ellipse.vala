@@ -28,6 +28,7 @@ public class Ellipse : Object {
 	}
 	
 	public override bool is_over (double x, double y) {
+		to_object_view (ref x, ref y);
 		double point_x = x - cx;
 		double point_y = y - cy;
 		return (point_x * point_x) / (rx * rx) + (point_y * point_y) / (ry * ry) <= 1;

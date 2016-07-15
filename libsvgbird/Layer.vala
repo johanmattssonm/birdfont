@@ -32,7 +32,6 @@ public class Layer : Object {
 		transforms = new SvgTransforms ();
 	}
 
-
 	public override bool update_boundaries (Context cr) {
 		if (objects.size == 0) {
 			return false;
