@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-"""
-Copyright (C) 2013 2014 2015 Johan Mattsson
+""" Copyright (C) 2013 2014 2015 Johan Mattsson
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -131,7 +130,7 @@ elif not options.libdir:
 	if platform.dist()[0] == 'Ubuntu' or platform.dist()[0] == 'Debian':
 		process = subprocess.Popen(['dpkg-architecture', '-qDEB_HOST_MULTIARCH'], stdout=subprocess.PIPE)
 		out, err = process.communicate()
-		out = str(out)
+		out = out.decode('ascii')
 		libdir = '/lib/' + out.rstrip ('\n')
 	else:
 		p = platform.machine()
