@@ -6,9 +6,9 @@
 #include <harfbuzz/hb-ft.h>
 #include <cairo.h>
 #include <cairo-ft.h>
-
-#define FONT_SIZE 36
-#define MARGIN (FONT_SIZE * .5)
+ 
+static GMutex font_config_lock;
+FcConfig* font_config = NULL; 
 
 typedef struct svg_bird_font_item_t {
 	int font_size;
@@ -17,37 +17,81 @@ typedef struct svg_bird_font_item_t {
 	hb_font_t *hb_font;
 } svg_bird_font_item;
 
-svg_bird_font_item* svg_bird_font_item_create (const char* font_file, int font_size) {
+gchar* svg_bird_find_font_file (const gchar* font_name);
+void svg_bird_font_item_delete (svg_bird_font_item* item);
+
+gboolean svg_bird_has_font_config () {
+	g_mutex_lock (&font_config_lock);
+	gboolean exists = font_config != NULL;
+	g_mutex_unlock (&font_config_lock);
+	return exists;
+}
+
+void svg_bird_set_font_config (FcConfig* f) {
+	g_mutex_lock (&font_config_lock);
+	font_config = f;
+	g_mutex_unlock (&font_config_lock);
+}
+
+svg_bird_font_item* svg_bird_font_item_create (const char* font_family, int font_size) {
 	FT_Error ft_error;
-
 	svg_bird_font_item* font = malloc (sizeof (svg_bird_font_item));
+	memset (font, 0, sizeof (svg_bird_font_item));
+ 
+	char* font_file = svg_bird_find_font_file (font_family);
 
+	FT_Library ft_library = 0;
+	FT_Face ft_face = 0;
+	
 	font->font_size = font_size;
-
-	if ((ft_error = FT_Init_FreeType (&font->ft_library))) {
+	if ((ft_error = FT_Init_FreeType (&ft_library))) {
 		g_warning ("Can't init freetype");
+		svg_bird_font_item_delete (font);
 		return NULL;
-	}
-	
-	if ((ft_error = FT_New_Face (font->ft_library, font_file, 0, &font->ft_face))) {
-		g_warning ("Can't init freetype font.");
+ 	}
+ 	
+ 	font->ft_library = ft_library;
+ 	
+	if ((ft_error = FT_New_Face (font->ft_library, font_file, 0, &ft_face))) {
+		g_warning ("Can't find freetype font %s %s.", font_family, font_file);
+		svg_bird_font_item_delete (font);
 		return NULL;
-	}
-	
+ 	}
+ 	
+ 	font->ft_face = ft_face;
+ 	
 	if ((ft_error = FT_Set_Char_Size (font->ft_face, font_size * 64, font_size * 64, 0, 0)))  {
 		g_warning ("Can't set font size.");
+		svg_bird_font_item_delete (font);
 		return NULL;
 	}
 
 	font->hb_font = hb_ft_font_create (font->ft_face, NULL);
 
+	if (font->hb_font == NULL) {
+		g_warning ("Can't create harfbuzz font for %s", font_file);
+		svg_bird_font_item_delete (font);
+		return NULL;
+	}
+
+	free (font_file);
+	return font;
 }
 
 void svg_bird_font_item_delete (svg_bird_font_item* item) {
-	if (item != NULL) {
-		FT_Done_Face (item->ft_face);
-		FT_Done_FreeType (item->ft_library);
-		hb_font_destroy (item->hb_font);
+	if (item) {
+		if (item->ft_face) {
+			FT_Done_Face (item->ft_face);
+		}
+
+		if (item->hb_font) {
+			hb_font_destroy (item->hb_font);
+		}
+		
+		if (item->ft_library) {
+			FT_Done_FreeType (item->ft_library);
+		}
+				
 		free (item);
 	}
 }
@@ -74,7 +118,7 @@ void svg_bird_draw_text (cairo_t* cr, svg_bird_font_item* font, const char* text
 		unsigned int cluster = info[i].cluster;
 		double x_position = current_x + pos[i].x_offset / 64.;
 		double y_position = current_y + pos[i].y_offset / 64.;
-		
+ 		
 		current_x += pos[i].x_advance / 64.;
 		current_y += pos[i].y_advance / 64.;
 	}
@@ -117,21 +161,92 @@ void svg_bird_draw_text (cairo_t* cr, svg_bird_font_item* font, const char* text
 		cairo_glyphs[i].index = info[i].codepoint;
 		cairo_glyphs[i].x = current_x + pos[i].x_offset / 64.;
 		cairo_glyphs[i].y = -(current_y + pos[i].y_offset / 64.);
-		
+
 		double dx = pos[i].x_advance / 64.0;
 		double dy = pos[i].y_advance / 64.0;
-		
+ 		
 		cairo_matrix_transform_distance (&matrix, &dx, &dy);
 		
 		current_x += dx;
 		current_y += dy;
-	}
+ 	}
 	
 	cairo_show_glyphs (cr, cairo_glyphs, len);
 	cairo_glyph_free (cairo_glyphs);
 
 	cairo_font_face_destroy (cairo_face);
-
+ 
 	hb_buffer_destroy (hb_buffer);
 	cairo_restore (cr);
+ }
+
+gchar* svg_bird_find_font_file (const gchar* font_name) {
+	const FcChar8* name;
+	FcPattern* search_pattern;
+	FcPattern* font;
+	FcChar8* file;
+	gchar* path;
+	FcObjectSet* font_properties;
+	FcFontSet* fonts;
+	int i;
+	
+	if (!svg_bird_has_font_config ()) {
+		g_warning("Font config not loaded.");
+		return NULL;
+	}
+
+	g_mutex_lock (&font_config_lock);
+
+	if (font_config == NULL) {
+		g_warning("Font config not loaded.");
+		return NULL;
+	}
+	
+	path = NULL;
+	name = font_name;
+
+	// match any font as fallback
+	search_pattern = FcPatternCreate ();
+	font_properties = FcObjectSetBuild (FC_FILE, NULL);
+
+	fonts = FcFontList (font_config, search_pattern, font_properties);
+	
+	if (fonts->nfont > 0) {
+		for (i = 0; i < fonts->nfont; i++) {
+			font = fonts->fonts[i];
+			
+			if (FcPatternGetString(font, FC_FILE, 0, &file) == FcResultMatch) {
+				path = g_strdup ((gchar*) file);
+				break;
+			}
+			
+			FcPatternDestroy (font);
+		}
+	}
+	
+	FcPatternDestroy (search_pattern);
+	
+	// search for a family name
+	search_pattern = FcPatternCreate ();
+	FcPatternAddString (search_pattern, FC_FAMILY, name);
+	fonts = FcFontList (font_config, search_pattern, font_properties);
+	
+	if (fonts->nfont > 0) {
+		for (i = 0; i < fonts->nfont; i++) {
+			font = fonts->fonts[i];
+			
+			if (FcPatternGetString(font, FC_FILE, 0, &file) == FcResultMatch) {
+				g_free (path);
+				path = g_strdup ((gchar*) file);
+				break;
+			}
+			
+			FcPatternDestroy (font);
+		}
+	}
+
+	FcPatternDestroy (search_pattern);
+	
+	g_mutex_unlock (&font_config_lock);
+	return path;
 }

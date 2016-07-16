@@ -14,32 +14,6 @@
 
 using Gee;
 
-[SimpleType]
-[CCode (has_type_id = false)]
-public extern struct FcConfig {
-}
-
-[CCode (cname = "FcInitLoadConfigAndFonts")]
-public extern FcConfig* FcInitLoadConfigAndFonts ();
-
-[CCode (cname = "FcConfigAppFontAddDir")]
-public extern string* FcConfigAppFontAddDir (FcConfig* config, string path);
-
-[CCode (cname = "FcConfigSetSysRoot")]
-public extern void FcConfigSetSysRoot (FcConfig* config, string path);
-
-[CCode (cname = "FcConfigParseAndLoad")]
-public extern bool FcConfigParseAndLoad (FcConfig* config, string path, bool complain);
-
-[CCode (cname = "FcConfigSetCurrent")]
-public extern void FcConfigSetCurrent (FcConfig* config);
-
-[CCode (cname = "FcConfigCreate")]
-public extern FcConfig* FcConfigCreate ();
-
-[CCode (cname = "FcConfigFilename")]
-public extern string FcConfigFilename (string path);
-
 [CCode (cname = "find_font")]
 public extern string? find_font (FcConfig* font_config, string characters);
 

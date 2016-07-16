@@ -130,8 +130,9 @@ gchar* find_font_file (FcConfig* font_config, const gchar* font_name) {
 				path = g_strdup ((gchar*) file);
 				break;
 			}
+			
+			FcPatternDestroy (font);
 		}
-		FcPatternDestroy (font);
 	}
 
 	FcPatternDestroy (search_pattern);

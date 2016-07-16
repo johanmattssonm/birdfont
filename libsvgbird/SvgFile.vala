@@ -614,11 +614,11 @@ public class SvgFile : GLib.Object {
 			string name = attr.get_name ();
 			
 			if (name == "font-size") {
-				text.font_size = (int) parse_number (attr.get_content ());
+				text.set_font_size ((int) parse_number (attr.get_content ()));
 			}
 
 			if (name == "font-family") {
-				text.font_family = attr.get_content ();
+				text.set_font (attr.get_content ());
 			}
 
 			if (name == "x") {
