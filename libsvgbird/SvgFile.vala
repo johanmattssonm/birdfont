@@ -410,6 +410,10 @@ public class SvgFile : GLib.Object {
 			parse_line (layer, parent_style, tag);
 		}
 		
+		if (name == "text") {
+			parse_text (layer, parent_style, tag);
+		}
+		
 		if (name == "svg") {
 			SvgDrawing embedded = parse_svg_file (tag, format);
 			layer.add_object (embedded);
@@ -602,6 +606,35 @@ public class SvgFile : GLib.Object {
 		set_object_properties (line, parent_style, tag);
 		layer.add_object (line);
 	}
+
+	private void parse_text (Layer layer, SvgStyle parent_style, XmlElement tag) {
+		Text text = new Text ();
+		
+		foreach (Attribute attr in tag.get_attributes ()) {
+			string name = attr.get_name ();
+			
+			if (name == "font-size") {
+				text.font_size = (int) parse_number (attr.get_content ());
+			}
+
+			if (name == "font-family") {
+				text.font_family = attr.get_content ();
+			}
+
+			if (name == "x") {
+				text.x = parse_number (attr.get_content ());
+			}
+			
+			if (name == "y") {
+				text.y = parse_number (attr.get_content ());
+			}
+		}
+		
+		text.set_text (tag.get_content ());
+		
+		set_object_properties (text, parent_style, tag);
+		layer.add_object (text);
+	}
 	
 	// FIXME: reverse order?
 	public static SvgTransforms parse_transform (string transforms) {
@@ -610,6 +643,10 @@ public class SvgFile : GLib.Object {
 		SvgTransforms transform_functions;
 		
 		transform_functions = new SvgTransforms ();
+		
+		if (transforms == "") {
+			return transform_functions;
+		}
 		
 		transform = transform.replace ("\t", " ");
 		transform = transform.replace ("\n", " ");
@@ -621,7 +658,7 @@ public class SvgFile : GLib.Object {
 		}
 		
 		if (unlikely (transform.index_of (")") == -1)) {
-			warning ("No parenthesis in transform function.");
+			warning (@"No parenthesis in transform function: $transform");
 			return transform_functions;
 		}
 		
