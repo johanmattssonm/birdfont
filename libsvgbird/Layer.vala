@@ -51,10 +51,12 @@ public class Layer : Object {
 
 			if (object is Layer) {
 				Layer sublayer = (Layer) object;
+				object.parent_matrix = cr.get_matrix ();
 				sublayer.apply_transform (cr);
 				object.view_matrix = cr.get_matrix ();
 				has_size = sublayer.update_boundaries (cr);
 			} else {
+				object.parent_matrix = cr.get_matrix ();
 				object.apply_transform (cr);
 				object.view_matrix = cr.get_matrix ();
 				has_size = object.update_boundaries (cr);
@@ -221,9 +223,6 @@ public class Layer : Object {
 
 	public override bool is_over (double x, double y) {
 		return false;
-	}
-		
-	public override void move (double dx, double dy) {
 	}
 	
 	public override bool is_empty () {

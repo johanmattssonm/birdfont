@@ -87,6 +87,9 @@ public abstract class Object : GLib.Object {
 	public const double CANVAS_MAX = 100000;
 	public const double CANVAS_MIN = -100000;
 	
+	public Matrix view_matrix = Matrix.identity ();
+	public Matrix parent_matrix = Matrix.identity ();
+		
 	public Object () {	
 	}
 
@@ -103,13 +106,41 @@ public abstract class Object : GLib.Object {
 		m.transform_point (ref x, ref y);
 	}
 	
+	public void to_object_distance (ref double x, ref double y) {
+		Matrix m = view_matrix;
+		m.invert ();
+		m.transform_distance (ref x, ref y);
+	}
+	
 	public abstract void draw_outline (Context cr);
 
 	public abstract Object copy ();
 	public abstract bool is_empty ();
-	public abstract void move (double dx, double dy);
 	
-	public Matrix view_matrix = Matrix.identity ();
+	public virtual void move (double dx, double dy) {
+		left += dx;
+		right += dx;
+		top += dy;
+		bottom += dy;
+		to_object_distance (ref dx, ref dy);
+		transforms.translate (dx, dy);
+		update_view_matrix ();
+	}
+	
+	public void update_view_matrix () {
+		Matrix v = parent_matrix;
+		Matrix m = transforms.get_matrix ();
+		m.multiply (m, v);
+		view_matrix = m;
+	}
+	
+	public Matrix get_parent_matrix () {
+		Matrix matrix = view_matrix;
+		Matrix object_matrix = transforms.get_matrix ();
+		object_matrix.invert ();
+		matrix.multiply (matrix, object_matrix);
+		return matrix;
+	}
 	
 	public virtual void move_bounding_box (double dx, double dy) {
 		top += dy;

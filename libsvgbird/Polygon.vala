@@ -50,9 +50,6 @@ public class Polygon : Object {
 		return inside;
 	}
 		
-	public override void move (double dx, double dy) {
-	}
-	
 	public override bool is_empty () {
 		return false;
 	}

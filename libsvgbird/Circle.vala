@@ -37,9 +37,6 @@ public class Circle : Object {
 		cr.arc (cx, cy, r, 0, 2 * Math.PI);
 	}
 
-	public override void move (double dx, double dy) {
-	}
-
 	public override bool is_empty () {
 		return false;
 	}

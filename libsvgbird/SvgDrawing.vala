@@ -84,9 +84,6 @@ public class SvgDrawing : Object {
 		
 		return drawing;
 	}
-	
-	public override void move (double dx, double dy) {
-	}
 
 	public override bool is_empty () {
 		return false;

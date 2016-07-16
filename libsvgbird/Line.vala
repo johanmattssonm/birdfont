@@ -44,9 +44,6 @@ public class Line : Object {
 		cr.line_to (x2, y2);
 	}
 
-	public override void move (double dx, double dy) {
-	}
-
 	public override bool is_empty () {
 		return false;
 	}

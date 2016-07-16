@@ -63,11 +63,6 @@ public class Rectangle : Object {
 		cr.arc (0, 0, 1, angle_start, angle_stop);
 		cr.restore ();
 	}
-	
-	public override void move (double dx, double dy) {
-		x += dx;
-		y += dy;
-	}
 
 	public override bool is_empty () {
 		return false;

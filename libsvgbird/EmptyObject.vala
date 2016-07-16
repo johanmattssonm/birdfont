@@ -28,9 +28,6 @@ public class EmptyObject : Object {
 	public override void draw_outline (Context cr) {
 	}
 
-	public override void move (double dx, double dy) {
-	}
-
 	public override bool is_empty () {
 		return false;
 	}
