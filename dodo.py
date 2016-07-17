@@ -402,6 +402,10 @@ def make_libsvgbird(target_binary, deps):
             $(pkg-config --cflags cairo) \
             $(pkg-config --cflags glib-2.0) \
             $(pkg-config --cflags xmlbird) \
+            $(pkg-config --cflags fontconfig) \
+            $(pkg-config --cflags harfbuzz) \
+            $(pkg-config --cflags harfbuzz-icu) \
+
             -o OBJECT_FILE"""
 
     linker_command = config.CC + " " + config.LDFLAGS.get("libsvgbird", "") + """ \
@@ -413,6 +417,9 @@ def make_libsvgbird(target_binary, deps):
             $(pkg-config --libs cairo) \
             $(pkg-config --libs glib-2.0) \
             $(pkg-config --libs xmlbird) \
+            $(pkg-config --libs fontconfig) \
+            $(pkg-config --libs harfbuzz) \
+            $(pkg-config --libs harfbuzz-icu) \
             -L./build -L./build/bin \
             -o ./build/bin/""" + target_binary
 
