@@ -118,7 +118,7 @@ gchar* find_font_file (FcConfig* font_config, const gchar* font_name) {
 	FcPatternAddBool (search_pattern, FC_SCALABLE, FcTrue);
 	FcPatternAddInteger (search_pattern, FC_WEIGHT, FC_WEIGHT_MEDIUM);
 	FcPatternAddInteger (search_pattern, FC_SLANT, FC_SLANT_ROMAN);
-		
+	
 	font_properties = FcObjectSetBuild (FC_FILE, NULL);
 	fonts = FcFontList (font_config, search_pattern, font_properties);
 	

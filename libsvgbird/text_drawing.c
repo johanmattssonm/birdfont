@@ -233,6 +233,8 @@ gchar* svg_bird_find_font_file (const gchar* font_name) {
 
 	// match any font as fallback
 	search_pattern = FcPatternCreate ();
+	FcPatternAddInteger (search_pattern, FC_SLANT, FC_SLANT_ROMAN);
+	
 	font_properties = FcObjectSetBuild (FC_FILE, NULL);
 
 	fonts = FcFontList (font_config, search_pattern, font_properties);
@@ -255,6 +257,10 @@ gchar* svg_bird_find_font_file (const gchar* font_name) {
 	// search for a family name
 	search_pattern = FcPatternCreate ();
 	FcPatternAddString (search_pattern, FC_FAMILY, name);
+	FcPatternAddInteger (search_pattern, FC_SLANT, FC_SLANT_ROMAN);
+	FcPatternAddBool (search_pattern, FC_SCALABLE, FcTrue);
+	FcPatternAddInteger (search_pattern, FC_WEIGHT, FC_WEIGHT_MEDIUM);
+
 	fonts = FcFontList (font_config, search_pattern, font_properties);
 	
 	if (fonts->nfont > 0) {

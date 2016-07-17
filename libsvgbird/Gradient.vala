@@ -23,6 +23,7 @@ public abstract class Gradient : GLib.Object {
 	public string id = "";
 	public string? href = null;
 	public SvgTransforms transforms;
+	public Matrix parent_matrix = Matrix.identity ();
 	public Matrix view_matrix = Matrix.identity ();
 
 	public Gradient () {
@@ -34,6 +35,21 @@ public abstract class Gradient : GLib.Object {
 		foreach (Stop stop in g.stops) {
 			stops.add (stop.copy ());
 		}
+	}
+
+	public void move (double dx, double dy) {
+		double x = dx;
+		double y = dy;
+
+		Matrix parent = parent_matrix;
+		parent.invert ();
+		parent.transform_distance (ref x, ref y);
+		
+		Matrix m = Matrix.identity ();
+		m.translate (-x, -y);
+		
+		transforms.transforms.insert (0, new SvgTransform.for_matrix (m));
+		transforms.collapse_transforms ();			
 	}
 
 	public Matrix get_matrix () {

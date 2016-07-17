@@ -118,12 +118,26 @@ public abstract class Object : GLib.Object {
 	public abstract bool is_empty ();
 	
 	public virtual void move (double dx, double dy) {
+		Gradient g;
+
 		left += dx;
 		right += dx;
 		top += dy;
 		bottom += dy;
+
+		if (style.fill_gradient != null) {
+			g = (!) style.fill_gradient;
+			g.move (dx, dy);
+		}
+		
+		if (style.stroke_gradient != null) {
+			g = (!) style.stroke_gradient;
+			g.move (dx, dy);
+		}
+
 		to_object_distance (ref dx, ref dy);
 		transforms.translate (dx, dy);
+		
 		update_view_matrix ();
 	}
 	
@@ -234,6 +248,7 @@ public abstract class Object : GLib.Object {
 			
 			pattern.set_matrix (gradient_matrix);
 			
+			g.parent_matrix = view_matrix;
 			g.view_matrix = gradient_matrix;
 			
 			foreach (Stop s in g.stops) {
@@ -259,7 +274,15 @@ public abstract class Object : GLib.Object {
 		bool has_stroke = style.has_stroke ();
 
 		apply_transform (context);
-
+		
+		if (style.fill_gradient != null) {
+			apply_gradient (context, (!) style.fill_gradient);
+		}
+		
+		if (style.stroke_gradient != null) {
+			apply_gradient (context, (!) style.stroke_gradient);
+		}
+		
 		if (has_stroke) {
 			context.set_line_width (style.stroke_width);
 		} else {
@@ -298,9 +321,9 @@ public abstract class Object : GLib.Object {
 	public virtual bool update_boundaries_for_object () {
 		ImageSurface surface = new Cairo.ImageSurface (Cairo.Format.ARGB32, 1, 1);
 		Context context = new Cairo.Context (surface);
+		context.set_matrix (parent_matrix);
 		return update_boundaries (context);
 	}
-
 }
 
 }
