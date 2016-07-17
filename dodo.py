@@ -394,6 +394,7 @@ def make_libsvgbird(target_binary, deps):
 
     cc_command = config.CC + " " + config.CFLAGS.get("libsvgbird", "") + """ \
             -c C_SOURCE \
+            -std=c99 \
             -fPIC \
             -I ./build/libsvgbird \
             $(pkg-config --cflags """ + config.GEE + """) \
