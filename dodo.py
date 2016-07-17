@@ -405,7 +405,6 @@ def make_libsvgbird(target_binary, deps):
             $(pkg-config --cflags fontconfig) \
             $(pkg-config --cflags harfbuzz) \
             $(pkg-config --cflags harfbuzz-icu) \
-
             -o OBJECT_FILE"""
 
     linker_command = config.CC + " " + config.LDFLAGS.get("libsvgbird", "") + """ \
