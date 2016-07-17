@@ -26,6 +26,7 @@ extern struct svg_bird_font_item {
 }
 
 extern void svg_bird_draw_text (Context cr, svg_bird_font_item* font, string text);
+extern void svg_bird_get_extent (svg_bird_font_item* font, string text, out double w, out double h);
 
 extern void svg_bird_font_item_delete (svg_bird_font_item* item);
 extern svg_bird_font_item* svg_bird_font_item_create (string font_file, int font_size);
@@ -66,7 +67,7 @@ public class Text : Object {
 	public double y = 0;
 
 	svg_bird_font_item* font = null;
-	
+
 	public Text () {
 		if (!svg_bird_has_font_config ()) {
 			init_font_config ();
@@ -79,6 +80,21 @@ public class Text : Object {
 		svg_bird_font_item_delete (font);
 	}
 
+	public void get_text_extents (out double w, out double h) {
+		svg_bird_get_extent (font, content, out w, out h);
+	}
+
+	public override bool update_boundaries (Context context) {
+		double w;
+		double h;
+		get_text_extents (out w, out h);
+		left = x;
+		top = y;
+		bottom = y + h;
+		right = x + w;
+		return true;
+	}
+	
 	public void set_font_size (int s) {
 		font_size = s;
 		set_font (font_family);
@@ -90,10 +106,6 @@ public class Text : Object {
 		}
 		
 		font = svg_bird_font_item_create (font_family, font_size);
-		
-		if (font == null) {
-			font = svg_bird_font_item_create ("sans-serif", font_size);
-		}
 	}
 
 	public void init_font_config () {
@@ -141,12 +153,13 @@ public class Text : Object {
 	public override void draw_outline (Context cr) {
 		cr.save ();
 		cr.translate (x, y);
+
+		double w, h;
+		svg_bird_get_extent (font, content, out w, out h);
 		
 		if (font != null) {
 			svg_bird_draw_text (cr, font, content);
-		} else {
-			warning ("No font.");
-		}
+		} 
 		
 		cr.restore ();
 	}

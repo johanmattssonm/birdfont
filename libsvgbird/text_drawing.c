@@ -20,6 +20,40 @@ typedef struct svg_bird_font_item_t {
 gchar* svg_bird_find_font_file (const gchar* font_name);
 void svg_bird_font_item_delete (svg_bird_font_item* item);
 
+void svg_bird_get_extent (svg_bird_font_item* font, const char* text, double* width, double* height) {
+	hb_buffer_t *hb_buffer;	
+
+	hb_buffer = hb_buffer_create ();
+	hb_buffer_add_utf8 (hb_buffer, text, -1, 0, -1);
+	hb_buffer_guess_segment_properties (hb_buffer);
+
+	hb_shape (font->hb_font, hb_buffer, NULL, 0);
+
+	unsigned int len = hb_buffer_get_length (hb_buffer);
+	hb_glyph_info_t *info = hb_buffer_get_glyph_infos (hb_buffer, NULL);
+	hb_glyph_position_t *pos = hb_buffer_get_glyph_positions (hb_buffer, NULL);
+	
+	double current_x = 0;
+	double current_y = 0;
+	
+	for (unsigned int i = 0; i < len; i++) {
+		double x_position = current_x + pos[i].x_offset / 64.;
+		double y_position = current_y + pos[i].y_offset / 64.;
+ 		
+		current_x += pos[i].x_advance / 64.;
+		current_y += pos[i].y_advance / 64.;
+	}
+
+	*width = current_x;
+	*height = current_y;
+
+	if (HB_DIRECTION_IS_HORIZONTAL (hb_buffer_get_direction(hb_buffer))) {
+		*height += font->font_size * 1.25;
+	} else {
+		*width += font->font_size * 1.25;
+	}
+}
+
 gboolean svg_bird_has_font_config () {
 	g_mutex_lock (&font_config_lock);
 	gboolean exists = font_config != NULL;
@@ -125,24 +159,16 @@ void svg_bird_draw_text (cairo_t* cr, svg_bird_font_item* font, const char* text
 
 	double width = 0;
 	double height = 0;
-	for (unsigned int i = 0; i < len; i++) {
-		width  += pos[i].x_advance / 64.;
-		height -= pos[i].y_advance / 64.;
-	}
 	
-	if (HB_DIRECTION_IS_HORIZONTAL (hb_buffer_get_direction(hb_buffer)))
-		height += font->font_size;
-	else
-		width += font->font_size;
-
 	cairo_font_face_t *cairo_face;
 	cairo_face = cairo_ft_font_face_create_for_ft_face (font->ft_face, 0);
 	cairo_set_font_face (cr, cairo_face);
 	cairo_set_font_size (cr, font->font_size);
 
+	cairo_font_extents_t font_extents;
+	cairo_font_extents (cr, &font_extents);
+
 	if (HB_DIRECTION_IS_HORIZONTAL (hb_buffer_get_direction(hb_buffer))) {
-		cairo_font_extents_t font_extents;
-		cairo_font_extents (cr, &font_extents);
 		double baseline = (font->font_size - font_extents.height) * .5 + font_extents.ascent;
 		cairo_translate (cr, 0, baseline);
 	} else {
@@ -166,7 +192,7 @@ void svg_bird_draw_text (cairo_t* cr, svg_bird_font_item* font, const char* text
 		double dy = pos[i].y_advance / 64.0;
  		
 		cairo_matrix_transform_distance (&matrix, &dx, &dy);
-		
+
 		current_x += dx;
 		current_y += dy;
  	}
