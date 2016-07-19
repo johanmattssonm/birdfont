@@ -37,21 +37,9 @@ public abstract class Gradient : GLib.Object {
 		}
 	}
 
-	public void move (double dx, double dy) {
-		double x = dx;
-		double y = dy;
-
-		Matrix parent = parent_matrix;
-		parent.invert ();
-		parent.transform_distance (ref x, ref y);
-		
-		Matrix m = Matrix.identity ();
-		m.translate (-x, -y);
-		
-		transforms.transforms.insert (0, new SvgTransform.for_matrix (m));
-		transforms.collapse_transforms ();			
+	public virtual void move (double dx, double dy) {
 	}
-
+	
 	public Matrix get_matrix () {
 		return transforms.get_matrix ();
 	}

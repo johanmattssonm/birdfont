@@ -55,6 +55,17 @@ public class RadialGradient : Gradient {
 		return description.str;
 	}
 	
+	public override void move (double dx, double dy) {
+		double x = dx;
+		double y = dy;
+
+		Matrix parent = parent_matrix;
+		parent.invert ();
+		parent.transform_distance (ref x, ref y);
+		
+		cx -= x;
+		cy -= y;
+	}
 }
 
 }
