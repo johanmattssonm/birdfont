@@ -23,8 +23,6 @@ public class SvgTransforms : GLib.Object {
 	
 	public double rotation = 0;
 	public double total_rotation = 0;
-	public double scale_x = 1;
-	public double scale_y = 1;
 	public double translate_x = 0;
 	public double translate_y = 0;
 	
@@ -35,27 +33,19 @@ public class SvgTransforms : GLib.Object {
 	}
 
 	public void collapse_transforms () {
-		Matrix translate_matrix = Matrix.identity ();
-		translate_matrix.translate (translate_x, translate_y);
-		SvgTransform translate_transform = new SvgTransform.for_matrix (translate_matrix);
-		add (translate_transform);
+		Matrix collapsed = get_matrix ();
 		
-		SvgTransform rotation_transform = new SvgTransform.for_matrix (rotation_matrix);
-		add (rotation_transform);
-		
+		translate_x	= 0;
+		translate_y	= 0;
+
 		rotation_matrix = Matrix.identity ();
 		rotation = 0;
 
-		SvgTransform size_transform = new SvgTransform.for_matrix (size_matrix);
-		add (size_transform);
-
 		size_matrix = Matrix.identity ();
-		scale_x = 1;
-		scale_y = 1;
 		
-		Matrix collapsed = get_matrix ();
-		SvgTransform collapsed_transform = new SvgTransform.for_matrix (collapsed);
 		clear ();
+		
+		SvgTransform collapsed_transform = new SvgTransform.for_matrix (collapsed);
 		add (collapsed_transform);
 	}
 
@@ -66,8 +56,6 @@ public class SvgTransforms : GLib.Object {
 		rotation = 0;
 		
 		size_matrix = Matrix.identity ();
-		scale_x = 1;
-		scale_y = 1;
 		
 		translate_x = 0;
 		translate_y = 0;
@@ -104,18 +92,22 @@ public class SvgTransforms : GLib.Object {
 		rotation_matrix.translate (-x, -y);
 	}
 
-	public void resize (double ratio_x, double ratio_y, double x, double y) {
-		scale_x *= ratio_x;
-		scale_y *= ratio_y;
-
+	public void resize (double scale_x, double scale_y, double x, double y) {
 		if (scale_x <= 0 || scale_y <= 0) {
 			return;
 		}
-
+		
+		double x2 = x;
+		double y2 = y;
+		
 		size_matrix = Matrix.identity ();
-		size_matrix.translate (x, y);
 		size_matrix.scale (scale_x, scale_y);
-		size_matrix.translate (-x, -y);
+		size_matrix.transform_point (ref x2, ref y2);
+
+		double dx = x - x2;
+		double dy = y - y2;
+		
+		size_matrix.translate (dx / scale_x, dy / scale_y);
 	}
 
 	public SvgTransforms copy () {
@@ -141,8 +133,9 @@ public class SvgTransforms : GLib.Object {
 		}
 
 		transformation_matrix.translate (translate_x, translate_y);
-		transformation_matrix.multiply (transformation_matrix, size_matrix);
+
 		transformation_matrix.multiply (transformation_matrix, rotation_matrix);
+		transformation_matrix.multiply (transformation_matrix, size_matrix);
 
 		return transformation_matrix;
 	}

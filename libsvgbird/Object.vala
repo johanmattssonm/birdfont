@@ -105,6 +105,23 @@ public abstract class Object : GLib.Object {
 		m.invert ();
 		m.transform_point (ref x, ref y);
 	}
+
+	public void to_parent_distance (ref double x, ref double y) {
+		Matrix m = parent_matrix;
+		m.invert ();
+		m.transform_distance (ref x, ref y);
+	}
+	
+	public void to_parent_view (ref double x, ref double y) {
+		Matrix m = parent_matrix;
+		m.invert ();
+		m.transform_point (ref x, ref y);
+	}
+	
+	public void from_object_view (ref double x, ref double y) {
+		Matrix m = view_matrix;
+		m.transform_point (ref x, ref y);
+	}
 	
 	public void to_object_distance (ref double x, ref double y) {
 		Matrix m = view_matrix;
@@ -274,6 +291,7 @@ public abstract class Object : GLib.Object {
 		bool has_stroke = style.has_stroke ();
 
 		apply_transform (context);
+		view_matrix = context.get_matrix ();
 		
 		if (style.fill_gradient != null) {
 			apply_gradient (context, (!) style.fill_gradient);

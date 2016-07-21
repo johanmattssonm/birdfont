@@ -60,7 +60,7 @@ Configure the project with ./configure --nonnull
 ## Packages
 
 Windows and Mac binaries can be downloaded from
-http://birdfont.org Many Linux distributions have packages of
+https://birdfont.org Many Linux distributions have packages of
 Birdfont in their repositories. There is a BSD package in OpenBSD.
 
 [birdfont]: https://birdfont.org/images/birdfont_logo2.png "Birdfont logo"

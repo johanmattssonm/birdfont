@@ -26,6 +26,8 @@ public class SvgStyle : GLib.Object {
 	public Gradient? fill_gradient = null;
 	public LineCap line_cap = LineCap.BUTT;
 
+	public bool visible = true;
+
 	public double padding_top {
 		get {
 			return SvgFile.parse_number (get_css_property ("padding-top"));
@@ -321,6 +323,14 @@ public class SvgStyle : GLib.Object {
 		if (s.stroke != null) {
 			Color color = (!) s.stroke;
 			color.a = stroke_opacity;
+		}
+		
+		string? v = s.get_css_property ("visibility");
+		if (v != null) {
+			string visible = (!) v;
+			if (visible == "hidden" || visible == "collapse") {
+				s.visible = false;
+			}
 		}
 	}
 	
