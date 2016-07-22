@@ -32,6 +32,14 @@ public class SvgTransforms : GLib.Object {
 		size_matrix = Matrix.identity ();
 	}
 
+	public double get_rotation () {
+		Matrix m = get_matrix ();
+		double w = 1;
+		double h = 1;
+		m.transform_distance (ref w, ref h);
+		return Math.atan2 (h, w);
+	}
+
 	public void collapse_transforms () {
 		Matrix collapsed = get_matrix ();
 		

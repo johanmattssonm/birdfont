@@ -680,6 +680,9 @@ public class SvgFile : GLib.Object {
 				transform_functions.add (matrix (functions[i]));
 			}
 			
+			if (functions[i].has_prefix ("rotate")) {
+				transform_functions.add (rotate (functions[i]));
+			}
 			// TODO: rotate etc.
 		}
 		
@@ -737,6 +740,19 @@ public class SvgFile : GLib.Object {
 		}
 		
 		return n;
+	}
+	
+	private static SvgTransform rotate (string function) {
+		string parameters = get_transform_parameters (function);
+		string[] p = parameters.split (" ");
+		SvgTransform transform = new SvgTransform ();
+		transform.type = TransformType.ROTATE;
+
+		if (p.length > 0) {
+			transform.arguments.add (parse_double (p[0]));
+		}
+
+		return transform;
 	}
 	
 	private static SvgTransform scale (string function) {
