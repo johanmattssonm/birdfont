@@ -310,16 +310,15 @@ public abstract class Object : GLib.Object {
 		draw_outline (context);
 
 		context.save ();
-
+		context.set_matrix (Matrix.identity ());
+		
 		if (has_stroke) {
 			context.stroke_extents (out x0, out y0, out x1, out y1);
 		} else {
 			context.fill_extents (out x0, out y0, out x1, out y1);
 		}
-		
-		Matrix matrix = context.get_matrix ();
-		matrix.transform_point (ref x0, ref y0);
-		matrix.transform_point (ref x1, ref y1);
+
+		context.set_matrix (view_matrix);
 
 		context.fill ();
 		context.restore ();

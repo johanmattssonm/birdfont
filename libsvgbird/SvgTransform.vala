@@ -73,13 +73,11 @@ public class SvgTransform : GLib.Object {
 				double r = arguments.get_double (0);
 				r *= Math.PI / 180;
 				matrix.rotate (r);
-				return matrix;
 			}
 		} else if (type == TransformType.SCALE) {
 			if (arguments.size == 1) {
 				double s = arguments.get_double (0);
 				matrix.scale (s, s);
-				return matrix;
 			} else if (arguments.size == 2) {
 				double s0 = arguments.get_double (0);
 				double s1 = arguments.get_double (1);
