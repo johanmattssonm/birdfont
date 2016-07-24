@@ -89,6 +89,7 @@ public class SvgFile : GLib.Object {
 		}
 
 		set_object_properties (drawing, new SvgStyle (), svg_tag);
+		drawing.update_boundaries_for_object ();
 		
 		return drawing;
 	}

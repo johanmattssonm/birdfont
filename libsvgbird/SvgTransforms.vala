@@ -32,6 +32,12 @@ public class SvgTransforms : GLib.Object {
 		size_matrix = Matrix.identity ();
 	}
 
+	public void clear_rotation () {
+		rotation = 0;
+		total_rotation = 0;
+		rotation_matrix = Matrix.identity ();	
+	}
+
 	public double get_rotation () {
 		Matrix m = get_matrix ();
 		double w = 1;

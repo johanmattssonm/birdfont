@@ -28,7 +28,10 @@ public class SvgDrawing : Object {
 	public double height = 0;
 
 	public override bool update_boundaries (Context cr) {
+		parent_matrix = cr.get_matrix ();
 		apply_transform (cr);
+		view_matrix = cr.get_matrix ();
+		
 		root_layer.update_boundaries (cr);
 		
 		left = root_layer.left;
@@ -56,7 +59,6 @@ public class SvgDrawing : Object {
 	public override void apply_transform (Context cr) {
 		apply_view_box (cr);
 		base.apply_transform (cr);
-		root_layer.apply_transform (cr);
 	}
 
 	public void draw (Context cr) {

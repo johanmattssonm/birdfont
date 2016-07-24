@@ -43,22 +43,17 @@ public class Layer : Object {
 		right = CANVAS_MIN;
 
 		cr.save ();
-		
+		parent_matrix = copy_matrix (cr.get_matrix ());
+		apply_transform (cr);
+		view_matrix = copy_matrix (cr.get_matrix ());
+
 		foreach (Object object in objects) {
 			bool has_size = false;
 
-			cr.save ();
-
 			if (object is Layer) {
 				Layer sublayer = (Layer) object;
-				object.parent_matrix = cr.get_matrix ();
-				sublayer.apply_transform (cr);
-				object.view_matrix = cr.get_matrix ();
 				has_size = sublayer.update_boundaries (cr);
 			} else {
-				object.parent_matrix = cr.get_matrix ();
-				object.apply_transform (cr);
-				object.view_matrix = cr.get_matrix ();
 				has_size = object.update_boundaries (cr);
 			}
 			
@@ -67,9 +62,7 @@ public class Layer : Object {
 				right = fmax (right, object.right);
 				top = fmin (top, object.top);
 				bottom = fmax (bottom, object.bottom);
-			}
-
-			cr.restore ();
+			}			
 		}
 		
 		cr.restore ();
@@ -87,6 +80,8 @@ public class Layer : Object {
 	
 	private void draw_layer (Context cr, bool paint) {
 		cr.save ();
+
+		apply_transform (cr);
 		
 		if (clip_path != null) {
 			ClipPath clipping = (!) clip_path;
@@ -103,8 +98,7 @@ public class Layer : Object {
 			
 			if (object is Layer) {
 				Layer sublayer = (Layer) object;
-				sublayer.apply_transform (cr);
-				
+
 				if (paint) {
 					sublayer.draw (cr);
 				} else {
@@ -144,7 +138,7 @@ public class Layer : Object {
 		foreach (Object object in objects) {
 			if (object is Layer) {
 				Layer sublayer = (Layer) object;
-				sublayer.remove (o);;
+				sublayer.remove (o);
 			}
 		}
 		

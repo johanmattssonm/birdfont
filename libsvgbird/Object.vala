@@ -84,8 +84,8 @@ public abstract class Object : GLib.Object {
 		}
 	}
 
-	public const double CANVAS_MAX = 100000;
-	public const double CANVAS_MIN = -100000;
+	public const double CANVAS_MAX = 1000000;
+	public const double CANVAS_MIN = -1000000;
 	
 	public Matrix view_matrix = Matrix.identity ();
 	public Matrix parent_matrix = Matrix.identity ();
@@ -289,9 +289,12 @@ public abstract class Object : GLib.Object {
 	public virtual bool update_boundaries (Context context) {
 		double x0, y0, x1, y1;
 		bool has_stroke = style.has_stroke ();
+		
+		context.save ();
 
+		parent_matrix = copy_matrix (context.get_matrix ());
 		apply_transform (context);
-		view_matrix = context.get_matrix ();
+		view_matrix = copy_matrix (context.get_matrix ());
 		
 		if (style.fill_gradient != null) {
 			apply_gradient (context, (!) style.fill_gradient);
@@ -308,8 +311,6 @@ public abstract class Object : GLib.Object {
 		}
 		
 		draw_outline (context);
-
-		context.save ();
 		context.set_matrix (Matrix.identity ());
 		
 		if (has_stroke) {
@@ -317,8 +318,6 @@ public abstract class Object : GLib.Object {
 		} else {
 			context.fill_extents (out x0, out y0, out x1, out y1);
 		}
-
-		context.set_matrix (view_matrix);
 
 		context.fill ();
 		context.restore ();
@@ -340,6 +339,10 @@ public abstract class Object : GLib.Object {
 		Context context = new Cairo.Context (surface);
 		context.set_matrix (parent_matrix);
 		return update_boundaries (context);
+	}
+	
+	public Matrix copy_matrix (Matrix m) {
+		return new Matrix (m.xx, m.yx, m.xy, m.yy, m.x0, m.y0);
 	}
 }
 
