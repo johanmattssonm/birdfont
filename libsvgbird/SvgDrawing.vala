@@ -28,9 +28,10 @@ public class SvgDrawing : Object {
 	public double height = 0;
 
 	public override bool update_boundaries (Context cr) {
-		parent_matrix = cr.get_matrix ();
-		apply_transform (cr);
-		view_matrix = cr.get_matrix ();
+		parent_matrix = copy_matrix (cr.get_matrix ());
+		base.apply_transform (cr);
+		apply_view_box (cr);
+		view_matrix = copy_matrix (cr.get_matrix ());
 		
 		root_layer.update_boundaries (cr);
 		
@@ -39,7 +40,7 @@ public class SvgDrawing : Object {
 		top = root_layer.top;
 		bottom = root_layer.bottom;
 
-		return true;
+		return root_layer.right - root_layer.left > 0;
 	}
 
 	public override bool is_over (double x, double y) {
@@ -50,20 +51,25 @@ public class SvgDrawing : Object {
 		if (view_box != null) {
 			ViewBox box = (!) view_box;
 			Matrix view_box_matrix = box.get_matrix (width, height);
-			Matrix view_matrix = cr.get_matrix ();
-			view_box_matrix.multiply (view_box_matrix, view_matrix);		
+			Matrix object_matrix = cr.get_matrix ();
+			view_box_matrix.multiply (view_box_matrix, object_matrix);
 			cr.set_matrix (view_box_matrix);
 		}
 	}
 
 	public override void apply_transform (Context cr) {
+		Matrix view_matrix = cr.get_matrix ();
+		Matrix object_matrix = transforms.get_matrix ();
+		object_matrix.multiply (object_matrix, view_matrix);		
+		cr.set_matrix (object_matrix);
+		
 		apply_view_box (cr);
-		base.apply_transform (cr);
 	}
 
 	public void draw (Context cr) {
 		cr.save ();
-		apply_transform (cr);
+		base.apply_transform (cr);
+		apply_view_box (cr);
 		root_layer.draw (cr);
 		cr.restore ();
 	}

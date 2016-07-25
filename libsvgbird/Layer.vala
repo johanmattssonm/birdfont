@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2015 Johan Mattsson
+	Copyright (C) 2015 2016 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -31,6 +31,20 @@ public class Layer : Object {
 		objects = new ObjectGroup ();
 		transforms = new SvgTransforms ();
 	}
+
+	public override void move (double dx, double dy) {
+		left += dx;
+		right += dx;
+		top += dy;
+		bottom += dy;
+
+		foreach (Object object in objects.objects) {
+			object.move (dx, dy);
+		}
+		
+		update_view_matrix ();
+	}
+
 
 	public override bool update_boundaries (Context cr) {
 		if (objects.size == 0) {

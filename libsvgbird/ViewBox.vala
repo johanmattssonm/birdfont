@@ -95,7 +95,11 @@ public class ViewBox : GLib.Object {
 		scale_x = original_width / width;
 		scale_y = original_height / height;
 		
-		bool scale_width = scale_x > scale_y;
+		print (@"minx miny $minx $miny\n");
+		print (@"scale_x > scale_y $scale_x > $scale_y\n");
+		print (@"original_width $original_width $width    $original_height $height\n");
+		
+		bool scale_width = scale_x * original_height > scale_y * original_width;
 		
 		if (scale_width) {
 			scale = scale_y;

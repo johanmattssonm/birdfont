@@ -294,7 +294,6 @@ public abstract class Object : GLib.Object {
 
 		parent_matrix = copy_matrix (context.get_matrix ());
 		apply_transform (context);
-		view_matrix = copy_matrix (context.get_matrix ());
 		
 		if (style.fill_gradient != null) {
 			apply_gradient (context, (!) style.fill_gradient);
@@ -311,6 +310,8 @@ public abstract class Object : GLib.Object {
 		}
 		
 		draw_outline (context);
+		
+		view_matrix = copy_matrix (context.get_matrix ());
 		context.set_matrix (Matrix.identity ());
 		
 		if (has_stroke) {
