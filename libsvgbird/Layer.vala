@@ -45,7 +45,6 @@ public class Layer : Object {
 		update_view_matrix ();
 	}
 
-
 	public override bool update_boundaries (Context cr) {
 		if (objects.size == 0) {
 			return false;

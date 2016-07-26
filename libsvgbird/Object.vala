@@ -309,10 +309,9 @@ public abstract class Object : GLib.Object {
 			context.set_line_width (0);
 		}
 		
-		draw_outline (context);
-		
 		view_matrix = copy_matrix (context.get_matrix ());
 		context.set_matrix (Matrix.identity ());
+		draw_outline (context);
 		
 		if (has_stroke) {
 			context.stroke_extents (out x0, out y0, out x1, out y1);
@@ -320,17 +319,67 @@ public abstract class Object : GLib.Object {
 			context.fill_extents (out x0, out y0, out x1, out y1);
 		}
 
+		double point_x0 = x0;
+		double point_y0 = y0;
+		double point_x1 = x1;
+		double point_y1 = y0;
+		double point_x2 = x1;
+		double point_y2 = y1;
+		double point_x3 = x0;
+		double point_y3 = y1;
+		
+		view_matrix.transform_point (ref point_x0, ref point_y0);
+		view_matrix.transform_point (ref point_x1, ref point_y1);
+		view_matrix.transform_point (ref point_x2, ref point_y2);
+		view_matrix.transform_point (ref point_x3, ref point_y3);
+
 		context.fill ();
 		context.restore ();
 
-		left = x0;
-		top = y0;
-		right = x1;
-		bottom = y1;
-				
+		left = min (point_x0, point_x1, point_x2, point_x3);
+		top = min (point_y0, point_y1, point_y2, point_y3);
+		right = max (point_x0, point_x1, point_x2, point_x3);
+		bottom = max (point_y0, point_y1, point_y2, point_y3);
+		
 		return boundaries_width != 0;
 	}
 
+	static double min (double x0, double x1, double x2, double x3) {
+		double min = x0;
+		
+		if (x1 < min) {
+			min = x1;
+		}
+		
+		if (x2 < min) {
+			min = x2;
+		}
+		
+		if (x3 < min) {
+			min = x3;
+		}
+		
+		return min;
+	}
+
+	static double max (double x0, double x1, double x2, double x3) {
+		double max = x0;
+		
+		if (x1 > max) {
+			max = x1;
+		}
+		
+		if (x2 > max) {
+			max = x2;
+		}
+		
+		if (x3 > max) {
+			max = x3;
+		}
+		
+		return max;
+	}
+	
 	public Matrix get_view_matrix () {
 		return view_matrix;
 	}
