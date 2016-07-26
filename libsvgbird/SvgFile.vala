@@ -762,8 +762,6 @@ public class SvgFile : GLib.Object {
 		SvgTransform transform = new SvgTransform ();
 		transform.type = TransformType.SCALE;
 
-		print (@"scale $parameters len $(p.length)\n");
-
 		if (p.length > 0) {
 			transform.arguments.add (parse_double (p[0]));
 		}

@@ -31,6 +31,11 @@ public abstract class Object : GLib.Object {
 	public virtual double top { get; set; }
 	public virtual double bottom { get; set; }
 	
+	public virtual double boundaries_x0 { get; set; }
+	public virtual double boundaries_y0 { get; set; }
+	public virtual double boundaries_x1 { get; set; }
+	public virtual double boundaries_y1 { get; set; }
+	
 	public virtual double boundaries_height { 
 		get {
 			return bottom - top;
@@ -272,8 +277,12 @@ public abstract class Object : GLib.Object {
 				Color c = s.color;
 				pattern.add_color_stop_rgba (s.offset, c.r, c.g, c.b, c.a);
 			}
-					
-			cr.set_source (pattern);
+			
+			if (likely (pattern.status () == 0)) {
+				cr.set_source (pattern);
+			} else {
+				warning ("Invalid pattern.");
+			}
 		}
 	}
 	
@@ -319,6 +328,11 @@ public abstract class Object : GLib.Object {
 			context.fill_extents (out x0, out y0, out x1, out y1);
 		}
 
+		boundaries_x0 = x0;
+		boundaries_y0 = y0;
+		boundaries_x1 = x1;
+		boundaries_y1 = y1;
+		
 		double point_x0 = x0;
 		double point_y0 = y0;
 		double point_x1 = x1;

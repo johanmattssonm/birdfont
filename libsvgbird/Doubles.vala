@@ -34,6 +34,10 @@ public class Doubles : GLib.Object {
 		delete data;
 		data = null;
 	}
+
+	public void clear () {
+		size = 0;
+	}
 	
 	public void set_double (int index, double p) {
 		if (unlikely (index < 0)) {
@@ -111,6 +115,18 @@ public class Doubles : GLib.Object {
 		}
 	}
 	
+	public void remove (int offset, int length) {
+		if (unlikely (offset < 0 || offset + length > size)) {
+			warning ("Invalid offset.");
+			return;
+		}
+		
+		for (int i = offset; i < size; i++) {
+			data[i] = data[i + length];
+		}
+		
+		size -= length;
+	}
 	
 	void increase_capacity () {
 		int new_capacity = 2 * capacity;
