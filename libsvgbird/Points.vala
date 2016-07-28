@@ -13,12 +13,14 @@
 */
 
 using Cairo;
+using Math;
 
 namespace SvgBird {
 
 public class Points : GLib.Object {
 	public Doubles point_data = new Doubles.for_capacity (100);
 	public bool closed;
+	public delegate bool LineIterator (double start_x, double start_y, double end_x, double end_y, double step, int point_index);
 	
 	public int size {
 		get {
@@ -64,6 +66,118 @@ public class Points : GLib.Object {
 	public uchar get_point_type (int index) {
 		return point_data.get_point_type (index);
 	}
+
+	public void all_points (LineIterator iter) {
+		double previous_x;
+		double previous_y;
+
+		PointValue* points = point_data.data;
+		int size = point_data.size;
+		
+		return_if_fail (size % 8 == 0);
+	
+		SvgPath.get_start (this, out previous_x, out previous_y);
+	
+		for (int i = 1; i < size; i += 8) {
+			switch (points[i].type) {
+			case POINT_ARC:		
+				double rx = points[i + 1].value;
+				double ry = points[i + 2].value;
+				double rotation = points[i + 3].value;
+				double large_arc = points[i + 4].value;
+				double sweep = points[i + 5].value;
+				double dest_x = points[i + 6].value;
+				double dest_y = points[i + 7].value;
+
+				double angle_start, angle_extent, cx, cy;
+				
+				get_arc_arguments (previous_x, previous_y, rx, ry,
+							rotation, large_arc > 0, sweep > 0, dest_x, dest_y,
+							out angle_start, out angle_extent,
+							out cx, out cy);
+							
+				const int steps = 50;
+				for (int step = 0; step < steps; step++) {
+					double angle = angle_start + step * (angle_extent / steps);
+					double next_x = cx + cos (angle);
+					double next_y = cy + sin (angle);
+					
+					iter (previous_x, previous_y, next_x, next_y, step, i);
+							
+					previous_x = next_x;
+					previous_y = next_y;
+				}
+				break;
+			case POINT_CUBIC:
+				all_lines (previous_x, previous_y,
+					points[i + 1].value, points[i + 2].value,
+					points[i + 3].value, points[i + 4].value,
+					points[i + 5].value, points[i + 6].value,
+					(x, y, t) => {
+						iter (previous_x, previous_y, x, y, 1, i);
+						
+						previous_x = x;
+						previous_y = y;
+						return true;
+					});
+
+				previous_x = points[i + 5].value;
+				previous_y = points[i + 6].value;
+				break;
+			case POINT_LINE:
+				double x = points[i + 1].value;
+				double y = points[i + 2].value;
+				
+				iter (previous_x, previous_y, x, y, 1, i);
+				
+				previous_x = x;
+				previous_y = y;
+				break;
+			}
+		}
+	}
+			
+	private static bool all_lines (double x0, double y0, double x1, double y1, double x2, double y2, double x3, double y3,
+			LineIterator iter, int index = 0, double steps = 400) {
+		double px = x1;
+		double py = y1;
+		
+		double t;
+		
+		double previous_x = px;
+		double previous_y = py;
+		
+		for (int i = 0; i < steps; i++) {
+			t = i / steps;
+			
+			px = bezier_path (t, x0, x1, x2, x3);
+			py = bezier_path (t, y0, y1, y2, y3);
+						
+			if (!iter (previous_x, previous_y, px, py, t, index)) {
+				return false;
+			}
+			
+			previous_x = px;
+			previous_y = py;
+		}
+		
+		return true;
+	}
+
+	public static double bezier_path (double step, double p0, double p1, double p2, double p3) {
+		double q0, q1, q2;
+		double r0, r1;
+
+		q0 = step * (p1 - p0) + p0;
+		q1 = step * (p2 - p1) + p1;
+		q2 = step * (p3 - p2) + p2;
+
+		r0 = step * (q1 - q0) + q0;
+		r1 = step * (q2 - q1) + q1;
+
+		return step * (r1 - r0) + r0;
+	}
+
 }
 
 }

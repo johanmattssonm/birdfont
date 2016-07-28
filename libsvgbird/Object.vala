@@ -128,6 +128,11 @@ public abstract class Object : GLib.Object {
 		m.transform_point (ref x, ref y);
 	}
 	
+	public void from_object_distance (ref double x, ref double y) {
+		Matrix m = view_matrix;
+		m.transform_distance (ref x, ref y);
+	}
+	
 	public void to_object_distance (ref double x, ref double y) {
 		Matrix m = view_matrix;
 		m.invert ();
@@ -406,7 +411,7 @@ public abstract class Object : GLib.Object {
 	}
 	
 	public Matrix copy_matrix (Matrix m) {
-		return new Matrix (m.xx, m.yx, m.xy, m.yy, m.x0, m.y0);
+		return Matrix (m.xx, m.yx, m.xy, m.yy, m.x0, m.y0);
 	}
 }
 

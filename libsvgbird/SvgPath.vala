@@ -23,8 +23,6 @@ public class SvgPath : Object {
 	double pen_position_x = 0;
 	double pen_position_y = 0;
 	
-	public delegate bool LineIterator (double x, double y, double step);	
-	
 	public SvgPath () {
 	}
 
@@ -53,76 +51,13 @@ public class SvgPath : Object {
 	}
 	
 	public static bool is_over_points (Points p, double point_x, double point_y) {
-		double previous_x;
-		double previous_y;
 		bool inside = false;
-
-		PointValue* points = p.point_data.data;
-		int size = p.point_data.size;
-		
-		return_if_fail (size % 8 == 0);
 	
-		get_start (p, out previous_x, out previous_y);
-	
-		for (int i = 0; i < size; i += 8) {
-			switch (points[i].type) {
-			case POINT_ARC:		
-				double rx = points[i + 1].value;
-				double ry = points[i + 2].value;
-				double rotation = points[i + 3].value;
-				double large_arc = points[i + 4].value;
-				double sweep = points[i + 5].value;
-				double dest_x = points[i + 6].value;
-				double dest_y = points[i + 7].value;
+		p.all_points ((start_x, start_y, end_x, end_y) => {
+			is_inside (ref inside, point_x, point_y, start_x, start_y, end_x, end_y);
+			return true;
+		});
 
-				double angle_start, angle_extent, cx, cy;
-				
-				get_arc_arguments (previous_x, previous_y, rx, ry,
-							rotation, large_arc > 0, sweep > 0, dest_x, dest_y,
-							out angle_start, out angle_extent,
-							out cx, out cy);
-				const int steps = 50;
-				for (int step = 0; step < steps; step++) {
-					double angle = angle_start + step * (angle_extent / steps);
-					double next_x = cx + cos (angle);
-					double next_y = cy + sin (angle);
-					is_inside (ref inside, 
-							point_x, point_y,
-							previous_x, previous_y, 
-							next_x, next_y);
-							
-					previous_x = next_x;
-					previous_y = next_y;
-				}
-				break;
-			case POINT_CUBIC:
-				all_lines (previous_x, previous_y,
-					points[i + 1].value, points[i + 2].value,
-					points[i + 3].value, points[i + 4].value,
-					points[i + 5].value, points[i + 6].value,
-					(x, y, t) => {
-						is_inside (ref inside, 
-							point_x, point_y,
-							previous_x, previous_y, 
-							x, y);
-						
-						previous_x = x;
-						previous_y = y;
-						return true;
-					});
-					
-				previous_x = points[i + 5].value;
-				previous_y = points[i + 6].value;
-				break;
-			case POINT_LINE:
-				is_inside (ref inside, point_x, point_y, previous_x, previous_y, 
-					points[i + 1].value, points[i + 2].value);
-				previous_x = points[i + 1].value;
-				previous_y = points[i + 2].value;
-				break;
-			}
-		}
-		
 		return inside;
 	}
 
@@ -132,41 +67,6 @@ public class SvgPath : Object {
 			&& point_x < (prev_x - next_x) * (point_y - next_y) / (prev_y - next_y) + next_x) {
 			inside = !inside;
 		}
-	}
-			
-	private static bool all_lines (double x0, double y0, double x1, double y1, double x2, double y2, double x3, double y3,
-			LineIterator iter, double steps = 400) {
-		double px = x1;
-		double py = y1;
-		
-		double t;
-		
-		for (int i = 0; i < steps; i++) {
-			t = i / steps;
-			
-			px = bezier_path (t, x0, x1, x2, x3);
-			py = bezier_path (t, y0, y1, y2, y3);
-						
-			if (!iter (px, py, t)) {
-				return false;
-			}
-		}
-		
-		return true;
-	}
-
-	public static double bezier_path (double step, double p0, double p1, double p2, double p3) {
-		double q0, q1, q2;
-		double r0, r1;
-
-		q0 = step * (p1 - p0) + p0;
-		q1 = step * (p2 - p1) + p1;
-		q2 = step * (p3 - p2) + p2;
-
-		r0 = step * (q1 - q0) + q0;
-		r1 = step * (q2 - q1) + q1;
-
-		return step * (r1 - r0) + r0;
 	}
 	
 	public override void draw_outline (Context cr) {
