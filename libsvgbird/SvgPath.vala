@@ -53,7 +53,7 @@ public class SvgPath : Object {
 	public static bool is_over_points (Points p, double point_x, double point_y) {
 		bool inside = false;
 	
-		p.all_points ((start_x, start_y, end_x, end_y) => {
+		p.all ((start_x, start_y, end_x, end_y) => {
 			is_inside (ref inside, point_x, point_y, start_x, start_y, end_x, end_y);
 			return true;
 		});

@@ -67,7 +67,7 @@ public class Points : GLib.Object {
 		return point_data.get_point_type (index);
 	}
 
-	public void all_points (LineIterator iter) {
+	public void all (LineIterator iter) {
 		double previous_x;
 		double previous_y;
 
@@ -77,8 +77,8 @@ public class Points : GLib.Object {
 		return_if_fail (size % 8 == 0);
 	
 		SvgPath.get_start (this, out previous_x, out previous_y);
-	
-		for (int i = 1; i < size; i += 8) {
+
+		for (int i = 8; i < size; i += 8) {
 			switch (points[i].type) {
 			case POINT_ARC:		
 				double rx = points[i + 1].value;
@@ -102,7 +102,7 @@ public class Points : GLib.Object {
 					double next_x = cx + cos (angle);
 					double next_y = cy + sin (angle);
 					
-					iter (previous_x, previous_y, next_x, next_y, step, i);
+					iter (previous_x, previous_y, next_x, next_y, step / steps, i);
 							
 					previous_x = next_x;
 					previous_y = next_y;
@@ -113,13 +113,8 @@ public class Points : GLib.Object {
 					points[i + 1].value, points[i + 2].value,
 					points[i + 3].value, points[i + 4].value,
 					points[i + 5].value, points[i + 6].value,
-					(x, y, t) => {
-						iter (previous_x, previous_y, x, y, 1, i);
-						
-						previous_x = x;
-						previous_y = y;
-						return true;
-					});
+					iter,
+					i);
 
 				previous_x = points[i + 5].value;
 				previous_y = points[i + 6].value;
@@ -178,6 +173,16 @@ public class Points : GLib.Object {
 		return step * (r1 - r0) + r0;
 	}
 
+	public static void bezier_vector (double step, double p0, double p1, double p2, double p3, out double a0, out double a1) {
+		double q0, q1, q2;
+
+		q0 = step * (p1 - p0) + p0;
+		q1 = step * (p2 - p1) + p1;
+		q2 = step * (p3 - p2) + p2;
+
+		a0 = step * (q1 - q0) + q0;
+		a1 = step * (q2 - q1) + q1;
+	}
 }
 
 }
