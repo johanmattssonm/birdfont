@@ -52,6 +52,36 @@ public class Points : GLib.Object {
 		point_data.add_type (type);
 	}
 
+	public int add_cubic (double handle_x, double handle_y,
+		double next_handle_x, double next_handle_y,
+		double x, double y) {
+			
+		// end point
+		if (size == 0) {
+			add_type (POINT_LINE);
+			add (x);
+			add (y);
+			add (0);
+			add (0);
+			add (0);
+			add (0);
+			add (0);
+		}
+		
+		int index = size - 8;
+		
+		insert_type (index, POINT_CUBIC);
+		insert (index + 1, handle_x);
+		insert (index + 2, handle_y);
+		insert (index + 3, next_handle_x);
+		insert (index + 4, next_handle_y);
+		insert (index + 5, x);
+		insert (index + 6, y);
+		insert (index + 7, 0);
+		
+		return index;
+	}
+
 	public Points copy () {
 		Points p = new Points ();
 		p.point_data = point_data.copy ();
