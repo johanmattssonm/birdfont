@@ -1092,6 +1092,7 @@ public class OverView : FontDisplay {
 		f.alternates = previous_collection.alternate_sets.copy ();
 
 		undo_items.remove_at (undo_items.size - 1);
+		update_item_list ();
 		GlyphCanvas.redraw ();
 	}
 	
