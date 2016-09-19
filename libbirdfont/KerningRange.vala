@@ -113,7 +113,8 @@ public class KerningRange : Tool {
 		TextListener listener = new TextListener (t_("Kerning class"), ranges, t_("Set"));
 		listener.signal_text_input.connect ((text) => {
 			set_ranges (text);
-			Toolbox.redraw_tool_box ();
+			KerningTools.classes.clear_cache ();
+			KerningTools.classes.redraw ();
 		});
 		
 		listener.signal_submit.connect (() => {

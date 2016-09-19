@@ -54,7 +54,12 @@ public class KerningTools : ToolCollection  {
 		active_otf_features = new OtfTags ();
 		
 		Expander kerning_tools = new Expander (t_("Kerning Tools"));
-		classes = new Expander ();
+		
+		if (is_null (classes)) {
+			classes = new Expander ();
+			update_kerning_classes ();
+		}
+		
 		expanders = new Gee.ArrayList<Expander> ();
 
 		Expander font_name = new Expander ();
@@ -86,6 +91,7 @@ public class KerningTools : ToolCollection  {
 			KerningRange kr = new KerningRange (f, @"$label $(++next_class)");
 			classes.add_tool (kr);
 			self.set_selected (false);
+			classes.clear_cache ();
 			classes.redraw ();
 		});
 		kerning_tools.add_tool (new_kerning_class);
@@ -176,8 +182,8 @@ public class KerningTools : ToolCollection  {
 		expanders.add (font_name);
 		expanders.add (zoom_expander);
 		expanders.add (kerning_tools);
+		expanders.add (otf_features);		
 		expanders.add (classes);
-		expanders.add (otf_features);
 	}
 	
 	public static void add_otf_label (string tag) {
@@ -266,6 +272,9 @@ public class KerningTools : ToolCollection  {
 				add_unique_class (kr);
 			}
 		}
+		
+		classes.clear_cache ();
+		classes.redraw ();
 	}
 
 	private static void remove_all_kerning_classes () {
