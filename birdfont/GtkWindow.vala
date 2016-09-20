@@ -161,9 +161,14 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		});
 		
 		scrollbar.set_visible (false);
-		
+	
 		show_all ();
+
 		MainWindow.open_recent_files_tab ();		
+
+#if FREE
+		MainWindow.show_license_dialog ();
+#endif
 	}
 
 	public void window_focus (void* data) {

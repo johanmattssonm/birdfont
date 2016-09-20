@@ -34,9 +34,24 @@ public class OtfFeatureTable : Table {
 	Gee.ArrayList<AlternateItem> undo_items;
 	// FIXME: implement redo
 	
+	bool ignore_input = false;
+	
 	public OtfFeatureTable (GlyphCollection? gc) {
 		glyph_collection = gc;
 		undo_items = new Gee.ArrayList<AlternateItem> ();
+	}
+
+	public override void selected_canvas () {
+		ignore_input = true; // make sure that tripple clicks in overview are ignored
+
+		TimeoutSource input_delay = new TimeoutSource (250);
+		input_delay.set_callback(() => {
+			ignore_input = false;
+			return false;
+		});
+		input_delay.attach (null);
+		
+		base.selected_canvas ();
 	}
 
 	public override Gee.ArrayList<Row> get_rows () {
@@ -48,6 +63,10 @@ public class OtfFeatureTable : Table {
 		GLib.Object o;
 		String s;
 		AlternateItem a;
+		
+		if (ignore_input) {
+			return;
+		}
 		
 		if (row_index == SOURCE_GLYPH) {
 			GlyphSelection gs = new GlyphSelection ();

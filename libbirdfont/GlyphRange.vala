@@ -182,7 +182,11 @@ public class GlyphRange {
 			}
 			
 			if (w.char_count () == 1) {
-				add_single (w.get_char ());
+				unichar c = w.get_char_validated ();
+				
+				if (c > 0) {
+					add_single (c);
+				}
 			} else if (w == "space") {
 				add_single (' ');
 			} else if (w == "divis") {

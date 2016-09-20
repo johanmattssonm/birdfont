@@ -161,7 +161,7 @@ public class HmtxTable : OtfTable {
 			}
 			
 			if (extent < 0) {
-				warning ("Negative extent.");
+				warning (@"Negative extent in $(gc.get_name ()).");
 			}
 			
 			advance_width[nmetrics] = (uint16) extent;

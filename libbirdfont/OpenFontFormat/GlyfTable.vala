@@ -307,18 +307,22 @@ public class GlyfTable : OtfTable {
 
 		// save bounding box for head table
 		if (glyf_data.bounding_box_xmin < this.xmin) {
+			printd (@"YMin in $(g.get_name ())\n");
 			this.xmin = glyf_data.bounding_box_xmin;
 		}
 		
 		if (glyf_data.bounding_box_ymin < this.ymin) {
+			printd (@"YMin in $(g.get_name ())\n");
 			this.ymin = glyf_data.bounding_box_ymin;
 		}
 		
 		if (glyf_data.bounding_box_xmax > this.xmax) {
+			printd (@"XMax in $(g.get_name ())\n");
 			this.xmax = glyf_data.bounding_box_xmax;
 		}
 		
 		if (glyf_data.bounding_box_ymax > this.ymax) {
+			printd (@"YMax in $(g.get_name ())\n");
 			this.ymax = glyf_data.bounding_box_ymax;
 		}
 		

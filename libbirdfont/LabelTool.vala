@@ -92,29 +92,31 @@ public class LabelTool : Tool {
 		if (is_selected ()) {
 		
 			if (selected_cache == null) {
-				selected_cache = Screen.create_background_surface ((int) w, (int) h + 2);
+				selected_cache = Screen.create_background_surface ((int) (w * Screen.get_scale ()), (int) ((h + 2) * Screen.get_scale ()));
 				Context c = new Context ((!) selected_cache);
-				c.scale (1 / Screen.get_scale (), 1 / Screen.get_scale ());
+				c.scale (Screen.get_scale (), Screen.get_scale ());
 				draw_tool_surface (c, x, 2, true);
 			}
 			
 			cr.save ();
+			cr.scale (1 / Screen.get_scale (), 1 / Screen.get_scale ());
 			cr.set_antialias (Cairo.Antialias.NONE);
-			cr.set_source_surface ((!) selected_cache, 0, (int) y - 2);
+			cr.set_source_surface ((!) selected_cache, 0, (int) ((y - 2) * Screen.get_scale ()));
 			cr.paint ();
 			cr.restore ();
 		} else {
 		
 			if (deselected_cache == null) {
-				deselected_cache = Screen.create_background_surface ((int) w, (int) h + 2);
+				deselected_cache = Screen.create_background_surface ((int) (w * Screen.get_scale ()), (int) ((h + 2) * Screen.get_scale ()));
 				Context c = new Context ((!) deselected_cache);
-				c.scale (1 / Screen.get_scale (), 1 / Screen.get_scale ());
+				c.scale (Screen.get_scale (), Screen.get_scale ());
 				draw_tool_surface (c, x, 2, false);
 			}
 			
 			cr.save ();
+			cr.scale (1 / Screen.get_scale (), 1 / Screen.get_scale ());
 			cr.set_antialias (Cairo.Antialias.NONE);
-			cr.set_source_surface ((!) deselected_cache, 0, (int) y - 2);
+			cr.set_source_surface ((!) deselected_cache, 0, (int) ((y - 2) * Screen.get_scale ()));
 			cr.paint ();
 			cr.restore ();
 		}

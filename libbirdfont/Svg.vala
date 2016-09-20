@@ -153,8 +153,8 @@ public class Svg {
 		EditPoint middle;
 		double x, y;
 		
-		x = start.get_right_handle ().x + (end.get_left_handle ().x - start.get_right_handle ().x);
-		y = start.get_right_handle ().y + (end.get_left_handle ().y - start.get_right_handle ().y);
+		x = start.get_right_handle ().x + (end.get_left_handle ().x - start.get_right_handle ().x) / 2;
+		y = start.get_right_handle ().y + (end.get_left_handle ().y - start.get_right_handle ().y) / 2;
 		
 		middle = new EditPoint (x, y, PointType.QUADRATIC);
 		middle.right_handle = end.get_left_handle ().copy ();
