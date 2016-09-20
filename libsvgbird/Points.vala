@@ -55,21 +55,22 @@ public class Points : GLib.Object {
 	public int add_cubic (double handle_x, double handle_y,
 		double next_handle_x, double next_handle_y,
 		double x, double y) {
-			
-		// end point
+		
+		int index;
+		
 		if (size == 0) {
-			add_type (POINT_LINE);
-			add (x);
-			add (y);
-			add (0);
-			add (0);
-			add (0);
-			add (0);
-			add (0);
+			index = 0;
+			insert_type (index, POINT_LINE);
+			insert (index + 1, x);
+			insert (index + 2, y);
+			insert (index + 3, 0);
+			insert (index + 4, 0);
+			insert (index + 5, 0);
+			insert (index + 6, 0);
+			insert (index + 7, 0);
 		}
 		
-		int index = size - 8;
-		
+		index = size;
 		insert_type (index, POINT_CUBIC);
 		insert (index + 1, handle_x);
 		insert (index + 2, handle_y);
@@ -78,7 +79,7 @@ public class Points : GLib.Object {
 		insert (index + 5, x);
 		insert (index + 6, y);
 		insert (index + 7, 0);
-		
+
 		return index;
 	}
 
