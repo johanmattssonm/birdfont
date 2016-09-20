@@ -45,6 +45,10 @@ public class KerningDisplay : FontDisplay {
 	
 	public bool adjust_side_bearings = false;
 	public bool right_side_bearing = true;
+
+	public bool right_to_left = false; 	
+	
+	WidgetAllocation allocation = new WidgetAllocation ();
 	
 	public KerningDisplay () {
 		GlyphSequence w = new GlyphSequence ();
@@ -133,6 +137,8 @@ public class KerningDisplay : FontDisplay {
 		double item_size = 1.0 / KerningTools.font_size;
 		double item_size2 = 2.0 / KerningTools.font_size;
 
+		this.allocation = allocation;
+
 		i = 0;
 		
 		// bg color
@@ -156,6 +162,10 @@ public class KerningDisplay : FontDisplay {
 		prev = null;
 		kern = 0;
 		
+		if (right_to_left) {
+			x = (allocation.width - 20) / KerningTools.font_size;
+		}
+				
 		foreach (GlyphSequence word in get_all_rows ()) {
 			wi = 0;
 			word_with_ligatures = word.process_ligatures (font);
@@ -188,7 +198,13 @@ public class KerningDisplay : FontDisplay {
 
 					cr.save ();
 					glyph.add_help_lines ();
-					cr.translate (kern + x - glyph.get_lsb () - Glyph.xc (), glyph.get_baseline () + y  - Glyph.yc ());
+
+					if (right_to_left) {
+						cr.translate (x - kern - glyph.get_lsb () - glyph.get_width () - Glyph.xc (), glyph.get_baseline () + y  - Glyph.yc ());
+					} else {						
+						cr.translate (kern + x - glyph.get_lsb () - Glyph.xc (), glyph.get_baseline () + y  - Glyph.yc ());
+					}
+					
 					glyph.draw_paths (cr);
 					cr.restore ();
 					
@@ -197,7 +213,11 @@ public class KerningDisplay : FontDisplay {
 				
 				// handle
 				if (first_row && (active_handle == i || selected_handle == i)) {
-					x2 = x + kern / 2.0;
+					if (right_to_left) {
+						x2 = x - kern / 2.0;
+					} else {
+						x2 = x + kern / 2.0;
+					}
 					
 					cr.save ();
 					
@@ -247,7 +267,11 @@ public class KerningDisplay : FontDisplay {
 					cr.restore ();
 				}	
 				
-				x += w + kern;
+				if (right_to_left) {
+					x -= w + kern;
+				} else {
+					x += w + kern;
+				}
 	
 				// caption
 				if (g == null || ((!)g).is_empty ()) {
@@ -281,7 +305,13 @@ public class KerningDisplay : FontDisplay {
 			}
 						
 			y += row_height + 20;
-			x = 20;
+			
+			if (right_to_left) {
+				x = (allocation.width - 20) / KerningTools.font_size;
+			} else {				
+				x = 20;
+			}
+
 			first_row = false;
 			
 			if (y > allocation.height) {
@@ -772,6 +802,11 @@ public class KerningDisplay : FontDisplay {
 			
 			k = (ex - last_handle_x) / y; // y-axis is for variable precision
 			k /= KerningTools.font_size;
+
+			if (right_to_left) {
+				k *= -1;
+			}			
+			
 			set_space (selected_handle, k);
 			GlyphCanvas.redraw ();
 		}
@@ -789,7 +824,11 @@ public class KerningDisplay : FontDisplay {
 		Glyph glyph = new Glyph.no_lines ("");
 		double fs = KerningTools.font_size;
 		double x = 20;
-				
+
+		if (right_to_left) {
+			x = (allocation.width - 20) / KerningTools.font_size;
+		}		
+			
 		GlyphRange? gr_left, gr_right;
 		
 		Glyph? prev = null;
@@ -825,8 +864,12 @@ public class KerningDisplay : FontDisplay {
 
 				kern = get_kerning_for_pair (((!)prev).get_name (), ((!)g).get_name (), gr_left, gr_right);
 			}
-							
-			d = Math.pow (fs * (x + kern) - ex, 2);
+			
+			if (right_to_left) {
+				d = Math.pow (fs * (x - kern) - ex, 2);
+			} else {				
+				d = Math.pow (fs * (x + kern) - ex, 2);
+			}
 			
 			if (d < min) {
 				min = d;
@@ -848,7 +891,13 @@ public class KerningDisplay : FontDisplay {
 			}
 			
 			prev = g;
-			x += w + kern;
+			
+			if (right_to_left) {
+				x -= w + kern;
+			} else {
+				x += w + kern;
+			}
+			
 			i++;
 			col_index++;
 		}
