@@ -75,7 +75,7 @@ def make_birdfont(target_binary, deps):
 		--pkg cairo \
 		--pkg libsoup-2.4 \
 		--pkg gdk-pixbuf-2.0 \
-		--pkg webkit2gtk-3.0 \
+		--pkg webkit2gtk-4.0 \
 		--pkg libnotify \
 		--pkg xmlbird \
 		--pkg libbirdfont
@@ -91,7 +91,7 @@ def make_birdfont(target_binary, deps):
 		$(pkg-config --cflags cairo) \
 		$(pkg-config --cflags glib-2.0) \
 		$(pkg-config --cflags gdk-pixbuf-2.0) \
-		$(pkg-config --cflags webkit2gtk-3.0) \
+		$(pkg-config --cflags webkit2gtk-4.0) \
 		$(pkg-config --cflags libnotify) \
         -o OBJECT_FILE"""
         
@@ -104,7 +104,7 @@ def make_birdfont(target_binary, deps):
 		$(pkg-config --libs cairo) \
 		$(pkg-config --libs glib-2.0) \
 		$(pkg-config --libs gdk-pixbuf-2.0) \
-		$(pkg-config --libs webkit2gtk-3.0) \
+		$(pkg-config --libs webkit2gtk-4.0) \
 		$(pkg-config --libs xmlbird) \
 		$(pkg-config --libs libnotify) \
 		-L./build -L./build/bin -l birdgems\
