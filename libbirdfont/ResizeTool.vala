@@ -268,8 +268,10 @@ public class ResizeTool : Tool {
 				EmbeddedSvg svg = (EmbeddedSvg) p;
 				x = selection_box_left - svg.x + selection_box_width / 2;
 				y = selection_box_top + svg.y + selection_box_height / 2;
-				p.transforms.rotate (angle, x, y);
-				rotation = p.transforms.total_rotation;
+				double theta = angle - svg.drawing.transforms.rotation;
+				svg.drawing.transforms.rotate (theta, x, y);
+				svg.drawing.transforms.collapse_transforms ();
+				rotation = svg.drawing.transforms.total_rotation;
 			} else if (p is PathObject) {
 				Path path = ((PathObject) p).get_path ();
 				SvgTransforms transform = new SvgTransforms ();
@@ -396,8 +398,10 @@ public class ResizeTool : Tool {
 				EmbeddedSvg svg = (EmbeddedSvg) p;
 				x = selection_box_left - svg.x;
 				y = selection_box_top + svg.y + selection_box_height;
-				p.transforms.resize (ratio_x, ratio_y, x, y);
-				glyph.layers.update_boundaries_for_object ();
+				svg.drawing.transforms.resize (ratio_x, ratio_y, x, y);
+				svg.drawing.transforms.collapse_transforms ();
+				svg.drawing.update_view_matrix ();
+				svg.drawing.update_boundaries_for_object ();
 			} else if (p is PathObject) {
 				Path path = ((PathObject) p).get_path ();
 				x = selection_box_center_x - selection_box_width / 2;
@@ -411,6 +415,7 @@ public class ResizeTool : Tool {
 		}
 		
 		if (glyph.active_paths.size > 0) {
+			glyph.layers.update_boundaries_for_object ();
 			update_resized_boundaries ();
 			objects_resized (resized_width, resized_height);
 		}

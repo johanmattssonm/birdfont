@@ -21,6 +21,8 @@ namespace BirdFont {
 
 public class EmbeddedSvg : SvgBird.Object {
 	public string svg_data = "";
+	
+	// the view matrix belongs to the drawing
 	public SvgDrawing drawing = new SvgDrawing ();
 	
 	public double x;
