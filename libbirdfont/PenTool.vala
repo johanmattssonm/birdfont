@@ -1240,7 +1240,7 @@ public class PenTool : Tool {
 				}
 				
 				// alt+click creates a point with symmetrical handles
-				if (KeyBindings.has_alt () || KeyBindings.has_ctrl ()) {
+				if (KeyBindings.has_alt () || KeyBindings.has_ctrl ()) {							
 					selected_point.set_reflective_handles (true);
 					selected_point.get_right_handle ().process_symmetrical_handle ();
 					GlyphCanvas.redraw ();
