@@ -137,10 +137,8 @@ public class ResizeTool : Tool {
 					PathObject path = (PathObject) object;
 					Path p = path.get_path ();
 					p.create_full_stroke ();
-				} else {
-					object.transforms.collapse_transforms ();
 				}
-			}			
+			}
 		});
 		
 		move_action.connect ((self, x, y)	 => {
@@ -271,7 +269,6 @@ public class ResizeTool : Tool {
 				double theta = angle - svg.drawing.transforms.rotation;
 				svg.drawing.transforms.rotate (theta, x, y);
 				svg.drawing.transforms.collapse_transforms ();
-				rotation = svg.drawing.transforms.total_rotation;
 			} else if (p is PathObject) {
 				Path path = ((PathObject) p).get_path ();
 				SvgTransforms transform = new SvgTransforms ();

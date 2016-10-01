@@ -464,7 +464,7 @@ class BirdFontFile : GLib.Object {
 			os.put_string (@"type=\"svg\" ");
 			os.put_string (@"x=\"$(round (svg.x))\" ");
 			os.put_string (@"y=\"$(round (svg.y))\" ");
-			os.put_string (@"transform=\"$(svg.transforms.get_xml ())\"");
+			os.put_string (@"transform=\"$(svg.drawing.transforms.get_xml ())\"");
 			os.put_string (@">\n");
 			
 			Tag tag = xml.get_root_tag ();
@@ -1521,7 +1521,7 @@ class BirdFontFile : GLib.Object {
 		
 		if (type == "svg") {
 			EmbeddedSvg svg = SvgParser.parse_embedded_svg_data (tag.get_content ());
-			svg.transforms = SvgFile.parse_transform (transform);
+			svg.drawing.transforms = SvgFile.parse_transform (transform);
 			svg.x = x;
 			svg.y = y;
 			layer.add_object (svg);
