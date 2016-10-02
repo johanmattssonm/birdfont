@@ -99,7 +99,7 @@ public abstract class Object : GLib.Object {
 	}
 
 	public Object.create_copy (Object o) {	
-	}
+	}	
 	
 	public virtual bool is_over (double x, double y) {
 		return left <= x <= right && top <= y <= bottom; 
@@ -151,16 +151,6 @@ public abstract class Object : GLib.Object {
 		right += dx;
 		top += dy;
 		bottom += dy;
-
-		if (style.fill_gradient != null) {
-			g = (!) style.fill_gradient;
-			g.move (dx, dy);
-		}
-		
-		if (style.stroke_gradient != null) {
-			g = (!) style.stroke_gradient;
-			g.move (dx, dy);
-		}
 
 		to_object_distance (ref dx, ref dy);
 		transforms.translate (dx, dy);
@@ -269,10 +259,7 @@ public abstract class Object : GLib.Object {
 			
 			Matrix gradient_matrix = g.get_matrix ();
 			gradient_matrix.invert ();
-			Matrix object_matrix = transforms.get_matrix ();
-			object_matrix.invert ();
-			gradient_matrix.multiply (gradient_matrix, object_matrix);
-			
+						
 			pattern.set_matrix (gradient_matrix);
 			
 			g.parent_matrix = view_matrix;
