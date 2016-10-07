@@ -15,6 +15,7 @@
 using B;
 using Math;
 using SvgBird;
+using Cairo;
 
 namespace BirdFont {
 
@@ -276,7 +277,9 @@ public class SvgParser {
 			Cairo.Matrix view_box_matrix = view_box.get_matrix (width, height);
 			view_box_matrix.multiply (view_box_matrix, matrix);
 			SvgTransform t = new SvgTransform.for_matrix (view_box_matrix);
-			transform (t.get_xml (), pl);
+			SvgTransforms transforms = new SvgTransforms ();
+			transforms.add (t);
+			transform_paths (transforms, paths);
 		}
 		
 		return paths;
@@ -343,64 +346,70 @@ public class SvgParser {
 				parse_line (t, pl);
 			}
 		}
+		
+		PathList paths = new PathList ();
+		
+		foreach (SvgBird.Object object in pl.objects) {
+			if (object is Path) {
+				paths.add ((Path) object);
+			}
+		}
+		
+		SvgTransforms transforms = SvgFile.get_transform (tag.get_attributes ());
+		transform_paths (transforms, paths);
+	}
+	
+	private void transform_paths (SvgTransforms transforms, PathList pl) {
+		foreach (Path p in pl.paths) {
+			transform_path (transforms, p);
+		}
+	}
 
-		foreach (Attribute attr in tag.get_attributes ()) {	
-			if (attr.get_name () == "transform") {
-				transform (attr.get_content (), pl);
-			}
-		}
-	}
-	
-	private void transform (string transform_functions, Layer layer) {
-		PathList path_list = new PathList ();
+	private void transform_path (SvgTransforms transforms, Path path) {
+		Font font = BirdFont.get_current_font ();
+		Glyph glyph = MainWindow.get_current_glyph ();
 		
-		foreach (SvgBird.Object o in layer.objects) {
-			if (o is PathObject) {
-				path_list.add (((PathObject) o).get_path ());
-			}
+		foreach (EditPoint ep in path.points) {
+			ep.tie_handles = false;
+			ep.reflective_point = false;
 		}
 		
-		transform_paths (transform_functions, path_list);
-		transform_subgroups (transform_functions, layer);
-	}
-	
-	private void transform_subgroups (string transform_functions, Layer layer) {
-		foreach (Layer subgroup in layer.get_sublayers ()) {
-			transform (transform_functions, subgroup);
-		}
-	}
-	
-	private void transform_paths (string transform_functions, PathList pl) {
-		string data = transform_functions.dup ();
-		string[] functions;
-				
-		// use only a single space as separator
-		while (data.index_of ("  ") > -1) {
-			data = data.replace ("  ", " ");
-		}
-		
-		return_if_fail (data.index_of (")") > -1);
-		
-		 // add separator
-		data = data.replace (") ", "|");
-		data = data.replace (")", "|"); 
-		functions = data.split ("|");
-		
-		for (int i = functions.length - 1; i >= 0; i--) {
-			if (functions[i].has_prefix ("translate")) {
-				translate (functions[i], pl);
-			}
-			
-			if (functions[i].has_prefix ("scale")) {
-				scale (functions[i], pl);
-			}
+		Matrix matrix = transforms.get_matrix ();
 
-			if (functions[i].has_prefix ("matrix")) {
-				matrix (functions[i], pl);
-			}
+		foreach (EditPoint ep in path.points) {
+			double x, y;
 			
-			// TODO: rotate etc.
+			x = ep.independent_x - glyph.left_limit;
+			y = font.top_limit - ep.independent_y;
+			
+			matrix.transform_point (ref x, ref y);
+			
+			ep.independent_x = glyph.left_limit + x;
+			ep.independent_y = font.top_limit - y;
+			
+			x = ep.get_right_handle ().x - glyph.left_limit;
+			y = font.top_limit - ep.get_right_handle ().y;
+			
+			matrix.transform_point (ref x, ref y);
+			
+			ep.get_right_handle ().x = glyph.left_limit + x;
+			ep.get_right_handle ().y = font.top_limit - y;
+			
+			x = ep.get_left_handle ().x - glyph.left_limit;
+			y = font.top_limit - ep.get_left_handle ().y;
+			
+			matrix.transform_point (ref x, ref y);
+			
+			ep.get_left_handle ().x = glyph.left_limit + x;
+			ep.get_left_handle ().y = font.top_limit - y;
 		}
+		
+		double stroke_x = path.stroke;
+		double stroke_y = path.stroke;
+		
+		matrix.transform_distance (ref stroke_x, ref stroke_y);
+		
+		path.stroke = stroke_x;
 	}
 
 	/** @param path a path in the cartesian coordinate system
@@ -595,11 +604,8 @@ public class SvgParser {
 
 		npl.add (p);
 		
-		foreach (Attribute attr in tag.get_attributes ()) {
-			if (attr.get_name () == "transform") {
-				transform_paths (attr.get_content (), npl);
-			}
-		}
+		SvgTransforms transforms = SvgFile.get_transform (tag.get_attributes ());
+		transform_paths (transforms, npl);
 		
 		npl.apply_style (style);
 		append_paths (pl, npl);
@@ -663,11 +669,8 @@ public class SvgParser {
 
 		npl.add (p);
 		
-		foreach (Attribute attr in tag.get_attributes ()) {
-			if (attr.get_name () == "transform") {
-				transform_paths (attr.get_content (), npl);
-			}
-		}
+		SvgTransforms transforms = SvgFile.get_transform (tag.get_attributes ());
+		transform_paths (transforms, npl);
 		
 		npl.apply_style (style);
 		append_paths (pl, npl);
@@ -740,11 +743,8 @@ public class SvgParser {
 		
 		npl.add (p);
 		
-		foreach (Attribute attr in tag.get_attributes ()) {
-			if (attr.get_name () == "transform") {
-				transform_paths (attr.get_content (), npl);
-			}
-		}
+		SvgTransforms transforms = SvgFile.get_transform (tag.get_attributes ());
+		transform_paths (transforms, npl);
 		
 		npl.apply_style (style);
 		append_paths (pl, npl);
@@ -841,11 +841,8 @@ public class SvgParser {
 		npl.add (p);
 		
 		// FIXME: right layer for other transforms
-		foreach (Attribute attr in tag.get_attributes ()) {
-			if (attr.get_name () == "transform") {
-				transform_paths (attr.get_content (), npl);
-			}
-		}
+		SvgTransforms transforms = SvgFile.get_transform (tag.get_attributes ());
+		transform_paths (transforms, npl);
 		
 		npl.apply_style (style);
 		append_paths (layer, npl);		
@@ -894,11 +891,8 @@ public class SvgParser {
 		path_list.add (p);
 		path_list.apply_style (style);
 		
-		foreach (Attribute attr in tag.get_attributes ()) {
-			if (attr.get_name () == "transform") {
-				transform_paths (attr.get_content (), path_list);
-			}
-		}
+		SvgTransforms transforms = SvgFile.get_transform (tag.get_attributes ());
+		transform_paths (transforms, path_list);
 		
 		return path_list;
 	}
@@ -974,11 +968,8 @@ public class SvgParser {
 			}
 		}
 		
-		foreach (Attribute attr in tag.get_attributes ()) {
-			if (attr.get_name () == "transform") {
-				transform_paths (attr.get_content (), path_list);
-			}
-		}
+		SvgTransforms transforms = SvgFile.get_transform (tag.get_attributes ());
+		transform_paths (transforms, path_list);
 	}
 
 	public static void create_lines_for_segment (Path path, EditPoint start, EditPoint end, double tolerance) {

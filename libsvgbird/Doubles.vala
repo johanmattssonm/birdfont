@@ -117,7 +117,7 @@ public class Doubles : GLib.Object {
 	
 	public void remove (int offset, int length) {
 		if (unlikely (offset < 0 || offset + length > size)) {
-			warning ("Invalid offset.");
+			warning (@"Invalid offset: $offset, length: $length, size: $size");
 			return;
 		}
 		

@@ -145,8 +145,6 @@ public abstract class Object : GLib.Object {
 	public abstract bool is_empty ();
 	
 	public virtual void move (double dx, double dy) {
-		Gradient g;
-
 		left += dx;
 		right += dx;
 		top += dy;

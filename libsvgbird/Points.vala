@@ -60,22 +60,18 @@ public class Points : GLib.Object {
 			next_handle_x, next_handle_y, x, y);
 	}
 
+	public int add_line (double x, double y) {
+		return insert_line (size, x, y);
+	}
+
 	public int insert_cubic (int position, double handle_x, double handle_y,
 		double next_handle_x, double next_handle_y,
 		double x, double y) {
 		
-		int index = position;
+		int index;
 		
 		if (size == 0) {
-			index = 0;
-			insert_type (index, POINT_LINE);
-			insert (index + 1, x);
-			insert (index + 2, y);
-			insert (index + 3, 0);
-			insert (index + 4, 0);
-			insert (index + 5, 0);
-			insert (index + 6, 0);
-			insert (index + 7, 0);
+			insert_line (0, x, y);
 		}
 		
 		index = position;
@@ -86,6 +82,21 @@ public class Points : GLib.Object {
 		insert (index + 4, next_handle_y);
 		insert (index + 5, x);
 		insert (index + 6, y);
+		insert (index + 7, 0);
+
+		return index;
+	}
+
+	public int insert_line (int position, double x, double y) {
+		int index = position;
+		
+		insert_type (index, POINT_LINE);
+		insert (index + 1, x);
+		insert (index + 2, y);
+		insert (index + 3, 0);
+		insert (index + 4, 0);
+		insert (index + 5, 0);
+		insert (index + 6, 0);
 		insert (index + 7, 0);
 
 		return index;

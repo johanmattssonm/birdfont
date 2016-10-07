@@ -828,7 +828,7 @@ public class SvgFile : GLib.Object {
 		return !hidden;
 	}
 
-	private SvgTransforms get_transform (Attributes attributes) {
+	public static SvgTransforms get_transform (Attributes attributes) {
 		foreach (Attribute attr in attributes) {
 			if (attr.get_name () == "transform") {
 				return parse_transform (attr.get_content ());
