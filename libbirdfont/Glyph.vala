@@ -441,7 +441,7 @@ public class Glyph : FontDisplay {
 			}
 		}
 
-		redraw_area (0, 0, allocation.width, allocation.height);
+		GlyphCanvas.redraw ();
 	}
 
 	public virtual void add_path (Path p) {

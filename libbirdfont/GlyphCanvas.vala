@@ -84,7 +84,7 @@ public class GlyphCanvas : GLib.Object {
 		if (MenuTab.has_suppress_event ()) {
 			warning ("Do not call redraw from background thread.");
 		} else {
-			signal_redraw_area (x, y, w, h);
+			signal_redraw_area (x, y, w + (int) MainWindow.scrollbar.width, h);
 		}
 	}
 	

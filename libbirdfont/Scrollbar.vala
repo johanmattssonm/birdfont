@@ -25,6 +25,7 @@ public class Scrollbar : GLib.Object {
 	public double height = 0;
 	public double corner = 0;
 	public double scroll_max = 1;
+	public double margin = 0;
 
 	public double motion_x = 0;
 	public double motion_y = 0;
@@ -34,10 +35,14 @@ public class Scrollbar : GLib.Object {
 	}
 
 	public bool button_press (uint button, double x, double y) {
+		if (!is_visible ()) {
+			return false;
+		}
+		
 		double h = height * position * scroll_max;
 	
 		if (left_x < x < left_x + width &&
-			 h < y < h + height * size) {
+			 h - corner < y < h + height * size + corner + 2 * margin) {
 			 	
 			motion_x = x;
 			motion_y = y;
@@ -49,6 +54,10 @@ public class Scrollbar : GLib.Object {
 	}
 
 	public bool button_release (uint button, double x, double y) {
+		if (!is_visible ()) {
+			return false;
+		}
+		
 		if (move) {
 			move = false;
 			return true;
@@ -56,18 +65,15 @@ public class Scrollbar : GLib.Object {
 			double h = height * position * scroll_max;
 			
 			if (y > h + size * height) {
-				print (@"down   $position\n");				
 				position += size;
 			} 
 			
 			if (y < h) {
-				print (@"up   $position\n");
 				position -= size;
 			}
 			
 			if (position > 1) {
 				position = 1;
-				print (@"max $scroll_max\n");
 			} else if (position < 0) {
 				position = 0;			
 			}
@@ -82,9 +88,8 @@ public class Scrollbar : GLib.Object {
 	
 
 	public bool motion (double x, double y) {
-		if (!move) {
-			return false;
-			
+		if (!move || !is_visible ()) {
+			return false;	
 		}
 
 		double p = (y - motion_y) / (height - size * height);
@@ -107,6 +112,10 @@ public class Scrollbar : GLib.Object {
 	}
 	
 	public void draw (Context cr, WidgetAllocation content_allocation, double width) {
+		if (!is_visible ()) {
+			return;
+		}		
+		
 		cr.save ();
 
 		this.width = width;		
@@ -114,21 +123,23 @@ public class Scrollbar : GLib.Object {
 		this.height = content_allocation.height;
 		this.corner = 4 * Screen.get_scale ();
 		this.scroll_max = 1 - size - 2 * corner / height;
+		this.margin = 2 * Screen.get_scale ();
 				
-		Theme.color (cr, "Scrollbar Background");	
+		Theme.color (cr, "Table Background 1");	
 		cr.rectangle (left_x, 0, width, height);		
 		cr.fill ();		
 
-		Theme.color (cr, "Scrollbar Foreground");
+		Theme.color (cr, "Tool Foreground");
 		double h = height * position * scroll_max;
-		Widget.draw_rounded_rectangle (cr, left_x, h, width, height * size, corner);			
+		
+		Widget.draw_rounded_rectangle (cr, left_x + margin, h, width - 2 * margin, height * size + 2 * margin, corner);			
 		cr.fill ();
 		
 		cr.restore ();
 	}
 	
 	public bool is_visible () {
-		return true;
+		return 0 < size < 1;
 	}
 
 	public void set_size (double size) {

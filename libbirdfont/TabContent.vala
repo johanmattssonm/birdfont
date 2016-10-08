@@ -132,6 +132,10 @@ public class TabContent : GLib.Object {
 		}
 
 		alloc = GlyphCanvas.get_allocation ();
+		
+		double scollbar_width = 10 * Screen.get_scale ();
+		alloc.width += (int) scollbar_width;
+		
 		pause_surface = Screen.create_background_surface (alloc.width, alloc.height);
 		cr = new Context ((!) pause_surface);
 		cr.scale (Screen.get_scale (), Screen.get_scale ());

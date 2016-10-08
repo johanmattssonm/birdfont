@@ -42,12 +42,16 @@ public class RecentFiles : Table {
 		} else if (row.get_index () == RECENT_FONT) {
 			return_if_fail (row.get_row_data () is Font);
 			f = (Font) row.get_row_data ();
+			MainWindow.scrollbar.set_size (0);
+			GlyphCanvas.redraw ();
 			load_font (f.get_path ());
 		} else if (row.get_index () == BACKUP) {
 			return_if_fail (row.get_row_data () is Font);
 			f = (Font) row.get_row_data ();
 			delete_backup (f.get_file_name ());
 		}
+
+		GlyphCanvas.redraw ();
 	}
 
 	public override void update_rows () {
