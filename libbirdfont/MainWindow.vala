@@ -32,7 +32,7 @@ public class MainWindow : GLib.Object {
 	public static Dialog dialog;
 	public static SpacingTab spacing_tab;
 	public static Task blocking_background_task;
-	public static Help help;
+	public static Scrollbar scrollbar;
 	
 	/** Number of pixels per mm */
 	public static double units = 1;
@@ -56,15 +56,15 @@ public class MainWindow : GLib.Object {
 		dialog = new Dialog ();
 		spacing_tab = new SpacingTab ();
 		blocking_background_task = new Task (null);
-		help = new Help ();
+		scrollbar = new Scrollbar ();		
 		
 		tools.select_tool (DrawingTools.bezier_tool);
 	}
-	
-	public static Help get_help () {
-		return help;
-	}
 
+	public static bool has_scrollbar () {
+		return scrollbar.is_visible ();
+	}	
+	
 	public static void abort_task () {
 		blocking_background_task.cancel ();
 	}
@@ -249,26 +249,26 @@ public class MainWindow : GLib.Object {
 	
 	public static void hide_scrollbar () {
 		if (!is_null (MainWindow.native_window)) {
-			MainWindow.native_window.set_scrollbar_size (-1);
+			MainWindow.scrollbar.set_size (-1);
 		}
 	}	
 
 	public static void show_scrollbar () {
 		if (!is_null (MainWindow.native_window)) {
-			MainWindow.native_window.set_scrollbar_size (scrollbar_size);
+			MainWindow.scrollbar.set_size (scrollbar_size);
 		}
 	}
 	
 	public static void set_scrollbar_size (double size) {
 		if (!is_null (MainWindow.native_window)) {
 			scrollbar_size = size;
-			MainWindow.native_window.set_scrollbar_size (size);
+			MainWindow.scrollbar.set_size (size);
 		}
 	}
 	
 	public static void set_scrollbar_position (double position) {
 		if (!is_null (MainWindow.native_window)) {
-			MainWindow.native_window.set_scrollbar_position (position);
+			MainWindow.scrollbar.set_position (position);
 		}
 	}
 		

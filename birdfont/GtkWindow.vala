@@ -41,15 +41,11 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	string clipboard_svg = "";
 	string inkscape_clipboard = "";
 	
-	Scrollbar scrollbar;
-	bool scrollbar_supress_signal = false;
-	
 	ToolboxCanvas toolbox;
 	
 	Task background_task = new Task(idle);
 	
 	public GtkWindow (string title) {
-		scrollbar = new Scrollbar (Orientation.VERTICAL, new Adjustment (0, 0, 1, 1, 0.01, 0.1));
 		((Gtk.Window)this).set_title ("BirdFont");
 	}
 	
@@ -61,16 +57,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		Signal.connect(this, "notify::is-active", (GLib.Callback) window_focus, null);
 
 		clipboard = Clipboard.get_for_display (get_display (), Gdk.SELECTION_CLIPBOARD);
-
-		scrollbar.value_changed.connect (() => {
-			double p;
-			
-			if (!scrollbar_supress_signal) {
-				p = scrollbar.get_value () / (1 - scrollbar.adjustment.page_size);
-				FontDisplay display = MainWindow.get_current_display ();
-				display.scroll_to (p);
-			}
-		});
 		
 		delete_event.connect (() => {
 			MenuTab.quit ();
@@ -90,8 +76,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 			string uri = "";
 			string html = "";
 			FontDisplay fd = tab.get_display ();
-			
-			scrollbar.set_visible (fd.has_scrollbar ());
 			
 			if (fd.get_name () == "Preview") {
 				uri = Preview.get_uri ();
@@ -123,9 +107,8 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		canvas_box = new Box (Orientation.HORIZONTAL, 0);
 		canvas_box.pack_start (glyph_canvas_area, true, true, 0);
 		canvas_box.pack_start (html_box, true, true, 0);
-		canvas_box.pack_start (scrollbar, false, true, 0);
-		tab_box = new Box (Orientation.VERTICAL, 0);
 		
+		tab_box = new Box (Orientation.VERTICAL, 0);		
 		tab_box.pack_start (new TabbarCanvas (MainWindow.get_tab_bar ()), false, false, 0);
 		tab_box.pack_start (canvas_box, true, true, 0);
 
@@ -159,9 +142,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		size_allocate.connect(() => {
 			GlyphCanvas.redraw ();
 		});
-		
-		scrollbar.set_visible (false);
-	
+
 		show_all ();
 
 		MainWindow.open_recent_files_tab ();		
@@ -200,17 +181,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	public void font_loaded () {
 		Font f = BirdFont.get_current_font ();
 		set_title (@"$(f.full_name)");
-	}
-
-	public void set_scrollbar_size (double size) {
-		scrollbar.adjustment.page_size = size;		
-		scrollbar.set_visible (size != 0);
-	}
-	
-	public void set_scrollbar_position (double position) {
-		scrollbar_supress_signal = true;
-		scrollbar.adjustment.value = position * (1 - scrollbar.adjustment.page_size);
-		scrollbar_supress_signal = false;
 	}
 
 	public void dump_clipboard_content (Clipboard clipboard, SelectionData selection_data) {
