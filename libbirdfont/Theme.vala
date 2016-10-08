@@ -112,7 +112,9 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Headline Background", 110 / 255.0, 113 / 255.0, 130 / 255.0, 1);
 		
 		Theme.set_default_color ("Checkbox Background", 255 / 255.0, 255 / 255.0, 255 / 255.0, 1);
-		
+		Theme.set_default_color ("Scrollbar Background", 202 / 255.0, 202 / 255.0, 202 / 202.0, 1);
+		Theme.set_default_color ("Scrollbar Foreground", 158 / 255.0, 158 / 255.0, 158 / 202.0, 1);
+				
 		Theme.set_default_color ("Foreground 1", 0, 0, 0, 1);
 		
 		Theme.set_default_color ("Text Foreground", 3 / 255.0, 16 / 255.0, 24 / 255.0, 1);
@@ -219,6 +221,8 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Headline Background", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
 		
 		Theme.set_default_color ("Checkbox Background", 101 / 255.0, 108 / 255.0, 116 / 255.0, 1);
+		Theme.set_default_color ("Scrollbar Background", 202 / 255.0, 202 / 255.0, 202 / 202.0, 1);
+		Theme.set_default_color ("Scrollbar Foreground", 158 / 255.0, 158 / 255.0, 158 / 202.0, 1);
 		
 		Theme.set_default_color ("Foreground 1", 0, 0, 0, 1);
 		
@@ -324,6 +328,8 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Headline Background", 0, 0, 0, 1);
 		
 		Theme.set_default_color ("Checkbox Background", 1, 1, 1, 1);
+		Theme.set_default_color ("Scrollbar Background", 1, 1, 1, 1);
+		Theme.set_default_color ("Scrollbar Foreground", 0, 0, 0, 1);
 		
 		Theme.set_default_color ("Foreground 1", 0, 0, 0, 1);
 		
@@ -431,6 +437,8 @@ public class Theme : GLib.Object {
 			t_("Default Background");
 			
 			t_("Checkbox Background");
+			t_("Scrollbar Foreground");
+			t_("Scrollbar Background");
 			
 			t_("Foreground 1");
 			t_("Text Foreground");

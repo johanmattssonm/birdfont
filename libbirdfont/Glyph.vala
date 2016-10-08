@@ -474,7 +474,7 @@ public class Glyph : FontDisplay {
 		GridTool.update_lines ();
 
 		if (!is_null (MainWindow.native_window)) {
-			MainWindow.native_window.set_scrollbar_size (0);
+			MainWindow.scrollbar.set_size (0);
 		}
 
 		update_zoom_bar ();

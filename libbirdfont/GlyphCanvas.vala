@@ -90,8 +90,9 @@ public class GlyphCanvas : GLib.Object {
 	
 	public static void redraw () {
 		GlyphCanvas c = MainWindow.get_glyph_canvas ();
-		if (!is_null (c)) {
-			c.redraw_area (0, 0, allocation.width, allocation.height);
+		if (!is_null (c) && !is_null (MainWindow.scrollbar)) {
+			int w = (int) (allocation.width + MainWindow.scrollbar.width);
+			c.redraw_area (0, 0, w, allocation.height);
 		}
 	}
 }
