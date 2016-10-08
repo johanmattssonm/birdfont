@@ -25,7 +25,6 @@ public class ToolItem : MenuItem {
 		
 		set {
 			base.modifiers = value;
-			tool.update_help ();
 		}
 	}
 	
@@ -36,7 +35,6 @@ public class ToolItem : MenuItem {
 		
 		set {
 			base.key = value;
-			tool.update_help ();
 		}
 	}
 	

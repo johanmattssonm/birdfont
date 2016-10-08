@@ -60,8 +60,6 @@ public class KerningDisplay : FontDisplay {
 		redo_items = new Gee.ArrayList <UndoItem> ();
 		w.set_otf_tags (KerningTools.get_otf_tags ());
 		first_row.add (w);
-		
-		description = Help.create_help_text (t_("Kerning is the process of adjusting the space between two letters. You can cahnge the space between one letter and all other letters in the spacing tab."));
 	}
 
 	public GlyphSequence get_first_row () {

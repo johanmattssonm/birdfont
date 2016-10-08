@@ -120,12 +120,6 @@ public class TabContent : GLib.Object {
 				MainWindow.scrollbar.draw (cr, allocation, scollbar_width);
 			}
 		}
-
-		Help help = MainWindow.get_help ();
-		
-		if (help.is_visible ()) {
-			help.draw (cr, allocation);
-		}
 	}
 
 	public static void create_pause_surface () {
@@ -243,12 +237,6 @@ public class TabContent : GLib.Object {
 		}
 
 		last_press_time = GLib.get_real_time ();
-
-		Help help = MainWindow.get_help ();
-		
-		if (help.button_press (button, x, y)) {
-			return; // event consumed by help text
-		}
 
 		if (MainWindow.get_dialog ().visible) {
 			MainWindow.get_dialog ().button_press (button, x, y);

@@ -33,10 +33,6 @@ public class LayerLabel : Tool {
 	public LayerLabel (Layer layer) {
 		base ();
 
-		if (help_text_hide == null) {
-			update_description ();
-		}
-
 		this.layer = layer;
 		this.label = layer.name;
 		
@@ -87,13 +83,6 @@ public class LayerLabel : Tool {
 				redraw ();
 			}
 			
-			if (y <= ty <= y + h) {
-				if (tx < 25 && help_text_hide != null) {
-					Help help = MainWindow.get_help ();
-					help.set_help_text ((!) help_text_hide);
-				}
-			}
-			
 			return false;
 		});
 
@@ -101,14 +90,9 @@ public class LayerLabel : Tool {
 			active_layer = false;
 		});
 	}
-
-	void update_description () {
-		help_text_hide = Help.create_help_text (t_("Hide the layer."));	
-	}
-
+	
 	public override void clear_cache () {
 		base.clear_cache ();
-		update_description ();
 	}
 		
 	void move_layer_up () {

@@ -125,14 +125,6 @@ public class Tool : Widget {
 		panel_move_action.connect ((self, x, y) => {
 			if (is_active ()) {
 				wait_for_tooltip ();
-				
-				Help help_box = MainWindow.get_help ();
-				
-				if (help == null) {
-					help = update_help ();
-				}
-				
-				help_box.set_help_text ((!) help);
 				redraw ();
 			}
 			return false;
@@ -141,21 +133,6 @@ public class Tool : Widget {
 	
 	public virtual void clear_cache () {
 		help = null;
-	}
-	
-	public TextArea? update_help () {
-		string t = get_tip ();
-		string description = t;
-		
-		if (t != "" && extented_description != "") {
-			description += "\n\n";
-		}
-		
-		if (extented_description != "") {
-			description += extented_description;
-		}
-		
-		return Help.create_help_text (description);
 	}
 	
 	public virtual string get_tip () {

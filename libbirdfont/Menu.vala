@@ -493,15 +493,6 @@ public class Menu : AbstractMenu {
 			show_menu = false;
 		});
 		menu.items.add (version);
-
-		MenuItem help = add_menu_item (t_("Help"), "help");
-		help.action.connect (() => {
-			Help help_box = MainWindow.get_help ();
-			help_box.set_visible (!help_box.is_visible ());
-			GlyphCanvas.redraw ();
-			show_menu = false;
-		});
-		menu.items.add (help);
 			
 		set_current_menu (menu);
 		top_menu = menu;
