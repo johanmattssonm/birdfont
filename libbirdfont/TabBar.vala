@@ -677,11 +677,13 @@ public class TabBar : GLib.Object {
 				Theme.text_color (wheel, "Highlighted 1");
 			}
 			
+			wheel.set_font_size (progress_size);
+			
 			double middley = h / 2;
 			double middlex = w - (wheel.get_sidebearing_extent () / 2) / scale;
-			wheel.set_font_size (progress_size);
+			
 			wheel.widget_x = middlex;
-			wheel.widget_y = middley;
+			wheel.widget_y = middley;			
 			
 			cr.save ();
 			if (!has_stop_button ()) {
