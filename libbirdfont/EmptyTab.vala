@@ -40,7 +40,7 @@ public class EmptyTab : FontDisplay {
 		cr.rectangle (0, 0, allocation.width, allocation.height);
 		cr.fill ();
 		cr.restore ();
-	}	
+	}
 }
 
 }

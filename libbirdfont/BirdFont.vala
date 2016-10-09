@@ -176,7 +176,6 @@ public class BirdFont {
 		Theme.set_default_colors ();
 
 		if (theme_version == "" || int.parse (theme_version) < default_theme_version) {
-
 			Theme.load_theme ("dark.theme");
 			Preferences.set ("theme", "dark.theme");
 		} else {

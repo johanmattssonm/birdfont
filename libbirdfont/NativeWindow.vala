@@ -27,9 +27,6 @@ public interface NativeWindow : GLib.Object {
 	public abstract void set_clipboard (string data);
 	public abstract void set_inkscape_clipboard (string data);
 
-	public abstract void set_scrollbar_size (double size);
-	public abstract void set_scrollbar_position (double position);
-	
 	/** Notify the UI about the new font. */
 	public abstract void font_loaded ();
 

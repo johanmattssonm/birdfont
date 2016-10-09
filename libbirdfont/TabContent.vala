@@ -72,6 +72,11 @@ public class TabContent : GLib.Object {
 	public static void draw (WidgetAllocation allocation, Context cr) {
 		AbstractMenu menu;
 		Dialog dialog;
+		double scollbar_width = 10 * Screen.get_scale ();
+		
+		if (MainWindow.has_scrollbar()) {
+			allocation.width -= (int) scollbar_width;
+		}
 
 		if (unlikely (MenuTab.has_suppress_event ())) {
 			cr.save ();
@@ -110,6 +115,10 @@ public class TabContent : GLib.Object {
 			if (text_input_visible) {
 				draw_text_input (allocation, cr);
 			}
+
+			if (MainWindow.has_scrollbar()) {
+				MainWindow.scrollbar.draw (cr, allocation, scollbar_width);
+			}
 		}
 	}
 
@@ -123,6 +132,10 @@ public class TabContent : GLib.Object {
 		}
 
 		alloc = GlyphCanvas.get_allocation ();
+		
+		double scollbar_width = 10 * Screen.get_scale ();
+		alloc.width += (int) scollbar_width;
+		
 		pause_surface = Screen.create_background_surface (alloc.width, alloc.height);
 		cr = new Context ((!) pause_surface);
 		cr.scale (Screen.get_scale (), Screen.get_scale ());
@@ -182,7 +195,11 @@ public class TabContent : GLib.Object {
 		}
 
 		if (!text_input_visible) {
-			GlyphCanvas.current_display.motion_notify (x, y);
+			bool consumed = MainWindow.scrollbar.motion (x, y);
+			
+			if (!consumed) {
+				GlyphCanvas.current_display.motion_notify (x, y);
+			}
 		} else {
 			text_input.motion (x, y);
 			GlyphCanvas.redraw ();
@@ -206,7 +223,11 @@ public class TabContent : GLib.Object {
 			text_input.button_release (button, x, y);
 			GlyphCanvas.redraw ();
 		} else {
-			GlyphCanvas.current_display.button_release (button, x, y);
+			bool consumed = MainWindow.scrollbar.button_release (button, x, y);
+						
+			if (!consumed) {			
+				GlyphCanvas.current_display.button_release (button, x, y);
+			}
 		}
 	}
 
@@ -228,7 +249,11 @@ public class TabContent : GLib.Object {
 					hide_text_input ();
 				}
 			} else {
-				GlyphCanvas.current_display.button_press (button, x, y);
+				bool consumed = MainWindow.scrollbar.button_press (button, x, y);
+				
+				if (!consumed) { 
+					GlyphCanvas.current_display.button_press (button, x, y);
+				}
 			}
 		}
 	}
