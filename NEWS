@@ -1,3 +1,10 @@
+birdfont (2.16.12) stable;
+
+  * Platform independet scrollbar
+  * Bug fixes
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  mån 10 okt 2016 14:38:53 CEST
+
 birdfont (2.16.9) stable;
 
   * RTL (right-to-left) writing in kerning tab
