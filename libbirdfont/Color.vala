@@ -1,24 +1,16 @@
-/* Copyright (C) 1999 The Free Software Foundation
- *
- * Authors: Simon Budig <Simon.Budig@unix-ag.org> (original code)
- *          Federico Mena-Quintero <federico@gimp.org> (cleanup for GTK+)
- *          Jonathan Blandford <jrb@redhat.com> (cleanup for GTK+)
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
- */
+/*
+	Copyright (C) 2016 Johan Mattsson
+
+	This library is free software; you can redistribute it and/or modify 
+	it under the terms of the GNU Lesser General Public License as 
+	published by the Free Software Foundation; either version 3 of the 
+	License, or (at your option) any later version.
+
+	This library is distributed in the hope that it will be useful, but 
+	WITHOUT ANY WARRANTY; without even the implied warranty of 
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+	Lesser General Public License for more details.
+*/
 
 namespace BirdFont {
 
@@ -32,134 +24,7 @@ public class Color : SvgBird.Color {
 	}
 	
 	public Color.hsba (double h, double s, double v, double a) {
-		double hue, saturation, value;
-		double f, p, q, t;
-		double r, g, b;
-
-		if (s == 0.0) {
-			r = v;
-			g = v;
-			b = v;
-		} else {
-			hue = h * 6.0;
-			saturation = s;
-			value = v;
-
-			if (hue == 6.0) {
-				hue = 0.0;
-			}
-
-			f = hue - (int) hue;
-			p = value * (1.0 - saturation);
-			q = value * (1.0 - saturation * f);
-			t = value * (1.0 - saturation * (1.0 - f));
-
-			switch ((int) hue) {
-			case 0:
-				r = value;
-				g = t;
-				b = p;
-				break;
-
-			case 1:
-				r = q;
-				g = value;
-				b = p;
-				break;
-
-			case 2:
-				r = p;
-				g = value;
-				b = t;
-				break;
-
-			case 3:
-				r = p;
-				g = q;
-				b = value;
-				break;
-
-			case 4:
-				r = t;
-				g = p;
-				b = value;
-				break;
-
-			case 5:
-				r = value;
-				g = p;
-				b = q;
-				break;
-
-			default:
-				assert_not_reached ();
-			}
-		}
-		
-		base (r, g, b, a);
-	}
-
-	public void to_hsva (out double h, out double s, out double v, out double a) {
-		double red, green, blue;
-		double min, max;
-		double delta;
-
-		a = this.a;
-		
-		red = r;
-		green = g;
-		blue = b;
-
-		h = 0.0;
-
-		if (red > green) {
-			if (red > blue)
-				max = red;
-			else
-				max = blue;
-
-			if (green < blue)
-				min = green;
-			else
-				min = blue;
-		} else {
-			if (green > blue)
-				max = green;
-			else
-				max = blue;
-
-			if (red < blue)
-				min = red;
-			else
-				min = blue;
-		}
-
-		v = max;
-
-		if (max != 0.0)
-			s = (max - min) / max;
-		else
-			s = 0.0;
-
-		if (s == 0.0)
-			h = 0.0;
-		else {
-			delta = max - min;
-
-			if (red == max)
-				h = (green - blue) / delta;
-			else if (green == max)
-				h = 2 + (blue - red) / delta;
-			else if (blue == max)
-				h = 4 + (red - green) / delta;
-
-			h /= 6.0;
-
-			if (h < 0.0)
-				h += 1.0;
-			else if (h > 1.0)
-				h -= 1.0;
-		}
+		base.hsva (h, s, v, a);
 	}
 
 	public static Color black () {
