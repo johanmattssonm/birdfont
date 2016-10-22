@@ -28,7 +28,7 @@ public class Points : GLib.Object {
 		}
 	}
 	
-	public void set_type (int index, uchar p) {
+	public void set_type (int index, uint32 p) {
 		point_data.set_type (index, p);
 	}
 	
@@ -36,7 +36,7 @@ public class Points : GLib.Object {
 		point_data.set_double (index, p);
 	}
 
-	public void insert_type (int index, uchar t) {
+	public void insert_type (int index, uint32 t) {
 		point_data.insert_type (index, t);
 	}
 	
@@ -48,7 +48,7 @@ public class Points : GLib.Object {
 		point_data.add (p);
 	}
 	
-	public void add_type (uchar type) {
+	public void add_type (uint32 type) {
 		point_data.add_type (type);
 	}
 
@@ -113,8 +113,12 @@ public class Points : GLib.Object {
 		return point_data.get_double (index);
 	}
 
-	public uchar get_point_type (int index) {
+	public uint32 get_point_type (int index) {
 		return point_data.get_point_type (index);
+	}
+	
+	public void set_point_type (int index, uint32 type) {
+		point_data.set_point_type (index, type);
 	}
 
 	public void all (LineIterator iter) {

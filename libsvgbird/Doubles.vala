@@ -53,7 +53,7 @@ public class Doubles : GLib.Object {
 		data[index].value = p;
 	}
 
-	public void set_type (int index, uchar t) {
+	public void set_type (int index, uint32 t) {
 		if (unlikely (index < 0)) {
 			warning ("index < 0");
 			return;
@@ -72,7 +72,7 @@ public class Doubles : GLib.Object {
 		data[index].value = p;
 	}
 	
-	public void insert_type (int index, uchar p) {
+	public void insert_type (int index, uint32 p) {
 		insert_element (index); 
 		data[index].type = p;
 	}
@@ -137,7 +137,7 @@ public class Doubles : GLib.Object {
 		capacity = new_capacity;		
 	}
 
-	public void add_type (uchar type) {
+	public void add_type (uint32 type) {
 		if (size >= capacity) {
 			increase_capacity ();
 		}
@@ -179,7 +179,7 @@ public class Doubles : GLib.Object {
 		return data[index].value;
 	}
 
-	public uchar get_point_type (int index) {
+	public uint32 get_point_type (int index) {
 		if (unlikely (index < 0)) {
 			warning ("index < 0");
 			return 0;
@@ -191,6 +191,20 @@ public class Doubles : GLib.Object {
 		}
 		
 		return data[index].type;
+	}
+	
+	public void set_point_type (int index, uint32 type) {
+		if (unlikely (index < 0)) {
+			warning ("index < 0");
+			return;
+		}
+
+		if (unlikely (index >= size)) {
+			warning ("index >= size");
+			return;
+		}
+		
+		data[index].type = type;
 	}
 	
 	public string get_string (int i) {

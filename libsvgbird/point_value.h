@@ -19,7 +19,7 @@
 
 typedef union {
 	gdouble value;
-	guchar type;
+	guint32 type;
 } SvgBirdPointValue;
 
 #endif

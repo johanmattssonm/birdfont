@@ -94,7 +94,7 @@ public class SvgPath : Object {
 		return_if_fail (size % 8 == 0);
 		return_if_fail (size >= 8);
 		
-		switch (path.get_point_type (0)) {
+		switch (path.get_point_type (0) & POINT_TYPE) {
 		case POINT_ARC:
 			x = path.get_double (6);
 			y = path.get_double (7);
@@ -120,7 +120,7 @@ public class SvgPath : Object {
 		return_if_fail (size % 8 == 0);
 	
 		for (int i = 0; i < size; i += 8) {
-			switch (points[i].type) {
+			switch (points[i].type & POINT_TYPE) {
 			case POINT_ARC:		
 				draw_arc (cr, points[i + 1].value, points[i + 2].value,
 					points[i + 3].value, points[i + 4].value,

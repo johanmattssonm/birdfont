@@ -2,7 +2,7 @@ namespace SvgBird {
 
 [CCode (cheader_filename="point_value.h")]
 public extern struct PointValue {
-    uchar type;
+    uint32 type;
     double value;
 }
 

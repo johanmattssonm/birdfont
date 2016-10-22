@@ -30,6 +30,15 @@ public abstract class Gradient : GLib.Object {
 		stops = new Gee.ArrayList<Stop> ();
 		transforms = new SvgTransforms ();
 	}
+
+	public Stop get_stop (int index) {
+		if (unlikely (index < 0 || index >= stops.size)) {
+			warning ("Stop index out of bounds");
+			return new Stop ();
+		}
+		
+		return stops.get (index);
+	}
 	
 	public void copy_stops (Gradient g) {
 		foreach (Stop stop in g.stops) {

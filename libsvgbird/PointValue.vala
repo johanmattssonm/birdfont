@@ -14,9 +14,12 @@
 
 namespace SvgBird {
 
-public static const uchar POINT_NONE = 0;
-public static const uchar POINT_ARC = 1;
-public static const uchar POINT_CUBIC = 2;
-public static const uchar POINT_LINE = 3;
+public static const uint32 POINT_NONE = 0;
+public static const uint32 POINT_ARC = 1;
+public static const uint32 POINT_CUBIC = 1 << 1;
+public static const uint32 POINT_LINE = 1 << 2;
+public static const uint32 POINT_NEXT_LINE = 1 << 3;
+public static const uint32 POINT_PREVIOUS_LINE = 1 << 4;
+public static const uint32 POINT_TYPE = POINT_ARC | POINT_CUBIC | POINT_LINE;
 
 }

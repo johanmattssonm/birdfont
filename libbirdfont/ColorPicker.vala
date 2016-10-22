@@ -147,7 +147,7 @@ public class ColorPicker : Tool {
 	public Color get_fill_color () {
 		return fill_color;
 	}
-		
+	
 	public override void draw_tool (Context cr, double px, double py) {
 		draw_bars (cr, px, py);
 		draw_dial (cr, px, py, 0, hue);
