@@ -18,6 +18,8 @@ using Math;
 namespace BirdFont {
 
 public class SettingsTab : SettingsDisplay {
+
+	string restart_message = "You need to restart the program in order to apply this setting.";	
 	
 	public SettingsTab () {
 		base ();
@@ -141,6 +143,25 @@ public class SettingsTab : SettingsDisplay {
 			DrawingTools.pen_tool.set_simplification_threshold (simplification_threshold.get_value ());
 		});
 
+		Tool translate_ui = new Tool ("translate");
+		translate_ui.select_action.connect((self) => {
+			Preferences.set ("translate", @"true");	
+			ThemeTab.redraw_ui ();
+			translate_ui.selected = true;
+			MainWindow.show_dialog (new MessageDialog (restart_message));
+		});
+		
+		translate_ui.deselect_action.connect((self) => {
+			Preferences.set ("translate", @"false");
+			translate_ui.selected = false;
+			MainWindow.show_dialog (new MessageDialog (restart_message));
+			ThemeTab.redraw_ui ();
+		});
+
+		string translate_setting = Preferences.get ("translate");
+		translate_ui.selected = translate_setting == "" || translate_setting == "true";		
+		tools.add (new SettingsItem (translate_ui, t_("Translate")));
+		
 		Tool themes = new Tool ("open_theme_tab");
 		themes.set_icon ("theme");
 		themes.select_action.connect((self) => {
