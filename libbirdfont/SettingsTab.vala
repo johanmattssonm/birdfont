@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2014 2015 Johan Mattsson
+	Copyright (C) 2014 2015 2016 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
