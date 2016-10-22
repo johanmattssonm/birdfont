@@ -498,7 +498,13 @@ public string t_ (string t) {
 #if ANDROID
 	return t;
 #else
-	return _(t);
+	string translate = Preferences.get ("translate");
+	
+	if (translate == "" || translate == "true") {
+		return _(t);
+	} else {
+		return t;
+	}
 #endif
 }
 
