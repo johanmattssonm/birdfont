@@ -444,6 +444,8 @@ public class BezierTool : Tool {
 			current_path.delete_last_point ();
 			current_path.reset_stroke ();
 			current_point = current_path.get_last_point ();
+			current_point.set_tie_handle (false);
+			current_point.set_reflective_handles (false);
 			state = MOVE_HANDLES;
 		} else {
 			state = swap ? MOVE_LAST_HANDLE_RIGHT : MOVE_LAST_HANDLE_LEFT;
