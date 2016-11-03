@@ -398,6 +398,8 @@ public class BezierTool : Tool {
 		
 		if (s > 2) {
 			p = current_path.points.get (s - 2);
+			p.set_tie_handle (false);
+			p.set_reflective_handles (false);
 			p.get_right_handle ().convert_to_line ();
 			current_point.get_left_handle ().convert_to_line ();
 			current_path.recalculate_linear_handles_for_point (p);
