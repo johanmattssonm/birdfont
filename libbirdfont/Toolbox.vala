@@ -79,7 +79,7 @@ public class Toolbox : GLib.Object  {
 		tool_sets.add (spacing_class_tools);
 		tool_sets.add (background_tools);
 		// the menu has all the file_tools commands, it will not be added here
-		tool_sets.add (hidden_tools); // tools without a button
+		tool_sets.add (hidden_tools); // tools without buttons
 		
 		current_set = file_tools;
 		current_set.selected ();
