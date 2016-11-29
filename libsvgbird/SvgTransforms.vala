@@ -134,6 +134,10 @@ public class SvgTransforms : GLib.Object {
 		return copy_transforms;
 	}
 
+	public void insert (int position, SvgTransform transform) {
+		transforms.insert (position, transform);
+	}
+
 	public void add (SvgTransform transform) {
 		transforms.add (transform);
 	}
