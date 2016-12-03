@@ -59,8 +59,16 @@ class SvgFontFormatWriter : GLib.Object  {
 
 		put ("<defs>");
 
-		put (@"<font id=\"$font_name\" horiz-adv-x=\"250\" >");
+		string font_id = font_name.replace (" ", "-");
+		Glyph space = font.get_space ().get_current ();
+		double space_width = space.get_width ();
+		
+		put (@"<font id=\"$font_id\" horiz-adv-x=\"$(to_float (space_width))\" >");
 		put (@"<font-face units-per-em=\"$(to_float (units_per_em))\" ascent=\"$(to_float (ascent))\" descent=\"$(to_float (descent))\" />");
+
+		put (@"<font-src>");
+		put (@"\t<font-face-name=\"$font_name\">");
+		put (@"</font-src>");
 
 		// (missing-glyph goes here)
 
