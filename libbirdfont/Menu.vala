@@ -396,7 +396,12 @@ public class Menu : AbstractMenu {
 
 		MenuItem next_kerning_pair = add_menu_item (t_("Select Next Kerning Pair"), "select next kerning pair");
 		next_kerning_pair.action.connect (() => {
-			KerningDisplay.next_pair ();
+			if (KerningDisplay.right_to_left)  {
+				KerningDisplay.previous_pair ();			
+			} else {
+				KerningDisplay.next_pair ();
+			}
+			
 			show_menu = false;
 		});
 		next_kerning_pair.add_display("Kerning");
@@ -405,7 +410,12 @@ public class Menu : AbstractMenu {
 
 		MenuItem previous_kerning_pair = add_menu_item (t_("Select Previous Kerning Pair"), "select previous kerning pair");
 		previous_kerning_pair.action.connect (() => {
-			KerningDisplay.previous_pair ();
+			if (KerningDisplay.right_to_left)  {
+				KerningDisplay.next_pair ();			
+			} else {
+				KerningDisplay.previous_pair ();
+			}
+			
 			show_menu = false;
 		});
 		previous_kerning_pair.add_display("Kerning");
