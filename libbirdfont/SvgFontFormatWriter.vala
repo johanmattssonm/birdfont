@@ -60,6 +60,8 @@ class SvgFontFormatWriter : Object  {
 		put ("<defs>");
 
 		string font_id = font_name.replace (" ", "-");
+		font_id = B.XmlParser.encode (font_id); 
+		
 		Glyph space = font.get_space ().get_current ();
 		double space_width = space.get_width ();
 		
@@ -67,7 +69,7 @@ class SvgFontFormatWriter : Object  {
 		put (@"<font-face units-per-em=\"$(to_float (units_per_em))\" ascent=\"$(to_float (ascent))\" descent=\"$(to_float (descent))\" />");
 
 		put (@"<font-src>");
-		put (@"\t<font-face-name=\"$font_name\">");
+		put (@"\t<font-face-name=\"XmlParser.encode ($font_name)\">");
 		put (@"</font-src>");
 
 		// (missing-glyph goes here)

@@ -46,7 +46,7 @@ public class KerningDisplay : FontDisplay {
 	public bool adjust_side_bearings = false;
 	public bool right_side_bearing = true;
 
-	public bool right_to_left = false; 	
+	public static bool right_to_left = false; 	
 	
 	WidgetAllocation allocation = new WidgetAllocation ();
 	
@@ -200,7 +200,7 @@ public class KerningDisplay : FontDisplay {
 					glyph.add_help_lines ();
 
 					if (right_to_left) {
-						cr.translate (x - kern - glyph.get_lsb () - glyph.get_width () - Glyph.xc (), glyph.get_baseline () + y  - Glyph.yc ());
+						cr.translate (-kern + x - glyph.get_lsb () - glyph.get_width () - Glyph.xc (), glyph.get_baseline () + y  - Glyph.yc ());
 					} else {						
 						cr.translate (kern + x - glyph.get_lsb () - Glyph.xc (), glyph.get_baseline () + y  - Glyph.yc ());
 					}
