@@ -53,7 +53,7 @@ public class SpacingClass : GLib.Object  {
 			string v = text;
 			
 			if (v.has_prefix ("U+") || v.has_prefix ("u+")) {
-				v = ((!) Font.to_unichar (val).to_string ()).dup ();
+				v = ((!) Font.to_unichar (v).to_string ()).dup ();
 			}
 			
 			if (update_first) {
