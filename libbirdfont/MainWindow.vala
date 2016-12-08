@@ -112,7 +112,17 @@ public class MainWindow : GLib.Object {
 		}
 	}
 
-	public static void  show_message (string text) {
+	public static void show_message (string text) {
+		Tab t = MainWindow.get_tab_bar ().get_selected_tab ();
+		string tab_name = t.get_display ().get_name ();
+
+		if (tab_name == "Preview") {
+			print ("select over");
+			MenuTab.select_overview ();
+		}
+		
+		print ("show mess");
+		
 		MessageDialog md = new MessageDialog (text);
 		show_dialog (md);
 	}

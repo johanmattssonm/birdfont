@@ -209,7 +209,7 @@ public class GlyfTable : OtfTable {
 		uint16 end_point;
 		uint16 npoints;
 		int16 ncontours;
-		int16 nflags;
+		uint16 nflags;
 		int glyph_offset;
 		uint len; 
 		uint coordinate_length;
@@ -223,6 +223,12 @@ public class GlyfTable : OtfTable {
 		
 		g.remove_empty_paths ();
 		glyf_data = g.get_ttf_data ();
+	
+		int points = glyf_data.get_num_points ();
+		if (unlikely (points >= uint16.MAX)) {
+			warning (@"Too many points in glyph $(g.get_name ()) ($points)");
+			throw new FileError.FAILED (t_("Too many control points") + " " + t_("in") + @" $(g.get_name ())");
+		}
 		
 		this.glyf_data.add (glyf_data);
 		
