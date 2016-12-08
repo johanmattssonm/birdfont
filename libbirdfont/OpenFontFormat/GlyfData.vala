@@ -43,7 +43,7 @@ public class GlyfData : GLib.Object {
 	public Gee.ArrayList<int16> coordinate_y = new Gee.ArrayList<int16> ();
 	
 	uint16 end_point = 0;
-	int16 nflags = 0;
+	uint16 nflags = 0;
 	
 	Glyph glyph;
 	
@@ -127,7 +127,7 @@ public class GlyfData : GLib.Object {
 		return (int16) paths.size;
 	}
 
-	public int16 get_nflags () {
+	public uint16 get_nflags () {
 		return nflags;
 	}
 	
@@ -150,15 +150,21 @@ public class GlyfData : GLib.Object {
 			}
 			
 			foreach (EditPoint e in quadratic.points) {
+				if (unlikely (nflags == uint16.MAX - 1) {
+					warning (@"Too many end points in $(glyph.get_name ())");
+					break;				
+				}
+				
 				end_point++;
 				type = e.get_right_handle ().type;
 				
 				// off curve
-				end_point++;
-				
-				if (end_point >= 0xFFFF) {
-					warning ("Too many points");
+				if (unlikely (nflags == uint16.MAX - 1) {
+					warning (@"Too many end points in $(glyph.get_name ())");
+					break;				
 				}
+				
+				end_point++;
 			}
 			end_points.add (end_point - 1);
 			
@@ -189,7 +195,13 @@ public class GlyfData : GLib.Object {
 				
 				// off curve
 				flags.add (CoordinateFlags.NONE);
-				nflags++;
+				
+				if (unlikely (nflags == uint16.MAX) {
+					warning (@"Too many flags in $(glyph.get_name ())");
+					return;				
+				}	
+								
+				nflags++;				
 			}
 		}
 	}

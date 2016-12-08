@@ -209,7 +209,7 @@ public class GlyfTable : OtfTable {
 		uint16 end_point;
 		uint16 npoints;
 		int16 ncontours;
-		int16 nflags;
+		uint16 nflags;
 		int glyph_offset;
 		uint len; 
 		uint coordinate_length;
