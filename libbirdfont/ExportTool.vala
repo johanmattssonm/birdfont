@@ -17,6 +17,8 @@ using B;
 namespace BirdFont {
 
 public class ExportTool : GLib.Object {
+
+	public static string? error_message = null;
 	
 	public ExportTool (string n) {
 	}
@@ -404,8 +406,7 @@ os.put_string (
 	<p class="big">
 		<span class="capstosmallcaps">OTF</span> features, 
 		<span class="swashes">like swashes </span>
-		<span class="alternates">alternates &amp; </span>
-		<span class="smallcaps">small caps</span>, can be added 
+		<span class="alternates">alternates &amp; </span> small caps, can be added 
 		to the font.</span>
 	</p>
 </div>
@@ -565,16 +566,19 @@ os.put_string (
 		OpenFontFormatWriter fo = new OpenFontFormatWriter (f.units_per_em);
 		
 		File file = (!) File.new_for_path (ttf);
-		File file_mac = (!) File.new_for_path (ttf_mac);
+		File file_mac = (!) File.new_for_path (ttf_mac);		
+
+		error_message = null;		
 		
 		try {
 			fo.open (file, file_mac);
 			fo.write_ttf_font (f);
 			fo.close ();
 		} catch (Error e) {
-			warning (@"Can't write TTF font to $ttf");
+			warning (@"Can't create TTF font to $ttf");
 			critical (@"$(e.message)");
-		}
+			error_message = e.message;			
+		}		
 	}
 	
 	static void write_eot (string ttf, string eot) {

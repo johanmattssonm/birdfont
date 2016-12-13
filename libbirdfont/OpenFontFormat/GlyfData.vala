@@ -43,7 +43,7 @@ public class GlyfData : GLib.Object {
 	public Gee.ArrayList<int16> coordinate_y = new Gee.ArrayList<int16> ();
 	
 	uint16 end_point = 0;
-	int16 nflags = 0;
+	uint16 nflags = 0;
 	
 	Glyph glyph;
 	
@@ -58,53 +58,48 @@ public class GlyfData : GLib.Object {
 		
 	public GlyfData (Glyph g) {
 		bool process;
-		PathList qp = g.get_quadratic_paths (); 
+		PathList all_quadratic = g.get_quadratic_paths (); 
+		PathList qp = new PathList ();
 		
 		glyph = g;
 						
-		foreach (Path p in qp.paths) {
+		int i = 0;
+		foreach (Path p in all_quadratic.paths) {
 			if (p.points.size > 0) {
-				if (!is_empty (p)) {
+				if (likely (!is_empty (p))) {
 					// Add points at extrema
 					p.add_extrema ();
+					qp.add (p);
+				} else {
+					warning (@"Path number $i is empty in $(glyph.get_name ())");
 				}
+				i++;
 			}
 		}
 		
-		process = true;
-		
-		while (process) {
-			points.clear ();
-			paths.clear ();
-			foreach (Path p in qp.paths) {
-				if (!is_empty (p)) {
-					paths.add (p);
-					foreach (EditPoint ep in p.points) {
-						points.add (ep);
-					}
-				}
+		points.clear ();
+		paths.clear ();
+		foreach (Path p in qp.paths) {
+			paths.add (p);
+
+			foreach (EditPoint ep in p.points) {
+				points.add (ep);
 			}
+		}
 			
-			if (paths.size == 0) {
-				break;
-			}
-			
+		if (paths.size > 0) {
 			process_end_points ();
 			process_flags ();
 			process_x ();
-			
-			// error checking is done here
-			process = !process_y (); 
-			
+			process_y (); 	
 			process_bounding_box ();
-		 }
+		}
 	}
 
 	bool is_empty (Path p) {
 		EditPoint? last = null;
 		
 		if (unlikely (p.points.size < 2)) {
-			warning (@"A path in $(glyph.get_name ()) has less than three points, it will not be exported.");
 			return true;
 		}
 		
@@ -114,8 +109,7 @@ public class GlyfData : GLib.Object {
 			}
 			last = ep;
 		}
-		
-		warning (@"A path in $(glyph.get_name ()) ($(glyph.get_hex ())) has no area but $(p.points.size) points at $(p.get_first_point ().x),$(p.get_first_point ().y).");
+
 		return true;
 	}
 
@@ -127,9 +121,26 @@ public class GlyfData : GLib.Object {
 		return (int16) paths.size;
 	}
 
-	public int16 get_nflags () {
+	public uint16 get_nflags () {
 		return nflags;
 	}
+
+	/** Count off curve points and on curve points.
+	 * @return the number of points or uint16.MAX if more than uint16.MAX points where found. 
+	 */ 
+	public int get_num_points () {
+		int points = 0;
+		
+		foreach (Path quadratic in paths) {
+			points += 2 * quadratic.points.size;
+			
+			if (points >= uint16.MAX) {
+				return uint16.MAX;			
+			}
+		}
+		
+		return points;
+	}			
 	
 	void process_end_points () {	
 		uint16 last_end_point = 0;
@@ -138,6 +149,7 @@ public class GlyfData : GLib.Object {
 		end_points.clear ();
 		end_point = 0;
 		
+		int path_number = 0;
 		foreach (Path quadratic in paths) {
 			if (unlikely (quadratic.points.size == 0)) {
 				warning (@"No points in path (before conversion $(quadratic.points.size))");
@@ -145,20 +157,26 @@ public class GlyfData : GLib.Object {
 			}
 			
 			if (unlikely (quadratic.points.size < 2)) {
-				warning ("A path contains less than three points, it will not be exported.");
+				warning ("A path contains less than three points, it will not be exported. Path number: $path_number");
 				continue;
 			}
 			
 			foreach (EditPoint e in quadratic.points) {
+				if (unlikely (nflags == uint16.MAX - 1)) {
+					warning (@"Too many end points in $(glyph.get_name ())");
+					break;				
+				}
+				
 				end_point++;
 				type = e.get_right_handle ().type;
 				
 				// off curve
-				end_point++;
-				
-				if (end_point >= 0xFFFF) {
-					warning ("Too many points");
+				if (unlikely (nflags == uint16.MAX - 1)) {
+					warning (@"Too many end points in $(glyph.get_name ())");
+					break;				
 				}
+				
+				end_point++;
 			}
 			end_points.add (end_point - 1);
 			
@@ -189,7 +207,13 @@ public class GlyfData : GLib.Object {
 				
 				// off curve
 				flags.add (CoordinateFlags.NONE);
-				nflags++;
+				
+				if (unlikely (nflags == uint16.MAX)) {
+					warning (@"Too many flags in $(glyph.get_name ())");
+					return;				
+				}	
+								
+				nflags++;				
 			}
 		}
 	}
@@ -230,7 +254,7 @@ public class GlyfData : GLib.Object {
 		}
 	}
 	
-	bool process_y () {
+	void process_y () {
 		double prev = 0;
 		double y;
 		Font font = OpenFontFormatWriter.get_current_font ();
@@ -238,6 +262,8 @@ public class GlyfData : GLib.Object {
 		int epi = 0;
 		
 		coordinate_y.clear ();
+
+		int path_number = 0;		
 		
 		foreach (Path p in paths) {
 			foreach (EditPoint e in p.points) {
@@ -245,17 +271,8 @@ public class GlyfData : GLib.Object {
 				coordinate_y.add ((int16) y);
 				
 				if ((int16) y == 0 && (int16) coordinate_x.get (coordinate_y.size - 1) == 0) {
-					warning (@"Point on point in TTF. Index $(coordinate_y.size - 1)");
-					
-					// FIXME: distorted shape
-					/*
-					if (BirdFont.has_argument ("--test")) {
-						print (glyph.get_name () + "\n");
-						print (points.get (epi).to_string ());
-						PenTool.remove_point_simplify (new PointSelection (points.get (epi), p));
-						return false;
-					}
-					*/
+					warning (@"Point on point in TTF. Index $(coordinate_y.size - 1) "
+						+ @"Path: $path_number in $(glyph.get_name ())");
 				}
 				
 				prev = rint (e.y * UNITS - font.base_line * UNITS);
@@ -265,25 +282,13 @@ public class GlyfData : GLib.Object {
 				// off curve
 				y = rint (e.get_right_handle ().y * UNITS - prev - font.base_line * UNITS);
 				coordinate_y.add ((int16) y);
-
-				if ((int16) y == 0 && (int16) coordinate_x.get (coordinate_y.size - 1) == 0) {
-					warning (@"Point on point in TTF (off curve) Index: $(coordinate_y.size - 1) ");
-					if (BirdFont.has_argument ("--test")) {
-						print (glyph.get_name () + "\n");
-						print (points.get (epi).to_string ());
-						
-						// FIXME: distorted shape
-						PenTool.remove_point_simplify (new PointSelection (points.get (epi), p));
-						return false;
-					}
-				}
 							
 				prev = rint (e.get_right_handle ().y * UNITS - font.base_line  * UNITS);
 				epi++;
 			}
+			
+			path_number++;
 		}
-		
-		return true;
 	}
 	
 	void process_bounding_box () {
