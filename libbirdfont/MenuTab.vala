@@ -441,6 +441,8 @@ public class MenuTab : FontDisplay {
 		} else {
 			MainWindow.show_dialog (new SaveDialog (dialog));
 		}
+		
+		MainWindow.native_window.update_window_size ();
 	} 
 	
 	public static void show_export_settings_tab () {
