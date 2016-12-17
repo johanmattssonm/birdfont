@@ -77,6 +77,25 @@ public class Preferences {
 		set ("recent_files", @"$(recent.str)");
 	}
 
+	public static void set_window_size (int x, int y, int width, int height) {
+		set ("window_x", @"$x");
+		set ("window_y", @"$y");
+		set ("window_width", @"$width");
+		set ("window_height", @"$height");
+	}
+
+	public static int get_window_x () {
+		string wp = get ("window_x");
+		int x = int.parse (wp);
+		return x;
+	}
+
+	public static int get_window_y () {
+		string wp = get ("window_y");
+		int y = int.parse (wp);
+		return y;
+	}
+	
 	public static int get_window_width() {
 		string wp = get ("window_width");
 		int w = int.parse (wp);
