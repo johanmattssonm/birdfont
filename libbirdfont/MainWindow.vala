@@ -117,11 +117,8 @@ public class MainWindow : GLib.Object {
 		string tab_name = t.get_display ().get_name ();
 
 		if (tab_name == "Preview") {
-			print ("select over");
 			MenuTab.select_overview ();
 		}
-		
-		print ("show mess");
 		
 		MessageDialog md = new MessageDialog (text);
 		show_dialog (md);
