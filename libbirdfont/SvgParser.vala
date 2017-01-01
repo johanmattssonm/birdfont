@@ -162,6 +162,7 @@ public class SvgParser {
 
 		// parse the file
 		if (!has_format) {
+			parser.set_format (SvgFormat.ILLUSTRATOR);
 			warn_if_test ("No format identifier found in SVG parser.\n");
 		}
 
@@ -226,7 +227,6 @@ public class SvgParser {
 		}
 	
 		foreach (XmlElement t in tag) {
-			
 			if (t.get_name () == "g") {
 				parse_layer (t, pl);
 			}
@@ -269,13 +269,11 @@ public class SvgParser {
 		}
 		
 		PathList paths = LayerUtils.get_all_paths (pl);
-
 		ViewBox? box = SvgFile.parse_view_box (tag);
+		
 		if (box != null) {
 			ViewBox view_box = (!) box;
-			Cairo.Matrix matrix = Cairo.Matrix.identity ();
-			Cairo.Matrix view_box_matrix = view_box.get_matrix (width, height);
-			view_box_matrix.multiply (view_box_matrix, matrix);
+			Matrix view_box_matrix = view_box.get_matrix (width, height);
 			SvgTransform t = new SvgTransform.for_matrix (view_box_matrix);
 			SvgTransforms transforms = new SvgTransforms ();
 			transforms.add (t);
@@ -347,14 +345,7 @@ public class SvgParser {
 			}
 		}
 		
-		PathList paths = new PathList ();
-		
-		foreach (SvgBird.Object object in pl.objects) {
-			if (object is Path) {
-				paths.add ((Path) object);
-			}
-		}
-		
+		PathList paths = LayerUtils.get_all_paths (pl);
 		SvgTransforms transforms = SvgFile.get_transform (tag.get_attributes ());
 		transform_paths (transforms, paths);
 	}

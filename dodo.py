@@ -567,6 +567,7 @@ def make_birdfont_test(target_binary, deps):
 		$(pkg-config --cflags gio-2.0) \
 		$(pkg-config --cflags cairo) \
 		$(pkg-config --cflags glib-2.0) \
+		$(pkg-config --cflags xmlbird) \
         -o OBJECT_FILE"""
         
     linker_command = config.CC + " " + config.LDFLAGS.get("birdfont-test", "") + """ \

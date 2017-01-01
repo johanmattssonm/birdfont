@@ -101,8 +101,14 @@ public class SvgFile : GLib.Object {
 		bool slice = true;
 		bool preserve_aspect_ratio = true;
 		
+		if (tag.get_name () != "svg") {
+			warning (@"viewBox is not the svg tag: $(tag.get_name ())");
+			return null;
+		}
+		
 		foreach (Attribute attribute in tag.get_attributes ()) {
 			if (attribute.get_name () == "viewBox") {
+				print (@"$(attribute.get_name ()): $(attribute.get_content ())\n");
 				parameters = attribute.get_content ();
 			}
 			
@@ -123,6 +129,7 @@ public class SvgFile : GLib.Object {
 			}
 		}
 		
+		print (@"parameters: $parameters\n");
 		arguments = parameters.replace (",", " ");
 		
 		while (arguments.index_of ("  ") > -1) {
@@ -131,8 +138,9 @@ public class SvgFile : GLib.Object {
 		
 		string[] view_box_parameters = arguments.split (" ");
 		
-		if (view_box_parameters.length != 4) {
+		if (unlikely (view_box_parameters.length != 4)) {
 			warning ("Expecting four arguments in view box.");
+			warning (@"Content: $arguments ($parameters)");
 			return null;
 		}
 

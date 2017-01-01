@@ -62,7 +62,10 @@ public class PreviewTools : ToolCollection  {
 				Preview.generate_html_document ();
 			}
 			
-			MainWindow.tabs.select_tab_name ("Preview");
+			if (ExportTool.error_message == null) {
+				MainWindow.tabs.select_tab_name ("Preview");
+			}
+			
 			return false;
 		});
 		

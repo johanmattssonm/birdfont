@@ -211,7 +211,12 @@ public class MenuTab : FontDisplay {
 	public static void signal_file_exported () {
 		IdleSource idle = new IdleSource ();
 		idle.set_callback (() => {
-			export_callback.file_exported ();
+			export_callback.file_exported ();			
+			
+			if (ExportTool.error_message != null) {
+				MainWindow.show_message (t_("Can't create TTF font.") + "\n" + (!) ExportTool.error_message);
+			}
+
 			return false;
 		});
 		idle.attach (null);
@@ -436,6 +441,8 @@ public class MenuTab : FontDisplay {
 		} else {
 			MainWindow.show_dialog (new SaveDialog (dialog));
 		}
+		
+		MainWindow.native_window.update_window_size ();
 	} 
 	
 	public static void show_export_settings_tab () {
