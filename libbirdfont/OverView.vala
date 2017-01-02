@@ -1723,6 +1723,7 @@ public class OverView : FontDisplay {
 			}
 			
 			g.insert_glyph (glyph, true);
+			update_path_boundaries (glyph);
 			i++;
 		}
 		
@@ -1730,6 +1731,12 @@ public class OverView : FontDisplay {
 		
 		update_item_list ();
 		GlyphCanvas.redraw ();
+	}
+
+	void update_path_boundaries (Glyph glyph) {
+		foreach (Path p in glyph.get_all_paths ()) {
+			p.update_region_boundaries ();
+		}
 	}
 
 	public override bool needs_modifier () {
@@ -1740,6 +1747,7 @@ public class OverView : FontDisplay {
 		public AlternateSets alternate_sets = new AlternateSets ();
 		public Gee.ArrayList<GlyphCollection> glyphs = new Gee.ArrayList<GlyphCollection> ();
 	}
+
 }
 
 }
