@@ -682,6 +682,15 @@ public class OverView : FontDisplay {
 		update_scheduled = false;
 	}
 	
+	public void reset_thumbnails () {
+		for (int i = 0; i < visible_items.size; i++) {
+			OverViewItem item = visible_items.get (i);
+			item.clear_cache ();
+		}
+		
+		update_item_list ();
+	}
+	
 	public override void draw (WidgetAllocation allocation, Context cr) {
 		if (update_scheduled
 			|| this.allocation.width != allocation.width
