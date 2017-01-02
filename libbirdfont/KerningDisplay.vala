@@ -156,7 +156,7 @@ public class KerningDisplay : FontDisplay {
 		row_height = get_row_height ();
 	
 		alpha = 1;
-		y = get_row_height () + font.base_line + 20;
+		y = get_row_height () - font.base_line + 20;
 		x = 20;
 		w = 0;
 		prev = null;
@@ -292,7 +292,7 @@ public class KerningDisplay : FontDisplay {
 			// draw caret
 			if (first_row) {
 				x2 = x;
-				caret_y = get_row_height () + font.base_line + 20;
+				caret_y = get_row_height () - font.base_line + 20;
 				cr.save ();
 				cr.set_line_width (1.0 / KerningTools.font_size);
 				Theme.color_opacity (cr, "Foreground 1", 0.5);
