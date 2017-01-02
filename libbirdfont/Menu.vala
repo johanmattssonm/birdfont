@@ -289,7 +289,37 @@ public class Menu : AbstractMenu {
 		import_color_svg = add_menu_item (t_("Import SVG file"),
 			"import svg file color", "Glyph");
 		import_color_svg.action.connect (() => {
+			FontDisplay current_display = MainWindow.get_current_display ();
+			OverView overview = MainWindow.get_overview ();
+			
+			if (current_display is OverView) {
+				GlyphCollection? gc;
+				
+				gc = overview.get_selected_item ().glyphs;
+				
+				OverViewItem item = overview.get_selected_item ();
+				
+				if (gc == null) {
+					// ignore control characters
+					if (item.character <= 0x1F) {
+						show_menu = false;
+						return;
+					}
+					
+					gc = overview.create_new_glyph (item.character, false);
+				}
+
+				GlyphCanvas canvas = MainWindow.get_glyph_canvas ();
+				canvas.set_current_glyph_collection ((!) gc, false);
+			}
+			
 			SvgParser.import (SvgType.COLOR);
+			
+			if (current_display is OverView) {
+				overview.reset_thumbnails ();
+				GlyphCanvas.redraw ();
+			}
+			
 			show_menu = false;
 		});
 		export_menu.items.add (import_color_svg);
