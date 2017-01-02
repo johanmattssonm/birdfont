@@ -287,7 +287,7 @@ public class Menu : AbstractMenu {
 
 		MenuItem import_color_svg;
 		import_color_svg = add_menu_item (t_("Import SVG file"),
-			"import svg file color", "Glyph");
+			"import svg file color", "");
 		import_color_svg.action.connect (() => {
 			FontDisplay current_display = MainWindow.get_current_display ();
 			OverView overview = MainWindow.get_overview ();
