@@ -28,7 +28,7 @@ public class Preview : FontDisplay {
 	}
 
 	public override void selected_canvas () {
-	MainWindow.set_scrollbar_size (0);
+		MainWindow.set_scrollbar_size (0);
 	}
 
 	public static string get_html_path () {

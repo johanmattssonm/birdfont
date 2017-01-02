@@ -184,6 +184,16 @@ public class Glyph : FontDisplay {
 		warning ("Layer is not added to glyph.");
 	}
 
+	public bool has_svg_path () {
+		foreach (SvgBird.Object object in get_visible_objects ()) {
+			if (object is EmbeddedSvg) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
 	public Gee.ArrayList<SvgBird.Object> get_visible_objects () {
 		return LayerUtils.get_visible_objects (layers);
 	}

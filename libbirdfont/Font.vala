@@ -187,6 +187,18 @@ public class Font : GLib.Object {
 		font_deleted ();
 	}
 
+	public bool has_svg_glyph () {
+		for (int glyph_index = 0; glyph_index < glyph_name.length (); glyph_index++) {
+			GlyphCollection gc = glyph_name.nth (glyph_index);
+			
+			if (gc.get_current ().has_svg_path ()) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
 	public void add_default_characters () {
 		GlyphCollection notdef = get_notdef_character ();
 		

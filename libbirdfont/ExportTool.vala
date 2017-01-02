@@ -584,7 +584,7 @@ os.put_string (
 		File file = (!) File.new_for_path (ttf);
 		File file_mac = (!) File.new_for_path (ttf_mac);		
 
-		error_message = null;		
+		error_message = null;
 		
 		try {
 			fo.open (file, file_mac);
@@ -594,7 +594,7 @@ os.put_string (
 			warning (@"Can't create TTF font to $ttf");
 			critical (@"$(e.message)");
 			error_message = e.message;			
-		}		
+		}
 	}
 	
 	static void write_eot (string ttf, string eot) {

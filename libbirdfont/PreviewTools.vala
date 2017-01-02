@@ -58,11 +58,18 @@ public class PreviewTools : ToolCollection  {
 		IdleSource idle = new IdleSource ();
 
 		idle.set_callback (() => {
+			Font font = BirdFont.get_current_font ();
+			bool has_svg = font.has_svg_glyph ();
+			
+			if (has_svg) {
+				MainWindow.show_message (t_("SVG glyphs can't be viewed in preview."));
+			}
+			
 			if (!Preview.has_html_document ()) {
 				Preview.generate_html_document ();
 			}
 			
-			if (ExportTool.error_message == null) {
+			if (ExportTool.error_message == null && !has_svg) {
 				MainWindow.tabs.select_tab_name ("Preview");
 			}
 			
