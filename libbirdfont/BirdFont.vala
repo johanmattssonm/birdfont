@@ -346,14 +346,17 @@ public class BirdFont {
 	}
 
 	public static File get_preview_directory () {
-		File settings = get_settings_directory ();
-		File backup = get_child(settings, "preview");
-
-		if (!backup.query_exists ()) {
-			DirUtils.create ((!) backup.get_path (), 0755);
+		string? export = BirdFont.get_current_font ().get_export_directory ();
+		
+		if (export == null) {
+			warning ("No export directory is set.");
+			export = "";
 		}
 
-		return backup;
+		File e = File.new_for_path ((!) export);
+		File p = get_child(e, "preview");
+		
+		return p;
 	}
 
 	public static void set_settings_subdir (string? subdir) {

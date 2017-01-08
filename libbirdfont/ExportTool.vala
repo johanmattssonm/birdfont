@@ -24,6 +24,28 @@ public class ExportTool : GLib.Object {
 	public ExportTool (string n) {
 	}
 
+	public static void set_output_directory () {
+#if MAC
+		Font font = BirdFont.get_current_font ();
+		string? path = font.get_export_directory ();
+			
+		FileChooser fc = new FileChooser ();
+		fc.file_selected.connect ((p) => {
+			 path = p;
+		});
+		
+		if (path == null) {
+			File export_path_handle = File.new_for_path (path);
+		
+			if (!can_write (export_path_handle)) {
+				MainWindow.file_chooser (t_("Export"), fc, FileChooser.LOAD | FileChooser.DIRECTORY);
+			}
+		}
+		
+		font.export_directory = path;
+#endif
+	}
+
 	public static string export_selected_paths_to_svg () {
 		return export_current_glyph_to_string (true);		
 	}
@@ -450,22 +472,31 @@ os.put_string (
 
 	public static string get_export_folder () {
 		Font font = BirdFont.get_current_font ();
-		string? sandbox = BirdFont.get_sandbox_directory ();
-
-		if (sandbox != null) {
-			File s = File.new_for_path ((!) sandbox);
-			File f = get_child (s, "Fonts");
-			try {
-				if (!f.query_exists ()) {
-					f.make_directory ();
-				}
-			} catch (GLib.Error e) {
-				warning(e.message);
-			}
-			return (!) get_child (f, font.full_name).get_path ();
-		} else {
-			return (!) font.get_folder ().get_path ();
+		string? d = font.get_export_directory ();
+		
+		if (d == null) {
+			warning ("No export path is not set");
+			return "";
 		}
+		
+		return (!) d;
+	}
+
+	static bool can_write (File folder) {
+		File test = get_child (folder, "text.tmp");
+		bool writable = false;
+		
+		try {
+			writable = FileUtils.set_contents (test.get_path (), "test");
+			
+			if (writable) {
+				FileUtils.remove (test.get_path ());
+			}
+		} catch (GLib.Error e) {
+			writable = false;
+		}
+		
+		return writable;
 	}
 
 	public static File get_export_dir () {
@@ -593,7 +624,8 @@ os.put_string (
 		} catch (Error e) {
 			warning (@"Can't create TTF font to $ttf");
 			critical (@"$(e.message)");
-			error_message = e.message;			
+			error_message = e.message;
+			f.export_directory = null;
 		}		
 	}
 	
