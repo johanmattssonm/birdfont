@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2014 2015 Johan Mattsson
+	Copyright (C) 2014 2015 2016 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -179,7 +179,9 @@ public class OverviewTools : ToolCollection  {
 			IdleSource idle = new IdleSource ();
 			idle.set_callback (() => {
 				self.set_selected (false);
-				BirdFont.get_current_font ().touch ();		
+				BirdFont.get_current_font ().touch ();
+				MainWindow.get_overview ().reset_thumbnails ();	
+				GlyphCanvas.redraw ();
 				return false;
 			});
 			idle.attach (null);

@@ -526,6 +526,10 @@ public class MoveTool : Tool {
 		}
 		
 		convert_objects_to_monochrome_glyph (glyph, embedded_paths);
+		
+		glyph.add_help_lines ();
+		glyph.fix_curve_orientation ();
+		
 		GlyphCanvas.redraw ();
 	}
 
@@ -541,6 +545,9 @@ public class MoveTool : Tool {
 		}
 		
 		convert_objects_to_monochrome_glyph (glyph, embedded_paths);
+		
+		glyph.add_help_lines ();
+		glyph.fix_curve_orientation ();
 	}
 
 	public void convert_objects_to_monochrome_glyph (Glyph glyph, ObjectGroup embedded_paths) {

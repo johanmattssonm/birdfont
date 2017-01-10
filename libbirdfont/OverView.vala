@@ -186,7 +186,7 @@ public class OverView : FontDisplay {
 		FontDisplay.dirty_scrollbar = true;
 	}
 	
-	public GlyphCollection create_new_glyph (unichar character) {
+	public GlyphCollection create_new_glyph (unichar character, bool select_tab = true) {
 		StringBuilder name = new StringBuilder ();
 		TabBar tabs = MainWindow.get_tab_bar ();
 		bool selected;
@@ -204,7 +204,10 @@ public class OverView : FontDisplay {
 			glyph_tab = new GlyphTab (glyph_collection);
 			glyph = glyph_collection.get_current ();
 			glyph.layers.add_layer (new Layer ());
-			tabs.add_tab (glyph_tab, true, glyph_collection);
+			
+			if (select_tab) {
+				tabs.add_tab (glyph_tab, true, glyph_collection);
+			}
 			
 			selected_items.add (glyph_collection);
 			
@@ -518,7 +521,7 @@ public class OverView : FontDisplay {
 		GlyphCanvas.redraw ();
 	}
 	
-	OverViewItem get_selected_item () {
+	public OverViewItem get_selected_item () {
 		if (visible_items.size == 0) {
 			return new OverViewItem ();
 		}
@@ -680,6 +683,16 @@ public class OverView : FontDisplay {
 		
 		get_selected_item ().selected = true;
 		update_scheduled = false;
+	}
+	
+	public void reset_thumbnails () {
+		for (int i = 0; i < visible_items.size; i++) {
+			OverViewItem item = visible_items.get (i);
+			item.clear_cache ();
+			item.draw_glyph_from_font ();	
+		}
+		
+		update_item_list ();
 	}
 	
 	public override void draw (WidgetAllocation allocation, Context cr) {
@@ -1723,6 +1736,7 @@ public class OverView : FontDisplay {
 			}
 			
 			g.insert_glyph (glyph, true);
+			update_path_boundaries (glyph);
 			i++;
 		}
 		
@@ -1730,6 +1744,12 @@ public class OverView : FontDisplay {
 		
 		update_item_list ();
 		GlyphCanvas.redraw ();
+	}
+
+	void update_path_boundaries (Glyph glyph) {
+		foreach (Path p in glyph.get_all_paths ()) {
+			p.update_region_boundaries ();
+		}
 	}
 
 	public override bool needs_modifier () {
@@ -1740,6 +1760,7 @@ public class OverView : FontDisplay {
 		public AlternateSets alternate_sets = new AlternateSets ();
 		public Gee.ArrayList<GlyphCollection> glyphs = new Gee.ArrayList<GlyphCollection> ();
 	}
+
 }
 
 }
