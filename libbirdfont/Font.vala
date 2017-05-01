@@ -192,7 +192,7 @@ public class Font : GLib.Object {
 #if MAC
 		return export_directory;
 #endif
-		return get_path ();
+		return get_folder_path ();
 	}
 
 	public void add_default_characters () {
@@ -335,7 +335,7 @@ public class Font : GLib.Object {
 				return fn;
 			} else {
 				file = File.new_for_path (fn);
-				return (!) file.resolve_relative_path ("").get_path ();
+				return (!) file.resolve_relative_path (".").get_path ();
 			}
 		}
 		
