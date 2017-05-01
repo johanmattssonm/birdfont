@@ -123,7 +123,7 @@ public class Preview : FontDisplay {
 			
 			preview_directory = File.new_for_path ((!) d);
 			
-			warning (@"previwdir $((!) d)");
+			printd (@"previwdir $((!) d)");
 			
 			if (ExportTool.get_export_dir () == null) {
 				ExportTool.set_output_directory ();
@@ -145,11 +145,9 @@ public class Preview : FontDisplay {
 			string name = ExportSettings.get_file_name_mac (font);
 			
 			while ((line = dis.read_line (null)) != null) {
-				warning (@"PRE $line     name $name rep $(TabContent.path_to_uri ((!) f_ttf.get_path ()))");
 				line = ((!) line).replace (@"$name.ttf", @"$(TabContent.path_to_uri ((!) f_ttf.get_path ()))?$rid");
 				line = ((!) line).replace (@"$name.eot", @"$(TabContent.path_to_uri ((!) f_eot.get_path ()))?$rid");
 				line = ((!) line).replace (@"$name.svg", @"$(TabContent.path_to_uri ((!) f_svg.get_path ()))?$rid");
-				warning (@"POST $line");
 				sb.append ((!) line);
 			}
 
