@@ -63,6 +63,7 @@ public class Font : GLib.Object {
 	public Gee.ArrayList<Line> custom_guides = new Gee.ArrayList<Line> ();
 	
 	public string? font_file = null;
+	public string? export_directory = null;
 	
 	bool modified = false;
 	
@@ -197,6 +198,13 @@ public class Font : GLib.Object {
 		}
 		
 		return false;
+	}
+	
+	public string? get_export_directory () {
+#if MAC
+		return export_directory;
+#endif
+		return get_folder_path ();
 	}
 
 	public void add_default_characters () {
@@ -348,7 +356,7 @@ public class Font : GLib.Object {
 				return fn;
 			} else {
 				file = File.new_for_path (fn);
-				return (!) file.resolve_relative_path ("").get_path ();
+				return (!) file.resolve_relative_path (".").get_path ();
 			}
 		}
 		
