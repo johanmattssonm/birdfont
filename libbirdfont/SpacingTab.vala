@@ -250,6 +250,7 @@ public class SpacingTab : KerningDisplay {
 			
 			v = double.parse (submitted_value);
 			text_input_glyph.left_limit -= v - text_input_glyph.get_left_side_bearing ();
+			text_input_glyph.update_other_spacing_classes ();
 		});
 		
 		suppress_input = true;
@@ -294,6 +295,7 @@ public class SpacingTab : KerningDisplay {
 			
 			v = double.parse (submitted_value);
 			text_input_glyph.right_limit += v - text_input_glyph.get_right_side_bearing ();
+			text_input_glyph.update_other_spacing_classes ();
 		});
 		
 		suppress_input = true;
