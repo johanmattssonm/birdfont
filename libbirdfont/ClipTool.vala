@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012 2014 2016 Johan Mattsson
+	Copyright (C) 2012 2014 2016 2017 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -201,19 +201,13 @@ public class ClipTool : Tool {
 				s.append (@"$(gc.get_current ().right_limit)");
 				s.append ("\n");
 
-				foreach (Path path in gc.get_current ().get_visible_paths ()) {
-					s.append ("BF path: ");
-					s.append (BirdFontFile.get_point_data (path));
-					s.append ("\n");
-
-					s.append ("BF stroke: ");
-					s.append (@"$(path.stroke)");
-					s.append ("\n");
-					
-					if (path.line_cap == LineCap.ROUND) {
-						s.append ("BF cap: round\n");
-					} else if (path.line_cap == LineCap.SQUARE) {
-						s.append ("BF cap: square\n");
+				foreach (SvgBird.Object obejct in gc.get_current ().get_visible_objects ()) {
+					if (obejct is Path) {
+						Path path = (Path) object;
+						add_birdfont_path (s, path);
+					} else if (object is EmbeddedSvg) {
+						EmbeddedSvg svg = (EmbeddedSvg) object:
+						add_birdfont_svg (s, svg);
 					}
 				}
 				
@@ -334,6 +328,30 @@ public class ClipTool : Tool {
 		}
 		
 		return s.str;
+	}
+
+	public void add_birdfont_svg (StringBuilder s, EmbeddedSvg svg) {
+		s.append ("BF svg: ");
+		string svg_data = svg.svg_data.replace ("\n", " ");
+		svg_data = svg_data.replace ("\r", "");
+		s.append (XmlParser.encode (svg_data));
+		s.append ("\n");	
+	}
+
+	public void add_birdfont_path (StringBuilder s, Path path) {
+		s.append ("BF path: ");
+		s.append (BirdFontFile.get_point_data (path));
+		s.append ("\n");
+
+		s.append ("BF stroke: ");
+		s.append (@"$(path.stroke)");
+		s.append ("\n");
+		
+		if (path.line_cap == LineCap.ROUND) {
+			s.append ("BF cap: round\n");
+		} else if (path.line_cap == LineCap.SQUARE) {
+			s.append ("BF cap: square\n");
+		}
 	}
 	
 	static bool all_points_selected (Path p) {

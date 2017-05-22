@@ -2208,7 +2208,7 @@ public class Glyph : FontDisplay {
 
 		sd = font.get_spacing ();
 		s = sd.get_all_connections (get_name ());
-
+		
 		foreach (string l in s) {
 			if (l != (!) unichar_code.to_string ()) {
 				g = font.get_glyph_collection (l);
