@@ -1823,6 +1823,7 @@ public class Glyph : FontDisplay {
 		undo_list.remove_at (undo_list.size - 1);
 
 		DrawingTools.update_layers ();
+		
 		PenTool.update_selected_points ();
 
 		clear_active_paths ();
@@ -1875,6 +1876,11 @@ public class Glyph : FontDisplay {
 		clear_active_paths ();
 		foreach (SvgBird.Object p in g.active_paths) {
 			add_active_object (p);
+		}
+
+		PathList pl = LayerUtils.get_all_paths (layers);
+		foreach (Path path in pl.paths) {
+			path.update_region_boundaries ();
 		}
 
 		redraw_area (0, 0, allocation.width, allocation.height);

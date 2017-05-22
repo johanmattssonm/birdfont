@@ -138,6 +138,8 @@ public class CircleTool : Tool {
 			}
 		}
 
+		path.update_region_boundaries ();
+
 		return path;
 	}
 	
@@ -165,6 +167,8 @@ public class CircleTool : Tool {
 			}
 		}
 
+		path.update_region_boundaries ();
+		
 		return path;
 	}
 	

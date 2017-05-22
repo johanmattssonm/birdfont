@@ -188,6 +188,17 @@ public class Font : GLib.Object {
 		font_deleted ();
 	}
 
+<<<<<<< HEAD
+=======
+	public string? get_export_directory () {
+#if MAC
+		return export_directory;
+#else
+		return get_path ();
+#endif
+	}
+	
+>>>>>>> 94139878f182ed4647645f72572bd764efff51f7
 	public bool has_svg_glyph () {
 		for (int glyph_index = 0; glyph_index < glyph_name.length (); glyph_index++) {
 			GlyphCollection gc = glyph_name.nth (glyph_index);
