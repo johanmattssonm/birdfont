@@ -66,10 +66,6 @@ class SvgFontFormatWriter : Object  {
 		put (@"<font id=\"$font_id\" horiz-adv-x=\"$(to_float (space_width))\" >");
 		put (@"<font-face units-per-em=\"$(to_float (units_per_em))\" ascent=\"$(to_float (ascent))\" descent=\"$(to_float (descent))\" />");
 
-		put (@"<font-src>");
-		put (@"\t<font-face-name=\"" + XmlParser.encode ($font_name) + "\" />");
-		put (@"</font-src>");
-
 		// (missing-glyph goes here)
 
 		// regular glyphs 
