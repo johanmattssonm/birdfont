@@ -50,8 +50,6 @@ public class KerningDisplay : FontDisplay {
 	
 	WidgetAllocation allocation = new WidgetAllocation ();
 	
-	TextArea description; 
-	
 	public KerningDisplay () {
 		GlyphSequence w = new GlyphSequence ();
 		rows = new Gee.ArrayList <GlyphSequence> ();

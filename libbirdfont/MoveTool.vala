@@ -564,6 +564,7 @@ public class MoveTool : Tool {
 
 				foreach (Path path in path_list.paths) {
 					path.move (svg.x - glyph.left_limit, svg.y - font.top_limit);
+					path.update_region_boundaries();
 				}				
 			}
 		}

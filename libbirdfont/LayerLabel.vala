@@ -28,8 +28,6 @@ public class LayerLabel : Tool {
 	/** Add margin when layer is moves. */
 	bool active_layer = false;
 	
-	static TextArea? help_text_hide = null;
-	
 	public LayerLabel (Layer layer) {
 		base ();
 

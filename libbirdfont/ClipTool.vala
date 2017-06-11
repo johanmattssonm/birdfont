@@ -13,6 +13,7 @@
 */
 
 using SvgBird;
+using B;
 
 namespace BirdFont {
 
@@ -201,12 +202,12 @@ public class ClipTool : Tool {
 				s.append (@"$(gc.get_current ().right_limit)");
 				s.append ("\n");
 
-				foreach (SvgBird.Object obejct in gc.get_current ().get_visible_objects ()) {
-					if (obejct is Path) {
+				foreach (SvgBird.Object object in gc.get_current ().get_visible_objects ()) {
+					if (object is Path) {
 						Path path = (Path) object;
 						add_birdfont_path (s, path);
 					} else if (object is EmbeddedSvg) {
-						EmbeddedSvg svg = (EmbeddedSvg) object:
+						EmbeddedSvg svg = (EmbeddedSvg) object;
 						add_birdfont_svg (s, svg);
 					}
 				}
@@ -330,7 +331,7 @@ public class ClipTool : Tool {
 		return s.str;
 	}
 
-	public void add_birdfont_svg (StringBuilder s, EmbeddedSvg svg) {
+	public static void add_birdfont_svg (StringBuilder s, EmbeddedSvg svg) {
 		s.append ("BF svg: ");
 		string svg_data = svg.svg_data.replace ("\n", " ");
 		svg_data = svg_data.replace ("\r", "");
@@ -338,7 +339,7 @@ public class ClipTool : Tool {
 		s.append ("\n");	
 	}
 
-	public void add_birdfont_path (StringBuilder s, Path path) {
+	public static void add_birdfont_path (StringBuilder s, Path path) {
 		s.append ("BF path: ");
 		s.append (BirdFontFile.get_point_data (path));
 		s.append ("\n");
