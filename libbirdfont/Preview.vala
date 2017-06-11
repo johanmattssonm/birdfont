@@ -155,6 +155,7 @@ public class Preview : FontDisplay {
 			warning (e.message);
 			warning ("Failed to load html into canvas.");
 		}
+		
 		return sb.str;
 	}
 
