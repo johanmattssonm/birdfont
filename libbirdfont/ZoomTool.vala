@@ -116,8 +116,7 @@ public class ZoomTool : Tool {
 	}
 
 	public void zoom_full_glyph () {
-		store_current_view ();
-		
+		store_current_view ();		
 		MainWindow.get_current_display ().zoom_min ();
 	}
 	

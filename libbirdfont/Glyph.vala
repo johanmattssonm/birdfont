@@ -1330,14 +1330,20 @@ public class Glyph : FontDisplay {
 
 		reset_zoom ();
 
-		foreach (var p in get_visible_paths ()) {
-			p.update_region_boundaries ();
-
-			if (p.points.size > 2) {
-				if (p.xmin < ax) ax = p.xmin;
-				if (p.ymin < ay) ay = p.ymin;
-				if (p.xmax > bx) bx = p.xmax;
-				if (p.ymax > by) by = p.ymax;
+		foreach (SvgBird.Object o in get_visible_objects ()) {
+			bool include = true;
+			
+			if (o is SvgPath) {
+				Path p = ((PathObject) o).path;
+				include = p.points.size > 1;
+				p.update_region_boundaries ();
+			}
+			
+			if (include) {
+				if (o.xmin < ax) ax = o.xmin;
+				if (o.ymin < ay) ay = o.ymin;
+				if (o.xmax > bx) bx = o.xmax;
+				if (o.ymax > by) by = o.ymax;
 			}
 		}
 
@@ -1350,7 +1356,7 @@ public class Glyph : FontDisplay {
 
 		show_zoom_area (iax, iay, ibx, iby); // set this later on button release
 		set_zoom_from_area ();
-		zoom_out (); // add some margin
+		zoom_out (); // add margin
 
 		redraw_area (0, 0, allocation.width, allocation.height);
 		update_zoom_bar ();
