@@ -100,6 +100,7 @@ public class SvgFile : GLib.Object {
 		string aspect_ratio = "";
 		bool slice = true;
 		bool preserve_aspect_ratio = true;
+		string default_unit = "px";
 		
 		if (tag.get_name () != "svg") {
 			warning (@"viewBox is not the svg tag: $(tag.get_name ())");
@@ -108,7 +109,6 @@ public class SvgFile : GLib.Object {
 		
 		foreach (Attribute attribute in tag.get_attributes ()) {
 			if (attribute.get_name () == "viewBox") {
-				print (@"$(attribute.get_name ()): $(attribute.get_content ())\n");
 				parameters = attribute.get_content ();
 			}
 			
@@ -127,9 +127,19 @@ public class SvgFile : GLib.Object {
 				
 				preserve_aspect_ratio = false;
 			}
+			
+			if (attribute.get_name () == "width") {
+				string val = attribute.get_content ();
+				default_unit = get_unit (val);
+			}
+			
+			if (attribute.get_name () == "height") {
+				string val = attribute.get_content ();
+				default_unit = get_unit (val);
+			}
 		}
 		
-		print (@"parameters: $parameters\n");
+
 		arguments = parameters.replace (",", " ");
 		
 		while (arguments.index_of ("  ") > -1) {
@@ -144,10 +154,10 @@ public class SvgFile : GLib.Object {
 			return null;
 		}
 
-		double minx = parse_number (view_box_parameters[0]);
-		double miny = parse_number (view_box_parameters[1]);
-		double width = parse_number (view_box_parameters[2]);
-		double height = parse_number (view_box_parameters[3]);
+		double minx = parse_number (view_box_parameters[0], default_unit);
+		double miny = parse_number (view_box_parameters[1], default_unit);
+		double width = parse_number (view_box_parameters[2], default_unit);
+		double height = parse_number (view_box_parameters[3], default_unit);
 		
 		uint alignment = ViewBox.XMID_YMID;
 		aspect_ratio = aspect_ratio.up ();
@@ -727,7 +737,23 @@ public class SvgFile : GLib.Object {
 		return s;
 	}
     
-	public static double parse_number (string? number_with_unit) {
+    public static string get_unit (string number_with_unit) {
+		if (number_with_unit.has_suffix ("pt")) {
+			return "pt";
+		} else if (number_with_unit.has_suffix ("pc")) {
+			return "pc";
+		} else if (number_with_unit.has_suffix ("mm")) {
+			return "mm";
+		} else if (number_with_unit.has_suffix ("cm")) {
+			return "cm";
+		} else if (number_with_unit.has_suffix ("in")) {
+			return "in";
+		}
+		
+		return "";
+	}
+	
+	public static double parse_number (string? number_with_unit, string default_unit = "") {
 		if (number_with_unit == null) {
 			return 0;
 		}
@@ -735,16 +761,21 @@ public class SvgFile : GLib.Object {
 		string d = (!) number_with_unit;
 		string s = remove_unit (d);
 		double n = parse_double (s);
+		string current_unit = get_unit (d);
 		
-		if (d.has_suffix ("pt")) {
+		if (current_unit == "") {
+			current_unit = default_unit;
+		}
+		
+		if (current_unit == "pt") {
 			n *= 1.25;
-		} else if (d.has_suffix ("pc")) {
+		} else if (current_unit == "pc") {
 			n *= 15;
-		} else if (d.has_suffix ("mm")) {
+		} else if (current_unit == "mm") {
 			n *= 3.543307;
-		} else if (d.has_suffix ("cm")) {
+		} else if (current_unit == "cm") {
 			n *= 35.43307;
-		} else if (d.has_suffix ("in")) {
+		} else if (current_unit == "in") {
 			n *= 90;
 		}
 		
