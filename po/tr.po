@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-22 13:17+0200\n"
-"PO-Revision-Date: 2016-07-30 09:45+0000\n"
+"POT-Creation-Date: 2017-06-14 17:09+0200\n"
+"PO-Revision-Date: 2017-06-11 11:33+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: tr\n"
@@ -16,16 +16,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1469871912.000000\n"
+"X-POOTLE-MTIME: 1497180838.000000\n"
 
 #: libbirdfont/Argument.vala:277
 msgid "Usage"
-msgstr "Kullanım"
+msgstr "haber"
 
 #: libbirdfont/Argument.vala:279 libbirdfont/ExportUtils.vala:19
 #: birdfont-autotrace/AutoTrace.vala:68
 msgid "FILE"
-msgstr "DOSYA"
+msgstr "haber"
 
 #: libbirdfont/Argument.vala:279 libbirdfont/ExportUtils.vala:19
 #: birdfont-autotrace/AutoTrace.vala:68
@@ -195,18 +195,18 @@ msgid "Thai"
 msgstr "Tay Dili"
 
 #. / All lower case letters in alphabetic order separated by space. Letters with diacritical marks should be included.
-#: libbirdfont/DefaultCharactersSet.vala:118 libbirdfont/ExportTool.vala:420
+#: libbirdfont/DefaultCharactersSet.vala:118 libbirdfont/ExportTool.vala:440
 msgid "a b c d e f g h i j k l m n o p q r s t u v w x y z"
 msgstr ""
 
 #. / All upper case letters in alphabetic order separated by space. Letters with diacritical marks should be included.
-#: libbirdfont/DefaultCharactersSet.vala:121 libbirdfont/ExportTool.vala:421
+#: libbirdfont/DefaultCharactersSet.vala:121 libbirdfont/ExportTool.vala:441
 msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:66
 #: libbirdfont/DescriptionDisplay.vala:277 libbirdfont/ExportSettings.vala:133
-#: libbirdfont/Menu.vala:479 libbirdfont/TableLayout.vala:203
+#: libbirdfont/Menu.vala:489 libbirdfont/TableLayout.vala:203
 msgid "Name and Description"
 msgstr "ad ve açıklama"
 
@@ -215,7 +215,7 @@ msgid "PostScript Name"
 msgstr "PostScript dosyası"
 
 #: libbirdfont/DescriptionDisplay.vala:80 libbirdfont/MenuTab.vala:103
-#: libbirdfont/MenuTab.vala:695
+#: libbirdfont/MenuTab.vala:702
 msgid "Name"
 msgstr "İsim"
 
@@ -245,7 +245,7 @@ msgid "Unique Identifier"
 msgstr "Özgün Tanımlayıcı"
 
 #: libbirdfont/DescriptionDisplay.vala:150 libbirdfont/ImportUtils.vala:156
-#: libbirdfont/Menu.vala:486 libbirdfont/Menu.vala:488
+#: libbirdfont/Menu.vala:496 libbirdfont/Menu.vala:498
 #: libbirdfont/VersionList.vala:268
 msgid "Version"
 msgstr "Sürüm"
@@ -566,17 +566,17 @@ msgstr ""
 msgid "Formats"
 msgstr ""
 
-#: libbirdfont/ExportSettings.vala:139
+#: libbirdfont/ExportSettings.vala:139 libbirdfont/ExportTool.vala:40
 msgid "Export"
 msgstr ""
 
-#: libbirdfont/ExportTool.vala:209 libbirdfont/Menu.vala:64
-#: libbirdfont/MenuTab.vala:354 libbirdfont/SaveCallback.vala:68
+#: libbirdfont/ExportTool.vala:233 libbirdfont/Menu.vala:64
+#: libbirdfont/MenuTab.vala:359 libbirdfont/SaveCallback.vala:68
 #: libbirdfont/SaveDialog.vala:38 libbirdfont/SaveDialogListener.vala:29
 msgid "Save"
 msgstr "Kaydet"
 
-#: libbirdfont/ExportTool.vala:419
+#: libbirdfont/ExportTool.vala:439
 msgid "Alphabet"
 msgstr ""
 
@@ -629,7 +629,7 @@ msgstr ""
 msgid "Save font"
 msgstr ""
 
-#: libbirdfont/FileTools.vala:49 libbirdfont/Menu.vala:472
+#: libbirdfont/FileTools.vala:49 libbirdfont/Menu.vala:482
 #: libbirdfont/SettingsDisplay.vala:225 libbirdfont/SettingsTab.vala:33
 #: libbirdfont/SettingsTab.vala:180
 msgid "Settings"
@@ -773,7 +773,7 @@ msgstr ""
 msgid "Insert"
 msgstr ""
 
-#: libbirdfont/KerningDisplay.vala:931 libbirdfont/MainWindow.vala:231
+#: libbirdfont/KerningDisplay.vala:931 libbirdfont/MainWindow.vala:238
 #: libbirdfont/MessageDialog.vala:37 libbirdfont/SpinButton.vala:208
 msgid "Close"
 msgstr ""
@@ -794,7 +794,7 @@ msgstr ""
 #: libbirdfont/Ligatures.vala:110 libbirdfont/Ligatures.vala:133
 #: libbirdfont/Ligatures.vala:156 libbirdfont/Ligatures.vala:188
 #: libbirdfont/SpacingClass.vala:50 libbirdfont/SpacingTab.vala:232
-#: libbirdfont/SpacingTab.vala:276 libbirdfont/SpinButton.vala:208
+#: libbirdfont/SpacingTab.vala:277 libbirdfont/SpinButton.vala:208
 #: libbirdfont/Theme.vala:685
 msgid "Set"
 msgstr ""
@@ -906,7 +906,7 @@ msgid "Contextual Substitutions"
 msgstr ""
 
 #: libbirdfont/LigatureList.vala:126 libbirdfont/LigatureList.vala:140
-#: libbirdfont/Menu.vala:427
+#: libbirdfont/Menu.vala:437
 msgid "Ligatures"
 msgstr ""
 
@@ -950,7 +950,7 @@ msgstr ""
 msgid "You need an older version of Birdfont to open it."
 msgstr ""
 
-#: libbirdfont/MainWindow.vala:231
+#: libbirdfont/MainWindow.vala:238
 msgid "Glyph sequence"
 msgstr ""
 
@@ -1146,35 +1146,35 @@ msgstr ""
 msgid "Select Next Kerning Pair"
 msgstr ""
 
-#: libbirdfont/Menu.vala:402
+#: libbirdfont/Menu.vala:407
 msgid "Select Previous Kerning Pair"
 msgstr ""
 
-#: libbirdfont/Menu.vala:411
+#: libbirdfont/Menu.vala:421
 msgid "Load Kerning Strings"
 msgstr ""
 
-#: libbirdfont/Menu.vala:418
+#: libbirdfont/Menu.vala:428
 msgid "Reload Kerning Strings"
 msgstr ""
 
-#: libbirdfont/Menu.vala:433
+#: libbirdfont/Menu.vala:443
 msgid "Show Ligatures"
 msgstr ""
 
-#: libbirdfont/Menu.vala:440
+#: libbirdfont/Menu.vala:450
 msgid "Add Ligature"
 msgstr ""
 
-#: libbirdfont/Menu.vala:449
+#: libbirdfont/Menu.vala:459
 msgid "Git"
 msgstr ""
 
-#: libbirdfont/Menu.vala:455
+#: libbirdfont/Menu.vala:465
 msgid "Save As .bfp"
 msgstr ""
 
-#: libbirdfont/Menu.vala:464 libbirdfont/OverView.vala:495
+#: libbirdfont/Menu.vala:474 libbirdfont/OverView.vala:495
 msgid "Overview"
 msgstr "Gözden Geçirme"
 
@@ -1211,7 +1211,12 @@ msgstr ""
 msgid "Menu"
 msgstr "Menü"
 
-#: libbirdfont/MenuTab.vala:695
+#: libbirdfont/MenuTab.vala:216
+#, fuzzy
+msgid "Can't create TTF font."
+msgstr "Yeni bir yazı tipi oluştur"
+
+#: libbirdfont/MenuTab.vala:702
 msgid "Add ligature"
 msgstr ""
 
@@ -1453,7 +1458,7 @@ msgstr ""
 msgid "Left"
 msgstr ""
 
-#: libbirdfont/SpacingTab.vala:276
+#: libbirdfont/SpacingTab.vala:277
 msgid "Right"
 msgstr ""
 
@@ -1878,9 +1883,6 @@ msgstr "Yazılıyor"
 
 #~ msgid "Update name & description"
 #~ msgstr "İsim & açıklamayı güncelle"
-
-#~ msgid "Create a new font"
-#~ msgstr "Yeni bir yazı tipi oluştur"
 
 #~ msgid "Preferences"
 #~ msgstr "Tercihler"

@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-22 13:17+0200\n"
-"PO-Revision-Date: 2016-04-14 09:55+0000\n"
+"POT-Creation-Date: 2017-06-14 17:09+0200\n"
+"PO-Revision-Date: 2016-10-22 19:11+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: Czech <translation-team-cs@lists.sourceforge.net>\n"
 "Language: cs\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1460627703.000000\n"
+"X-POOTLE-MTIME: 1477163484.000000\n"
 
 #: libbirdfont/Argument.vala:277
 msgid "Usage"
@@ -190,14 +190,14 @@ msgid "Thai"
 msgstr "Thajština"
 
 #. / All lower case letters in alphabetic order separated by space. Letters with diacritical marks should be included.
-#: libbirdfont/DefaultCharactersSet.vala:118 libbirdfont/ExportTool.vala:420
+#: libbirdfont/DefaultCharactersSet.vala:118 libbirdfont/ExportTool.vala:440
 msgid "a b c d e f g h i j k l m n o p q r s t u v w x y z"
 msgstr ""
 "a á b c č d ď e é ě f g h i í j k l m n ň o ó p q r ř s š t ť u ú ů v w x y "
 "ý z ž"
 
 #. / All upper case letters in alphabetic order separated by space. Letters with diacritical marks should be included.
-#: libbirdfont/DefaultCharactersSet.vala:121 libbirdfont/ExportTool.vala:421
+#: libbirdfont/DefaultCharactersSet.vala:121 libbirdfont/ExportTool.vala:441
 msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 msgstr ""
 "A Á B C Č D Ď E É Ě F G H I Í J K L M N Ň O Ó P Q R Ř S Š T Ť U Ú Ů V W X Y "
@@ -205,7 +205,7 @@ msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:66
 #: libbirdfont/DescriptionDisplay.vala:277 libbirdfont/ExportSettings.vala:133
-#: libbirdfont/Menu.vala:479 libbirdfont/TableLayout.vala:203
+#: libbirdfont/Menu.vala:489 libbirdfont/TableLayout.vala:203
 msgid "Name and Description"
 msgstr "Název a popis"
 
@@ -214,7 +214,7 @@ msgid "PostScript Name"
 msgstr "Název PostScript"
 
 #: libbirdfont/DescriptionDisplay.vala:80 libbirdfont/MenuTab.vala:103
-#: libbirdfont/MenuTab.vala:695
+#: libbirdfont/MenuTab.vala:702
 msgid "Name"
 msgstr "Název"
 
@@ -243,7 +243,7 @@ msgid "Unique Identifier"
 msgstr "Jedinečný identifikátor"
 
 #: libbirdfont/DescriptionDisplay.vala:150 libbirdfont/ImportUtils.vala:156
-#: libbirdfont/Menu.vala:486 libbirdfont/Menu.vala:488
+#: libbirdfont/Menu.vala:496 libbirdfont/Menu.vala:498
 #: libbirdfont/VersionList.vala:268
 msgid "Version"
 msgstr "Verze"
@@ -561,17 +561,17 @@ msgstr "Složka"
 msgid "Formats"
 msgstr "Formáty"
 
-#: libbirdfont/ExportSettings.vala:139
+#: libbirdfont/ExportSettings.vala:139 libbirdfont/ExportTool.vala:40
 msgid "Export"
 msgstr "Exportovat"
 
-#: libbirdfont/ExportTool.vala:209 libbirdfont/Menu.vala:64
-#: libbirdfont/MenuTab.vala:354 libbirdfont/SaveCallback.vala:68
+#: libbirdfont/ExportTool.vala:233 libbirdfont/Menu.vala:64
+#: libbirdfont/MenuTab.vala:359 libbirdfont/SaveCallback.vala:68
 #: libbirdfont/SaveDialog.vala:38 libbirdfont/SaveDialogListener.vala:29
 msgid "Save"
 msgstr "Uložit"
 
-#: libbirdfont/ExportTool.vala:419
+#: libbirdfont/ExportTool.vala:439
 msgid "Alphabet"
 msgstr "Abeceda"
 
@@ -610,7 +610,7 @@ msgstr "Složky"
 
 #: libbirdfont/FileTools.vala:31
 msgid "New font"
-msgstr "Nova fonte"
+msgstr "Nový font"
 
 #: libbirdfont/FileTools.vala:37
 msgid "Open font"
@@ -620,7 +620,7 @@ msgstr "Otevřít písmo"
 msgid "Save font"
 msgstr "Uložit písmo"
 
-#: libbirdfont/FileTools.vala:49 libbirdfont/Menu.vala:472
+#: libbirdfont/FileTools.vala:49 libbirdfont/Menu.vala:482
 #: libbirdfont/SettingsDisplay.vala:225 libbirdfont/SettingsTab.vala:33
 #: libbirdfont/SettingsTab.vala:180
 msgid "Settings"
@@ -767,7 +767,7 @@ msgstr "Unicode"
 msgid "Insert"
 msgstr "Vložit"
 
-#: libbirdfont/KerningDisplay.vala:931 libbirdfont/MainWindow.vala:231
+#: libbirdfont/KerningDisplay.vala:931 libbirdfont/MainWindow.vala:238
 #: libbirdfont/MessageDialog.vala:37 libbirdfont/SpinButton.vala:208
 msgid "Close"
 msgstr "Zavřít"
@@ -788,7 +788,7 @@ msgstr "Třída podřezávání"
 #: libbirdfont/Ligatures.vala:110 libbirdfont/Ligatures.vala:133
 #: libbirdfont/Ligatures.vala:156 libbirdfont/Ligatures.vala:188
 #: libbirdfont/SpacingClass.vala:50 libbirdfont/SpacingTab.vala:232
-#: libbirdfont/SpacingTab.vala:276 libbirdfont/SpinButton.vala:208
+#: libbirdfont/SpacingTab.vala:277 libbirdfont/SpinButton.vala:208
 #: libbirdfont/Theme.vala:685
 msgid "Set"
 msgstr "Nastavit"
@@ -899,7 +899,7 @@ msgid "Contextual Substitutions"
 msgstr "Náhrady vyplývající ze souvislostí"
 
 #: libbirdfont/LigatureList.vala:126 libbirdfont/LigatureList.vala:140
-#: libbirdfont/Menu.vala:427
+#: libbirdfont/Menu.vala:437
 msgid "Ligatures"
 msgstr "Slitky"
 
@@ -943,7 +943,7 @@ msgstr "Toto písmo bylo uděláno ve staré verzi Birdfontu."
 msgid "You need an older version of Birdfont to open it."
 msgstr "K jeho otevření potřebujete starší verzi Birdfontu."
 
-#: libbirdfont/MainWindow.vala:231
+#: libbirdfont/MainWindow.vala:238
 msgid "Glyph sequence"
 msgstr "Pořadí znaků"
 
@@ -1136,35 +1136,35 @@ msgstr "Třídy prostrkávání (rozestupů)"
 msgid "Select Next Kerning Pair"
 msgstr "Vybrat další dvojici podřezávání (vyrovnání)"
 
-#: libbirdfont/Menu.vala:402
+#: libbirdfont/Menu.vala:407
 msgid "Select Previous Kerning Pair"
 msgstr "Vybrat předchozí dvojici podřezávání (vyrovnání)"
 
-#: libbirdfont/Menu.vala:411
+#: libbirdfont/Menu.vala:421
 msgid "Load Kerning Strings"
 msgstr "Nahrát podřezávací řetězce"
 
-#: libbirdfont/Menu.vala:418
+#: libbirdfont/Menu.vala:428
 msgid "Reload Kerning Strings"
 msgstr "Nahrát podřezávací řetězce znovu"
 
-#: libbirdfont/Menu.vala:433
+#: libbirdfont/Menu.vala:443
 msgid "Show Ligatures"
 msgstr "Ukázat slitky"
 
-#: libbirdfont/Menu.vala:440
+#: libbirdfont/Menu.vala:450
 msgid "Add Ligature"
 msgstr "Přidat slitek"
 
-#: libbirdfont/Menu.vala:449
+#: libbirdfont/Menu.vala:459
 msgid "Git"
 msgstr "Git"
 
-#: libbirdfont/Menu.vala:455
+#: libbirdfont/Menu.vala:465
 msgid "Save As .bfp"
 msgstr "Uložit jako BFP"
 
-#: libbirdfont/Menu.vala:464 libbirdfont/OverView.vala:495
+#: libbirdfont/Menu.vala:474 libbirdfont/OverView.vala:495
 msgid "Overview"
 msgstr "Přehled"
 
@@ -1201,7 +1201,12 @@ msgstr "Před vyvedením musíte písmo uložit."
 msgid "Menu"
 msgstr "Nabídka"
 
-#: libbirdfont/MenuTab.vala:695
+#: libbirdfont/MenuTab.vala:216
+#, fuzzy
+msgid "Can't create TTF font."
+msgstr "Criar uma nova fonte"
+
+#: libbirdfont/MenuTab.vala:702
 msgid "Add ligature"
 msgstr "Přidat slitek"
 
@@ -1442,7 +1447,7 @@ msgstr "Rozestupy"
 msgid "Left"
 msgstr "Vlevo"
 
-#: libbirdfont/SpacingTab.vala:276
+#: libbirdfont/SpacingTab.vala:277
 msgid "Right"
 msgstr "Vpravo"
 
@@ -2226,9 +2231,6 @@ msgstr "Zapisuje se"
 
 #~ msgid "Update name & description"
 #~ msgstr "Atualizar nome e descrição"
-
-#~ msgid "Create a new font"
-#~ msgstr "Criar uma nova fonte"
 
 #~ msgid "Add name and description to this font."
 #~ msgstr "Adicionar nome e descrição para esta fonte."
