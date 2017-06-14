@@ -142,7 +142,7 @@ public class Preview : FontDisplay {
 				warning ("SVG file does not exist.");
 			}
 
-			string name = ExportSettings.get_file_name_mac (font);
+			string name = ExportSettings.get_file_name (font);
 			
 			while ((line = dis.read_line (null)) != null) {
 				line = ((!) line).replace (@"$name.ttf", @"$(TabContent.path_to_uri ((!) f_ttf.get_path ()))?$rid");
