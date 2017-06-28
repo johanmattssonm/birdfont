@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-22 13:17+0200\n"
-"PO-Revision-Date: 2016-04-02 10:31+0000\n"
+"POT-Creation-Date: 2017-06-14 17:09+0200\n"
+"PO-Revision-Date: 2017-03-25 18:02+0000\n"
 "Last-Translator: Anonymous Pootle User\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: he\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1459593065.000000\n"
+"X-POOTLE-MTIME: 1490464924.000000\n"
 
 #: libbirdfont/Argument.vala:277
 msgid "Usage"
@@ -34,40 +34,40 @@ msgstr "אפשרות"
 
 #: libbirdfont/Argument.vala:281
 msgid "enable Android customizations"
-msgstr "הפעיל התאמות לאנדרויד"
+msgstr "הפעל התאמות לאנדרויד"
 
 #: libbirdfont/Argument.vala:282
 msgid "show coordinate in glyph view"
-msgstr "להציג נקודות ציון בתצוגת גליף"
+msgstr "הצג נקודת ציון בתצוגת גילוף"
 
 #: libbirdfont/Argument.vala:283
 msgid "exit if a test case fails"
-msgstr "לצאת אם בדיקה נכשלה"
+msgstr "צא אם הבדיקה נכשלת"
 
 #: libbirdfont/Argument.vala:284
+#, fuzzy
 msgid "treat warnings as fatal"
-msgstr "להתייחס אל אזהרות כאל שגיאות סופניות"
+msgstr "התייחס אל אזהרות כאל שגיאות סופניות"
 
 #: libbirdfont/Argument.vala:285
 msgid "show this message"
-msgstr "להציג את ההודעה הזאת"
+msgstr "הצג הודעה זו"
 
 #: libbirdfont/Argument.vala:286
 msgid "write a log file"
-msgstr "כתיבת קובץ לוג"
+msgstr "כתוב קובץ log"
 
 #: libbirdfont/Argument.vala:287
 msgid "enable Machintosh customizations"
-msgstr "להפעיל התאמות למקינטוש"
+msgstr "הפעל התאמות למקינטוש"
 
 #: libbirdfont/Argument.vala:288
-#, fuzzy
 msgid "enable Windows customizations"
-msgstr "הפעיל התאמות לווינדוס"
+msgstr "הפעל התאמות לווינדוס"
 
 #: libbirdfont/Argument.vala:289
 msgid "don't translate"
-msgstr "לא לתרגם"
+msgstr "אל תתרגם"
 
 #: libbirdfont/Argument.vala:290
 msgid "sleep between each command in test suite"
@@ -190,34 +190,35 @@ msgstr ""
 msgid "Thai"
 msgstr ""
 
+# לא לתרגם
 #. / All lower case letters in alphabetic order separated by space. Letters with diacritical marks should be included.
-#: libbirdfont/DefaultCharactersSet.vala:118 libbirdfont/ExportTool.vala:420
+#: libbirdfont/DefaultCharactersSet.vala:118 libbirdfont/ExportTool.vala:440
 msgid "a b c d e f g h i j k l m n o p q r s t u v w x y z"
 msgstr ""
 
 #. / All upper case letters in alphabetic order separated by space. Letters with diacritical marks should be included.
-#: libbirdfont/DefaultCharactersSet.vala:121 libbirdfont/ExportTool.vala:421
+#: libbirdfont/DefaultCharactersSet.vala:121 libbirdfont/ExportTool.vala:441
 msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:66
 #: libbirdfont/DescriptionDisplay.vala:277 libbirdfont/ExportSettings.vala:133
-#: libbirdfont/Menu.vala:479 libbirdfont/TableLayout.vala:203
+#: libbirdfont/Menu.vala:489 libbirdfont/TableLayout.vala:203
 msgid "Name and Description"
 msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:70 libbirdfont/MenuTab.vala:98
 msgid "PostScript Name"
-msgstr ""
+msgstr "שם PostScript"
 
 #: libbirdfont/DescriptionDisplay.vala:80 libbirdfont/MenuTab.vala:103
-#: libbirdfont/MenuTab.vala:695
+#: libbirdfont/MenuTab.vala:702
 msgid "Name"
-msgstr ""
+msgstr "שם"
 
 #: libbirdfont/DescriptionDisplay.vala:90 libbirdfont/MenuTab.vala:108
 msgid "Style"
-msgstr ""
+msgstr "סגנון"
 
 #: libbirdfont/DescriptionDisplay.vala:100
 msgid "Bold"
@@ -229,7 +230,7 @@ msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:119
 msgid "Weight"
-msgstr ""
+msgstr "משקל"
 
 #: libbirdfont/DescriptionDisplay.vala:129 libbirdfont/MenuTab.vala:113
 msgid "Full Name (Name and Style)"
@@ -240,10 +241,10 @@ msgid "Unique Identifier"
 msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:150 libbirdfont/ImportUtils.vala:156
-#: libbirdfont/Menu.vala:486 libbirdfont/Menu.vala:488
+#: libbirdfont/Menu.vala:496 libbirdfont/Menu.vala:498
 #: libbirdfont/VersionList.vala:268
 msgid "Version"
-msgstr ""
+msgstr "גרסה"
 
 #: libbirdfont/DescriptionDisplay.vala:160
 msgid "Description"
@@ -267,7 +268,7 @@ msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:219
 msgid "Manufacturer"
-msgstr ""
+msgstr "יצרן"
 
 #: libbirdfont/DescriptionDisplay.vala:230
 msgid "Designer"
@@ -303,7 +304,7 @@ msgstr ""
 
 #: libbirdfont/DrawingTools.vala:126 libbirdfont/Menu.vala:247
 msgid "Layers"
-msgstr ""
+msgstr "שכבות"
 
 #: libbirdfont/DrawingTools.vala:127
 msgid "Stroke"
@@ -379,15 +380,15 @@ msgstr ""
 
 #: libbirdfont/DrawingTools.vala:368
 msgid "Rotation"
-msgstr ""
+msgstr "סיבוב"
 
 #: libbirdfont/DrawingTools.vala:407
 msgid "Width"
-msgstr ""
+msgstr "רוחב"
 
 #: libbirdfont/DrawingTools.vala:432
 msgid "Height"
-msgstr ""
+msgstr "גובה"
 
 #: libbirdfont/DrawingTools.vala:475
 msgid "Tie curve handles for the selected edit point"
@@ -558,17 +559,17 @@ msgstr ""
 msgid "Formats"
 msgstr ""
 
-#: libbirdfont/ExportSettings.vala:139
+#: libbirdfont/ExportSettings.vala:139 libbirdfont/ExportTool.vala:40
 msgid "Export"
 msgstr ""
 
-#: libbirdfont/ExportTool.vala:209 libbirdfont/Menu.vala:64
-#: libbirdfont/MenuTab.vala:354 libbirdfont/SaveCallback.vala:68
+#: libbirdfont/ExportTool.vala:233 libbirdfont/Menu.vala:64
+#: libbirdfont/MenuTab.vala:359 libbirdfont/SaveCallback.vala:68
 #: libbirdfont/SaveDialog.vala:38 libbirdfont/SaveDialogListener.vala:29
 msgid "Save"
 msgstr ""
 
-#: libbirdfont/ExportTool.vala:419
+#: libbirdfont/ExportTool.vala:439
 msgid "Alphabet"
 msgstr ""
 
@@ -586,8 +587,9 @@ msgid "write files to this directory"
 msgstr ""
 
 #: libbirdfont/ExportUtils.vala:22
+#, fuzzy
 msgid "write svg file"
-msgstr ""
+msgstr "כתיבת קובץ לוג"
 
 #: libbirdfont/ExportUtils.vala:23
 msgid "write ttf and eot file"
@@ -617,7 +619,7 @@ msgstr ""
 msgid "Save font"
 msgstr ""
 
-#: libbirdfont/FileTools.vala:49 libbirdfont/Menu.vala:472
+#: libbirdfont/FileTools.vala:49 libbirdfont/Menu.vala:482
 #: libbirdfont/SettingsDisplay.vala:225 libbirdfont/SettingsTab.vala:33
 #: libbirdfont/SettingsTab.vala:180
 msgid "Settings"
@@ -761,7 +763,7 @@ msgstr ""
 msgid "Insert"
 msgstr ""
 
-#: libbirdfont/KerningDisplay.vala:931 libbirdfont/MainWindow.vala:231
+#: libbirdfont/KerningDisplay.vala:931 libbirdfont/MainWindow.vala:238
 #: libbirdfont/MessageDialog.vala:37 libbirdfont/SpinButton.vala:208
 msgid "Close"
 msgstr ""
@@ -782,7 +784,7 @@ msgstr ""
 #: libbirdfont/Ligatures.vala:110 libbirdfont/Ligatures.vala:133
 #: libbirdfont/Ligatures.vala:156 libbirdfont/Ligatures.vala:188
 #: libbirdfont/SpacingClass.vala:50 libbirdfont/SpacingTab.vala:232
-#: libbirdfont/SpacingTab.vala:276 libbirdfont/SpinButton.vala:208
+#: libbirdfont/SpacingTab.vala:277 libbirdfont/SpinButton.vala:208
 #: libbirdfont/Theme.vala:685
 msgid "Set"
 msgstr ""
@@ -893,7 +895,7 @@ msgid "Contextual Substitutions"
 msgstr ""
 
 #: libbirdfont/LigatureList.vala:126 libbirdfont/LigatureList.vala:140
-#: libbirdfont/Menu.vala:427
+#: libbirdfont/Menu.vala:437
 msgid "Ligatures"
 msgstr ""
 
@@ -937,7 +939,7 @@ msgstr ""
 msgid "You need an older version of Birdfont to open it."
 msgstr ""
 
-#: libbirdfont/MainWindow.vala:231
+#: libbirdfont/MainWindow.vala:238
 msgid "Glyph sequence"
 msgstr ""
 
@@ -1131,35 +1133,35 @@ msgstr ""
 msgid "Select Next Kerning Pair"
 msgstr ""
 
-#: libbirdfont/Menu.vala:402
+#: libbirdfont/Menu.vala:407
 msgid "Select Previous Kerning Pair"
 msgstr ""
 
-#: libbirdfont/Menu.vala:411
+#: libbirdfont/Menu.vala:421
 msgid "Load Kerning Strings"
 msgstr ""
 
-#: libbirdfont/Menu.vala:418
+#: libbirdfont/Menu.vala:428
 msgid "Reload Kerning Strings"
 msgstr ""
 
-#: libbirdfont/Menu.vala:433
+#: libbirdfont/Menu.vala:443
 msgid "Show Ligatures"
 msgstr ""
 
-#: libbirdfont/Menu.vala:440
+#: libbirdfont/Menu.vala:450
 msgid "Add Ligature"
 msgstr ""
 
-#: libbirdfont/Menu.vala:449
+#: libbirdfont/Menu.vala:459
 msgid "Git"
 msgstr ""
 
-#: libbirdfont/Menu.vala:455
+#: libbirdfont/Menu.vala:465
 msgid "Save As .bfp"
 msgstr ""
 
-#: libbirdfont/Menu.vala:464 libbirdfont/OverView.vala:495
+#: libbirdfont/Menu.vala:474 libbirdfont/OverView.vala:495
 msgid "Overview"
 msgstr ""
 
@@ -1196,7 +1198,11 @@ msgstr ""
 msgid "Menu"
 msgstr ""
 
-#: libbirdfont/MenuTab.vala:695
+#: libbirdfont/MenuTab.vala:216
+msgid "Can't create TTF font."
+msgstr ""
+
+#: libbirdfont/MenuTab.vala:702
 msgid "Add ligature"
 msgstr ""
 
@@ -1409,7 +1415,7 @@ msgstr ""
 #: libbirdfont/SettingsTab.vala:163
 #, fuzzy
 msgid "Translate"
-msgstr "לא לתרגם"
+msgstr "אל תתרגם"
 
 #: libbirdfont/SettingsTab.vala:170
 msgid "Color theme"
@@ -1435,7 +1441,7 @@ msgstr ""
 msgid "Left"
 msgstr ""
 
-#: libbirdfont/SpacingTab.vala:276
+#: libbirdfont/SpacingTab.vala:277
 msgid "Right"
 msgstr ""
 
