@@ -20,15 +20,15 @@ public class KernList : GLib.Object {
 	public delegate void KernIterator (Kern k);
 	public delegate void PairFormat1Iterator (PairFormat1 k);
 
-	GlyfTable glyf_table;
-	uint num_pairs;
+	public GlyfTable glyf_table;
+	public uint num_pairs;
 	
 	public KernList (GlyfTable glyf_table) {
 		this.glyf_table = glyf_table;
 		num_pairs = 0;
 		pairs = new Gee.ArrayList<PairFormat1> (); 
 	}
-	
+		
 	/** @return number of pairs. */
 	public uint fetch_all_pairs () {
 		PairFormat1 current_pairs = new PairFormat1 ();
@@ -50,7 +50,7 @@ public class KernList : GLib.Object {
 			if (unlikely (kerning_pair.character.get_name () == "")) {
 				warning ("No name for glyph");
 			}
-
+			
 			current_pairs = new PairFormat1 ();
 			gid_left = (uint16) glyf_table.get_gid (kerning_pair.character.get_name ());
 			current_pairs.left = gid_left;
@@ -122,6 +122,18 @@ public class KernList : GLib.Object {
 			iter (p);
 			
 			i++;
+		}
+	}
+	
+	public void all_single_kern (PairFormat1Iterator iter) {
+		foreach (PairFormat1 p in pairs) {
+			foreach (Kern k in p.pairs) {
+				PairFormat1 single = new PairFormat1 ();
+				single.left = p.left;
+				single.pairs.add (k);
+				
+				iter (single);
+			}
 		}
 	}
 }

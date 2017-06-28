@@ -21,8 +21,7 @@ namespace BirdFont {
 public class KerningPair : GLib.Object {
 	public Glyph character;
 	public Gee.ArrayList<Kerning> kerning;
-
-	Gee.ArrayList<Glyph> right;
+	public Gee.ArrayList<Glyph> right;
 	
 	public KerningPair (Glyph left) {
 		character = left;
