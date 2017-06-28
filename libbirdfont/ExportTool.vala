@@ -468,10 +468,10 @@ os.put_string (
 		bool writable = false;
 		
 		try {
-			writable = FileUtils.set_contents (test.get_path (), "test");
+			writable = FileUtils.set_contents ((!) test.get_path (), "test");
 			
 			if (writable) {
-				FileUtils.remove (test.get_path ());
+				FileUtils.remove ((!) test.get_path ());
 			}
 		} catch (GLib.Error e) {
 			writable = false;

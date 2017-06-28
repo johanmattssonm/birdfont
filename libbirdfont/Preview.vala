@@ -125,7 +125,7 @@ public class Preview : FontDisplay {
 			
 			printd (@"previwdir $((!) d)");
 			
-			if (ExportTool.get_export_dir () == null) {
+			if (ExportTool.get_export_folder () == "") {
 				ExportTool.set_output_directory ();
 			}
 
