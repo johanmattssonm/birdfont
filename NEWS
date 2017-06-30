@@ -1,3 +1,9 @@
+birdfont (2.19.0) stable;
+
+  * Huge amount of kerning pairs supported in the extended GPOS table
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  mån 10 okt 2016 14:38:53 CEST
+
 birdfont (2.16.12) stable;
 
   * Platform independet scrollbar
