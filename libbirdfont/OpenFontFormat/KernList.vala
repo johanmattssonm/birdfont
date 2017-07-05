@@ -51,20 +51,36 @@ public class KernList : GLib.Object {
 				warning ("No name for glyph");
 			}
 			
+			
+			string glyph_name = kerning_pair.character.get_name ();
 			current_pairs = new PairFormat1 ();
-			gid_left = (uint16) glyf_table.get_gid (kerning_pair.character.get_name ());
+			gid_left = (uint16) glyf_table.get_gid (glyph_name);
+
+			if (unlikely (gid_left == -1)) {
+				warning("Ignoring kerning for missing character: $(glyph_name)");			
+				return;
+			}		
+			
 			current_pairs.left = gid_left;
 			pairs.add (current_pairs);
 			
 			if (unlikely (kerning_pair.kerning.size == 0)) {
-				warning (@"No kerning pairs for character: $((kerning_pair.character.get_name ()))");
+				warning (@"No kerning pairs for character (left): $(glyph_name)");
 			}
 			
 			i = 0;
 			num_pairs += kerning_pair.kerning.size;
 			foreach (Kerning k in kerning_pair.kerning) {
-				gid_right = (uint16) glyf_table.get_gid (k.get_glyph ().get_name ());
-				current_pairs.pairs.add (new Kern (gid_left, gid_right, (int16) Math.rint (k.val * HeadTable.UNITS)));
+				string right_name = k.get_glyph ().get_name ();
+				gid_right = (uint16) glyf_table.get_gid (right_name);
+
+				if (unlikely (gid_right == -1)) {
+					warning("Ignoring kerning for missing character (right): $(right_name)");
+				} else {
+					int16 kerning_value = (int16) Math.rint (k.val * HeadTable.UNITS);
+					Kern kern = new Kern (gid_left, gid_right, kerning_value);
+					current_pairs.pairs.add (kern);
+				}							
 			}
 			
 			current_pairs.pairs.sort ((a, b) => {

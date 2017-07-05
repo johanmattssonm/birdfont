@@ -35,7 +35,7 @@ public class GlyfTable : OtfTable {
 	public HeadTable head_table;
 	public HmtxTable hmtx_table;
 	public LocaTable loca_table;
-	public CmapTable cmap_table; // cmap and post is null when inistialized and set in parse method
+	public CmapTable cmap_table; // cmap and post is tables are null when initialized and set in parse method
 	public PostTable post_table;
 	public KernTable kern_table;
 	
