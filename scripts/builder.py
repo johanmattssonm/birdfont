@@ -138,7 +138,10 @@ def is_up_to_date(task):
 
     for dep in task['file_dep']:
         if not path.isfile(dep):
-            print('Dependency is not created yet: ' + dep + ' needed for ' + task['targets'])
+            targets = " ".join(str(x) for x in task['targets'])
+            print('Build failed because dependency is not created yet: ' + dep)
+            print()
+            print('Targetes depending on ' + dep + ":\n" + targets)
             exit(1)
 
     target_times = []
