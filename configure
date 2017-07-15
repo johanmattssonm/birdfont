@@ -49,9 +49,10 @@ def test_program_version (program, a, b, c):
 	version = [int(n) for n in v.split ('.')]
 	return [a,b,c] <= version	
 
-def test_library_version (lib):
+def test_library_version(pkg_config, lib, required=True, version=None):
 	print ('Looking for library: ' + lib + '\t\t')
-	process = subprocess.Popen ('pkg-config --modversion ' + lib, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+	process = subprocess.Popen(pkg_config + ' --modversion ' + lib, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+	v = process.stdout.readline().decode('utf-8')
 	process.communicate()[0]
 	return process.returncode == 0
 
@@ -64,7 +65,7 @@ def has_posixvala ():
 		print (OKGREEN + 'Using posix profile.' + ENDC)			
 	return 'True'
 
-def configure(gtk, libbgee, valac):
+def configure(gtk, libbgee, valac, pkg_config):
 	global gee
 	
 	if not test_program_version(valac, 0, 16, 0):
@@ -93,21 +94,21 @@ def configure(gtk, libbgee, valac):
 				'xmlbird'
 				]
 
+	test_library_version(pkg_config, 'xmlbird', True, '1.2.0')
+
 	for lib in libs:
-		if not test_library_version (lib):
-			print (FAIL + 'Can not find ' + lib + ENDC)
-			exit (1)
+		test_library_version(pkg_config, lib)
 
 	if libbgee == 'Any':
-		if test_library_version ('gee-0.8'):
+		if test_library_version(pkg_config, 'gee-0.8', False):
 			gee = 'gee-0.8'
-		elif test_library_version ('gee-1.0'):
+		elif test_library_version(pkg_config, 'gee-1.0', False):
 			gee = 'gee-1.0'
 		else:
 			print (FAIL + 'Can not find libgee (version 0.8 or version 1.0).' + ENDC)
 			exit (1)
 	else:
-		if not test_library_version (libbgee):
+		if not test_library_version(pkg_config, libbgee):
 			print (FAIL + 'Can not find lib gee.' + ENDC)
 			exit (1)
 		gee = libbgee;
@@ -126,6 +127,7 @@ parser.add_option('-c', '--cc', dest='cc', help='C compiler', metavar='CC')
 parser.add_option('-g', '--gtk', dest='gtk', help='Build Gtk version, default is True', metavar='GTK')
 parser.add_option('-e', '--gee', dest='gee', help='Version of libgee', metavar='GEE')
 parser.add_option('-v', '--valac', dest='valac', help='Vala compiler', metavar='VALAC')
+parser.add_option('-P', '--pkg-config', dest='pkg_config', help='Package config tool', metavar='PKG_CONFIG')
 parser.add_option('-n', '--nonnull', dest='nonnull', action="store_true", help='Enable compiletime checks for null pointers', metavar='NONNULL')
 
 parser.add_option('', '--valac-flags', dest='valac_flags', help='Vala compiler flags for all targets', metavar='VALAC_FLAGS', default='')
@@ -178,21 +180,24 @@ if not options.gee:
 	options.gee = 'Any'
 if not options.valac:
 	options.valac = 'valac'
+if not options.pkg_config:
+	options.pkg_config = 'pkg-config'
 if not options.nonnull:
 	options.nonnull = False
 else:
 	options.nonnull = True
 	
-configure(options.gtk, options.gee, options.valac)
+configure(options.gtk, options.gee, options.valac, options.pkg_config)
 
 configfile.write_config(options.prefix)
 configfile.write_compile_parameters(options.prefix,
-									 options.dest,
-									 options.cc,
-									 gee,
-									 options.valac,
-									 options.nonnull,
-									 valacflags,
-									 cflags,
-									 ldflags,
-									 options.gtk)
+									options.dest,
+									options.cc,
+									gee,
+									options.valac,
+									options.pkg_config,
+									options.nonnull,
+									valacflags,
+									cflags,
+									ldflags,
+									options.gtk)

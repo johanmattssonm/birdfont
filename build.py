@@ -11,7 +11,6 @@ from scripts import version
 if platform == 'msys':
 	process_tasks(dodo.make_libbirdgems('libbirdgems.dll', []))
 	process_tasks(dodo.make_libbirdfont('libbirdfont.dll', ['libbirdgems.dll']))
-	process_tasks(dodo.make_libbirdfont('libbirdfont.dll', ['libbirdgems.dll']))
 	process_tasks(dodo.make_birdfont_test('birdfont-test.exe', ['libbirdgems.so', 'libbirdfont.so']))
 elif platform == 'darwin':
 	gems = "libbirdgems." + str(version.LIBBIRDGEMS_SO_VERSION) + '.dylib'
