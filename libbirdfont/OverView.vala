@@ -688,6 +688,7 @@ public class OverView : FontDisplay {
 		}
 		
 		if (unlikely (character_info != null)) {
+			print (@"character_info: $(character_info.get_entry ())\n");
 			draw_character_info (cr);
 		}
 	}
@@ -1495,6 +1496,7 @@ public class OverView : FontDisplay {
 		double character_height;
 		
 		entry = ((!)character_info).get_entry ();
+
 		lines = entry.split ("\n");
 		
 		foreach (string line in entry.split ("\n")) {
@@ -1574,6 +1576,7 @@ public class OverView : FontDisplay {
 			
 			character_start = y + 10 + i * UCD_LINE_HEIGHT;
 			character_height = h - character_start;
+
 			draw_fallback_character (cr, x, character_start, character_height);
 		}
 	}
@@ -1582,7 +1585,11 @@ public class OverView : FontDisplay {
 	void draw_fallback_character (Context cr, double x, double y, double height)
 	requires (character_info != null) {
 		unichar c = ((!)character_info).unicode;
-		
+
+		if (height < 0) {
+			return;
+		}
+
 		cr.save ();
 		Text character = new Text ();
 		character.set_use_cache (false);
