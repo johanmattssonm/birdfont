@@ -688,7 +688,6 @@ public class OverView : FontDisplay {
 		}
 		
 		if (unlikely (character_info != null)) {
-			print (@"character_info: $(character_info.get_entry ())\n");
 			draw_character_info (cr);
 		}
 	}
