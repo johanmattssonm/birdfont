@@ -168,7 +168,7 @@ public class TrackTool : Tool {
 					add_endpoint_and_merge (x, y);
 				}
 							
-				foreach (Path path in g.active_paths) {
+				foreach (Path path in g.layers.get_all_paths ().paths) {
 					convert_hidden_points (path);
 					path.update_region_boundaries ();
 				}
