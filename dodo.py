@@ -91,6 +91,7 @@ def make_birdfont(target_binary, deps):
 		$({pkg-config} --cflags cairo) \
 		$({pkg-config} --cflags glib-2.0) \
 		$({pkg-config} --cflags gdk-pixbuf-2.0) \
+		$({pkg-config} --cflags xmlbird) \
 		$({pkg-config} --cflags webkit2gtk-4.0) \
 		$({pkg-config} --cflags libnotify) \
         -o OBJECT_FILE""".format(**config.SETTINGS)
@@ -148,6 +149,7 @@ def make_birdfont_export(target_binary, deps):
 		$({pkg-config} --cflags gio-2.0) \
 		$({pkg-config} --cflags cairo) \
 		$({pkg-config} --cflags glib-2.0) \
+		$({pkg-config} --cflags xmlbird) \
         -o OBJECT_FILE""".format(**config.SETTINGS)
         
     linker_command = """{cc} {ldflags[birdfont-export]} \
@@ -201,6 +203,7 @@ def make_birdfont_import(target_binary, deps):
 		$({pkg-config} --cflags gio-2.0) \
 		$({pkg-config} --cflags cairo) \
 		$({pkg-config} --cflags glib-2.0) \
+		$({pkg-config} --cflags xmlbird) \
         -o OBJECT_FILE""".format(**config.SETTINGS)
 
     linker_command = """{cc} {ldflags[birdfont-import]} \
@@ -254,6 +257,7 @@ def make_birdfont_autotrace(target_binary, deps):
 		$({pkg-config} --cflags gio-2.0) \
 		$({pkg-config} --cflags cairo) \
 		$({pkg-config} --cflags glib-2.0) \
+		$({pkg-config} --cflags xmlbird) \
         -o OBJECT_FILE""".format(**config.SETTINGS)
         
     linker_command = """{cc} {ldflags[birdfont-autotrace]} \
@@ -455,6 +459,7 @@ def make_birdfont_test(target_binary, deps):
 		$({pkg-config} --cflags gio-2.0) \
 		$({pkg-config} --cflags cairo) \
 		$({pkg-config} --cflags glib-2.0) \
+		$({pkg-config} --cflags xmlbird) \
         -o OBJECT_FILE""".format(**config.SETTINGS)
 
     linker_command = """{cc} {ldflags[birdfont-test]} \
