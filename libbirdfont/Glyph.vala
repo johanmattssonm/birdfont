@@ -424,21 +424,10 @@ public class Glyph : FontDisplay {
 	public override void scroll_wheel (double x, double y,
 		double pixeldelta_x, double pixeldelta_y) {
 
-		if (KeyBindings.has_alt () || KeyBindings.has_ctrl ()) {
-			if (pixeldelta_y > 0) {
-				zoom_in_at_point (x, y, pixeldelta_y);
-			} else {
-				zoom_out_at_point (x, y, pixeldelta_y);
-			}
+		if (pixeldelta_y > 0) {
+			zoom_in_at_point (x, y, pixeldelta_y);
 		} else {
-			if (!KeyBindings.has_shift ()) {
-				view_offset_x -= pixeldelta_x / view_zoom;
-				view_offset_y -= pixeldelta_y / view_zoom;
-			} else {
-				// move canvas a long x axis instead of y
-				view_offset_x -= pixeldelta_y / view_zoom;
-				view_offset_y -= pixeldelta_x / view_zoom;
-			}
+			zoom_out_at_point (x, y, pixeldelta_y);
 		}
 
 		GlyphCanvas.redraw ();
