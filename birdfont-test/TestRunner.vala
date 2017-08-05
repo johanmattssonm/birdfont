@@ -37,7 +37,7 @@ public class TestRunner : NativeWindow, GLib.Object  {
 		if (type == "SVG") {
 			File f = File.new_for_path (file);
 			Font font = new Font ();
-			import_svg_file (font, f, SvgType.REGULAR);
+			import_svg_file (font, f);
 		} else if (type == "BF") {
 			Font font = new Font ();
 			font.set_font_file (file);

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2015 Johan Mattsson
+	Copyright (C) 2015 2016 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -103,16 +103,15 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Stroke Color", 141 / 255.0, 141 / 255.0, 141 / 255.0, 1);
 		Theme.set_default_color ("Handle Color", 141 / 255.0, 141 / 255.0, 141 / 255.0, 1);
 		Theme.set_default_color ("Fill Color", 0.5, 0.5, 0.5, 1);
-		Theme.set_default_color ("Objects", 0, 0, 0, 1);
-
+		Theme.set_default_color ("Selected Objects", 35 / 255.0, 131 / 255.0, 194 / 255.0, 1);
+		
 		Theme.set_default_color ("Background 1", 1, 1, 1, 1);
 		Theme.set_default_color ("Dialog Background", 238 / 255.0, 239 / 255.0, 243 / 255.0, 1);
 		Theme.set_default_color ("Menu Background", 222 / 255.0, 221 / 255.0, 226 / 255.0, 1);
 		Theme.set_default_color ("Default Background", 238 / 255.0, 239 / 255.0, 243 / 255.0, 1);
 		Theme.set_default_color ("Headline Background", 110 / 255.0, 113 / 255.0, 130 / 255.0, 1);
 		
-		Theme.set_default_color ("Checkbox Background", 255 / 255.0, 255 / 255.0, 255 / 255.0, 1);
-		
+		Theme.set_default_color ("Checkbox Background", 255 / 255.0, 255 / 255.0, 255 / 255.0, 1);				
 		Theme.set_default_color ("Foreground 1", 0, 0, 0, 1);
 		
 		Theme.set_default_color ("Text Foreground", 3 / 255.0, 16 / 255.0, 24 / 255.0, 1);
@@ -210,7 +209,7 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Stroke Color", 141 / 255.0, 141 / 255.0, 141 / 255.0, 1);
 		Theme.set_default_color ("Handle Color", 141 / 255.0, 141 / 255.0, 141 / 255.0, 1);
 		Theme.set_default_color ("Fill Color", 0.5, 0.5, 0.5, 1);
-		Theme.set_default_color ("Objects", 0, 0, 0, 1);
+		Theme.set_default_color ("Selected Objects", 35 / 255.0, 131 / 255.0, 194 / 255.0, 1);
 		
 		Theme.set_default_color ("Background 1", 1, 1, 1, 1);
 		Theme.set_default_color ("Dialog Background", 55 / 255.0, 56 / 255.0, 62 / 255.0, 1);
@@ -315,7 +314,7 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Stroke Color", 141 / 255.0, 141 / 255.0, 141 / 255.0, 1);
 		Theme.set_default_color ("Handle Color", 141 / 255.0, 141 / 255.0, 141 / 255.0, 1);
 		Theme.set_default_color ("Fill Color", 0, 0, 0, 1);
-		Theme.set_default_color ("Objects", 0, 0, 0, 1);
+		Theme.set_default_color ("Selected Objects", 0, 0, 0, 1);
 		
 		Theme.set_default_color ("Background 1", 1, 1, 1, 1);
 		Theme.set_default_color ("Dialog Background", 1, 1, 1, 1);
@@ -324,7 +323,6 @@ public class Theme : GLib.Object {
 		Theme.set_default_color ("Headline Background", 0, 0, 0, 1);
 		
 		Theme.set_default_color ("Checkbox Background", 1, 1, 1, 1);
-		
 		Theme.set_default_color ("Foreground 1", 0, 0, 0, 1);
 		
 		Theme.set_default_color ("Text Foreground", 0, 0, 0, 1);
@@ -424,7 +422,6 @@ public class Theme : GLib.Object {
 			t_("Handle Color");
 			t_("Fill Color");
 			t_("Selected Objects");
-			t_("Objects");
 			
 			t_("Background 1");
 			t_("Dialog Background");

@@ -53,7 +53,6 @@ public class ThemeTab : SettingsDisplay {
 			
 			select_theme.select_action.connect((self) => {
 				string theme_file = self.get_name ();
-				TabBar tb;
 				Toolbox toolbox;
 				
 				Preferences.set ("theme", theme_file);
@@ -76,17 +75,7 @@ public class ThemeTab : SettingsDisplay {
 					e.redraw ();
 				}
 				
-				Toolbox.redraw_tool_box ();
-				
-				GlyphCanvas.redraw ();
-				
-				tb = MainWindow.get_tab_bar ();
-				tb.redraw (0, 0, tb.width, tb.height);
-				
-				OverViewItem.label_background = null;
-				OverViewItem.selected_label_background = null;
-				OverViewItem.label_background_no_menu = null;
-				OverViewItem.selected_label_background_no_menu = null;
+				redraw_ui ();
 			});
 		
 			select_theme.set_icon ("theme");
@@ -140,6 +129,22 @@ public class ThemeTab : SettingsDisplay {
 		}
 	}
 
+	public static void redraw_ui (){
+		TabBar tb;
+		
+		Toolbox.redraw_tool_box ();		
+				
+		GlyphCanvas.redraw ();
+				
+		tb = MainWindow.get_tab_bar ();
+		tb.redraw (0, 0, tb.width, tb.height);
+			
+		OverViewItem.label_background = null;
+		OverViewItem.selected_label_background = null;
+		OverViewItem.label_background_no_menu = null;
+		OverViewItem.selected_label_background_no_menu = null;		
+	}
+	
 	public static string get_label_from_file_name (string theme) {
 		string label;
 		

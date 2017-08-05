@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-06 12:06+0100\n"
-"PO-Revision-Date: 2015-06-01 11:21+0000\n"
-"Last-Translator: Dheeta <dita.m.saputri@gmail.com>\n"
+"POT-Creation-Date: 2017-06-14 17:09+0200\n"
+"PO-Revision-Date: 2017-01-29 18:52+0000\n"
+"Last-Translator: S <stevro@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Pootle 2.5.1-rc1\n"
-"X-POOTLE-MTIME: 1433157710.000000\n"
+"X-POOTLE-MTIME: 1485715930.000000\n"
 
 #: libbirdfont/Argument.vala:277
 msgid "Usage"
@@ -84,11 +84,16 @@ msgstr "Pilih latar belakang"
 msgid "Background Image"
 msgstr "Gambar Latar Belakang"
 
-#: libbirdfont/BackgroundTool.vala:44
+#: libbirdfont/BackgroundTool.vala:163
 msgid "Move, resize and rotate background image"
 msgstr "Pindah, ubah ukuran dan putar gambar latar belakang"
 
-#: libbirdfont/BackgroundTool.vala:246
+#: libbirdfont/BackgroundTool.vala:166 libbirdfont/BezierTool.vala:103
+#: libbirdfont/PointTool.vala:88
+msgid "on axis"
+msgstr ""
+
+#: libbirdfont/BackgroundTool.vala:294
 msgid "Select background image"
 msgstr "Pilih gambar latar belakang"
 
@@ -97,7 +102,7 @@ msgid "Images"
 msgstr "Gambar"
 
 #: libbirdfont/BackgroundTools.vala:34 libbirdfont/FileDialogTab.vala:94
-#: libbirdfont/RecentFiles.vala:106
+#: libbirdfont/RecentFiles.vala:110
 msgid "Files"
 msgstr "Berkas"
 
@@ -105,16 +110,16 @@ msgstr "Berkas"
 msgid "Parts"
 msgstr "Bagian"
 
-#: libbirdfont/BackgroundTools.vala:53 libbirdfont/Glyph.vala:2462
-#: libbirdfont/LigatureList.vala:106 libbirdfont/OtfFeatureTable.vala:181
+#: libbirdfont/BackgroundTools.vala:53 libbirdfont/Glyph.vala:2362
+#: libbirdfont/LigatureList.vala:106 libbirdfont/OtfFeatureTable.vala:218
 msgid "Add"
 msgstr "Tambah"
 
-#: libbirdfont/BackgroundTools.vala:123
+#: libbirdfont/BackgroundTools.vala:122
 msgid "Select Glyph"
-msgstr "Pilih Glyph"
+msgstr "Pilih Glif"
 
-#: libbirdfont/BackgroundTools.vala:233 libbirdfont/LoadCallback.vala:102
+#: libbirdfont/BackgroundTools.vala:232 libbirdfont/LoadCallback.vala:100
 #: libbirdfont/Menu.vala:50
 msgid "Open"
 msgstr "Buka"
@@ -125,27 +130,24 @@ msgstr ""
 
 #: libbirdfont/BezierTool.vala:95
 msgid "line"
-msgstr ""
+msgstr "garis"
 
 #: libbirdfont/BezierTool.vala:99
 msgid "corner"
 msgstr ""
 
-#: libbirdfont/BezierTool.vala:103
-msgid "on axis"
-msgstr ""
-
 #: libbirdfont/CircleTool.vala:36
 msgid "Circle"
-msgstr ""
+msgstr "Lingkaran"
 
 #: libbirdfont/CutBackgroundTool.vala:38
+#, fuzzy
 msgid "Crop background image"
-msgstr ""
+msgstr "Potong gambar latar belakang"
 
 #: libbirdfont/DefaultCharactersSet.vala:25
 msgid "Default Language"
-msgstr ""
+msgstr "Bahasa Utama"
 
 #: libbirdfont/DefaultCharactersSet.vala:26
 msgid "Private Use Area"
@@ -153,15 +155,15 @@ msgstr ""
 
 #: libbirdfont/DefaultCharactersSet.vala:28
 msgid "Chinese"
-msgstr ""
+msgstr "Bahasa Mandarin"
 
 #: libbirdfont/DefaultCharactersSet.vala:29
 msgid "English"
-msgstr ""
+msgstr "Bahasa Inggris"
 
 #: libbirdfont/DefaultCharactersSet.vala:30
 msgid "Greek"
-msgstr ""
+msgstr "Bahasa Yunani"
 
 #: libbirdfont/DefaultCharactersSet.vala:31
 msgid "Japanese"
@@ -188,29 +190,29 @@ msgid "Thai"
 msgstr "Thailand"
 
 #. / All lower case letters in alphabetic order separated by space. Letters with diacritical marks should be included.
-#: libbirdfont/DefaultCharactersSet.vala:118 libbirdfont/ExportTool.vala:433
+#: libbirdfont/DefaultCharactersSet.vala:118 libbirdfont/ExportTool.vala:440
 msgid "a b c d e f g h i j k l m n o p q r s t u v w x y z"
 msgstr "a b c d e f g h i j k l m n o p q r s t u v w x y z"
 
 #. / All upper case letters in alphabetic order separated by space. Letters with diacritical marks should be included.
-#: libbirdfont/DefaultCharactersSet.vala:121 libbirdfont/ExportTool.vala:434
+#: libbirdfont/DefaultCharactersSet.vala:121 libbirdfont/ExportTool.vala:441
 msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
-msgstr ""
+msgstr "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
 
 #: libbirdfont/DescriptionDisplay.vala:66
 #: libbirdfont/DescriptionDisplay.vala:277 libbirdfont/ExportSettings.vala:133
-#: libbirdfont/Menu.vala:499 libbirdfont/TableLayout.vala:203
+#: libbirdfont/Menu.vala:489 libbirdfont/TableLayout.vala:203
 msgid "Name and Description"
-msgstr "Nama dan Perintah"
+msgstr "Nama dan Deskripsi"
 
 #: libbirdfont/DescriptionDisplay.vala:70 libbirdfont/MenuTab.vala:98
 msgid "PostScript Name"
 msgstr "Nama PostScript"
 
 #: libbirdfont/DescriptionDisplay.vala:80 libbirdfont/MenuTab.vala:103
-#: libbirdfont/MenuTab.vala:696
+#: libbirdfont/MenuTab.vala:702
 msgid "Name"
-msgstr ""
+msgstr "Nama"
 
 #: libbirdfont/DescriptionDisplay.vala:90 libbirdfont/MenuTab.vala:108
 msgid "Style"
@@ -218,45 +220,46 @@ msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:100
 msgid "Bold"
-msgstr ""
+msgstr "Cetak tebal"
 
 #: libbirdfont/DescriptionDisplay.vala:109
 msgid "Italic"
-msgstr ""
+msgstr "Cetak miring"
 
 #: libbirdfont/DescriptionDisplay.vala:119
 msgid "Weight"
-msgstr ""
+msgstr "Ketebalan"
 
 #: libbirdfont/DescriptionDisplay.vala:129 libbirdfont/MenuTab.vala:113
 msgid "Full Name (Name and Style)"
 msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:140 libbirdfont/MenuTab.vala:118
+#, fuzzy
 msgid "Unique Identifier"
-msgstr ""
+msgstr "Identifikasi Unik"
 
-#: libbirdfont/DescriptionDisplay.vala:150 libbirdfont/ImportUtils.vala:161
-#: libbirdfont/Menu.vala:506 libbirdfont/Menu.vala:508
-#: libbirdfont/VersionList.vala:265
+#: libbirdfont/DescriptionDisplay.vala:150 libbirdfont/ImportUtils.vala:156
+#: libbirdfont/Menu.vala:496 libbirdfont/Menu.vala:498
+#: libbirdfont/VersionList.vala:268
 msgid "Version"
 msgstr "Versi"
 
 #: libbirdfont/DescriptionDisplay.vala:160
 msgid "Description"
-msgstr ""
+msgstr "Deskripsi"
 
 #: libbirdfont/DescriptionDisplay.vala:171
 msgid "Copyright"
-msgstr ""
+msgstr "Hak Cipta"
 
 #: libbirdfont/DescriptionDisplay.vala:183
 msgid "License"
-msgstr ""
+msgstr "Lisensi"
 
 #: libbirdfont/DescriptionDisplay.vala:195
 msgid "License URL"
-msgstr ""
+msgstr "URL Lisensi"
 
 #: libbirdfont/DescriptionDisplay.vala:207
 msgid "Trademark"
@@ -264,15 +267,16 @@ msgstr ""
 
 #: libbirdfont/DescriptionDisplay.vala:219
 msgid "Manufacturer"
-msgstr ""
+msgstr "Manufaktur"
 
 #: libbirdfont/DescriptionDisplay.vala:230
 msgid "Designer"
-msgstr ""
+msgstr "Desainer"
 
 #: libbirdfont/DescriptionDisplay.vala:241
+#, fuzzy
 msgid "Vendor URL"
-msgstr ""
+msgstr "URL Vendor"
 
 #: libbirdfont/DescriptionDisplay.vala:252
 msgid "Designer URL"
@@ -283,8 +287,9 @@ msgid "Background Tools"
 msgstr ""
 
 #: libbirdfont/DrawingTools.vala:113
+#, fuzzy
 msgid "Control Points"
-msgstr ""
+msgstr "Titik Kendali"
 
 #: libbirdfont/DrawingTools.vala:114
 msgid "Object Tools"
@@ -310,7 +315,7 @@ msgstr "Sapuan"
 msgid "Geometrical Shapes"
 msgstr "Bentuk Geometri"
 
-#: libbirdfont/DrawingTools.vala:129 libbirdfont/OverviewTools.vala:40
+#: libbirdfont/DrawingTools.vala:129 libbirdfont/OverviewTools.vala:45
 msgid "Zoom"
 msgstr "Perbesar"
 
@@ -322,12 +327,16 @@ msgstr "Pedoman & Kisi-kisi"
 msgid "Grid Size"
 msgstr "Ukuran Kisi/kotak"
 
-#: libbirdfont/DrawingTools.vala:195
+#: libbirdfont/DrawingTools.vala:194
 msgid "Move canvas"
 msgstr "Pindahkan kanvas"
 
+#: libbirdfont/DrawingTools.vala:195
+msgid "Ctrl + Shift + Click"
+msgstr ""
+
 #: libbirdfont/DrawingTools.vala:196
-msgid "Press space and click to move the canvas."
+msgid "Space + Click"
 msgstr ""
 
 #: libbirdfont/DrawingTools.vala:204
@@ -343,202 +352,214 @@ msgid "Undo"
 msgstr ""
 
 #: libbirdfont/DrawingTools.vala:234
+#, fuzzy
 msgid "Insert new points on path"
-msgstr ""
+msgstr "Tambahkan titik baru di jalur"
 
-#: libbirdfont/DrawingTools.vala:244
+#: libbirdfont/DrawingTools.vala:243
 msgid "Create quadratic Bézier curves"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:245
-msgid ""
-"All control points will be converted to quadratic points in the TTF format."
-msgstr ""
-
-#: libbirdfont/DrawingTools.vala:255
+#: libbirdfont/DrawingTools.vala:252
 msgid "Create cubic Bézier curves"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:264
+#: libbirdfont/DrawingTools.vala:261
 msgid "Quadratic path with two line handles"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:273
+#: libbirdfont/DrawingTools.vala:270
 msgid "Convert selected points"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:284
+#: libbirdfont/DrawingTools.vala:281
 msgid "X coordinate"
-msgstr ""
+msgstr "Koordinat X"
 
-#: libbirdfont/DrawingTools.vala:328
+#: libbirdfont/DrawingTools.vala:325
 msgid "Y coordinate"
-msgstr ""
+msgstr "Koordinat Y"
 
-#: libbirdfont/DrawingTools.vala:371
+#: libbirdfont/DrawingTools.vala:368
 msgid "Rotation"
-msgstr ""
+msgstr "Rotasi"
 
-#: libbirdfont/DrawingTools.vala:410
+#: libbirdfont/DrawingTools.vala:407
 msgid "Width"
 msgstr "Lebar"
 
-#: libbirdfont/DrawingTools.vala:435
+#: libbirdfont/DrawingTools.vala:432
 msgid "Height"
 msgstr "Tinggi"
 
-#: libbirdfont/DrawingTools.vala:478
+#: libbirdfont/DrawingTools.vala:475
 msgid "Tie curve handles for the selected edit point"
 msgstr "Ikat lengkungan pegangan untuk titik sunting yang dipilih"
 
-#: libbirdfont/DrawingTools.vala:529
+#: libbirdfont/DrawingTools.vala:526
 msgid "Symmetrical handles"
 msgstr "Pegangan simetris"
 
-#: libbirdfont/DrawingTools.vala:559
+#: libbirdfont/DrawingTools.vala:556
 msgid "Convert segment to line."
 msgstr "Mengubah ruas ke garis."
 
-#: libbirdfont/DrawingTools.vala:567
+#: libbirdfont/DrawingTools.vala:564
 msgid "Create counter from outline"
 msgstr "Membuat loket dari garis besar"
 
-#: libbirdfont/DrawingTools.vala:570
+#: libbirdfont/DrawingTools.vala:567
 msgid "Scale object to font top/baseline"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:579
+#: libbirdfont/DrawingTools.vala:576
 msgid "Close path"
 msgstr "Tutup jalur"
 
-#: libbirdfont/DrawingTools.vala:601
+#: libbirdfont/DrawingTools.vala:598
+#, fuzzy
 msgid "Move to path to the bottom of the layer"
-msgstr ""
+msgstr "Pindah ke jalur untuk lapisan bawah "
 
-#: libbirdfont/DrawingTools.vala:615
+#: libbirdfont/DrawingTools.vala:612
+#, fuzzy
 msgid "Flip path vertically"
-msgstr "Balik jalur secara tegak lurus"
+msgstr "Balik jalur secara vertikal"
 
-#: libbirdfont/DrawingTools.vala:623
+#: libbirdfont/DrawingTools.vala:620
+#, fuzzy
 msgid "Flip path horizontally"
-msgstr ""
+msgstr "Balik jalur secara horizontal"
 
-#: libbirdfont/DrawingTools.vala:632
+#: libbirdfont/DrawingTools.vala:629
 msgid "Set size for background image"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:670
+#: libbirdfont/DrawingTools.vala:667
+#, fuzzy
 msgid "Show/hide background image"
-msgstr ""
+msgstr "Tampilkan/sembunyikan gambar latar belakang"
 
-#: libbirdfont/DrawingTools.vala:681
+#: libbirdfont/DrawingTools.vala:678
+#, fuzzy
 msgid "Insert a new background image"
-msgstr ""
+msgstr "Tambahkan gambar latar belakang baru"
 
-#: libbirdfont/DrawingTools.vala:695 libbirdfont/ThemeTab.vala:151
+#: libbirdfont/DrawingTools.vala:692 libbirdfont/ThemeTab.vala:156
 msgid "High contrast"
-msgstr ""
+msgstr "Kontras Tinggi"
 
-#: libbirdfont/DrawingTools.vala:709
+#: libbirdfont/DrawingTools.vala:706
+#, fuzzy
 msgid "Set background threshold"
-msgstr ""
+msgstr "Tetapkan batas latar belakang"
 
-#: libbirdfont/DrawingTools.vala:728
+#: libbirdfont/DrawingTools.vala:725
+#, fuzzy
 msgid "Amount of autotrace details"
-msgstr ""
+msgstr "Jumlah detil autotrace"
 
-#: libbirdfont/DrawingTools.vala:747
+#: libbirdfont/DrawingTools.vala:744
+#, fuzzy
 msgid "Autotrace simplification"
-msgstr ""
+msgstr "Penyederhanaan autotrace"
 
-#: libbirdfont/DrawingTools.vala:757
+#: libbirdfont/DrawingTools.vala:754
+#, fuzzy
 msgid "Autotrace background image"
-msgstr ""
+msgstr "Gambar latar belakang autotrace"
 
-#: libbirdfont/DrawingTools.vala:765
+#: libbirdfont/DrawingTools.vala:762
+#, fuzzy
 msgid "Delete background image"
-msgstr ""
+msgstr "Hapus gambar latar belakang"
 
-#: libbirdfont/DrawingTools.vala:772
+#: libbirdfont/DrawingTools.vala:769
+#, fuzzy
 msgid "Add layer"
-msgstr ""
+msgstr "Tambah Lapisan"
 
-#: libbirdfont/DrawingTools.vala:782
+#: libbirdfont/DrawingTools.vala:779
+#, fuzzy
 msgid "Show layers"
-msgstr ""
+msgstr "Tampilkan Lapisan"
 
-#: libbirdfont/DrawingTools.vala:792
+#: libbirdfont/DrawingTools.vala:789
 msgid "Apply stroke"
 msgstr "Terapkan sapuan"
 
-#: libbirdfont/DrawingTools.vala:826 libbirdfont/SettingsTab.vala:34
+#: libbirdfont/DrawingTools.vala:823 libbirdfont/SettingsTab.vala:36
 msgid "Stroke width"
 msgstr "Lebar sapuan"
 
-#: libbirdfont/DrawingTools.vala:872
+#: libbirdfont/DrawingTools.vala:865
 msgid "Create outline form stroke"
 msgstr "Membuat garis besar dari sapuan"
 
-#: libbirdfont/DrawingTools.vala:881
+#: libbirdfont/DrawingTools.vala:874
 msgid "Butt line cap"
 msgstr "Penutup baris belakang"
 
-#: libbirdfont/DrawingTools.vala:908
+#: libbirdfont/DrawingTools.vala:898
 msgid "Round line cap"
 msgstr "Penutup baris bulat"
 
-#: libbirdfont/DrawingTools.vala:936
+#: libbirdfont/DrawingTools.vala:923
 msgid "Square line cap"
 msgstr "Penutup baris kotak"
 
-#: libbirdfont/DrawingTools.vala:1008
+#: libbirdfont/DrawingTools.vala:992
 msgid "Show guidelines"
 msgstr "Tampilkan pedoman"
 
-#: libbirdfont/DrawingTools.vala:1020
+#: libbirdfont/DrawingTools.vala:1004
 msgid "Show more guidelines"
 msgstr "Tampilkan lebih banyak pedoman"
 
-#: libbirdfont/DrawingTools.vala:1036
+#: libbirdfont/DrawingTools.vala:1020
 msgid "Show guidelines at top and bottom margin"
 msgstr "Tampilkan pedoman di batas atas dan bawah "
 
-#: libbirdfont/DrawingTools.vala:1060
+#: libbirdfont/DrawingTools.vala:1044
+#, fuzzy
 msgid "Lock guides and grid"
-msgstr ""
+msgstr "Kunci garis bantu"
 
-#: libbirdfont/DrawingTools.vala:1102
+#: libbirdfont/DrawingTools.vala:1086
 msgid "Zoom Out More"
 msgstr "Lebih Memperbesar Keluar"
 
-#: libbirdfont/DrawingTools.vala:1111
+#: libbirdfont/DrawingTools.vala:1096
 msgid "Show full glyph"
-msgstr ""
+msgstr "Tampilkan seluruh glif"
 
-#: libbirdfont/DrawingTools.vala:1118
+#: libbirdfont/DrawingTools.vala:1104
+#, fuzzy
 msgid "Fit in view"
-msgstr ""
+msgstr "Sesuaikan tampilan"
 
-#: libbirdfont/DrawingTools.vala:1125
+#: libbirdfont/DrawingTools.vala:1112
 msgid "Zoom in on background image"
 msgstr ""
 
-#: libbirdfont/DrawingTools.vala:1135
+#: libbirdfont/DrawingTools.vala:1123
 msgid "Previous view"
-msgstr ""
+msgstr "Tampilan sebelumnya"
 
-#: libbirdfont/DrawingTools.vala:1141
+#: libbirdfont/DrawingTools.vala:1130
 msgid "Next view"
-msgstr ""
+msgstr "Tampilan selanjutnya"
 
-#: libbirdfont/DrawingTools.vala:1543
+#: libbirdfont/DrawingTools.vala:1535
+#, fuzzy
 msgid "Set size for grid"
-msgstr ""
+msgstr "Tetapkan ukuran grid"
 
 #: libbirdfont/ExportSettings.vala:41 libbirdfont/ExportSettings.vala:185
-#: libbirdfont/Menu.vala:329
+#: libbirdfont/Menu.vala:309
+#, fuzzy
 msgid "Export Settings"
-msgstr ""
+msgstr "Pengaturan ekspor"
 
 #: libbirdfont/ExportSettings.vala:45 libbirdfont/ExportSettings.vala:60
 msgid "File Name"
@@ -546,54 +567,58 @@ msgstr "Nama Berkas"
 
 #: libbirdfont/ExportSettings.vala:75
 msgid "Units Per Em"
-msgstr ""
+msgstr "Satuan Per Em"
 
-#: libbirdfont/ExportSettings.vala:94 libbirdfont/RecentFiles.vala:73
+#: libbirdfont/ExportSettings.vala:94 libbirdfont/RecentFiles.vala:77
+#, fuzzy
 msgid "Folder"
-msgstr ""
+msgstr "Berkas"
 
 #: libbirdfont/ExportSettings.vala:98
 msgid "Formats"
 msgstr "Bentuk"
 
-#: libbirdfont/ExportSettings.vala:139
+#: libbirdfont/ExportSettings.vala:139 libbirdfont/ExportTool.vala:40
 msgid "Export"
 msgstr "Menambahkan"
 
-#: libbirdfont/ExportTool.vala:222 libbirdfont/Menu.vala:64
-#: libbirdfont/MenuTab.vala:355 libbirdfont/SaveCallback.vala:69
+#: libbirdfont/ExportTool.vala:233 libbirdfont/Menu.vala:64
+#: libbirdfont/MenuTab.vala:359 libbirdfont/SaveCallback.vala:68
 #: libbirdfont/SaveDialog.vala:38 libbirdfont/SaveDialogListener.vala:29
 msgid "Save"
 msgstr "Menyimpan"
 
-#: libbirdfont/ExportTool.vala:432
+#: libbirdfont/ExportTool.vala:439
 msgid "Alphabet"
-msgstr ""
+msgstr "Alfabet"
 
 #: libbirdfont/ExportUtils.vala:17 libbirdfont/ImportUtils.vala:17
 #: birdfont-autotrace/AutoTrace.vala:66
+#, fuzzy
 msgid "Usage:"
-msgstr ""
+msgstr "Pemakaian"
 
 #: libbirdfont/ExportUtils.vala:20 birdfont-autotrace/AutoTrace.vala:71
 msgid "print this message"
 msgstr "Cetak pesan ini"
 
 #: libbirdfont/ExportUtils.vala:21
+#, fuzzy
 msgid "write files to this directory"
-msgstr ""
+msgstr "tulis berkas di direktori ini"
 
 #: libbirdfont/ExportUtils.vala:22
 msgid "write svg file"
-msgstr ""
+msgstr "tulis berkas svg"
 
 #: libbirdfont/ExportUtils.vala:23
 msgid "write ttf and eot file"
-msgstr ""
+msgstr "tulis berkas ttf dan eot"
 
 #: libbirdfont/ExportUtils.vala:130
+#, fuzzy
 msgid "Can't find output directory"
-msgstr ""
+msgstr "Tidak dapat menemukan direktori output"
 
 #: libbirdfont/FileDialogTab.vala:79
 msgid "Select a Folder"
@@ -615,52 +640,52 @@ msgstr "Buka huruf"
 msgid "Save font"
 msgstr "Simpan huruf"
 
-#: libbirdfont/FileTools.vala:49 libbirdfont/Menu.vala:492
-#: libbirdfont/SettingsDisplay.vala:225 libbirdfont/SettingsTab.vala:31
-#: libbirdfont/SettingsTab.vala:159
+#: libbirdfont/FileTools.vala:49 libbirdfont/Menu.vala:482
+#: libbirdfont/SettingsDisplay.vala:225 libbirdfont/SettingsTab.vala:33
+#: libbirdfont/SettingsTab.vala:180
 msgid "Settings"
 msgstr "Pengaturan"
 
 #: libbirdfont/FileTools.vala:55 libbirdfont/ThemeTab.vala:42
-#: libbirdfont/ThemeTab.vala:162
+#: libbirdfont/ThemeTab.vala:167
 msgid "Themes"
-msgstr ""
+msgstr "Tema"
 
-#: libbirdfont/Glyph.vala:602
+#: libbirdfont/Glyph.vala:518
 msgid "top margin"
-msgstr ""
+msgstr "margin atas"
 
-#: libbirdfont/Glyph.vala:609
+#: libbirdfont/Glyph.vala:525
 msgid "top"
-msgstr ""
+msgstr "atas"
 
-#: libbirdfont/Glyph.vala:616
+#: libbirdfont/Glyph.vala:532
 msgid "x-height"
-msgstr ""
+msgstr "tinggi x"
 
-#: libbirdfont/Glyph.vala:625
+#: libbirdfont/Glyph.vala:541
 msgid "baseline"
-msgstr ""
+msgstr "garis basis"
 
-#: libbirdfont/Glyph.vala:632
+#: libbirdfont/Glyph.vala:548
 msgid "bottom"
-msgstr ""
+msgstr "bawah"
 
-#: libbirdfont/Glyph.vala:638
+#: libbirdfont/Glyph.vala:554
 msgid "bottom margin"
-msgstr ""
+msgstr "margin bawah"
 
-#: libbirdfont/Glyph.vala:644
+#: libbirdfont/Glyph.vala:560
 msgid "left"
-msgstr ""
+msgstr "kiri"
 
-#: libbirdfont/Glyph.vala:653
+#: libbirdfont/Glyph.vala:569
 msgid "right"
-msgstr ""
+msgstr "kanan"
 
-#: libbirdfont/Glyph.vala:2462
+#: libbirdfont/Glyph.vala:2362
 msgid "Guide"
-msgstr ""
+msgstr "Panduan"
 
 #: libbirdfont/GridTool.vala:38
 msgid "Show grid"
@@ -668,10 +693,6 @@ msgstr ""
 
 #: libbirdfont/GuideTab.vala:46 libbirdfont/GuideTab.vala:57
 msgid "Guides"
-msgstr ""
-
-#: libbirdfont/Help.vala:29
-msgid "BirdFont is a font editor."
 msgstr ""
 
 #: libbirdfont/HiddenTools.vala:33
@@ -695,57 +716,53 @@ msgid "Move handle along axis"
 msgstr ""
 
 #: libbirdfont/ImportUtils.vala:19
+#, fuzzy
 msgid "BF-FILE"
-msgstr ""
+msgstr "BERKAS-BF"
 
 #: libbirdfont/ImportUtils.vala:19
+#, fuzzy
 msgid "SVG-FILES ..."
-msgstr ""
+msgstr "BERKAS-SVG"
 
-#: libbirdfont/ImportUtils.vala:59 libbirdfont/ImportUtils.vala:67
+#: libbirdfont/ImportUtils.vala:54 libbirdfont/ImportUtils.vala:62
 msgid "does not exist."
-msgstr ""
+msgstr "tidak ada."
 
-#: libbirdfont/ImportUtils.vala:68
+#: libbirdfont/ImportUtils.vala:63
 msgid "A new font will be created."
-msgstr ""
+msgstr "Font baru akan dibuat."
 
-#: libbirdfont/ImportUtils.vala:90
+#: libbirdfont/ImportUtils.vala:85
 msgid "Failed to import"
 msgstr "Gagal dalam memasukkan"
 
-#: libbirdfont/ImportUtils.vala:91
+#: libbirdfont/ImportUtils.vala:86
 msgid "Aborting"
 msgstr "Membatalkan"
 
-#: libbirdfont/ImportUtils.vala:124
+#: libbirdfont/ImportUtils.vala:119
 msgid "is not the name of a glyph or a Unicode value."
 msgstr "bukan nama dari glyph atau nilai Standar Kode."
 
-#: libbirdfont/ImportUtils.vala:125
+#: libbirdfont/ImportUtils.vala:120
 msgid "Unicode values must start with U+."
 msgstr "Nilai standar kode harus dimulai dengan U+."
 
-#: libbirdfont/ImportUtils.vala:151
+#: libbirdfont/ImportUtils.vala:146
 msgid "Adding"
 msgstr "Menambahkan"
 
-#: libbirdfont/ImportUtils.vala:155
+#: libbirdfont/ImportUtils.vala:150
 msgid "to"
 msgstr "pada"
 
-#: libbirdfont/ImportUtils.vala:157 libbirdfont/OtfFeatureTable.vala:105
-#: libbirdfont/OverviewTools.vala:42
+#: libbirdfont/ImportUtils.vala:152 libbirdfont/OtfFeatureTable.vala:135
+#: libbirdfont/OverviewTools.vala:48
 msgid "Glyph"
 msgstr "Glyph"
 
-#: libbirdfont/KerningDisplay.vala:60
-msgid ""
-"Kerning is the process of adjusting the space between two letters. You can "
-"cahnge the space between one letter and all other letters in the spacing tab."
-msgstr ""
-
-#: libbirdfont/KerningDisplay.vala:101 libbirdfont/KerningDisplay.vala:882
+#: libbirdfont/KerningDisplay.vala:101 libbirdfont/KerningDisplay.vala:931
 msgid "Kerning"
 msgstr ""
 
@@ -764,16 +781,16 @@ msgid "Type “space” to kern the space character and “divis” to kern -."
 msgstr ""
 "Ketik \"ruang\" untuk pangkal karakter ruang dan \"divis\" untuk pangkal -."
 
-#: libbirdfont/KerningDisplay.vala:683 libbirdfont/OverviewTools.vala:78
+#: libbirdfont/KerningDisplay.vala:713 libbirdfont/OverviewTools.vala:84
 msgid "Unicode"
 msgstr "Standar kode"
 
-#: libbirdfont/KerningDisplay.vala:683
+#: libbirdfont/KerningDisplay.vala:713
 msgid "Insert"
 msgstr "Sisipkan"
 
-#: libbirdfont/KerningDisplay.vala:882 libbirdfont/MainWindow.vala:241
-#: libbirdfont/MessageDialog.vala:37 libbirdfont/SpinButton.vala:231
+#: libbirdfont/KerningDisplay.vala:931 libbirdfont/MainWindow.vala:238
+#: libbirdfont/MessageDialog.vala:37 libbirdfont/SpinButton.vala:208
 msgid "Close"
 msgstr "Tutup"
 
@@ -785,16 +802,16 @@ msgstr "Sepasang pangkal"
 msgid "No kerning pairs created."
 msgstr "Tidak ada sepasang pangkal yang dibuat."
 
-#: libbirdfont/KerningRange.vala:113 libbirdfont/KerningTools.vala:85
+#: libbirdfont/KerningRange.vala:113 libbirdfont/KerningTools.vala:90
 msgid "Kerning class"
 msgstr "Kelas pangkal"
 
-#: libbirdfont/KerningRange.vala:113 libbirdfont/LayerLabel.vala:166
-#: libbirdfont/Ligatures.vala:118 libbirdfont/Ligatures.vala:141
-#: libbirdfont/Ligatures.vala:164 libbirdfont/Ligatures.vala:196
-#: libbirdfont/SpacingClass.vala:45 libbirdfont/SpacingTab.vala:232
-#: libbirdfont/SpacingTab.vala:276 libbirdfont/SpinButton.vala:231
-#: libbirdfont/Theme.vala:687
+#: libbirdfont/KerningRange.vala:113 libbirdfont/LayerLabel.vala:144
+#: libbirdfont/Ligatures.vala:110 libbirdfont/Ligatures.vala:133
+#: libbirdfont/Ligatures.vala:156 libbirdfont/Ligatures.vala:188
+#: libbirdfont/SpacingClass.vala:50 libbirdfont/SpacingTab.vala:232
+#: libbirdfont/SpacingTab.vala:277 libbirdfont/SpinButton.vala:208
+#: libbirdfont/Theme.vala:685
 msgid "Set"
 msgstr "Atur"
 
@@ -806,51 +823,58 @@ msgstr "Memuat tali pangkal"
 msgid "Kerning Tools"
 msgstr ""
 
-#: libbirdfont/KerningTools.vala:63 libbirdfont/SpacingTools.vala:31
+#: libbirdfont/KerningTools.vala:68 libbirdfont/SpacingTools.vala:31
 msgid "Font Size"
-msgstr ""
+msgstr "Ukuran Huruf"
 
-#: libbirdfont/KerningTools.vala:82
+#: libbirdfont/KerningTools.vala:87
 msgid "Create new kerning class."
 msgstr ""
 
-#: libbirdfont/KerningTools.vala:93
+#: libbirdfont/KerningTools.vala:99
 msgid "Use text input to enter kerning values."
 msgstr ""
 
-#: libbirdfont/KerningTools.vala:101 libbirdfont/SpacingTools.vala:52
+#: libbirdfont/KerningTools.vala:107 libbirdfont/SpacingClassTools.vala:30
+#: libbirdfont/SpacingTools.vala:52
 msgid "Insert glyph from overview"
 msgstr ""
 
-#: libbirdfont/KerningTools.vala:116 libbirdfont/SpacingTools.vala:67
+#: libbirdfont/KerningTools.vala:122 libbirdfont/SpacingTools.vala:67
 msgid "Insert character by unicode value"
 msgstr ""
 
-#: libbirdfont/KerningTools.vala:124
+#: libbirdfont/KerningTools.vala:130
+msgid "Right to left"
+msgstr ""
+
+#: libbirdfont/KerningTools.vala:139
 msgid "Open a text file with kerning strings first."
 msgstr ""
 
-#: libbirdfont/KerningTools.vala:126
+#: libbirdfont/KerningTools.vala:141
 msgid "Previous kerning string"
 msgstr ""
 
-#: libbirdfont/KerningTools.vala:136
+#: libbirdfont/KerningTools.vala:151
+#, fuzzy
 msgid "You have reached the beginning of the list."
-msgstr ""
+msgstr "Kamu telah mencapai akhir dari daftar."
 
-#: libbirdfont/KerningTools.vala:145
+#: libbirdfont/KerningTools.vala:160
+#, fuzzy
 msgid "Next kerning string"
-msgstr ""
+msgstr "Memuat tali pangkal"
 
-#: libbirdfont/KerningTools.vala:155
+#: libbirdfont/KerningTools.vala:170
 msgid "You have reached the end of the list."
 msgstr "Kamu telah mencapai akhir dari daftar."
 
-#: libbirdfont/KerningTools.vala:164
+#: libbirdfont/KerningTools.vala:179
 msgid "Substitutions"
-msgstr ""
+msgstr "Substitusi"
 
-#: libbirdfont/LanguageSelectionTab.vala:28 libbirdfont/OverviewTools.vala:39
+#: libbirdfont/LanguageSelectionTab.vala:28 libbirdfont/OverviewTools.vala:44
 msgid "Character Sets"
 msgstr "Mengatur Karakter"
 
@@ -858,11 +882,7 @@ msgstr "Mengatur Karakter"
 msgid "Character Set"
 msgstr "Mengatur Karakter"
 
-#: libbirdfont/LayerLabel.vala:101
-msgid "Hide the layer."
-msgstr ""
-
-#: libbirdfont/LayerLabel.vala:166
+#: libbirdfont/LayerLabel.vala:144
 msgid "Layer"
 msgstr ""
 
@@ -895,59 +915,66 @@ msgid "New Ligature"
 msgstr "Pengikat Baru"
 
 #: libbirdfont/LigatureList.vala:109
+#, fuzzy
 msgid "New Contextual Substitution"
-msgstr ""
+msgstr "Substitusi Kontekstual Baru"
 
 #: libbirdfont/LigatureList.vala:115
 msgid "Contextual Substitutions"
 msgstr ""
 
 #: libbirdfont/LigatureList.vala:126 libbirdfont/LigatureList.vala:140
-#: libbirdfont/Menu.vala:447
+#: libbirdfont/Menu.vala:437
+#, fuzzy
 msgid "Ligatures"
-msgstr ""
+msgstr "Ligature"
 
-#: libbirdfont/Ligatures.vala:118
+#: libbirdfont/Ligatures.vala:110
 msgid "Beginning"
-msgstr ""
+msgstr "Awal"
 
-#: libbirdfont/Ligatures.vala:141
+#: libbirdfont/Ligatures.vala:133
 msgid "Middle"
-msgstr ""
+msgstr "Tengah"
 
-#: libbirdfont/Ligatures.vala:164
+#: libbirdfont/Ligatures.vala:156
 msgid "End"
-msgstr ""
+msgstr "Akhir"
 
-#: libbirdfont/Ligatures.vala:196
+#: libbirdfont/Ligatures.vala:188
+#, fuzzy
 msgid "Ligature"
-msgstr ""
+msgstr "Ligature"
 
 #: libbirdfont/Line.vala:157
 msgid "Position"
-msgstr ""
+msgstr "Posisi"
 
 #: libbirdfont/Line.vala:157
 msgid "Move"
-msgstr ""
+msgstr "Pindah"
 
 #: libbirdfont/LoadCallback.vala:29
+#, fuzzy
 msgid "This font was made with a newer version of Birdfont."
-msgstr ""
+msgstr "Font ini dibuat dengan versi Birdfont yang lebih baru."
 
 #: libbirdfont/LoadCallback.vala:30
+#, fuzzy
 msgid "You need to upgrade your version of Birdfont."
-msgstr ""
+msgstr "Anda harus mengupgrade versi Birdfont."
 
 #: libbirdfont/LoadCallback.vala:34
+#, fuzzy
 msgid "This font was made with an old version of Birdfont."
-msgstr ""
+msgstr "Font ini dibuat dengan Birdfont versi lama."
 
 #: libbirdfont/LoadCallback.vala:35
+#, fuzzy
 msgid "You need an older version of Birdfont to open it."
-msgstr ""
+msgstr "Anda perlu Birdfont versi lama untuk membukanya."
 
-#: libbirdfont/MainWindow.vala:241
+#: libbirdfont/MainWindow.vala:238
 msgid "Glyph sequence"
 msgstr ""
 
@@ -959,7 +986,7 @@ msgstr "Berkas"
 msgid "New"
 msgstr "Baru"
 
-#: libbirdfont/Menu.vala:57 libbirdfont/RecentFiles.vala:81
+#: libbirdfont/Menu.vala:57 libbirdfont/RecentFiles.vala:85
 msgid "Recent Files"
 msgstr "Berkas Terkini"
 
@@ -985,7 +1012,7 @@ msgstr "Mengulang"
 
 #: libbirdfont/Menu.vala:113
 msgid "Copy"
-msgstr "Menyalin"
+msgstr "Salin"
 
 #: libbirdfont/Menu.vala:120
 msgid "Paste"
@@ -996,33 +1023,37 @@ msgid "Paste In Place"
 msgstr ""
 
 #: libbirdfont/Menu.vala:134
+#, fuzzy
 msgid "Select All Paths"
-msgstr ""
+msgstr "Pilih Semua Jalur"
 
 #: libbirdfont/Menu.vala:141
 msgid "Select All Glyphs"
-msgstr ""
+msgstr "Pilih Semua Glif"
 
 #: libbirdfont/Menu.vala:148
 msgid "Move To Baseline"
-msgstr ""
+msgstr "Pindah ke Garis Basis"
 
-#: libbirdfont/Menu.vala:155 libbirdfont/OverView.vala:257
-#: libbirdfont/OverView.vala:276 libbirdfont/OverviewTools.vala:154
+#: libbirdfont/Menu.vala:155 libbirdfont/OverView.vala:260
+#: libbirdfont/OverView.vala:279 libbirdfont/OverviewTools.vala:188
 msgid "Search"
-msgstr ""
+msgstr "Cari"
 
 #: libbirdfont/Menu.vala:162
+#, fuzzy
 msgid "Simplify Path"
-msgstr ""
+msgstr "Sederhanakan Jalur"
 
 #: libbirdfont/Menu.vala:169
+#, fuzzy
 msgid "Merge Paths"
-msgstr ""
+msgstr "Gabungkan Jalur"
 
 #: libbirdfont/Menu.vala:176
+#, fuzzy
 msgid "Close Path"
-msgstr ""
+msgstr "Tutup jalur"
 
 #: libbirdfont/Menu.vala:183
 msgid "Glyph Sequence"
@@ -1033,12 +1064,13 @@ msgid "Set Background Glyph"
 msgstr ""
 
 #: libbirdfont/Menu.vala:197
+#, fuzzy
 msgid "Remove Background Glyph"
-msgstr ""
+msgstr "Hapus Background Glif"
 
 #: libbirdfont/Menu.vala:204
 msgid "Create Guide"
-msgstr ""
+msgstr "Buat Garis Bantu"
 
 #: libbirdfont/Menu.vala:211
 msgid "List Guides"
@@ -1061,12 +1093,14 @@ msgid "Select Point Below"
 msgstr "Pilih Titik Bawah"
 
 #: libbirdfont/Menu.vala:253
+#, fuzzy
 msgid "Move Layer Up"
-msgstr ""
+msgstr "Geser Layer Ke Atas"
 
 #: libbirdfont/Menu.vala:260
+#, fuzzy
 msgid "Move Layer Down"
-msgstr ""
+msgstr "Geser Layer Ke Bawah"
 
 #: libbirdfont/Menu.vala:268
 msgid "Import and Export"
@@ -1080,194 +1114,212 @@ msgstr "Menambahkan Huruf"
 msgid "Export Glyph as SVG"
 msgstr "Menambahkan Glyph sebagai SVG"
 
-#: libbirdfont/Menu.vala:288 libbirdfont/Menu.vala:304
+#: libbirdfont/Menu.vala:288
 msgid "Import SVG file"
 msgstr "Memasukkan berkas SVG"
 
-#: libbirdfont/Menu.vala:295 libbirdfont/Menu.vala:313
+#: libbirdfont/Menu.vala:295
 msgid "Import SVG folder"
 msgstr "Memasukkan berkas SVG"
 
-#: libbirdfont/Menu.vala:304 libbirdfont/Menu.vala:313
-msgid "color"
-msgstr ""
-
-#: libbirdfont/Menu.vala:322
+#: libbirdfont/Menu.vala:302
 msgid "Import Background Image"
 msgstr ""
 
-#: libbirdfont/Menu.vala:336 libbirdfont/Preview.vala:27
+#: libbirdfont/Menu.vala:316 libbirdfont/Preview.vala:27
 msgid "Preview"
-msgstr ""
+msgstr "Pratinjau"
 
-#: libbirdfont/Menu.vala:344
+#: libbirdfont/Menu.vala:324
 msgid "Tab"
 msgstr ""
 
-#: libbirdfont/Menu.vala:350
+#: libbirdfont/Menu.vala:330
+#, fuzzy
 msgid "Next Tab"
-msgstr ""
+msgstr "Tab Berikutnya"
 
-#: libbirdfont/Menu.vala:357
+#: libbirdfont/Menu.vala:337
+#, fuzzy
 msgid "Previous Tab"
-msgstr ""
+msgstr "Tab Sebelumnya"
 
-#: libbirdfont/Menu.vala:364
+#: libbirdfont/Menu.vala:344
+#, fuzzy
 msgid "Close Tab"
-msgstr ""
+msgstr "Tutup Tab"
 
-#: libbirdfont/Menu.vala:371
+#: libbirdfont/Menu.vala:351
 msgid "Close All Tabs"
 msgstr "Tutup semua tab"
 
-#: libbirdfont/Menu.vala:379
+#: libbirdfont/Menu.vala:359
 msgid "Spacing and Kerning"
 msgstr ""
 
-#: libbirdfont/Menu.vala:385
+#: libbirdfont/Menu.vala:365
 msgid "Show Spacing Tab"
 msgstr ""
 
-#: libbirdfont/Menu.vala:392
+#: libbirdfont/Menu.vala:372
 msgid "Show Kerning Tab"
 msgstr ""
 
-#: libbirdfont/Menu.vala:399
+#: libbirdfont/Menu.vala:379
 msgid "List Kerning Pairs"
 msgstr ""
 
-#: libbirdfont/Menu.vala:406 libbirdfont/SpacingClassTab.vala:80
+#: libbirdfont/Menu.vala:386 libbirdfont/SpacingClassTab.vala:97
 msgid "Spacing Classes"
 msgstr ""
 
-#: libbirdfont/Menu.vala:413
+#: libbirdfont/Menu.vala:393
 msgid "Select Next Kerning Pair"
 msgstr ""
 
-#: libbirdfont/Menu.vala:422
+#: libbirdfont/Menu.vala:407
 msgid "Select Previous Kerning Pair"
 msgstr ""
 
-#: libbirdfont/Menu.vala:431
+#: libbirdfont/Menu.vala:421
+#, fuzzy
 msgid "Load Kerning Strings"
-msgstr ""
+msgstr "Memuat tali pangkal"
 
-#: libbirdfont/Menu.vala:438
+#: libbirdfont/Menu.vala:428
+#, fuzzy
 msgid "Reload Kerning Strings"
-msgstr ""
+msgstr "Memuat tali pangkal"
 
-#: libbirdfont/Menu.vala:453
+#: libbirdfont/Menu.vala:443
+#, fuzzy
 msgid "Show Ligatures"
-msgstr ""
+msgstr "Perlihatkan Ligature"
 
-#: libbirdfont/Menu.vala:460
+#: libbirdfont/Menu.vala:450
+#, fuzzy
 msgid "Add Ligature"
-msgstr ""
+msgstr "Pengikat Baru"
 
-#: libbirdfont/Menu.vala:469
+#: libbirdfont/Menu.vala:459
 msgid "Git"
-msgstr ""
+msgstr "Git"
 
-#: libbirdfont/Menu.vala:475
+#: libbirdfont/Menu.vala:465
 msgid "Save As .bfp"
-msgstr ""
+msgstr "Simpan Sebagai .bfp"
 
-#: libbirdfont/Menu.vala:484 libbirdfont/OverView.vala:478
+#: libbirdfont/Menu.vala:474 libbirdfont/OverView.vala:495
 msgid "Overview"
-msgstr ""
-
-#: libbirdfont/Menu.vala:513
-msgid "Help"
-msgstr ""
+msgstr "Tinjauan"
 
 #: libbirdfont/MenuItem.vala:82
 msgid "UP"
-msgstr ""
+msgstr "ATAS"
 
 #: libbirdfont/MenuItem.vala:85
 msgid "DOWN"
-msgstr ""
+msgstr "BAWAH"
 
 #: libbirdfont/MenuItem.vala:88
 msgid "LEFT"
-msgstr ""
+msgstr "KIRI"
 
 #: libbirdfont/MenuItem.vala:91
 msgid "RIGHT"
-msgstr ""
+msgstr "KANAN"
 
 #: libbirdfont/MenuTab.vala:95
+#, fuzzy
 msgid "Missing metadata in font:"
-msgstr ""
+msgstr "Metadata hilang dalam font:"
 
 #: libbirdfont/MenuTab.vala:128
+#, fuzzy
 msgid ""
 "You need to choose a different name for the TTF file with Mac adjustmets."
-msgstr ""
+msgstr "Pilih nama berbeda untuk berkas TTF dengan penyesuaian Mac."
 
 #: libbirdfont/MenuTab.vala:146
+#, fuzzy
 msgid "You need to save your font before exporting it."
-msgstr ""
+msgstr "Anda harus menyimpan font sebelum mengekspornya."
 
 #: libbirdfont/MenuTab.vala:189
 msgid "Menu"
+msgstr "Menu"
+
+#: libbirdfont/MenuTab.vala:216
+msgid "Can't create TTF font."
 msgstr ""
 
-#: libbirdfont/MenuTab.vala:696
+#: libbirdfont/MenuTab.vala:702
+#, fuzzy
 msgid "Add ligature"
-msgstr ""
+msgstr "Pengikat Baru"
 
 #: libbirdfont/MoveTool.vala:41
+#, fuzzy
 msgid "Move paths"
-msgstr ""
+msgstr "Pindah Jalur"
 
-#: libbirdfont/OtfFeatureTable.vala:102 libbirdfont/OtfFeatureTable.vala:167
+#: libbirdfont/OtfFeatureTable.vala:124 libbirdfont/OtfFeatureTable.vala:197
 msgid "Glyph Substitutions"
-msgstr ""
+msgstr "Substitusi Glif"
 
-#: libbirdfont/OtfFeatureTable.vala:108
+#: libbirdfont/OtfFeatureTable.vala:130 libbirdfont/OtfFeatureTable.vala:138
 msgid "New glyph"
-msgstr ""
+msgstr "Glif baru"
 
-#: libbirdfont/OtfFeatureTable.vala:115
+#: libbirdfont/OtfFeatureTable.vala:145
 msgid "Replacement"
-msgstr ""
+msgstr "Pengganti"
 
-#: libbirdfont/OtfFeatureTable.vala:120
+#: libbirdfont/OtfFeatureTable.vala:150
 msgid "Tag"
 msgstr ""
 
-#: libbirdfont/OtfFeatureTable.vala:181
-msgid "Glyph name"
+#: libbirdfont/OtfFeatureTable.vala:212
+msgid "Select a glyph to create an alternate for."
 msgstr ""
 
-#: libbirdfont/OtfFeatureTable.vala:200
+#: libbirdfont/OtfFeatureTable.vala:218
+msgid "Glyph name"
+msgstr "Nama Glif"
+
+#: libbirdfont/OtfFeatureTable.vala:232
 msgid "All glyphs must have unique names."
-msgstr ""
+msgstr "Semua glif harus punya nama unik."
 
 #: libbirdfont/OtfLabel.vala:47
+#, fuzzy
 msgid "Stylistic Alternate"
-msgstr ""
+msgstr "Gaya Alternatif"
 
 #: libbirdfont/OtfLabel.vala:49
 msgid "Small Caps"
-msgstr ""
+msgstr "Huruf Kecil"
 
 #: libbirdfont/OtfLabel.vala:51
+#, fuzzy
 msgid "Capitals to Small Caps"
-msgstr ""
+msgstr "Huruf Kapital ke Huruf Kecil"
 
 #: libbirdfont/OtfLabel.vala:53
 msgid "Swashes"
 msgstr ""
 
-#: libbirdfont/OverView.vala:257 libbirdfont/OverView.vala:276
+#: libbirdfont/OverView.vala:260 libbirdfont/OverView.vala:279
 msgid "Filter"
 msgstr ""
 
-#: libbirdfont/OverView.vala:1498
-msgid "See also:"
+#: libbirdfont/OverView.vala:699
+msgid "No glyphs in this view."
 msgstr ""
+
+#: libbirdfont/OverView.vala:1562
+msgid "See also:"
+msgstr "Lihat juga:"
 
 #: libbirdfont/OverWriteDialogListener.vala:30
 msgid "Overwrite TTF file?"
@@ -1280,99 +1332,107 @@ msgstr ""
 #: libbirdfont/OverWriteDialogListener.vala:32
 #: libbirdfont/OverwriteBfFile.vala:34 libbirdfont/SaveDialog.vala:50
 msgid "Cancel"
-msgstr ""
+msgstr "Batalkan"
 
 #: libbirdfont/OverWriteDialogListener.vala:33
 msgid "Yes, don't ask again."
-msgstr ""
+msgstr "Ya, jangan tanya lagi."
 
-#: libbirdfont/OverviewTools.vala:41 libbirdfont/OverviewTools.vala:119
+#: libbirdfont/OverviewTools.vala:46 libbirdfont/OverviewTools.vala:117
+#: libbirdfont/OverviewTools.vala:153
 msgid "Transform"
 msgstr ""
 
-#: libbirdfont/OverviewTools.vala:43
+#: libbirdfont/OverviewTools.vala:49
 msgid "Multi-Master"
 msgstr ""
 
-#: libbirdfont/OverviewTools.vala:56
+#: libbirdfont/OverviewTools.vala:62
 msgid "All Glyphs"
 msgstr ""
 
-#: libbirdfont/OverviewTools.vala:66
+#: libbirdfont/OverviewTools.vala:72
+#, fuzzy
 msgid "Default"
-msgstr ""
+msgstr "Bawaan"
 
-#: libbirdfont/OverviewTools.vala:93
+#: libbirdfont/OverviewTools.vala:99
 msgid "Skew"
 msgstr "Condong"
 
-#: libbirdfont/OverviewTools.vala:106
+#: libbirdfont/OverviewTools.vala:132
 msgid "Resize"
-msgstr ""
+msgstr "Ubah Ukuran"
 
-#: libbirdfont/OverviewTools.vala:134
+#: libbirdfont/OverviewTools.vala:168
 msgid "Create alternate"
-msgstr ""
+msgstr "Buat alternatif"
 
-#: libbirdfont/OverviewTools.vala:138
+#: libbirdfont/OverviewTools.vala:172
+#, fuzzy
 msgid "Set curve orientation"
-msgstr ""
+msgstr "Tetapkan orientasi curve"
 
-#: libbirdfont/OverviewTools.vala:160
+#: libbirdfont/OverviewTools.vala:194
+#, fuzzy
 msgid "Master Size"
-msgstr ""
+msgstr "Ukuran Utama"
 
-#: libbirdfont/OverviewTools.vala:175
+#: libbirdfont/OverviewTools.vala:209
 msgid "Create new master font"
 msgstr ""
 
 #: libbirdfont/OverwriteBfFile.vala:25
+#, fuzzy
 msgid "This file already exists. Do you want to replace it?"
-msgstr ""
+msgstr "Berkas ini sudah ada. Apakah Anda ingin menimpanya?"
 
 #: libbirdfont/OverwriteBfFile.vala:27
 msgid "Replace"
-msgstr ""
+msgstr "Ganti"
 
 #: libbirdfont/PenTool.vala:82
 msgid "Add new points"
-msgstr ""
+msgstr "Tambah titik baru"
 
-#: libbirdfont/PointTool.vala:24
+#: libbirdfont/PointTool.vala:84
+#, fuzzy
 msgid "Move control points"
-msgstr ""
+msgstr "Pindah titik kontrol"
 
 #: libbirdfont/PreviewTools.vala:27
 msgid "Reload webview"
 msgstr ""
 
 #: libbirdfont/PreviewTools.vala:33
+#, fuzzy
 msgid "Export fonts"
-msgstr ""
+msgstr "Ekspor font"
 
 #: libbirdfont/PreviewTools.vala:39
 msgid "Generate html document"
 msgstr ""
 
-#: libbirdfont/RecentFiles.vala:62
+#: libbirdfont/RecentFiles.vala:66
+#, fuzzy
 msgid "No fonts created yet"
-msgstr ""
+msgstr "Belum ada font yang dibuat"
 
-#: libbirdfont/RecentFiles.vala:65
+#: libbirdfont/RecentFiles.vala:69
 msgid "Create a New Font"
-msgstr ""
+msgstr "Buat Font Baru"
 
-#: libbirdfont/RecentFiles.vala:76
+#: libbirdfont/RecentFiles.vala:80
 msgid "Glyphs"
-msgstr ""
+msgstr "Glif"
 
-#: libbirdfont/RecentFiles.vala:92
+#: libbirdfont/RecentFiles.vala:96
 msgid "Backups"
 msgstr ""
 
 #: libbirdfont/RectangleTool.vala:30
 msgid "Rectangle"
-msgstr ""
+msgstr "Bujur Sangkar"
 
 #: libbirdfont/ResizeTool.vala:49
 msgid "Resize and rotate paths"
@@ -1380,53 +1440,59 @@ msgstr ""
 
 #: libbirdfont/SaveDialog.vala:36
 msgid "Save changes?"
-msgstr ""
+msgstr "Simpan perubahan?"
 
 #: libbirdfont/SaveDialog.vala:44 libbirdfont/SaveDialogListener.vala:30
 msgid "Discard"
-msgstr ""
+msgstr "Singkirkan"
 
 #: libbirdfont/SaveDialogListener.vala:28
 msgid "Save?"
-msgstr ""
+msgstr "Simpan?"
 
-#: libbirdfont/SettingsTab.vala:80
+#: libbirdfont/SettingsTab.vala:82
+#, fuzzy
 msgid "Precision for pen tool"
-msgstr ""
+msgstr "Ketepatan untuk pen tool"
 
-#: libbirdfont/SettingsTab.vala:88
+#: libbirdfont/SettingsTab.vala:90
 msgid "Show or hide control point handles"
 msgstr ""
 
-#: libbirdfont/SettingsTab.vala:98
+#: libbirdfont/SettingsTab.vala:100
 msgid "Fill open paths."
 msgstr ""
 
-#: libbirdfont/SettingsTab.vala:105
+#: libbirdfont/SettingsTab.vala:107
 msgid "Use TTF units."
 msgstr ""
 
-#: libbirdfont/SettingsTab.vala:108
+#: libbirdfont/SettingsTab.vala:110
 msgid "Number of points added by the freehand tool"
 msgstr ""
 
-#: libbirdfont/SettingsTab.vala:130
+#: libbirdfont/SettingsTab.vala:132
 msgid "Path simplification threshold"
 msgstr ""
 
-#: libbirdfont/SettingsTab.vala:149
-msgid "Color theme"
-msgstr ""
+#: libbirdfont/SettingsTab.vala:163
+#, fuzzy
+msgid "Translate"
+msgstr "Jangan diterjemahkan"
 
-#: libbirdfont/SettingsTab.vala:151
+#: libbirdfont/SettingsTab.vala:170
+msgid "Color theme"
+msgstr "Warna tema"
+
+#: libbirdfont/SettingsTab.vala:172
 msgid "Key Bindings"
 msgstr ""
 
-#: libbirdfont/SpacingClass.vala:45
+#: libbirdfont/SpacingClass.vala:50
 msgid "Character"
-msgstr ""
+msgstr "Karakter"
 
-#: libbirdfont/SpacingClassTab.vala:69
+#: libbirdfont/SpacingClassTab.vala:86
 msgid "New spacing class"
 msgstr ""
 
@@ -1436,297 +1502,304 @@ msgstr ""
 
 #: libbirdfont/SpacingTab.vala:232
 msgid "Left"
-msgstr ""
+msgstr "Kiri"
 
-#: libbirdfont/SpacingTab.vala:276
+#: libbirdfont/SpacingTab.vala:277
 msgid "Right"
+msgstr "Kanan"
+
+#: libbirdfont/SvgParser.vala:51 libbirdfont/SvgParser.vala:95
+msgid "Import"
 msgstr ""
 
-#: libbirdfont/Theme.vala:421
+#: libbirdfont/Theme.vala:419
+#, fuzzy
 msgid "Canvas Background"
-msgstr ""
+msgstr "Latar Belakang Kanvas"
 
-#: libbirdfont/Theme.vala:422
+#: libbirdfont/Theme.vala:420
 msgid "Filled Stroke"
 msgstr ""
 
-#: libbirdfont/Theme.vala:423
+#: libbirdfont/Theme.vala:421
 msgid "Stroke Color"
 msgstr ""
 
-#: libbirdfont/Theme.vala:424
+#: libbirdfont/Theme.vala:422
 msgid "Handle Color"
 msgstr ""
 
-#: libbirdfont/Theme.vala:425
+#: libbirdfont/Theme.vala:423
 msgid "Fill Color"
 msgstr ""
 
-#: libbirdfont/Theme.vala:426
+#: libbirdfont/Theme.vala:424
 msgid "Selected Objects"
 msgstr ""
 
-#: libbirdfont/Theme.vala:428
+#: libbirdfont/Theme.vala:426
 msgid "Background 1"
-msgstr ""
+msgstr "Latar Belakang 1"
+
+#: libbirdfont/Theme.vala:427
+#, fuzzy
+msgid "Dialog Background"
+msgstr "Latar Belakang Dialog"
+
+#: libbirdfont/Theme.vala:428
+msgid "Menu Background"
+msgstr "Latar Belakang Menu"
 
 #: libbirdfont/Theme.vala:429
-msgid "Dialog Background"
-msgstr ""
-
-#: libbirdfont/Theme.vala:430
-msgid "Menu Background"
-msgstr ""
-
-#: libbirdfont/Theme.vala:431
 msgid "Default Background"
 msgstr ""
 
-#: libbirdfont/Theme.vala:433
+#: libbirdfont/Theme.vala:431
 msgid "Checkbox Background"
 msgstr ""
 
-#: libbirdfont/Theme.vala:435
+#: libbirdfont/Theme.vala:433
 msgid "Foreground 1"
 msgstr ""
 
-#: libbirdfont/Theme.vala:436
+#: libbirdfont/Theme.vala:434
 msgid "Text Foreground"
 msgstr ""
 
-#: libbirdfont/Theme.vala:437
+#: libbirdfont/Theme.vala:435
 msgid "Table Border"
 msgstr ""
 
-#: libbirdfont/Theme.vala:438
+#: libbirdfont/Theme.vala:436
 msgid "Selection Border"
 msgstr ""
 
-#: libbirdfont/Theme.vala:439
+#: libbirdfont/Theme.vala:437
 msgid "Overview Glyph"
 msgstr ""
 
-#: libbirdfont/Theme.vala:440
+#: libbirdfont/Theme.vala:438
 msgid "Foreground Inverted"
 msgstr ""
 
-#: libbirdfont/Theme.vala:441
+#: libbirdfont/Theme.vala:439
 msgid "Menu Foreground"
 msgstr ""
 
-#: libbirdfont/Theme.vala:442
+#: libbirdfont/Theme.vala:440
 msgid "Selected Tab Foreground"
 msgstr ""
 
-#: libbirdfont/Theme.vala:443
+#: libbirdfont/Theme.vala:441
 msgid "Tab Separator"
 msgstr ""
 
-#: libbirdfont/Theme.vala:445
+#: libbirdfont/Theme.vala:443
 msgid "Highlighted 1"
 msgstr ""
 
-#: libbirdfont/Theme.vala:446
+#: libbirdfont/Theme.vala:444
 msgid "Highlighted Guide"
 msgstr ""
 
-#: libbirdfont/Theme.vala:448
+#: libbirdfont/Theme.vala:446
 msgid "Grid"
 msgstr ""
 
-#: libbirdfont/Theme.vala:450
+#: libbirdfont/Theme.vala:448
 msgid "Guide 1"
 msgstr ""
 
-#: libbirdfont/Theme.vala:451
+#: libbirdfont/Theme.vala:449
 msgid "Guide 2"
 msgstr ""
 
-#: libbirdfont/Theme.vala:452
+#: libbirdfont/Theme.vala:450
 msgid "Guide 3"
 msgstr ""
 
-#: libbirdfont/Theme.vala:454
+#: libbirdfont/Theme.vala:452
 msgid "Button Border 1"
 msgstr ""
 
-#: libbirdfont/Theme.vala:455
+#: libbirdfont/Theme.vala:453
 msgid "Button Background 1"
 msgstr ""
 
-#: libbirdfont/Theme.vala:456
+#: libbirdfont/Theme.vala:454
 msgid "Button Border 2"
 msgstr ""
 
-#: libbirdfont/Theme.vala:457
+#: libbirdfont/Theme.vala:455
 msgid "Button Background 2"
 msgstr ""
 
-#: libbirdfont/Theme.vala:458
+#: libbirdfont/Theme.vala:456
 msgid "Button Border 3"
 msgstr ""
 
-#: libbirdfont/Theme.vala:459
+#: libbirdfont/Theme.vala:457
 msgid "Button Background 3"
 msgstr ""
 
-#: libbirdfont/Theme.vala:460
+#: libbirdfont/Theme.vala:458
 msgid "Button Border 4"
 msgstr ""
 
-#: libbirdfont/Theme.vala:461
+#: libbirdfont/Theme.vala:459
 msgid "Button Background 4"
 msgstr ""
 
-#: libbirdfont/Theme.vala:463
+#: libbirdfont/Theme.vala:461
 msgid "Button Foreground"
 msgstr ""
 
-#: libbirdfont/Theme.vala:464
+#: libbirdfont/Theme.vala:462
 msgid "Selected Button Foreground"
 msgstr ""
 
-#: libbirdfont/Theme.vala:466
+#: libbirdfont/Theme.vala:464
 msgid "Tool Foreground"
 msgstr ""
 
-#: libbirdfont/Theme.vala:467
+#: libbirdfont/Theme.vala:465
 msgid "Selected Tool Foreground"
 msgstr ""
 
-#: libbirdfont/Theme.vala:469
+#: libbirdfont/Theme.vala:467
 msgid "Text Area Background"
 msgstr ""
 
-#: libbirdfont/Theme.vala:471
+#: libbirdfont/Theme.vala:469
 msgid "Overview Item Border"
 msgstr ""
 
-#: libbirdfont/Theme.vala:473
+#: libbirdfont/Theme.vala:471
 msgid "Selected Overview Item"
 msgstr ""
 
-#: libbirdfont/Theme.vala:474
+#: libbirdfont/Theme.vala:472
 msgid "Overview Item 1"
 msgstr ""
 
-#: libbirdfont/Theme.vala:475
+#: libbirdfont/Theme.vala:473
 msgid "Overview Item 2"
 msgstr ""
 
-#: libbirdfont/Theme.vala:477
+#: libbirdfont/Theme.vala:475
 msgid "Overview Selected Foreground"
 msgstr ""
 
-#: libbirdfont/Theme.vala:478
+#: libbirdfont/Theme.vala:476
 msgid "Overview Foreground"
 msgstr ""
 
-#: libbirdfont/Theme.vala:480
+#: libbirdfont/Theme.vala:478
 msgid "Glyph Count Background 1"
 msgstr ""
 
-#: libbirdfont/Theme.vala:481
+#: libbirdfont/Theme.vala:479
 msgid "Glyph Count Background 2"
 msgstr ""
 
-#: libbirdfont/Theme.vala:483
+#: libbirdfont/Theme.vala:481
 msgid "Dialog Shadow"
 msgstr ""
 
-#: libbirdfont/Theme.vala:485
+#: libbirdfont/Theme.vala:483
 msgid "Selected Active Cubic Control Point"
 msgstr ""
 
-#: libbirdfont/Theme.vala:486
+#: libbirdfont/Theme.vala:484
 msgid "Selected Cubic Control Point"
 msgstr ""
 
-#: libbirdfont/Theme.vala:487
+#: libbirdfont/Theme.vala:485
 msgid "Active Cubic Control Point"
 msgstr ""
 
-#: libbirdfont/Theme.vala:488
+#: libbirdfont/Theme.vala:486
 msgid "Cubic Control Point"
 msgstr ""
 
-#: libbirdfont/Theme.vala:490
+#: libbirdfont/Theme.vala:488
 msgid "Selected Active Quadratic Control Point"
 msgstr ""
 
-#: libbirdfont/Theme.vala:491
+#: libbirdfont/Theme.vala:489
 msgid "Selected Quadratic Control Point"
 msgstr ""
 
-#: libbirdfont/Theme.vala:492
+#: libbirdfont/Theme.vala:490
 msgid "Active Quadratic Control Point"
 msgstr ""
 
-#: libbirdfont/Theme.vala:493
+#: libbirdfont/Theme.vala:491
 msgid "Cubic Quadratic Point"
 msgstr ""
 
-#: libbirdfont/Theme.vala:495
+#: libbirdfont/Theme.vala:493
 msgid "Selected Control Point Handle"
 msgstr ""
 
-#: libbirdfont/Theme.vala:496
+#: libbirdfont/Theme.vala:494
 msgid "Active Handle"
 msgstr ""
 
-#: libbirdfont/Theme.vala:497
+#: libbirdfont/Theme.vala:495
 msgid "Control Point Handle"
 msgstr ""
 
-#: libbirdfont/Theme.vala:499
+#: libbirdfont/Theme.vala:497
 msgid "Merge"
-msgstr ""
+msgstr "Gabung"
 
-#: libbirdfont/Theme.vala:500
+#: libbirdfont/Theme.vala:498
 msgid "Spin Button"
 msgstr ""
 
-#: libbirdfont/Theme.vala:501
+#: libbirdfont/Theme.vala:499
 msgid "Active Spin Button"
 msgstr ""
 
-#: libbirdfont/Theme.vala:502
+#: libbirdfont/Theme.vala:500
 msgid "Zoom Bar Border"
 msgstr ""
 
-#: libbirdfont/Theme.vala:503
+#: libbirdfont/Theme.vala:501
+#, fuzzy
 msgid "Font Name"
-msgstr ""
+msgstr "Nama Font"
 
-#: libbirdfont/Theme.vala:687
+#: libbirdfont/Theme.vala:685
 msgid "New theme"
-msgstr ""
+msgstr "Tema baru"
 
-#: libbirdfont/ThemeTab.vala:118
+#: libbirdfont/ThemeTab.vala:107
 msgid "Add new theme"
-msgstr ""
+msgstr "Tambah tema baru"
 
-#: libbirdfont/ThemeTab.vala:120
+#: libbirdfont/ThemeTab.vala:109
 msgid "Colors"
-msgstr ""
+msgstr "Warna"
 
-#: libbirdfont/ThemeTab.vala:147
+#: libbirdfont/ThemeTab.vala:152
 msgid "Dark"
-msgstr ""
+msgstr "Gelap"
 
-#: libbirdfont/ThemeTab.vala:149
+#: libbirdfont/ThemeTab.vala:154
 msgid "Bright"
-msgstr ""
+msgstr "Terang"
 
-#: libbirdfont/ThemeTab.vala:153
+#: libbirdfont/ThemeTab.vala:158
 msgid "Custom"
 msgstr ""
 
 #: libbirdfont/ThemeTools.vala:30
 msgid "Color"
-msgstr ""
+msgstr "Warna"
 
-#: libbirdfont/ToolItem.vala:66
+#: libbirdfont/ToolItem.vala:44
 msgid "Shift"
 msgstr ""
 
@@ -1736,9 +1809,9 @@ msgstr ""
 
 #: libbirdfont/VersionList.vala:51
 msgid "New version"
-msgstr ""
+msgstr "Versi baru"
 
-#: birdfont/GtkWindow.vala:531
+#: birdfont/GtkWindow.vala:443
 msgid "Your fonts have been exported."
 msgstr ""
 
@@ -1760,15 +1833,15 @@ msgstr ""
 
 #: birdfont-autotrace/AutoTrace.vala:92
 msgid "File does not exist."
-msgstr ""
+msgstr "Berkas tidak ada."
 
 #: birdfont-autotrace/AutoTrace.vala:98
 msgid "Unknown file format."
-msgstr ""
+msgstr "Format berkas tidak diketahui."
 
 #: birdfont-autotrace/AutoTrace.vala:114
 msgid "Writing"
-msgstr ""
+msgstr "Penulisan"
 
 #~ msgid "Move to path to the bottom layer"
 #~ msgstr "Pindah ke jalur untuk lapisan bawah "

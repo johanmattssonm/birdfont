@@ -328,9 +328,11 @@ public class TabBar : GLib.Object {
 	public bool close_by_name (string name, bool background_tab = false) {
 		int i = 0;
 				
-		foreach (var t in tabs) {
-			if (t.get_display ().get_name () == name) {
-				return close_tab (i, background_tab);
+		foreach (Tab tab in tabs) {
+			if (tab.get_display ().get_name () == name) {
+				bool closed = close_tab (i, background_tab);
+				redraw_tab_bar (0, 0, width, height);
+				return closed;
 			}
 			
 			i++;
@@ -466,8 +468,7 @@ public class TabBar : GLib.Object {
 		t = tabs.get (index);
 		previous_tab = current_tab;
 		current_tab = t;
-
-		scroll_to_tab (selected, signal_selected);
+		scroll_to_tab (selected, signal_selected);		
 	}
 	
 	private bool has_scroll () {
@@ -569,7 +570,7 @@ public class TabBar : GLib.Object {
 		
 		if (stop_button) {
 			MainWindow.abort_task ();
-		} else if (over_close_tab >= 0 && over == selected) {
+		} else if (over_close_tab >= 0) {
 			close_tab (over_close_tab);
 		} else {
 			select_tab (over);
@@ -579,8 +580,8 @@ public class TabBar : GLib.Object {
 	public void add_tab (FontDisplay display_item, bool signal_selected = true, GlyphCollection? gc = null) {
 		double tab_width = -1;
 		bool always_open = false;
-		int s = (tabs.size == 0) ? 0 : selected + 1;
-		Tab t;
+		int position = (tabs.size == 0) ? 0 : selected + 1;
+		Tab tab;
 
 		if (MenuTab.has_suppress_event ()) {
 			warn_if_test ("Event suppressed");
@@ -592,21 +593,21 @@ public class TabBar : GLib.Object {
 			tab_width += 36;
 		}
 		
-		t = new Tab (display_item, tab_width, always_open);
-		tabs.insert (s,t);
+		tab = new Tab (display_item, tab_width, always_open);		
+		tabs.insert (position, tab);
 		
 		if (gc != null) {
-			t.set_glyph_collection ((!) gc);
+			tab.set_glyph_collection ((!) gc);
 		}
 
-		GlyphCanvas.set_display (t.get_display ());
+		GlyphCanvas.set_display (tab.get_display ());
 
 		MainWindow.get_glyph_canvas ()
-			.set_current_glyph_collection (t.get_glyph_collection ());
+			.set_current_glyph_collection (tab.get_glyph_collection ());
 				
-		select_tab (s, signal_selected);
+		select_tab (position, signal_selected);
 	}
-	
+		
 	/** Returns true if the new item was added to the bar. */
 	public bool add_unique_tab (FontDisplay display_item, bool signal_selected = true) {
 		bool i;
@@ -676,11 +677,13 @@ public class TabBar : GLib.Object {
 				Theme.text_color (wheel, "Highlighted 1");
 			}
 			
+			wheel.set_font_size (progress_size);
+			
 			double middley = h / 2;
 			double middlex = w - (wheel.get_sidebearing_extent () / 2) / scale;
-			wheel.set_font_size (progress_size);
+			
 			wheel.widget_x = middlex;
-			wheel.widget_y = middley;
+			wheel.widget_y = middley;			
 			
 			cr.save ();
 			if (!has_stop_button ()) {
@@ -868,7 +871,7 @@ public class TabBar : GLib.Object {
 		}
 		
 		if (processing) {
-			timer = new TimeoutSource (50);
+			timer = new TimeoutSource (250);
 			timer.set_callback (() => {
 				wheel_rotation += 0.008 * 2 * Math.PI;
 				

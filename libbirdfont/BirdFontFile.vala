@@ -11,9 +11,7 @@
 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
 	Lesser General Public License for more details.
 */
-
 using B;
-using SvgBird;
 
 namespace BirdFont {
 
@@ -277,11 +275,25 @@ class BirdFontFile : GLib.Object {
 		foreach (SpacingClass sc in s.classes) {
 				os.put_string ("<spacing ");
 				os.put_string ("first=\"");
-				os.put_string (Font.to_hex (sc.first.get_char ()));
+				
+				if (sc.first.char_count () == 1) {
+					os.put_string (Font.to_hex (sc.first.get_char ()));
+				} else {
+					os.put_string ("name:");
+					os.put_string (XmlParser.encode (sc.first));
+				}
+				
 				os.put_string ("\" ");
 				
 				os.put_string ("next=\"");
-				os.put_string (Font.to_hex (sc.next.get_char ()));
+				
+				if (sc.next.char_count () == 1) {
+					os.put_string (Font.to_hex (sc.next.get_char ()));
+				} else {
+					os.put_string ("name:");
+					os.put_string (XmlParser.encode (sc.next));
+				}
+				
 				os.put_string ("\" ");
 				
 				os.put_string ("/>\n");
@@ -434,7 +446,7 @@ class BirdFontFile : GLib.Object {
 	public void write_glyph (Glyph g, DataOutputStream os) throws GLib.Error {
 		os.put_string (@"\t<glyph id=\"$(g.version_id)\" left=\"$(double_to_string (g.left_limit))\" right=\"$(double_to_string (g.right_limit))\">\n");
 		
-		foreach (Layer layer in g.layers.get_sublayers ()) {
+		foreach (Layer layer in g.layers.subgroups) {
 			write_layer (layer, os);
 		}
 
@@ -442,110 +454,38 @@ class BirdFontFile : GLib.Object {
 		os.put_string ("\t</glyph>\n");
 	}
 
-	void write_embedded_svg (EmbeddedSvg svg, DataOutputStream os) throws GLib.Error {
-		XmlParser xml = new XmlParser ((!) svg.svg_data);
-		
-		if (xml.validate ()) {
-			os.put_string (@"<embedded ");
-			os.put_string (@"type=\"svg\" ");
-			os.put_string (@"x=\"$(round (svg.x))\"");
-			os.put_string (@"y=\"$(round (svg.y))\"");
-			os.put_string (@">\n");
-			
-			Tag tag = xml.get_root_tag ();
-			
-			os.put_string ("<");
-			os.put_string (tag.get_name ());
-			
-			os.put_string (" ");
-			write_tag_attributes (os, tag);
-			
-			string content = tag.get_content ();
-			
-			if (content == "") {
-				os.put_string (" /");
-			}
-			
-			os.put_string (">");
-	
-			os.put_string (content);
-			
-			os.put_string ("</");
-			os.put_string (tag.get_name ());
-			os.put_string (">\n");
-			
-			os.put_string ("</embedded>\n");
-		}
-	}
-
-	void write_tag_attributes (DataOutputStream os, Tag tag) throws GLib.Error {
-		bool first = true;
-		
-		foreach (Attribute attribute in tag.get_attributes ()) {
-			string ns = attribute.get_namespace ();
-			
-			if (!first) {
-				os.put_string (" ");
-			}
-						
-			if (ns != "") {
-				os.put_string (ns);
-				os.put_string (":");
-			}
-			
-			os.put_string (attribute.get_name ());
-			os.put_string ("=");
-			os.put_string ("\"");
-			os.put_string (attribute.get_content ());
-			os.put_string ("\"");
-			
-			first = false;
-		}
-	}
-
 	void write_layer (Layer layer, DataOutputStream os) throws GLib.Error {
+		string data;
+		
+		// FIXME: name etc.
 		os.put_string (@"\t\t<layer name= \"$(layer.name)\" visible=\"$(layer.visible)\">\n");
 		
-		foreach (SvgBird.Object o in layer.objects.objects) {
-			
-			if (o is EmbeddedSvg) {
-				write_embedded_svg ((EmbeddedSvg) o, os);
+		foreach (Path p in layer.get_all_paths ().paths) {
+			data = get_point_data (p);
+			if (data != "") {
+				os.put_string (@"\t\t\t<path ");
+				
+				if (p.stroke != 0) {
+					os.put_string (@"stroke=\"$(double_to_string (p.stroke))\" ");
+				}
+				
+				if (p.line_cap != LineCap.BUTT) {
+					if (p.line_cap == LineCap.ROUND) {
+						os.put_string (@"cap=\"round\" ");
+					} else if (p.line_cap == LineCap.SQUARE) {
+						os.put_string (@"cap=\"square\" ");
+					}
+				}
+				
+				if (p.skew != 0) {
+					os.put_string (@"skew=\"$(double_to_string (p.skew))\" ");
+				}
+				
+				os.put_string (@"data=\"$(data)\" />\n");
 			}
-			
-			if (o is PathObject) {
-				Path p = ((PathObject) o).get_path ();
-				write_path_object (p, os);
-			}			
 		}
 		
 		os.put_string ("\t\t</layer>\n");	
-	}
-
-	void write_path_object (Path p, DataOutputStream os) throws GLib.Error {
-		string data;
-			
-		data = get_point_data (p);
-		if (data != "") {
-			os.put_string (@"\t\t\t<path ");
-			
-			if (p.stroke != 0) {
-				os.put_string (@"stroke=\"$(double_to_string (p.stroke))\" ");
-			}
-			
-			if (p.line_cap != LineCap.BUTT) {
-				if (p.line_cap == LineCap.ROUND) {
-					os.put_string (@"cap=\"round\" ");
-				} else if (p.line_cap == LineCap.SQUARE) {
-					os.put_string (@"cap=\"square\" ");
-				}
-			}
-			
-			if (p.skew != 0) {
-				os.put_string (@"skew=\"$(double_to_string (p.skew))\" ");
-			}
-			
-			os.put_string (@"data=\"$(data)\" />\n");
-		}
 	}
 
 	public static string double_to_string (double n) {
@@ -1128,6 +1068,7 @@ class BirdFontFile : GLib.Object {
 	
 	private void parse_spacing_class (Tag tag) {
 		string first, next;
+		string name;
 		SpacingData spacing = font.get_spacing ();
 		
 		first = "";
@@ -1135,11 +1076,21 @@ class BirdFontFile : GLib.Object {
 		
 		foreach (Attribute attr in tag.get_attributes ()) {
 			if (attr.get_name () == "first") {
-				first = (!) Font.to_unichar (attr.get_content ()).to_string ();
+				if (attr.get_content ().has_prefix ("U+")) {
+					first = (!) Font.to_unichar (attr.get_content ()).to_string ();
+				} else if (attr.get_content ().has_prefix ("name:")) {
+					name = attr.get_content ().substring ("name:".length);
+					first = XmlParser.decode (name);
+				}
 			}
 
 			if (attr.get_name () == "next") {
-				next = (!) Font.to_unichar (attr.get_content ()).to_string ();
+				if (attr.get_content ().has_prefix ("U+")) {
+					next = (!) Font.to_unichar (attr.get_content ()).to_string ();
+				} else if (attr.get_content ().has_prefix ("name:")) {
+					name = attr.get_content ().substring ("name:".length);
+					next = XmlParser.decode (name);
+				}
 			}		
 		}
 		
@@ -1157,6 +1108,7 @@ class BirdFontFile : GLib.Object {
 			
 			foreach (Attribute attr in tag.get_attributes ()) {
 				if (attr.get_name () == "left") {
+
 					range_left.parse_ranges (unserialize (attr.get_content ()));
 				}
 
@@ -1455,7 +1407,7 @@ class BirdFontFile : GLib.Object {
 		foreach (Tag t in tag) {
 			if (t.get_name () == "background") {
 				parse_background_scale (glyph, t);
-			}		
+			}
 		}
 
 		foreach (Path p in glyph.get_all_paths ()) {
@@ -1466,33 +1418,6 @@ class BirdFontFile : GLib.Object {
 		gc.set_unassigned (unassigned);
 		
 		master.insert_glyph (glyph, selected || selected_id == id);
-	}
-
-	void parse_embedded_svg (Layer layer, Tag tag) {
-		string type = "";
-		double x = 0;
-		double y = 0;
-		
-		foreach (Attribute attribute in tag.get_attributes ()) {
-			if (attribute.get_name () == "x") {
-				x = parse_double (attribute.get_content ());
-			}
-
-			if (attribute.get_name () == "y") {
-				y = parse_double (attribute.get_content ());
-			}
-
-			if (attribute.get_name () == "type") {
-				type = attribute.get_content ();
-			}
-		}
-		
-		if (type == "svg") {
-			EmbeddedSvg svg = SvgParser.parse_embedded_svg_data (tag.get_content ());
-			svg.x = x;
-			svg.y = y;
-			layer.add_object (svg);
-		}
 	}
 
 	Layer parse_layer (Tag tag) {
@@ -1512,11 +1437,7 @@ class BirdFontFile : GLib.Object {
 		foreach (Tag t in tag) {
 			if (t.get_name () == "path") {
 				path = parse_path (t);
-				LayerUtils.add_path (layer, path);
-			}
-			
-			if (t.get_name () == "embedded") {
-				parse_embedded_svg (layer, t);
+				layer.add_path (path);
 			}
 		}
 		
@@ -1551,7 +1472,7 @@ class BirdFontFile : GLib.Object {
 			}
 		}
 		
-		return path;
+		return path;	
 	}
 	
 	private static void line (Path path, string px, string py) {
@@ -1957,7 +1878,6 @@ class BirdFontFile : GLib.Object {
 		ligatures = font.get_ligatures ();
 		ligatures.add_ligature (sequence, ligature);
 	}
-
 }
 
 }

@@ -75,7 +75,8 @@ public class AbstractMenu : GLib.Object {
 		return null;
 	}
 
-	public void process_key_binding_events (uint keyval) {
+	/** @return true if the keybindings consumes the event. */
+	public bool process_key_binding_events (uint keyval) {
 		string display;
 		FontDisplay current_display = MainWindow.get_current_display ();
 		ToolItem tm;
@@ -83,7 +84,7 @@ public class AbstractMenu : GLib.Object {
 		
 		display = current_display.get_name ();
 
-		if (current_display is Glyph) {
+		if (current_display is GlyphTab) {
 			display = "Glyph";
 		}
 		
@@ -96,7 +97,7 @@ public class AbstractMenu : GLib.Object {
 					if (!SettingsDisplay.update_key_bindings 
 						&& !(item is ToolItem)) {
 						item.action ();
-						return;
+						return true;
 					}
 					
 					if (item is ToolItem) {
@@ -106,16 +107,18 @@ public class AbstractMenu : GLib.Object {
 							if (tm.tool.editor_events) {
 								MainWindow.get_toolbox ().set_current_tool (tm.tool);
 								tm.tool.select_action (tm.tool);
-								return;
+								return true;
 							} else {
 								tm.tool.select_action (tm.tool);								
-								return;
+								return true;
 							}
 						}
 					}
 				}
 			}
 		}
+		
+		return false;
 	}
 
 	public void load_key_bindings () {
@@ -231,6 +234,7 @@ public class AbstractMenu : GLib.Object {
 
 	public void add_tool_key_bindings () {
 		ToolItem tool_item;
+
 		foreach (ToolCollection tool_set in MainWindow.get_toolbox ().tool_sets) {
 			foreach (Expander e in tool_set.get_expanders ()) {
 				foreach (Tool t in e.tool) {

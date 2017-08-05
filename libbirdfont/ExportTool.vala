@@ -13,13 +13,36 @@
 */
 
 using B;
-using SvgBird;
 
 namespace BirdFont {
 
 public class ExportTool : GLib.Object {
+
+	public static string? error_message = null;
 	
 	public ExportTool (string n) {
+	}
+
+	public static void set_output_directory () {
+#if MAC
+		Font font = BirdFont.get_current_font ();
+		string? path = font.get_export_directory ();
+			
+		FileChooser fc = new FileChooser ();
+		fc.file_selected.connect ((p) => {
+			 path = p;
+		});
+		
+		if (path == null) {
+			File export_path_handle = File.new_for_path (path);
+		
+			if (!can_write (export_path_handle)) {
+				MainWindow.file_chooser (t_("Export"), fc, FileChooser.LOAD | FileChooser.DIRECTORY);
+			}
+		}
+		
+		font.export_directory = path;
+#endif
 	}
 
 	public static string export_selected_paths_to_svg () {
@@ -45,7 +68,7 @@ public class ExportTool : GLib.Object {
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
 <svg version="1.0" 
 	id="glyph_""" + name + """" 
-	mlns="http://www.w3.org/2000/svg" 
+	xmlns="http://www.w3.org/2000/svg" 
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	x="0px"
 	y="0px"
@@ -96,50 +119,37 @@ public class ExportTool : GLib.Object {
 		
 		name = glyph.get_name ();
 		
-		Gee.ArrayList<SvgBird.Object> pl;
+		Gee.ArrayList<Path> pl;
 		
 		s = new StringBuilder ();
 		glyph_svg = "";
 
-		pl = only_selected_paths ? glyph.active_paths : glyph.get_visible_objects ();
-		
-		foreach (SvgBird.Object o in pl) {
-			
-			if (o is PathObject) {
-				Path p = ((PathObject) o).get_path ();
-
-				if (p.stroke > 0) {
-					s.append (@"<path ");
-					s.append (@"style=\"");
-					s.append (@"fill:none;");
-					s.append (@"stroke:#000000;");
-					s.append (@"stroke-width:$(p.stroke)px;");
-					
-					if (p.line_cap == LineCap.ROUND) {
-						s.append (@"stroke-linecap:round;");
-					} else if (p.line_cap == LineCap.SQUARE) {
-						s.append (@"stroke-linecap:square;");
-					}
-					
-					s.append (@"\" ");
-					
-					s.append (@"d=\"$(Svg.to_svg_path (p, glyph))\" id=\"path_$(name)_$(id)\" />\n");
-					id++;
+		pl = only_selected_paths ? glyph.active_paths : glyph.get_visible_paths ();
+		foreach (Path p in pl) {
+			if (p.stroke > 0) {
+				s.append (@"<path ");
+				s.append (@"style=\"");
+				s.append (@"fill:none;");
+				s.append (@"stroke:#000000;");
+				s.append (@"stroke-width:$(p.stroke)px;");
+				
+				if (p.line_cap == LineCap.ROUND) {
+					s.append (@"stroke-linecap:round;");
+				} else if (p.line_cap == LineCap.SQUARE) {
+					s.append (@"stroke-linecap:square;");
 				}
-			} else {
-				warning ("Copy and paste for other objects not implemented.");
+				
+				s.append (@"\" ");
+				
+				s.append (@"d=\"$(Svg.to_svg_path (p, glyph))\" id=\"path_$(name)_$(id)\" />\n");
+				id++;
 			}
 		}
 		
 		if (only_selected_paths) {
-			foreach (SvgBird.Object p in glyph.active_paths) {
-				if (p is PathObject) {
-					Path path = ((PathObject) p).get_path ();
-					if (path.stroke == 0) {
-						glyph_svg += Svg.to_svg_path (path, glyph);
-					}
-				} else {
-					warning ("Not implemented");
+			foreach (Path p in glyph.active_paths) {
+				if (p.stroke == 0) {
+					glyph_svg += Svg.to_svg_path (p, glyph);
 				}
 			}	
 		} else {
@@ -173,14 +183,14 @@ public class ExportTool : GLib.Object {
 			string fn;
 			int i;
 			
-			if (fd is Glyph) {
+			if (fd is GlyphTab || fd is Glyph) {
 				glyph = MainWindow.get_current_glyph ();
 			} else if (fd is OverView) {
 				OverView overview = MainWindow.get_overview ();
 				Glyph? g = overview.get_selected_glyph ();
 				
 				if (g == null) {
-					warning("No glyhp selected in overview.");
+					warning("No glyph selected in overview.");
 					return;
 				}
 				
@@ -192,6 +202,7 @@ public class ExportTool : GLib.Object {
 			name = glyph.get_name ();
 			
 			if (selected_file == null) {
+				warning ("No selected file.");
 				return;
 			}
 			
@@ -212,7 +223,6 @@ public class ExportTool : GLib.Object {
 				glyph_svg = export_to_string (glyph, false);
 				os = new DataOutputStream (file.create(FileCreateFlags.REPLACE_DESTINATION));
 				os.put_string (glyph_svg);
-		
 			} catch (Error e) {
 				stderr.printf (@"Export \"$svg_file\" \n");
 				critical (@"$(e.message)");
@@ -415,11 +425,7 @@ os.put_string (
 
 <div>
 	<h3 class="big"></h3>
-	<p class="big">
-		<span class="capstosmallcaps">OTF</span> features, 
-		<span class="swashes">like swashes </span>
-		<span class="alternates">alternates &amp; </span>
-		<span class="smallcaps">small caps</span>, can be added 
+	<p class="big">OTF features, like swashes alternates &amp; </span> small caps, can be added 
 		to the font.</span>
 	</p>
 </div>
@@ -447,22 +453,31 @@ os.put_string (
 
 	public static string get_export_folder () {
 		Font font = BirdFont.get_current_font ();
-		string? sandbox = BirdFont.get_sandbox_directory ();
-
-		if (sandbox != null) {
-			File s = File.new_for_path ((!) sandbox);
-			File f = get_child (s, "Fonts");
-			try {
-				if (!f.query_exists ()) {
-					f.make_directory ();
-				}
-			} catch (GLib.Error e) {
-				warning(e.message);
-			}
-			return (!) get_child (f, font.full_name).get_path ();
-		} else {
-			return (!) font.get_folder ().get_path ();
+		string? d = font.get_export_directory ();
+		
+		if (d == null) {
+			warning ("No export path is not set");
+			return "";
 		}
+		
+		return (!) d;
+	}
+
+	static bool can_write (File folder) {
+		File test = get_child (folder, "text.tmp");
+		bool writable = false;
+		
+		try {
+			writable = FileUtils.set_contents ((!) test.get_path (), "test");
+			
+			if (writable) {
+				FileUtils.remove ((!) test.get_path ());
+			}
+		} catch (GLib.Error e) {
+			writable = false;
+		}
+		
+		return writable;
 	}
 
 	public static File get_export_dir () {
@@ -579,16 +594,20 @@ os.put_string (
 		OpenFontFormatWriter fo = new OpenFontFormatWriter (f.units_per_em);
 		
 		File file = (!) File.new_for_path (ttf);
-		File file_mac = (!) File.new_for_path (ttf_mac);
+		File file_mac = (!) File.new_for_path (ttf_mac);		
+
+		error_message = null;		
 		
 		try {
 			fo.open (file, file_mac);
 			fo.write_ttf_font (f);
 			fo.close ();
 		} catch (Error e) {
-			warning (@"Can't write TTF font to $ttf");
+			warning (@"Can't create TTF font to $ttf");
 			critical (@"$(e.message)");
-		}
+			error_message = e.message;
+			f.export_directory = null;
+		}		
 	}
 	
 	static void write_eot (string ttf, string eot) {

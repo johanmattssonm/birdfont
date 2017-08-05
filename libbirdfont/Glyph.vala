@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012 2013 2014 2015 Johan Mattsson
+	Copyright (C) 2012 - 2016 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as
@@ -15,8 +15,6 @@
 using Cairo;
 using Math;
 using Gee;
-using B;
-using SvgBird;
 
 namespace BirdFont {
 
@@ -122,7 +120,7 @@ public class Glyph : FontDisplay {
 	Line left_line;
 	Line right_line;
 
-	/** Cache for Cairo rendering */
+	/** Cache for Cairo surface rendering */
 	HashMap<string, Surface> glyph_cache = new HashMap<string, Surface> ();
 
 	public const double CANVAS_MIN = -10000;
@@ -133,24 +131,20 @@ public class Glyph : FontDisplay {
 
 	public Layer layers = new Layer ();
 	public int current_layer = 0;
-	public Gee.ArrayList<SvgBird.Object> active_paths = new Gee.ArrayList<SvgBird.Object> ();
+	public Gee.ArrayList<Path> active_paths = new Gee.ArrayList<Path> ();
+	public Gee.ArrayList<Layer> selected_groups = new Gee.ArrayList<Layer> ();
 
-	// used if this glyph originates from a fallback font
+	// used if this glyph is fetched from a fallback font
 	public double top_limit = 0;
 	public double baseline = 0;
 	public double bottom_limit = 0;
 
 	public Surface? overview_thumbnail = null;
 
-	public double selection_box_width = 0;
-	public double selection_box_height = 0;
-	public double selection_box_x = 0;
-	public double selection_box_y = 0;
-	
 	public Glyph (string name, unichar unichar_code = 0) {
 		this.name = name;
 		this.unichar_code = unichar_code;
-		
+
 		add_help_lines ();
 
 		left_limit = -28;
@@ -162,18 +156,18 @@ public class Glyph : FontDisplay {
 		this.unichar_code = unichar_code;
 	}
 
+	public Gee.ArrayList<Path> get_active_paths () {
+		return active_paths;
+	}
+
 	public Layer get_current_layer () {
-		if (unlikely (!(0 <= current_layer < layers.objects.size))) {
-			warning ("Layer index out of bounds.");
-			return new Layer ();
-		}
-		
-		return layers.get_sublayers ().get (current_layer);
+		return_val_if_fail (0 <= current_layer < layers.subgroups.size, new Layer ());
+		return layers.subgroups.get (current_layer);
 	}
 
 	public void set_current_layer (Layer layer) {
 		int i = 0;
-		foreach (Layer l in layers.get_sublayers ()) {
+		foreach (Layer l in layers.subgroups) {
 			if (likely (l == layer)) {
 				current_layer = i;
 				return;
@@ -184,40 +178,27 @@ public class Glyph : FontDisplay {
 		warning ("Layer is not added to glyph.");
 	}
 
-	public Gee.ArrayList<SvgBird.Object> get_visible_objects () {
-		return LayerUtils.get_visible_objects (layers);
-	}
-
 	public Gee.ArrayList<Path> get_visible_paths () {
-		return LayerUtils.get_visible_paths (layers).paths;
+		return layers.get_visible_paths ().paths;
 	}
 
 	public PathList get_visible_path_list () {
-		return LayerUtils.get_visible_paths (layers);
-	}
-
-	public Gee.ArrayList<SvgBird.Object> get_objects_in_current_layer () {
-		return get_current_layer ().objects.objects;
+		return layers.get_visible_paths ();
 	}
 
 	public Gee.ArrayList<Path> get_paths_in_current_layer () {
-		return LayerUtils.get_all_paths (get_current_layer ()).paths;
+		return get_current_layer ().get_all_paths ().paths;
 	}
 
 	public Gee.ArrayList<Path> get_all_paths () {
-		return LayerUtils.get_all_paths (layers).paths;
+		return layers.get_all_paths ().paths;
 	}
 
 	public void add_new_layer () {
 		layers.add_layer (new Layer ());
-		current_layer = layers.objects.size - 1;
+		current_layer = layers.subgroups.size - 1;
 	}
 
-	public void add_layer (Layer layer) {
-		layers.add_layer (layer);
-		current_layer = layers.objects.size - 1;
-	}
-	
 	public int get_layer_index (Layer layer) {
 		return layers.index_of (layer);
 	}
@@ -257,10 +238,6 @@ public class Glyph : FontDisplay {
 	public override void close () {
 		undo_list.clear ();
 		redo_list.clear ();
-		
-		foreach (Path path in get_all_paths ()) {
-			path.set_editable (false);
-		}
 	}
 
 	public void set_empty_ttf (bool e) {
@@ -272,69 +249,46 @@ public class Glyph : FontDisplay {
 	}
 
 	public void clear_active_paths () {
+		selected_groups.clear ();
 		active_paths.clear ();
 	}
 
 	public void add_active_path (Layer? group, Path? p) {
+		Path path;
+		Layer g;
+
 		if (p != null) {
-			PathObject path = new PathObject.for_path ((!) p);
-			add_active_object (group, path);
-		} else {
-			add_active_object (group, null);
-		}
-	}
-	
-	// FIXME: delete group
-	public void add_active_object (Layer? group, SvgBird.Object? o) {
-		SvgBird.Object object;
+			path = (!) p;
 
-		if (o != null) {
-			object = (!) o;
-
-			if (!active_paths_contains (object)) {
-				active_paths.add (object);
-			}
-			
-			if (object is PathObject) {
-				PathObject path = (PathObject) object;
-				if (Toolbox.get_move_tool ().is_selected ()) {
-					if (path.get_path ().stroke > 0) {
-						Toolbox.set_object_stroke (path.get_path ().stroke);
-					}
-				}
-				
-				PenTool.active_path = path.get_path ();
-			}
-		}
-	}
-
-	public bool active_paths_contains (SvgBird.Object object) {
-		Glyph glyph = MainWindow.get_current_glyph ();
-
-		if (glyph.active_paths.contains (object)) {
-			return true;
-		}
-		
-		if (object is PathObject) {
-			PathObject path = (PathObject) object;
-			
-			foreach (SvgBird.Object active in glyph.active_paths) {
-				if (active is PathObject) {
-					PathObject path_active = (PathObject) active;
-					if (path_active.get_path () == path.get_path ()) {
-						return true;
-					}
+			if (Toolbox.get_move_tool ().is_selected ()) {
+				if (path.stroke > 0) {
+					Toolbox.set_object_stroke (path.stroke);
 				}
 			}
+
+			if (!active_paths.contains (path)) {
+				active_paths.add (path);
+			}
+			PenTool.active_path = path;
 		}
-		
-		return false;
+
+		if (group != null) {
+			g = (!) group;
+			if (!selected_groups.contains (g)) {
+				selected_groups.add (g);
+			}
+		}
 	}
-	
+
 	public void delete_background () {
 		store_undo_state ();
 		background_image = null;
 		GlyphCanvas.redraw ();
+	}
+
+	public Path? get_active_path () {
+		return_val_if_fail (active_paths.size > 0, null);
+		return active_paths.get (active_paths.size - 1);
 	}
 
 	public bool boundaries (out double x1, out double y1, out double x2, out double y2) {
@@ -386,7 +340,7 @@ public class Glyph : FontDisplay {
 		px2 = -10000;
 		py2 = -10000;
 
-		foreach (SvgBird.Object p in active_paths) {
+		foreach (Path p in active_paths) {
 			if (p.xmin < px) {
 				px = p.xmin;
 			}
@@ -470,40 +424,21 @@ public class Glyph : FontDisplay {
 	public override void scroll_wheel (double x, double y,
 		double pixeldelta_x, double pixeldelta_y) {
 
-		if (KeyBindings.has_alt () || KeyBindings.has_ctrl ()) {
-			if (pixeldelta_y > 0) {
-				zoom_in_at_point (x, y, pixeldelta_y);
-			} else {
-				zoom_out_at_point (x, y, pixeldelta_y);
-			}
+		if (pixeldelta_y > 0) {
+			zoom_in_at_point (x, y, pixeldelta_y);
 		} else {
-			if (!KeyBindings.has_shift ()) {
-				view_offset_x -= pixeldelta_x / view_zoom;
-				view_offset_y -= pixeldelta_y / view_zoom;
-			} else {
-				// move canvas a long x axis instead of y
-				view_offset_x -= pixeldelta_y / view_zoom;
-				view_offset_y -= pixeldelta_x / view_zoom;
-			}
+			zoom_out_at_point (x, y, pixeldelta_y);
 		}
 
-		redraw_area (0, 0, allocation.width, allocation.height);
+		GlyphCanvas.redraw ();
 	}
 
 	public virtual void add_path (Path p) {
-		if (layers.objects.size == 0) {
+		if (layers.subgroups.size == 0) {
 			layers.add_layer (new Layer ());
 		}
 
-		LayerUtils.add_path (get_current_layer (), p);
-	}
-
-	public void add_object (SvgBird.Object object) {
-		if (layers.objects.size == 0) {
-			layers.add_layer (new Layer ());
-		}
-
-		get_current_layer ().add_object (object);		
+		get_current_layer ().add_path (p);
 	}
 
 	public override void selected_canvas () {
@@ -528,7 +463,7 @@ public class Glyph : FontDisplay {
 		GridTool.update_lines ();
 
 		if (!is_null (MainWindow.native_window)) {
-			MainWindow.native_window.set_scrollbar_size (0);
+			MainWindow.scrollbar.set_size (0);
 		}
 
 		update_zoom_bar ();
@@ -539,13 +474,16 @@ public class Glyph : FontDisplay {
 		if (index != "") {
 			int i = int.parse (index);
 			
-			if (0 <= i < layers.objects.size) {
+			if (0 <= i < layers.subgroups.size) {
 				current_layer = i;
 			}
 		}
 		
 		DrawingTools.update_layers ();
 		MainWindow.get_toolbox ().update_expanders ();
+
+		Tool current_tool = MainWindow.get_toolbox ().get_current_tool ();
+		current_tool.select_action (current_tool);
 	}
 
 	void update_zoom_bar () {
@@ -794,12 +732,8 @@ public class Glyph : FontDisplay {
 		}
 	}
 
-	public void delete_object (SvgBird.Object o) {
-		layers.remove (o);
-	}
-
 	public void delete_path (Path p) {
-		LayerUtils.remove_path(layers, p);
+		layers.remove_path(p);
 	}
 
 	public string get_svg_data () {
@@ -949,9 +883,8 @@ public class Glyph : FontDisplay {
 			add_path (path);
 			path.reopen ();
 			path.create_list ();
-			
-			PathObject object = new PathObject.for_path (path);
-			add_active_object (null, object);
+
+			add_active_path (null, path);
 		}
 
 		if (remaining_points.paths.size > 0) {
@@ -1050,7 +983,9 @@ public class Glyph : FontDisplay {
 			return;
 		}
 
-		if (move_canvas || DrawingTools.move_canvas.is_selected ()) {
+		if (move_canvas 
+			|| DrawingTools.move_canvas.is_selected ()
+			|| (KeyBindings.has_ctrl () && KeyBindings.has_shift ())) {
 			view_is_moving = true;
 			move_offset_x = view_offset_x;
 			move_offset_y = view_offset_y;
@@ -1064,7 +999,7 @@ public class Glyph : FontDisplay {
 	public void set_active_path (Path p) {
 		p.reopen ();
 		clear_active_paths ();
-		add_active_object (null, new PathObject.for_path (p));
+		add_active_path (null, p);
 	}
 
 	/** Move view port centrum to this coordinate. */
@@ -1134,19 +1069,9 @@ public class Glyph : FontDisplay {
 	}
 
 	public void show_zoom_area (int sx, int sy, int nx, int ny) {
-		double x, y, w, h;
-
 		set_zoom_area (sx, sy, nx, ny);
-
 		zoom_area_is_visible = true;
-
-		x = Math.fmin (zoom_x1, zoom_x2) - 50;
-		y = Math.fmin (zoom_y1, zoom_y2) - 50;
-
-		w = Math.fabs (zoom_x1 - zoom_x2) + 100;
-		h = Math.fabs (zoom_y1 - zoom_y2) + 100;
-
-		redraw_area ((int)x, (int)y, (int)w, (int)h);
+		GlyphCanvas.redraw ();
 	}
 
 	public void set_zoom_area (int sx, int sy, int nx, int ny) {
@@ -1208,17 +1133,61 @@ public class Glyph : FontDisplay {
 		return -y;
 	}
 
-	public SvgBird.Object? get_object_at (double x, double y) {
-		Layer layer = get_current_layer ();
-		for (int i = layer.objects.size - 1; i >= 0; i--) {
-			SvgBird.Object o = layer.objects.get_object (i);
-			
-			if (o.is_over (x, y)) {
-				return o;
+	public Layer? get_path_at (double x, double y) {
+		Layer? group = null;
+		bool found = false;
+
+		foreach (Layer layer in get_current_layer ().subgroups) {
+			foreach (Path pt in layer.paths.paths) {
+				if (pt.is_over (x, y)) {
+					found = true;
+					group = layer;
+				}
 			}
 		}
-		
-		return null;
+
+		if (!found) {
+			foreach (Path pt in get_paths_in_current_layer ()) {
+				if (pt.is_over (x, y)) {
+					Layer layer = new Layer ();
+					layer.is_counter = true;
+					layer.single_path = true;
+					layer.add_path (pt);
+					group = layer;
+				}
+			}
+		}
+
+		return group;
+	}
+
+	public bool select_path (double x, double y) {
+		Path? p = null;
+		bool found = false;
+
+		foreach (Path pt in get_paths_in_current_layer ()) {
+			if (pt.is_over (x, y)) {
+				p = pt;
+				found = true;
+			}
+		}
+
+		if (!KeyBindings.has_shift ()) {
+			clear_active_paths ();
+		}
+
+		add_active_path (null, p);
+
+		return found;
+	}
+
+	public bool is_over_selected_path (double x, double y) {
+		foreach (Path pt in active_paths) {
+			if (pt.is_over (x, y)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void queue_redraw_path (Path path) {
@@ -1235,6 +1204,48 @@ public class Glyph : FontDisplay {
 		double xtb = -view_offset_x - xmax;
 
 		redraw_area ((int)xtb - 10, (int)yta - 10, (int)(xtb - xta) + 10, (int) (yta - ytb) + 10);
+	}
+
+	public Path get_closeset_path (double x, double y) {
+		double d;
+		EditPoint ep = new EditPoint ();
+
+		Path min_point = new Path ();
+		double min_distance = double.MAX;
+
+		double xt = path_coordinate_x (x);
+		double yt = path_coordinate_y (y);
+		var paths = get_visible_paths ();
+
+		foreach (Path p in paths) {
+			if (p.is_over (xt, yt)) {
+				return p;
+			}
+		}
+
+		foreach (Path p in paths) {
+			if (p.points.size == 0) continue;
+
+			p.get_closest_point_on_path (ep, xt, yt);
+			d = Math.pow (ep.x - xt, 2) + Math.pow (ep.y - yt, 2);
+
+			if (d < min_distance) {
+				min_distance = d;
+				min_point = p;
+			}
+
+		}
+
+		// a path without any editpoints
+		if (paths.size > 0) {
+			return paths.get (0);
+		}
+
+		if (unlikely (min_distance == double.MAX)) {
+			warning (@"No path found in path_list.");
+		}
+
+		return min_point;
 	}
 
 	public void move_selected_edit_point_coordinates (EditPoint selected_point, double xt, double yt) {
@@ -1287,9 +1298,8 @@ public class Glyph : FontDisplay {
 			return;
 		}
 
-		foreach (SvgBird.Object object in active_paths) {
+		foreach (Path path in active_paths) {
 			EditPoint p;
-			Path path = ((PathObject) object).get_path ();
 			EditPoint pl = path.get_last_point ();
 
 			if (pl.prev != null) {
@@ -1303,6 +1313,7 @@ public class Glyph : FontDisplay {
 
 				if (px > x) px -= tw + 60;
 				if (py > y) py -= th + 60;
+
 			} else {
 				px = x - 60;
 				py = y - 60;
@@ -1343,7 +1354,7 @@ public class Glyph : FontDisplay {
 	}
 
 	public void open_path () {
-		foreach (Path p in get_all_paths ()) {
+		foreach (Path p in get_visible_paths ()) {
 			p.set_editable (true);
 			p.recalculate_linear_handles ();
 
@@ -1588,91 +1599,157 @@ public class Glyph : FontDisplay {
 		cr.stroke ();
 	}
 
-	public void draw_layers (Context cr) {
-		foreach (SvgBird.Object object in layers.objects) {
-			if (object is Layer) {
-				draw_layer (cr, (Layer) object);
+	/** Draw filled paths. */
+	public void draw_paths (Context cr, Color? c = null) {
+		PathList stroke;
+		Color color;
+		bool open;
+		
+		cr.save ();
+		cr.new_path ();
+		foreach (Path p in get_visible_paths ()) {
+			if (c != null) {
+				color = (!) c;
+			} else if (p.color != null) {
+				color = (!) p.color;
+			} else {
+				color = Color.black ();
+			}
+
+			if (p.stroke > 0) {
+				stroke = p.get_stroke_fast ();
+				draw_path_list (stroke, cr, color);
+			} else {
+				open = p.is_open ();
+				
+				if (open) {
+					p.close ();
+					p.recalculate_linear_handles ();
+				}
+				
+				p.draw_path (cr, this, color);
+				
+				if (open) {
+					p.reopen ();
+				}
 			}
 		}
-		
-		draw_bird_font_paths (cr);
+		cr.fill ();
+		cr.restore ();
 	}
 
-	public void draw_layer (Context cr, Layer sublayers) {
-		foreach (SvgBird.Object object in sublayers.objects) {
-			if (object is EmbeddedSvg) {
-				EmbeddedSvg svg = (EmbeddedSvg) object;
-				svg.draw_embedded_svg (cr);
+	public void draw_path (Context cr) {
+		PathList stroke;
+		Color color;
+
+		cr.save ();
+		cr.new_path ();
+		foreach (Path p in get_visible_paths ()) {
+			if (p.stroke > 0) {
+				stroke = p.get_stroke_fast ();
+
+				if (p.is_editable ()) {
+					color = Theme.get_color ("Filled Stroke");
+					color.a = 0.8;
+				} else {
+					color = Color.black ();
+				}
+
+				draw_path_list (stroke, cr, color);
 			}
 		}
-	}
-		
-	public void draw_bird_font_paths (Context cr) {
-		Tool selected_tool = MainWindow.get_toolbox ().get_current_tool ();
-		
-		bool draw_control_points = (selected_tool is PenTool)
-			|| (selected_tool is PointTool)
-			|| (selected_tool is TrackTool)
-			|| (selected_tool is BezierTool);
+		cr.fill ();
+		cr.restore ();
 
-		bool has_path = false;
-		
-		if (!draw_control_points) {
-			foreach (SvgBird.Object object in get_visible_objects ()) {
-				if (object is PathObject
-					&& object.stroke > 0) {
-						
-					has_path = true;
-					PathObject object_path = (PathObject) object;				
-					object_path.draw_path (cr);
+		if (!(MainWindow.get_toolbox ().get_current_tool () is PenTool)
+			&& !(MainWindow.get_toolbox ().get_current_tool () is PointTool)
+			&& !(MainWindow.get_toolbox ().get_current_tool () is TrackTool)
+			&& !(MainWindow.get_toolbox ().get_current_tool () is BezierTool)) {
+			cr.save ();
+			cr.new_path ();
+			foreach (Path p in active_paths) {
+				if (p.stroke > 0) {
+					stroke = p.get_stroke_fast ();
+					color = Theme.get_color ("Selected Objects");
+					draw_path_list (stroke, cr, color);
 				}
 			}
+			cr.fill ();
+			cr.restore ();
+		}
 
-			if (has_path) {
-				cr.set_fill_rule (FillRule.WINDING);
-				cr.set_source_rgba (0, 0, 0, 1);
+		if (is_open () && Path.fill_open_path) {
+			cr.save ();
+			cr.new_path ();
+			foreach (Path p in get_visible_paths ()) {
+				if (p.stroke == 0) {
+					color = p.color == null ? get_path_fill_color () : (!) p.color;
+					p.draw_path (cr, this, color);
+				}
+			}
+			cr.fill ();
+			cr.restore ();
+		}
+
+		if (is_open ()) {
+			cr.save ();
+			cr.new_path ();
+			foreach (Path p in get_visible_paths ()) {
+				p.draw_outline (cr);
+				p.draw_edit_points (cr);
+			}
+			cr.restore ();
+		}
+
+		if (!is_open ()) {
+			// This was good for testing but it is way too slow:
+			// Svg.draw_svg_path (cr, get_svg_data (), Glyph.xc () + left, Glyph.yc () - baseline);
+
+			cr.save ();
+			cr.new_path ();
+			foreach (Path p in get_visible_paths ()) {
+				if (p.stroke == 0) {
+					color = p.color == null ? Color.black () : (!) p.color;
+					p.draw_path (cr, this, color);
+				}
+			}
+			cr.close_path ();
+			cr.fill ();
+			cr.restore ();
+
+			foreach (Path p in active_paths) {
+				cr.save ();
+				cr.new_path ();
+				if (p.stroke == 0) {
+					p.draw_path (cr, this);
+				}
+				cr.close_path ();
 				cr.fill ();
-			}
-		}
-		
-		has_path = false;
-		
-		if (!draw_control_points) {
-			foreach (SvgBird.Object object in get_visible_objects ()) {
-				if (object is PathObject
-					&& object.stroke == 0) {
-						
-					has_path = true;
-					PathObject object_path = (PathObject) object;				
-					object_path.draw_path (cr);
-				}
-			}
-
-			if (has_path) {
-				cr.set_fill_rule (FillRule.EVEN_ODD);
-				Theme.color (cr, "Objects");
-				cr.fill ();
-			}
-		}
-		
-		if (draw_control_points) {
-			foreach (SvgBird.Object object in get_visible_objects ()) {
-				if (object is PathObject) {
-					PathObject object_path = (PathObject) object;
-					Glyph g = MainWindow.get_current_glyph ();
-					cr.set_line_width (CanvasSettings.stroke_width / g.view_zoom);
-					object_path.path.draw_path (cr);
-					object_path.path.draw_control_points (cr);
-				}
+				cr.restore ();
 			}
 		}
 
 		if (show_orientation_arrow) {
 			foreach (Path p in get_visible_paths ()) {
-				if (p.stroke == 0) {
+				if (p.stroke > 0) {
+					stroke = p.get_stroke_fast ();
+					foreach (Path ps in stroke.paths) {
+						ps.draw_orientation_arrow (cr, orientation_arrow_opacity);
+					}
+				} else {
 					p.draw_orientation_arrow (cr, orientation_arrow_opacity);
 				}
 			}
+		}
+	}
+
+	private Color get_path_fill_color () {
+		return Theme.get_color ("Fill Color");
+	}
+
+	public void draw_path_list (PathList pl, Context cr, Color? c = null) {
+		foreach (Path p in pl.paths) {
+			p.draw_path (cr, this, c);
 		}
 	}
 
@@ -1712,8 +1789,8 @@ public class Glyph : FontDisplay {
 		}
 
 		if (unlikely (Preferences.draw_boundaries)) {
-			foreach (SvgBird.Object o in get_visible_objects ()) {
-				draw_boundaries (o, cmp);
+			foreach (Path p in get_visible_paths ()) {
+				p.draw_boundaries (cmp);
 			}
 		}
 
@@ -1730,29 +1807,22 @@ public class Glyph : FontDisplay {
 			cmp.restore ();
 		}
 
-		cmp.save ();
-		cmp.scale (view_zoom, view_zoom);
-		cmp.translate (-view_offset_x, -view_offset_y);
-		draw_layers (cmp);
-		cmp.restore ();	
-		
-		Tool selected_tool = MainWindow.get_toolbox ().get_current_tool ();
-		bool draw_selection = active_paths.size > 0
-			&& (selected_tool is MoveTool || selected_tool is ResizeTool);
-		
-		if (draw_selection) {
-			update_selection_boundaries ();
-			draw_selection_box (cmp);
+		if (!is_empty ()) {
+			cmp.save ();
+			cmp.scale (view_zoom, view_zoom);
+			cmp.translate (-view_offset_x, -view_offset_y);
+			draw_path (cmp);
+			cmp.restore ();
 		}
-		
+
 		cmp.save ();
 		tool = MainWindow.get_toolbox ().get_current_tool ();
 		tool.draw_action (tool, cmp, this);
 		cmp.restore ();
 	}
 
-	private void zoom_in_at_point (double x, double y, double zoom = 15) {
-		int n = (int) (-zoom);
+	private void zoom_in_at_point (double x, double y, double amount = 15) {
+		int n = (int) (-amount);
 		zoom_at_point (x, y, n);
 	}
 
@@ -1788,7 +1858,7 @@ public class Glyph : FontDisplay {
 	private void move_view_offset (double x, double y) {
 		view_offset_x = move_offset_x + (pointer_begin_x - x) * (1/view_zoom);
 		view_offset_y = move_offset_y + (pointer_begin_y - y) * (1/view_zoom);
-		redraw_area (0, 0, allocation.width, allocation.height);
+		GlyphCanvas.redraw ();
 	}
 
 	public void store_undo_state (bool clear_redo = false) {
@@ -1819,10 +1889,10 @@ public class Glyph : FontDisplay {
 			g.add_line (line.copy ());
 		}
 
-		g.layers = (Layer) layers.copy ();
+		g.layers = layers.copy ();
 
-		foreach (SvgBird.Object o in active_paths) {
-			g.active_paths.add (o);
+		foreach (Path p in active_paths) {
+			g.active_paths.add (p);
 		}
 
 		if (background_image != null) {
@@ -1892,7 +1962,7 @@ public class Glyph : FontDisplay {
 
 	void set_glyph_data (Glyph g) {
 		current_layer = g.current_layer;
-		layers = (Layer) g.layers.copy ();
+		layers = g.layers.copy ();
 
 		left_limit = g.left_limit;
 		right_limit = g.right_limit;
@@ -1909,8 +1979,8 @@ public class Glyph : FontDisplay {
 		}
 
 		clear_active_paths ();
-		foreach (SvgBird.Object p in g.active_paths) {
-			add_active_object (null, p);
+		foreach (Path p in g.active_paths) {
+			add_active_path (null, p);
 		}
 
 		redraw_area (0, 0, allocation.width, allocation.height);
@@ -2243,7 +2313,7 @@ public class Glyph : FontDisplay {
 		SpacingData sd;
 
 		sd = font.get_spacing ();
-		s = sd.get_all_connections ((!) unichar_code.to_string ());
+		s = sd.get_all_connections (get_name ());
 
 		foreach (string l in s) {
 			if (l != (!) unichar_code.to_string ()) {
@@ -2310,12 +2380,12 @@ public class Glyph : FontDisplay {
 	public void move_layer_up () {
 		Layer layer = get_current_layer ();
 
-		if (current_layer + 2 <= layers.objects.size) {
-			return_if_fail (0 <= current_layer + 2 <= layers.objects.size);
-			layers.objects.objects.insert (current_layer + 2, layer);
+		if (current_layer + 2 <= layers.subgroups.size) {
+			return_if_fail (0 <= current_layer + 2 <= layers.subgroups.size);
+			layers.subgroups.insert (current_layer + 2, layer);
 
-			return_if_fail (0 <= current_layer + 1 < layers.objects.size);
-			layers.objects.objects.remove_at (current_layer);
+			return_if_fail (0 <= current_layer + 1 < layers.subgroups.size);
+			layers.subgroups.remove_at (current_layer);
 
 			set_current_layer (layer);
 		}
@@ -2325,11 +2395,11 @@ public class Glyph : FontDisplay {
 		Layer layer = get_current_layer ();
 
 		if (current_layer >= 1) {
-			return_if_fail (0 <= current_layer - 1 < layers.objects.size);
-			layers.objects.objects.insert (current_layer - 1, layer);
+			return_if_fail (0 <= current_layer - 1 < layers.subgroups.size);
+			layers.subgroups.insert (current_layer - 1, layer);
 
-			return_if_fail (0 <= current_layer + 1 < layers.objects.size);
-			layers.objects.objects.remove_at (current_layer + 1);
+			return_if_fail (0 <= current_layer + 1 < layers.subgroups.size);
+			layers.subgroups.remove_at (current_layer + 1);
 
 			set_current_layer (layer);
 		}
@@ -2402,138 +2472,6 @@ public class Glyph : FontDisplay {
 		}
 		
 		return g2;
-	}
-	
-	// FIXME: convert everything to the new SvgBird.Object code
-	public Gee.ArrayList<Path> get_active_paths () {
-		Gee.ArrayList<Path> paths = new Gee.ArrayList<Path> ();
-		
-		foreach (SvgBird.Object object in active_paths) {
-			if (object is PathObject) {
-				paths.add (((PathObject) object).get_path ());
-			}
-		}
-		
-		return paths;
-	}
-	
-	public void draw_boundaries  (SvgBird.Object object, Context cr) {
-		double x = Glyph.reverse_path_coordinate_x (object.xmin); 
-		double y = Glyph.reverse_path_coordinate_y (object.ymin);
-		double x2 = Glyph.reverse_path_coordinate_x (object.xmax);
-		double y2 = Glyph.reverse_path_coordinate_y (object.ymax);
-		
-		cr.save ();
-		
-		Theme.color (cr, "Default Background");
-		cr.set_line_width (2);
-		cr.rectangle (x, y, x2 - x, y2 - y);
-		cr.stroke ();
-		
-		cr.restore ();
-	}
-	
-	void draw_selection_box (Context cr) {
-		double x, y, w, h;
-		double hook_width;
-		
-		x = reverse_path_coordinate_x (selection_box_x);
-		y = reverse_path_coordinate_y (selection_box_y);
-		w = selection_box_width / ivz ();
-		h = selection_box_height / ivz ();
-		
-		hook_width = w > 20 ? 10 : w * 0.2;
-
-		update_selection_boundaries ();
-		cr.save ();
-		
-		// FIXME: use color theme
-		cr.set_source_rgba (0, 0, 0, 1); 
-		
-		cr.set_line_width (1);
-		cr.move_to (x, y + hook_width);
-		cr.line_to (x, y);
-		cr.line_to (x + hook_width, y);
-		cr.stroke ();
-
-		cr.move_to (x + w - hook_width, y);
-		cr.line_to (x + w, y);
-		cr.line_to (x + w, y + hook_width);
-		cr.stroke ();
-
-		cr.move_to (x + w, y + h - hook_width);
-		cr.line_to (x + w, y + h);
-		cr.line_to (x + w - hook_width, y + h);
-
-		cr.move_to (x + hook_width, y + h);
-		cr.line_to (x, y + h);
-		cr.line_to (x, y + h - hook_width);
-		
-		cr.stroke ();					
-		cr.restore ();
-
-		cr.save ();
-		cr.set_source_rgba (1, 1, 1, 1); 
-		
-		cr.set_line_width (1);
-		cr.move_to (x + 1, y + hook_width);
-		cr.line_to (x + 1, y + 1);
-		cr.line_to (x + hook_width, y + 1);
-		cr.stroke ();
-
-		cr.move_to (x + w - hook_width, y + 1);
-		cr.line_to (x + w - 1, y + 1);
-		cr.line_to (x + w - 1, y + hook_width);
-		cr.stroke ();
-
-		cr.move_to (x + w - 1, y + h - hook_width);
-		cr.line_to (x + w - 1, y + h - 1);
-		cr.line_to (x + w - hook_width, y + h - 1);
-
-		cr.move_to (x + hook_width, y + h - 1);
-		cr.line_to (x + 1, y + h - 1);
-		cr.line_to (x + 1, y + h - hook_width);
-		
-		cr.stroke ();					
-		cr.restore ();
-	}
-
-	public void update_selection_boundaries () {
-		get_selection_box_boundaries (out selection_box_x,
-			out selection_box_y, out selection_box_width,
-			out selection_box_height);	
-	}
-
-	public void get_selection_box_boundaries (out double x, out double y, out double w, out double h) {
-		double px, py, px2, py2;
-		
-		px = CANVAS_MAX;
-		py = CANVAS_MAX;
-		px2 = CANVAS_MIN;
-		py2 = CANVAS_MIN;
-		
-		foreach (Path p in get_active_paths ()) {
-			if (px > p.xmin) {
-				px = p.xmin;
-			} 
-
-			if (py > p.ymin) {
-				py = p.ymin;
-			}
-
-			if (px2 < p.xmax) {
-				px2 = p.xmax;
-			}
-			
-			if (py2 < p.ymax) {
-				py2 = p.ymax;
-			}
-		}
-		
-		w = px2 - px;
-		h = py2 - py;
-		x = px;
-		y = py2;
 	}
 }
 

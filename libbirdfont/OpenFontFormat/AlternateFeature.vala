@@ -24,7 +24,7 @@ public class AlternateFeature : GLib.Object {
 		
 		this.tag = tag;
 		this.glyf_table = glyf_table;
-		alternates = font.alternates.get_alt (tag);
+		alternates = font.alternates.get_alt_with_glyph (tag, font);
 
 		alternates.sort ((a, b) => {
 			Alternate alt1 = (Alternate) a;

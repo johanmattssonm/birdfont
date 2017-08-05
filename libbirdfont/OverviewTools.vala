@@ -16,6 +16,11 @@ using Cairo;
 
 namespace BirdFont {
 
+public enum Transform {
+	SLANT,
+	SIZE
+}
+
 public class OverviewTools : ToolCollection  {
 
 	static LabelTool all_glyphs;
@@ -38,7 +43,8 @@ public class OverviewTools : ToolCollection  {
 		Expander font_name = new Expander ();
 		Expander character_sets = new Expander (t_("Character Sets"));
 		Expander zoom_expander = new Expander (t_("Zoom"));
-		Expander transform_expander = new Expander (t_("Transform"));
+		Expander transform_slant_expander = new Expander (t_("Transform"));
+		Expander transform_size_expander = new Expander ();
 		Expander glyph_expander = new Expander (t_("Glyph"));
 		Expander multi_master = new Expander (t_("Multi-Master"));
 		
@@ -93,44 +99,72 @@ public class OverviewTools : ToolCollection  {
 		skew = new SpinButton ("skew_overview", t_("Skew"));
 		skew.set_big_number (true);
 		skew.set_int_value ("0.000");
+
+		FontSettings settings = BirdFont.get_current_font ().settings;			
+		string? skew_value = settings.get_setting ("skew_overview");
+
+		if (skew_value != null) {
+			skew.set_int_value ((!) skew_value);
+		}
+
 		skew.set_int_step (1);
 		skew.set_min (-100);
 		skew.set_max (100);
 		skew.show_icon (true);
 		skew.set_persistent (false);
-		skew.new_value_action.connect ((self) => {
-			resize.set_value_round (100, false, false);
+		transform_slant_expander.add_tool (skew);
+			
+		Tool transform_slant = new Tool ("transform_slant", t_("Transform"));
+		transform_slant.set_icon ("transform");
+		transform_slant.select_action.connect ((self) => {
+			FontSettings fs = BirdFont.get_current_font ().settings;			
+			fs.set_setting ("skew_overview", @"$(skew.get_value ())");
+			transform_slant.selected = false;
+			
+			process_transform (Transform.SLANT);
+			
+			BirdFont.get_current_font ().touch ();
 		});
-		transform_expander.add_tool (skew);
+		transform_slant.selected = false;
+		transform_slant.set_persistent (false);
+		transform_slant_expander.add_tool (transform_slant);
 
 		resize = new SpinButton ("resize_overview", t_("Resize"));
 		resize.set_big_number (true);
-		resize.set_int_value ("0.000");
+		resize.set_int_value ("100.0");
+					
+		string? resize_value = settings.get_setting ("resize_overview");
+
+		if (resize_value != null) {
+			resize.set_int_value ((!) resize_value);
+			
+			if (resize.get_value () <= 0) {
+				resize.set_int_value ("100.0");
+			}
+		}
+
 		resize.set_int_step (1);
 		resize.set_min (0);
 		resize.set_max (300);
 		resize.show_icon (true);
 		resize.set_persistent (false);
-		resize.new_value_action.connect ((self) => {
-			skew.set_value_round (0, false, false);
-		});
-		transform_expander.add_tool (resize);
+		transform_size_expander.add_tool (resize);
+
+		Tool transform_size = new Tool ("transform_size", t_("Transform"));
+		transform_size.set_icon ("transform");
+		transform_size.select_action.connect ((self) => {
+			FontSettings fs = BirdFont.get_current_font ().settings;			
+			fs.set_setting ("resize_overview", @"$(resize.get_value ())");
+			transform_size.selected = false;
 			
-		Tool transform = new Tool ("transform", t_("Transform"));
-		transform.select_action.connect ((self) => {
-			FontSettings fs = BirdFont.get_current_font ().settings;
-			
-			fs.set_setting ("skew_overview", @"$(skew.get_value ())");
-			transform.selected = false;
-			
-			process_transform ();
+			process_transform (Transform.SIZE);
 			
 			BirdFont.get_current_font ().touch ();
 		});
-		transform.selected = false;
-		transform.set_persistent (false);
-		transform_expander.add_tool (transform);
-		
+		transform_size.selected = false;
+		transform_size.set_persistent (false);
+		transform_size_expander.add_tool (transform_size);
+
 		Tool alternate = new Tool ("alternate", t_("Create alternate"));
 		alternate.select_action.connect (add_new_alternate);
 		glyph_expander.add_tool (alternate);
@@ -179,7 +213,8 @@ public class OverviewTools : ToolCollection  {
 		expanders.add (font_name);
 		expanders.add (zoom_expander);
 		expanders.add (character_sets);
-		expanders.add (transform_expander);
+		expanders.add (transform_slant_expander);
+		expanders.add (transform_size_expander);
 		expanders.add (glyph_expander);
 		
 		if (BirdFont.has_argument ("--test")) {
@@ -244,19 +279,20 @@ public class OverviewTools : ToolCollection  {
 	public void add_new_alternate (Tool tool) {
 		OverView o = MainWindow.get_overview ();
 		OverViewItem oi = o.selected_item;
-		GlyphCollection gc;
+		GlyphCollection? gc;
 		
 		tool.set_selected (false);
 		
-		if (oi.glyphs == null || ((!) oi.glyphs).is_unassigned ()) {
-			return;
+		gc = (!) oi.glyphs;		
+		
+		if (oi.glyphs != null && ((!) oi.glyphs).is_unassigned ()) {
+			gc = null;
 		}
 		
-		gc = (!) oi.glyphs;		
 		MainWindow.tabs.add_tab (new OtfFeatureTable (gc));
 	}
 	
-	public void process_transform () {
+	public void process_transform (Transform transform) {
 		OverView o;
 		Glyph g;
 		OverView.OverViewUndoItem ui;
@@ -273,15 +309,24 @@ public class OverviewTools : ToolCollection  {
 				ui.glyphs.add (gc.copy_deep ());
 				g.add_help_lines ();
 				
-				if (skew.get_value () != 0) {
-					DrawingTools.resize_tool.skew_glyph (g, -skew.get_value (), 0, false);
+				if (transform == Transform.SLANT) {
+					if (skew.get_value () != 0) {
+						DrawingTools.resize_tool.skew_glyph (g, -skew.get_value (), 0, false);
+					}
 				}
 				
-				if (resize.get_value () != 100) {
-					double scale = resize.get_value () / 100;
-					DrawingTools.resize_tool.resize_glyph (g, scale, scale, false);
+				if (transform == Transform.SIZE) {
+					if (resize.get_value () != 100) {
+						double scale = resize.get_value () / 100;
+						DrawingTools.resize_tool.resize_glyph (g, scale, scale, false);
+					}
 				}
 			}
+		}
+		
+		foreach (OverViewItem item in o.visible_items) {
+			item.clear_cache ();
+			item.draw_glyph_from_font ();
 		}
 		
 		o.undo_items.add (ui);
@@ -310,16 +355,9 @@ public class OverviewTools : ToolCollection  {
 		GlyphRange gr;
 		uint size;
 		OverView overview;
-		Font font;
-		
-		// All characters including .notdef
-		font = BirdFont.get_current_font ();
-		size = font.length ();
-		
-		if (!font.has_glyph (".notdef")) {
-			size++;
-		}
-		
+
+		// All characters
+		size = BirdFont.get_current_font ().length ();
 		all_glyphs.number = get_display_value (size);
 		
 		// Default

@@ -13,7 +13,6 @@
 */
 
 using Cairo;
-using SvgBird;
 
 namespace BirdFont {
 
@@ -120,7 +119,7 @@ public class ColorPicker : Tool {
 				int g = (int) ((tx / Toolbox.allocation_width) * gradient.stops.size);
 				return_if_fail (0 <= g < gradient.stops.size);
 				current_stop = gradient.stops.get (g);
-				set_color (new Color.create_copy (current_stop.color));
+				set_color (current_stop.color);
 			}
 		}
 		
@@ -237,7 +236,7 @@ public class ColorPicker : Tool {
 			int stop_size = (int) ((double) Toolbox.allocation_width / gradient.stops.size);
 			for (int i = 0; i < gradient.stops.size; i++) {
 				Stop s = gradient.stops.get (i);
-				c = new Color.create_copy (s.color);
+				c = s.color;
 				cr.save ();
 				cr.set_source_rgba (c.r, c.g, c.b, c.a);
 				cr.rectangle (i * stop_size, y + 4 * bar_height, stop_size, bar_height);

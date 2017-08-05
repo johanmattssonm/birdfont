@@ -182,7 +182,11 @@ public class GlyphRange {
 			}
 			
 			if (w.char_count () == 1) {
-				add_single (w.get_char ());
+				unichar c = w.get_char_validated ();
+				
+				if (c > 0) {
+					add_single (c);
+				}
 			} else if (w == "space") {
 				add_single (' ');
 			} else if (w == "divis") {
@@ -475,9 +479,10 @@ public class GlyphRange {
 	}
 	
 	public unichar get_character (uint32 index) {
-		UniRange r;
-		unichar c;
+		int64 ti;
 		string chr;
+		UniRange r;
+		unichar c;		
 		UniRange? range;
 		uint32 range_start_index;
 		
@@ -532,7 +537,9 @@ public class GlyphRange {
 		uns = unserialize (c);
 		
 		if (uns.char_count () != 1) {
-			warning (@"Expecting a single character got $c");
+			// the glyph was not found by its name because it is not in the list of
+			// unassigned characters
+			return false; 
 		}
 		
 		s = uns.get_char ();

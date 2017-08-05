@@ -28,7 +28,7 @@ public class CodePageBits : GLib.Object {
 		
 	public CodePageBits () {
 		if (database == null) {
-			open_database (get_database_file ());
+			open_database (get_database_file (), OPEN_READONLY);
 		}
 	}
 
@@ -192,7 +192,7 @@ public class CodePageBits : GLib.Object {
 				f.delete ();
 			}
 			
-			open_database (f);
+			open_database (f, OPEN_READWRITE);
 			create_tables ();
 		
 			default_range = new PageBit (-1, "null-");
@@ -242,8 +242,8 @@ public class CodePageBits : GLib.Object {
 		}
 	}
 	
-	void open_database (File db_file) {
-		int rc = Database.open ((!) db_file.get_path (), out database);
+	void open_database (File db_file, int access) {
+		int rc = Database.open_v2 ((!) db_file.get_path (), out database, access);
 
 		db = (!) database;
 
@@ -333,3 +333,4 @@ public class CodePageBits : GLib.Object {
 }
 
 }
+ 

@@ -28,12 +28,12 @@ public class QuestionDialog : Dialog {
 	double height = 0;
 	
 	public QuestionDialog (string message) {
-		Color color = Theme.get_color ("Text Tool Box");
-		question = new TextArea (font_size, color);
+		question = new TextArea (font_size);
 		question.min_width = 300;
 		question.min_height = font_size;
 		question.set_editable (false);
 		question.draw_border = false;
+		question.text_color = Theme.get_color ("Text Tool Box");
 		question.set_text (message);
 		buttons = new Gee.ArrayList<Button> ();
 	}

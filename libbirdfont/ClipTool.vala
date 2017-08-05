@@ -12,8 +12,6 @@
 	Lesser General Public License for more details.
 */
 
-using SvgBird;
-
 namespace BirdFont {
 
 public class ClipTool : Tool {
@@ -34,7 +32,7 @@ public class ClipTool : Tool {
 		string bf_data;
 		string data;
 		
-		if (fd is Glyph) {
+		if (fd is GlyphTab) {
 			svg_data = ExportTool.export_selected_paths_to_svg ();
 			
 			bf_data = export_selected_paths_to_birdfont_clipboard ();
@@ -89,7 +87,7 @@ public class ClipTool : Tool {
 		double x, y, w, h;
 		double dx, dy;
 		
-		if (fd is Glyph) {
+		if (fd is GlyphTab) {
 			paste_paths (false);
 			
 			g.selection_boundaries (out x, out y, out w, out h);
@@ -97,7 +95,7 @@ public class ClipTool : Tool {
 			dx = g.motion_x - x - w / 2.0;
 			dy = g.motion_y - y + h / 2.0;
 			
-			foreach (SvgBird.Object path in g.active_paths) {
+			foreach (Path path in g.active_paths) {
 				path.move (dx, dy);
 			}
 		} else if (fd is KerningDisplay) {
@@ -117,7 +115,7 @@ public class ClipTool : Tool {
 		// Determine if clipboard contains data in birdfont format.
 		is_bf_clipboard = clipboard_data.index_of ("BirdFontClipboard") > -1; 
 
-		if (fd is Glyph) {
+		if (fd is GlyphTab) {
 			paste_to_glyph (is_bf_clipboard, paste_guide_lines);
 		}
 		
@@ -134,9 +132,10 @@ public class ClipTool : Tool {
 		FontDisplay fd = MainWindow.get_current_display ();
 		Glyph? destination = null;
 		string data;
-		return_if_fail (fd is Glyph);
+		return_if_fail (fd is GlyphTab);
 		
-		destination = (Glyph) fd;
+		GlyphTab glyph_tab = (GlyphTab) fd; 
+		destination = glyph_tab.glyphs.get_current ();
 		((!)destination).store_undo_state ();
 		((!)destination).clear_active_paths ();
 		
@@ -262,7 +261,7 @@ public class ClipTool : Tool {
 					}
 				}
 			} else if (glyph.get_visible_paths ().size > 0) {
-				foreach (Path path in glyph.get_active_paths ()) { // FIXME: other objects
+				foreach (Path path in glyph.active_paths) {
 					s.append ("BF path: ");
 					s.append (BirdFontFile.get_point_data (path));
 					s.append ("\n");
@@ -407,9 +406,9 @@ public class ClipTool : Tool {
 				string cap = p.replace ("cap: ", "");
 				
 				if (cap == "round") {
-					path.line_cap = SvgBird.LineCap.ROUND;
+					path.line_cap = LineCap.ROUND;
 				} else if (cap == "square") {
-					path.line_cap = SvgBird.LineCap.SQUARE;
+					path.line_cap = LineCap.SQUARE;
 				}
 			}
 		}
@@ -449,13 +448,13 @@ public class ClipTool : Tool {
 		if (path.points.size > 0) {
 			PenTool.clear_directions ();
 			glyph.add_path (path);
-			glyph.add_active_path (null, path);
+			glyph.active_paths.add (path);
 			path.update_region_boundaries ();
 		}
 		
 		PenTool.remove_all_selected_points ();
 		
-		foreach (Path p in glyph.get_active_paths ()) {
+		foreach (Path p in glyph.active_paths) {
 			if (p.is_open ()) {
 				foreach (EditPoint e in p.points) {
 					e.set_selected (true);

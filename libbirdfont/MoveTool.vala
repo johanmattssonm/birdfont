@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012 2013 2015 2016 Johan Mattsson
+	Copyright (C) 2012 2013 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -14,7 +14,6 @@
 
 using Math;
 using Cairo;
-using SvgBird;
 
 namespace BirdFont {
 
@@ -38,8 +37,8 @@ public class MoveTool : Tool {
 	public signal void objects_moved ();
 	public signal void objects_deselected ();
 	
-	public MoveTool (string n) {
-		base (n, t_("Move paths"));
+	public MoveTool (string name) {
+		base (name, t_("Move paths"));
 
 		selection_changed.connect (() => {
 			update_selection_boundaries ();
@@ -95,13 +94,8 @@ public class MoveTool : Tool {
 				g.store_undo_state ();
 			}
 			
-			foreach (SvgBird.Object p in g.active_paths) {
-				if (p is PathObject) {
-					LayerUtils.remove_path (g.layers, ((PathObject) p).get_path ());
-				} else {
-					g.layers.remove (p);
-				}
-				
+			foreach (Path p in g.active_paths) {
+				g.layers.remove_path (p);
 				g.update_view ();
 			}
 
@@ -115,8 +109,9 @@ public class MoveTool : Tool {
 	
 	public void move (int x, int y) {
 		Glyph glyph = MainWindow.get_current_glyph ();
-		double dx = Glyph.path_coordinate_x (last_x) - Glyph.path_coordinate_x (x);
-		double dy = Glyph.path_coordinate_y (last_y) - Glyph.path_coordinate_y (y); 
+		double dx = last_x - x;
+		double dy = last_y - y; 
+		double p = PenTool.precision;
 		double delta_x, delta_y;
 		
 		if (!move_path) {
@@ -126,11 +121,21 @@ public class MoveTool : Tool {
 		if (move_path && (fabs(dx) > 0 || fabs (dy) > 0)) {
 			moved = true;
 
-			delta_x = -dx;
-			delta_y = -dy;
+			delta_x = Glyph.ivz () * -dx * p;
+			delta_y = Glyph.ivz () * dy * p;
+							
+			foreach (Layer group in glyph.selected_groups) {
+				if (group.gradient != null) {
+					Gradient g = (!) group.gradient;
+					g.x1 += delta_x;
+					g.x2 += delta_x;
+					g.y1 += delta_y;
+					g.y2 += delta_y;
+				}
+			}
 			
-			foreach (SvgBird.Object object in glyph.active_paths) {
-				object.move (delta_x, delta_y);
+			foreach (Path path in glyph.active_paths) {
+				path.move (delta_x, delta_y);
 			}
 		}
 
@@ -157,7 +162,7 @@ public class MoveTool : Tool {
 		if (GridTool.is_visible () && moved) {
 			tie_paths_to_grid (glyph);
 		} else if (GridTool.has_ttf_grid ()) {
-			foreach (SvgBird.Object p in glyph.active_paths) {
+			foreach (Path p in glyph.active_paths) {
 				tie_path_to_ttf_grid (p);
 			}
 		} 
@@ -174,11 +179,8 @@ public class MoveTool : Tool {
 			objects_moved ();
 			DrawingTools.resize_tool.signal_objects_rotated ();
 			
-			foreach (SvgBird.Object o in glyph.active_paths) {
-				if (o is PathObject) {
-					PathObject path = (PathObject) o;
-					path.get_path ().create_full_stroke ();
-				}
+			foreach (Path p in glyph.active_paths) {
+				p.create_full_stroke ();
 			}
 		} else {
 			objects_deselected ();
@@ -187,36 +189,42 @@ public class MoveTool : Tool {
 		
 	public void press (int b, int x, int y) {
 		Glyph glyph = MainWindow.get_current_glyph ();
-		SvgBird.Object object;
+		Path p;
 		bool selected = false;
-		SvgBird.Object? o;
+		Layer? group;
+		Layer g;
 		
-		glyph.store_undo_state ();	
-		double px = Glyph.path_coordinate_x (x);
-		double py = Glyph.path_coordinate_y (y);
-		o = glyph.get_object_at (px, py);
-
-		if (o != null) {
-			object = (!) o;
-			selected = glyph.active_paths_contains (object);
- 			
+		glyph.store_undo_state ();
+		group_selection = false;
+		
+		group = glyph.get_path_at (x, y);
+		
+		if (group != null) {
+			g = (!) group;
+			return_if_fail (g.paths.paths.size > 0);
+			p = g.paths.paths.get (0);
+			selected = glyph.active_paths.contains (p);
+			
 			if (!selected && !KeyBindings.has_shift ()) {
 				glyph.clear_active_paths ();
 			} 
 			
-			if (selected && KeyBindings.has_shift ()) {
-				glyph.active_paths.remove (object);
-			} else {
-				glyph.add_active_object (null, object);
-			}			
+			foreach (Path lp in g.paths.paths) {
+				if (selected && KeyBindings.has_shift ()) {
+					glyph.selected_groups.remove ((!) group);
+					glyph.active_paths.remove (lp);
+				} else {
+					glyph.add_active_path ((!) group, lp);
+				}
+			}
 		} else if (!KeyBindings.has_shift ()) {
 			glyph.clear_active_paths ();
 		}
+		
+		move_path = true;
 
 		update_selection_boundaries ();
-
-		move_path = true;
-		
+					
 		last_x = x;
 		last_y = y;
 		
@@ -230,7 +238,8 @@ public class MoveTool : Tool {
 		selection_changed ();
 		GlyphCanvas.redraw ();
 	}
-		
+	
+	
 	void select_group () {
 		double x1 = Glyph.path_coordinate_x (Math.fmin (selection_x, last_x));
 		double y1 = Glyph.path_coordinate_y (Math.fmin (selection_y, last_y));
@@ -240,10 +249,10 @@ public class MoveTool : Tool {
 		
 		glyph.clear_active_paths ();
 		
-		foreach (SvgBird.Object p in glyph.get_objects_in_current_layer ()) {
+		foreach (Path p in glyph.get_paths_in_current_layer ()) {
 			if (p.xmin > x1 && p.xmax < x2 && p.ymin < y1 && p.ymax > y2) {
-				if (!p.is_empty ()) {
-					glyph.add_active_object (null, p);
+				if (p.points.size > 0) {
+					glyph.add_active_path (null, p);
 				}
 			}
 		}
@@ -264,13 +273,30 @@ public class MoveTool : Tool {
 		
 		get_selection_box_boundaries (out x, out y, out w, out h);
 		
-		foreach (SvgBird.Object path in glyph.active_paths) {
+		foreach (Path path in glyph.active_paths) {
 			path.move (glyph.left_limit - x + w / 2, font.base_line - y + h / 2);
 		}
 		
 		update_selection_boundaries ();
 		objects_moved ();
 		GlyphCanvas.redraw ();
+	}
+
+	static void draw_selection_box (Context cr) {
+		double x = Math.fmin (selection_x, last_x);
+		double y = Math.fmin (selection_y, last_y);
+
+		double w = Math.fabs (selection_x - last_x);
+		double h = Math.fabs (selection_y - last_y);
+		
+		cr.save ();
+		
+		Theme.color (cr, "Foreground 1");
+		cr.set_line_width (2);
+		cr.rectangle (x, y, w, h);
+		cr.stroke ();
+		
+		cr.restore ();
 	}
 	
 	public static void get_selection_box_boundaries (out double x, out double y, out double w, out double h) {
@@ -282,26 +308,23 @@ public class MoveTool : Tool {
 		px2 = -10000;
 		py2 = -10000;
 		
-		foreach (SvgBird.Object o in glyph.active_paths) {
-			if (o is PathObject) {
-				Path p = ((PathObject) o).get_path ();
-				p.update_region_boundaries ();
-				
-				if (px > p.xmin) {
-					px = p.xmin;
-				} 
+		foreach (Path p in glyph.active_paths) {
+			p.update_region_boundaries ();
+			
+			if (px > p.xmin) {
+				px = p.xmin;
+			} 
 
-				if (py > p.ymin) {
-					py = p.ymin;
-				}
+			if (py > p.ymin) {
+				py = p.ymin;
+			}
 
-				if (px2 < p.xmax) {
-					px2 = p.xmax;
-				}
-				
-				if (py2 < p.ymax) {
-					py2 = p.ymax;
-				}
+			if (px2 < p.xmax) {
+				px2 = p.xmax;
+			}
+			
+			if (py2 < p.ymax) {
+				py2 = p.ymax;
 			}
 		}
 		
@@ -335,7 +358,7 @@ public class MoveTool : Tool {
 				break;
 		}
 		
-		foreach (SvgBird.Object path in glyph.active_paths) {
+		foreach (Path path in glyph.active_paths) {
 			path.move (x * Glyph.ivz (), y * Glyph.ivz ());
 		}
 		
@@ -343,10 +366,10 @@ public class MoveTool : Tool {
 		PenTool.reset_stroke ();
 		update_selection_boundaries ();
 		objects_moved ();
-		glyph.redraw_area (0, 0, glyph.allocation.width, glyph.allocation.height);
+		GlyphCanvas.redraw ();
 	}
 
-	static void tie_path_to_ttf_grid (SvgBird.Object p) {
+	static void tie_path_to_ttf_grid (Path p) {
 		double sx, sy, qx, qy;	
 
 		sx = p.xmax;
@@ -396,7 +419,7 @@ public class MoveTool : Tool {
 		dx_min = Math.fabs (qx - minx);
 		dx_max = Math.fabs (sx - maxx);
 		
-		foreach (SvgBird.Object p in g.active_paths) {
+		foreach (Path p in g.active_paths) {
 			if (dy_min < dy_max) {
 				p.move (0, qy - miny);
 			} else {
@@ -415,10 +438,8 @@ public class MoveTool : Tool {
 	
 	public static void update_boundaries_for_selection () {
 		Glyph glyph = MainWindow.get_current_glyph ();
-		foreach (SvgBird.Object o in glyph.active_paths) {
-			if (o is PathObject) {
-				((PathObject)o).get_path ().update_region_boundaries ();
-			}
+		foreach (Path p in glyph.active_paths) {
+			p.update_region_boundaries ();
 		}
 	}
 	
@@ -440,19 +461,14 @@ public class MoveTool : Tool {
 		xc = selection_box_center_x;
 		yc = selection_box_center_y;
 
-		foreach (SvgBird.Object p in glyph.active_paths) {
-			if (p is PathObject) {
-				Path path = ((PathObject) p).get_path ();
-				
-				// FIXME: move to object
-				if (vertical) {
-					path.flip_vertical ();
-				} else {
-					path.flip_horizontal ();
-				}
-				
-				path.reverse ();
+		foreach (Path p in glyph.active_paths) {
+			if (vertical) {
+				p.flip_vertical ();
+			} else {
+				p.flip_horizontal ();
 			}
+			
+			p.reverse ();
 		}
 
 		get_selection_box_boundaries (out xc2, out yc2, out w, out h); 
@@ -460,7 +476,7 @@ public class MoveTool : Tool {
 		dx = -(xc2 - xc);
 		dy = -(yc2 - yc);
 		
-		foreach (SvgBird.Object p in glyph.active_paths) {
+		foreach (Path p in glyph.active_paths) {
 			p.move (dx, dy);
 		}
 		
@@ -474,9 +490,9 @@ public class MoveTool : Tool {
 		Glyph g = MainWindow.get_current_glyph ();
 		
 		g.clear_active_paths ();
-		foreach (SvgBird.Object p in g.get_objects_in_current_layer ()) {
-			if (!p.is_empty ()) {
-				g.add_active_object (null, p);
+		foreach (Path p in g.get_paths_in_current_layer ()) {
+			if (p.points.size > 0) {
+				g.add_active_path (null, p);
 			}
 		}
 		
@@ -484,21 +500,6 @@ public class MoveTool : Tool {
 		
 		update_selection_boundaries ();
 		objects_moved ();
-	}
-
-	static void draw_selection_box (Context cr) {
-		double x = Math.fmin (selection_x, last_x);
-		double y = Math.fmin (selection_y, last_y);
-
-		double w = Math.fabs (selection_x - last_x);
-		double h = Math.fabs (selection_y - last_y);
-		
-		cr.save ();			
-		Theme.color (cr, "Foreground 1");
-		cr.set_line_width (2);
-		cr.rectangle (x, y, w, h);
-		cr.stroke ();
-		cr.restore ();
 	}
 }
 

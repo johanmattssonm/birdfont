@@ -34,7 +34,6 @@ public static int run_import (string[] arg) {
 	BirdFont.current_font = new Font ();
 	BirdFont.current_glyph_collection = new GlyphCollection.with_glyph ('\0', "");
 	MainWindow.init ();
-	SvgType type = SvgType.REGULAR;
 
 	if (arg.length < 3) {
 		print_import_help (arg);
@@ -44,11 +43,7 @@ public static int run_import (string[] arg) {
 	bf_file = build_absoulute_path (arg[1]);
 	
 	for (int i = 2; i < arg.length; i++) {
-		if (arg[i] == "--color") {
-			type = SvgType.COLOR;
-		} else {
-			svg_files.add (arg[i]);
-		}
+		svg_files.add (arg[i]);
 	}
 	
 	bf = File.new_for_path (bf_file);
@@ -84,7 +79,7 @@ public static int run_import (string[] arg) {
 
 	foreach (string f in svg_files) {
 		svg = File.new_for_path (f);
-		imported = import_svg_file (font, svg, type);
+		imported = import_svg_file (font, svg);
 		
 		if (!imported) {
 			stdout.printf (t_("Failed to import") + " " + f + "\n");
@@ -98,7 +93,7 @@ public static int run_import (string[] arg) {
 	return 0;
 }
 
-public static bool import_svg_file (Font font, File svg_file, SvgType type) {
+public static bool import_svg_file (Font font, File svg_file) {
 	string file_name = (!) svg_file.get_basename ();
 	string glyph_name;
 	StringBuilder n;
@@ -163,11 +158,7 @@ public static bool import_svg_file (Font font, File svg_file, SvgType type) {
 	stdout.printf (@"$(glyph.version_id)");
 	stdout.printf ("\n");
 	
-	if (type == SvgType.COLOR) {
-		SvgParser.import_color_svg (glyph, (!) svg_file.get_path ());
-	} else {
-		SvgParser.import_svg ((!) svg_file.get_path ());
-	}
+	SvgParser.import_svg ((!) svg_file.get_path ());
 	
 	return true;
 }

@@ -12,8 +12,6 @@
 	Lesser General Public License for more details.
 */
 
-using SvgBird;
-
 namespace BirdFont {
 
 public class PathList : GLib.Object {
@@ -79,20 +77,6 @@ public class PathList : GLib.Object {
 		}
 		
 		return pl;
-	}
-
-	public void apply_style (SvgStyle style) {
-		foreach (Path p in paths) {
-			if (style.has_stroke ()) {
-				p.stroke = style.get_stroke_width ();
-			} else {
-				p.stroke = 0;
-			}
-			
-			p.line_cap = style.get_line_cap ();
-			p.reset_stroke ();
-			p.update_region_boundaries ();		
-		}
 	}
 }
 

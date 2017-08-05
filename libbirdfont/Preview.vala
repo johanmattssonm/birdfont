@@ -28,7 +28,7 @@ public class Preview : FontDisplay {
 	}
 
 	public override void selected_canvas () {
-	MainWindow.set_scrollbar_size (0);
+		MainWindow.set_scrollbar_size (0);
 	}
 
 	public static string get_html_path () {
@@ -113,11 +113,26 @@ public class Preview : FontDisplay {
 		try {
 			dis = new DataInputStream (get_file ().read ());
 
-			preview_directory = BirdFont.get_preview_directory ();
+			string? d = font.get_export_directory ();
+			
+			if (d == null) {
+				warning ("Export dir is not set.");
+				ExportTool.set_output_directory ();
+				d = font.get_export_directory ();
+			}
+			
+			preview_directory = File.new_for_path ((!) d);
+			
+			printd (@"previwdir $((!) d)");
+			
+			if (ExportTool.get_export_folder () == "") {
+				ExportTool.set_output_directory ();
+			}
 
-			f_ttf = get_child (ExportTool.get_export_dir (), @"$(ExportSettings.get_file_name (font)).ttf");
-			f_eot = get_child (ExportTool.get_export_dir (), @"$(ExportSettings.get_file_name (font)).eot");
-			f_svg = get_child (ExportTool.get_export_dir (), @"$(ExportSettings.get_file_name (font)).svg");
+			File dir = File.new_for_path ((!) d);
+			f_ttf = get_child (dir, @"$(ExportSettings.get_file_name (font)).ttf");
+			f_eot = get_child (dir, @"$(ExportSettings.get_file_name (font)).eot");
+			f_svg = get_child (dir, @"$(ExportSettings.get_file_name (font)).svg");
 
 			if (!f_ttf.query_exists ()) {
 				warning ("TTF file does not exist.");
@@ -127,10 +142,12 @@ public class Preview : FontDisplay {
 				warning ("SVG file does not exist.");
 			}
 
+			string name = ExportSettings.get_file_name (font);
+			
 			while ((line = dis.read_line (null)) != null) {
-				line = ((!) line).replace (@"$(ExportSettings.get_file_name (font)).ttf", @"$(TabContent.path_to_uri ((!) f_ttf.get_path ()))?$rid");
-				line = ((!) line).replace (@"$(ExportSettings.get_file_name (font)).eot", @"$(TabContent.path_to_uri ((!) f_eot.get_path ()))?$rid");
-				line = ((!) line).replace (@"$(ExportSettings.get_file_name (font)).svg", @"$(TabContent.path_to_uri ((!) f_svg.get_path ()))?$rid");
+				line = ((!) line).replace (@"$name.ttf", @"$(TabContent.path_to_uri ((!) f_ttf.get_path ()))?$rid");
+				line = ((!) line).replace (@"$name.eot", @"$(TabContent.path_to_uri ((!) f_eot.get_path ()))?$rid");
+				line = ((!) line).replace (@"$name.svg", @"$(TabContent.path_to_uri ((!) f_svg.get_path ()))?$rid");
 				sb.append ((!) line);
 			}
 
@@ -138,6 +155,7 @@ public class Preview : FontDisplay {
 			warning (e.message);
 			warning ("Failed to load html into canvas.");
 		}
+		
 		return sb.str;
 	}
 

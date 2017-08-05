@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2014 - 2016 Johan Mattsson
+	Copyright (C) 2014 2015 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify
 	it under the terms of the GNU Lesser General Public License as
@@ -72,7 +72,12 @@ public class TabContent : GLib.Object {
 	public static void draw (WidgetAllocation allocation, Context cr) {
 		AbstractMenu menu;
 		Dialog dialog;
+		double scollbar_width = 10 * Screen.get_scale ();
 		
+		if (MainWindow.has_scrollbar()) {
+			allocation.width -= (int) scollbar_width;
+		}
+
 		if (unlikely (MenuTab.has_suppress_event ())) {
 			cr.save ();
 			Theme.color (cr, "Background 1");
@@ -110,12 +115,10 @@ public class TabContent : GLib.Object {
 			if (text_input_visible) {
 				draw_text_input (allocation, cr);
 			}
-		}
 
-		Help help = MainWindow.get_help ();
-		
-		if (help.is_visible ()) {
-			help.draw (cr, allocation);
+			if (MainWindow.has_scrollbar()) {
+				MainWindow.scrollbar.draw (cr, allocation, scollbar_width);
+			}
 		}
 	}
 
@@ -129,6 +132,10 @@ public class TabContent : GLib.Object {
 		}
 
 		alloc = GlyphCanvas.get_allocation ();
+		
+		double scollbar_width = 10 * Screen.get_scale ();
+		alloc.width += (int) scollbar_width;
+		
 		pause_surface = Screen.create_background_surface (alloc.width, alloc.height);
 		cr = new Context ((!) pause_surface);
 		cr.scale (Screen.get_scale (), Screen.get_scale ());
@@ -150,8 +157,12 @@ public class TabContent : GLib.Object {
 		KeyBindings.add_modifier_from_keyval (keyval);
 
 		if (!text_input_visible) {
-			MainWindow.get_menu ().process_key_binding_events (keyval);
-			GlyphCanvas.current_display.key_press (keyval);
+			AbstractMenu menu = MainWindow.get_menu ();
+			bool consumed = menu.process_key_binding_events (keyval);
+			
+			if (!consumed) {
+				GlyphCanvas.current_display.key_press (keyval);
+			}
 		} else {
 			text_input.key_press (keyval);
 		}
@@ -184,7 +195,11 @@ public class TabContent : GLib.Object {
 		}
 
 		if (!text_input_visible) {
-			GlyphCanvas.current_display.motion_notify (x, y);
+			bool consumed = MainWindow.scrollbar.motion (x, y);
+			
+			if (!consumed) {
+				GlyphCanvas.current_display.motion_notify (x, y);
+			}
 		} else {
 			text_input.motion (x, y);
 			GlyphCanvas.redraw ();
@@ -208,7 +223,11 @@ public class TabContent : GLib.Object {
 			text_input.button_release (button, x, y);
 			GlyphCanvas.redraw ();
 		} else {
-			GlyphCanvas.current_display.button_release (button, x, y);
+			bool consumed = MainWindow.scrollbar.button_release (button, x, y);
+						
+			if (!consumed) {			
+				GlyphCanvas.current_display.button_release (button, x, y);
+			}
 		}
 	}
 
@@ -218,12 +237,6 @@ public class TabContent : GLib.Object {
 		}
 
 		last_press_time = GLib.get_real_time ();
-
-		Help help = MainWindow.get_help ();
-		
-		if (help.button_press (button, x, y)) {
-			return; // event consumed by help text
-		}
 
 		if (MainWindow.get_dialog ().visible) {
 			MainWindow.get_dialog ().button_press (button, x, y);
@@ -236,7 +249,11 @@ public class TabContent : GLib.Object {
 					hide_text_input ();
 				}
 			} else {
-				GlyphCanvas.current_display.button_press (button, x, y);
+				bool consumed = MainWindow.scrollbar.button_press (button, x, y);
+				
+				if (!consumed) { 
+					GlyphCanvas.current_display.button_press (button, x, y);
+				}
 			}
 		}
 	}
@@ -439,7 +456,7 @@ public class TabContent : GLib.Object {
 		TabContent.key_release (Key.LOGO_LEFT);
 		TabContent.key_release (Key.LOGO_RIGHT);
 
-		if (MainWindow.get_current_display () is Glyph) {
+		if (MainWindow.get_current_display () is GlyphTab) {
 			TabContent.key_release ((uint) ' ');
 		}
 	}

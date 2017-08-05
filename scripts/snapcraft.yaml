@@ -1,0 +1,26 @@
+name: birdfont
+version: VERSION
+summary: Font editor
+description: A font edior which can create TTF, EOT and SVG fonts
+confinement: strict
+
+build-packages: [valac, python3, libglib2.0-dev, libgtk-3-dev,
+ libwebkit2gtk-3.0-dev, libgee-0.8-dev, libnotify-dev, libsqlite3-dev, 
+ libxmlbird-dev, python-pkg-resources]
+
+apps: 
+  run: 
+    command: birdfont
+    plugs: [home, gsettings, x11, unity7]
+
+parts: 
+  birdfont: 
+    plugin: make
+    source: snapsource/birdfont
+    stage-packages:
+      - libglib2.0-0
+      - libwebkit2gtk-3.0-25
+      - libgee-0.8-2
+      - libnotify4
+      - libsqlite3-0
+      - libxmlbird1

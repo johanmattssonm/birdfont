@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012 2014 2015 Johan Mattsson
+	Copyright (C) 2012 - 2016 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -13,7 +13,6 @@
 */
 
 using Cairo;
-using SvgBird;
 
 namespace BirdFont {
 
@@ -51,7 +50,7 @@ public class OverView : FontDisplay {
 	
 	string search_query = "";
 	
-	Gee.ArrayList<OverViewItem> visible_items = new Gee.ArrayList<OverViewItem> ();
+	public Gee.ArrayList<OverViewItem> visible_items = new Gee.ArrayList<OverViewItem> ();
 	
 	/** List of undo commands. */
 	public Gee.ArrayList<OverViewUndoItem> undo_items = new Gee.ArrayList<OverViewUndoItem> ();
@@ -94,22 +93,14 @@ public class OverView : FontDisplay {
 				TabBar tabs = MainWindow.get_tab_bar ();
 				string n = glyph_collection.get_current ().name;
 				bool selected = tabs.select_char (n);
-				GlyphCanvas canvas;
 				Glyph g = glyph_collection.get_current (); 
+				GlyphTab glyph_tab;
 				
 				if (!selected) {
-					canvas = MainWindow.get_glyph_canvas ();
-					tabs.add_tab (g, true, glyph_collection);
-					canvas.set_current_glyph_collection (glyph_collection);
-					set_initial_zoom ();
+					glyph_tab = new GlyphTab (glyph_collection);
+					tabs.add_tab (glyph_tab, true, glyph_collection);
+					set_glyph_zoom (glyph_collection);
 					PenTool.update_orientation ();
-				}
-				
-				if (glyph_collection.get_name () == ".notdef") {
-					Font font = BirdFont.get_current_font ();
-					if (!font.has_glyph (".notdef")) {
-						font.add_glyph_collection (glyph_collection);
-					}
 				}
 			});
 
@@ -126,7 +117,7 @@ public class OverView : FontDisplay {
 		if (default_character_set) {
 			IdleSource idle = new IdleSource ();
 
-			idle.set_callback (() => {			
+			idle.set_callback (() => {
 				use_default_character_set ();
 				selected_canvas ();
 				return false;
@@ -138,6 +129,16 @@ public class OverView : FontDisplay {
 		update_item_list ();
 		update_scrollbar ();
 		reset_zoom ();
+		
+		string? zoom = Preferences.get ("overview_zoom");
+		
+		if (zoom != null) {
+			string z = (!) zoom;
+			
+			if (z != "") {
+				set_zoom (double.parse (z));
+			}			
+		}
 	}
 
 	public Glyph? get_selected_glyph () {
@@ -184,6 +185,7 @@ public class OverView : FontDisplay {
 		Glyph glyph;
 		GlyphCollection glyph_collection;
 		GlyphCanvas canvas;
+		GlyphTab glyph_tab; 
 		
 		glyph_collection = MainWindow.get_current_glyph_collection ();
 		name.append_unichar (character);
@@ -191,17 +193,17 @@ public class OverView : FontDisplay {
 				
 		if (!selected) {
 			glyph_collection = add_character_to_font (character);
-			
+			glyph_tab = new GlyphTab (glyph_collection);
 			glyph = glyph_collection.get_current ();
 			glyph.layers.add_layer (new Layer ());
-			tabs.add_tab (glyph, true, glyph_collection);
+			tabs.add_tab (glyph_tab, true, glyph_collection);
 			
 			selected_items.add (glyph_collection);
 			
 			canvas = MainWindow.get_glyph_canvas ();
 			canvas.set_current_glyph_collection (glyph_collection);
 			
-			set_initial_zoom ();
+			set_glyph_zoom (glyph_collection);
 		} else {
 			warning ("Glyph is already open");
 		}
@@ -289,15 +291,18 @@ public class OverView : FontDisplay {
 		return null;
 	}
 	
-	public void set_initial_zoom () {
+	public void set_glyph_zoom (GlyphCollection glyphs) {
+		GlyphCanvas canvas;
+		canvas = MainWindow.get_glyph_canvas ();
+		canvas.set_current_glyph_collection (glyphs);
 		Toolbox tools = MainWindow.get_toolbox ();
 		ZoomTool z = (ZoomTool) tools.get_tool ("zoom_tool");
 		z.store_current_view ();
-		MainWindow.get_current_glyph ().default_zoom ();
+		glyphs.get_current ().default_zoom ();
 		z.store_current_view ();
 		OverViewItem.reset_label ();
 	}
-
+	
 	public double get_height () {
 		double l;
 		Font f;
@@ -395,6 +400,7 @@ public class OverView : FontDisplay {
 		KeyBindings.set_require_modifier (true);
 		update_scrollbar ();
 		update_zoom_bar ();
+		OverViewItem.glyph_scale = 1;
 		update_item_list ();
 		selected_item = get_selected_item ();
 		GlyphCanvas.redraw ();
@@ -415,7 +421,17 @@ public class OverView : FontDisplay {
 		OverViewItem.margin = OverViewItem.DEFAULT_MARGIN * z;
 		update_item_list ();
 		OverViewItem.reset_label ();
-		GlyphCanvas.redraw ();	
+		Preferences.set ("overview_zoom", @"$zoom");
+
+		Font font = BirdFont.get_current_font ();
+		for (int index = 0; index < font.length (); index++) {
+			GlyphCollection? glyphs = font.get_glyph_collection_index ((uint32) index);
+			return_if_fail (glyphs != null);
+			GlyphCollection g = (!) glyphs;
+			g.get_current ().overview_thumbnail = null;
+		}
+		
+		GlyphCanvas.redraw ();
 	}
 	
 	public override void zoom_min () {
@@ -504,7 +520,9 @@ public class OverView : FontDisplay {
 			return selected_item;
 		}
 
-		return visible_items.get (selected);
+		OverViewItem item = visible_items.get (selected);
+		item.selected = true;
+		return item;
 	}
 	
 	int get_items_per_row () {
@@ -527,7 +545,7 @@ public class OverView : FontDisplay {
 	
 	public void process_item_list_update () {
 		string character_string;
-		Font font = BirdFont.get_current_font ();
+		Font f = BirdFont.get_current_font ();
 		GlyphCollection? glyphs = null;
 		uint32 index;
 		OverViewItem item;
@@ -551,11 +569,10 @@ public class OverView : FontDisplay {
 		y = OverViewItem.margin;
 		
 		if (all_available) {
-			uint font_length = font.length ();
-			int i;
+			uint font_length = f.length ();
 			
-			for (i = 0; i < item_list_length && index < font_length; i++) {
-				glyphs = font.get_glyph_collection_index ((uint32) index);
+			for (int i = 0; i < item_list_length && index < font_length; i++) {
+				glyphs = f.get_glyph_collection_index ((uint32) index);
 				return_if_fail (glyphs != null);
 				
 				glyph = ((!) glyphs).get_current ();
@@ -565,20 +582,10 @@ public class OverView : FontDisplay {
 				item = new OverViewItem ();
 				item.set_character (character);
 				item.set_glyphs (glyphs);
-				item.generate_graphics ();
-				item.selected = (selected_items.index_of ((!) glyphs) != -1);
-				
+				item.x = x;
+				item.y = y;
 				visible_items.add (item);
 				index++;
-			}
-			
-			if (i < item_list_length && !font.has_glyph (".notdef")) {
-				item = new OverViewItem ();
-				item.set_glyphs (font.get_not_def_character ());
-				item.generate_graphics (false);
-				item.version_menu = null;
-				item.selected = (selected_items.index_of ((!) glyphs) != -1);
-				visible_items.add (item);
 			}
 		} else {
 			uint32 glyph_range_size = glyph_range.get_length ();
@@ -606,17 +613,8 @@ public class OverView : FontDisplay {
 			visible_size = visible_items.size;
 			for (int i = 0; i < visible_size; i++) {
 				item = visible_items.get (i);
-				glyphs = font.get_glyph_collection_by_name ((!) item.character.to_string ());
+				glyphs = f.get_glyph_collection_by_name ((!) item.character.to_string ());
 				item.set_glyphs (glyphs);
-				
-				if (glyphs != null) {
-					item.selected = (selected_items.index_of ((!) glyphs) != -1);
-				}
-			}
-
-			for (int i = 0; i < visible_size; i++) {
-				item = visible_items.get (i);
-				item.generate_graphics ();
 			}
 		}
 		
@@ -624,16 +622,30 @@ public class OverView : FontDisplay {
 		y = OverViewItem.margin;
 		
 		visible_size = visible_items.size;
+		int selected_index;
+		bool selected_item;
 		double full_width = OverViewItem.full_width ();
 		
 		for (int i = 0; i < visible_size; i++) {
 			item = visible_items.get (i);
 
-			if (item.glyphs == null) {
-				item.selected |= (i == selected);
+			selected_item = false;
+	
+			if (all_available) {
+				glyphs = f.get_glyph_collection_index ((uint32) i);
+			} else {			
+				glyphs = f.get_glyph_collection_by_name ((!) item.character.to_string ());
+			}
+			
+			if (glyphs != null) {
+				selected_index = selected_items.index_of ((!) glyphs);
+				selected_item = (selected_index != -1);
 			}
 			
 			item.adjust_scale ();
+			
+			selected_item |= (i == selected);
+			item.selected = selected_item;
 			
 			item.x = x + view_offset_x;
 			item.y = y + view_offset_y;
@@ -682,8 +694,9 @@ public class OverView : FontDisplay {
 		
 	void draw_empty_canvas (WidgetAllocation allocation, Context cr) {
 		Text t;
+		
 		cr.save ();
-		t = new Text ("No glyphs in this view.", 24);
+		t = new Text (t_("No glyphs in this view."), 24);
 		Theme.text_color (t, "Text Foreground");
 		t.widget_x = 40;
 		t.widget_y = 30;
@@ -1035,8 +1048,10 @@ public class OverView : FontDisplay {
 		}
 		store_undo_items (undo_item);
 
-		foreach (GlyphCollection gc in selected_items) {
-			font.delete_glyph (gc);
+		foreach (GlyphCollection glyph_collection in selected_items) {
+			font.delete_glyph (glyph_collection);
+			string name = glyph_collection.get_name ();
+			MainWindow.get_tab_bar ().close_background_tab_by_name (name);
 		}
 
 		update_item_list ();
@@ -1061,12 +1076,23 @@ public class OverView : FontDisplay {
 			if (g.length () > 0) {
 				font.add_glyph_collection (g);
 			}
+
+			TabBar tabs = MainWindow.get_tab_bar ();
+			Tab? tab = tabs.get_tab (g.get_name ());
+			
+			if (tab != null) {
+				Tab t = (!) tab;
+				set_glyph_zoom (g);
+				t.set_glyph_collection (g);
+				t.set_display (new GlyphTab (g));
+			}
 		}
 		
 		Font f = BirdFont.get_current_font ();
 		f.alternates = previous_collection.alternate_sets.copy ();
 
 		undo_items.remove_at (undo_items.size - 1);
+		update_item_list ();
 		GlyphCanvas.redraw ();
 	}
 	
@@ -1085,8 +1111,17 @@ public class OverView : FontDisplay {
 		foreach (GlyphCollection g in previous_collection.glyphs) {
 			font.delete_glyph (g);
 			font.add_glyph_collection (g);
+
+			TabBar tabs = MainWindow.get_tab_bar ();
+			Tab? tab = tabs.get_tab (g.get_name ());
+			
+			if (tab != null) {
+				Tab t = (!) tab;
+				set_glyph_zoom (g);
+				t.set_glyph_collection (g);
+				t.set_display (new GlyphTab (g));
+			}
 		}
-		
 		font.alternates = previous_collection.alternate_sets.copy ();
 
 		redo_items.remove_at (redo_items.size - 1);
@@ -1133,6 +1168,15 @@ public class OverView : FontDisplay {
 			if (o.get_name () == name) {
 				selected = i;
 				selected_item = get_selected_item ();
+
+				if (selected_item.y > allocation.height - OverViewItem.height) {
+					view_offset_y -= (selected_item.y + OverViewItem.height) - allocation.height;
+				}
+
+				if (selected_item.y < 0) {
+					view_offset_y = 0;
+				}		
+
 				return true;
 			}
 			
@@ -1183,12 +1227,12 @@ public class OverView : FontDisplay {
 		if (all_available) {
 			
 			// don't search for glyphs in huge CJK fonts 
-			if (font.length () > 300) {
+			if (font.length () > 500) {
 				r = 0;
 			} else {
 				// FIXME: too slow
 				for (r = 0; r < font.length (); r += items_per_row) {
-					for (i = 0; i < items_per_row; i++) {
+					for (i = 0; i < items_per_row && i < font.length (); i++) {
 						glyphs = font.get_glyph_collection_index ((uint32) r + i);
 						return_if_fail (glyphs != null);
 						glyph = ((!) glyphs).get_current ();
@@ -1225,6 +1269,7 @@ public class OverView : FontDisplay {
 		
 		if (index > -1) {
 			first_visible = r;
+			process_item_list_update ();
 			update_item_list ();
 			select_visible_glyph (ch);
 		}
@@ -1245,9 +1290,12 @@ public class OverView : FontDisplay {
 	}
 
 	public void open_overview_item (OverViewItem i) {
+		return_if_fail (!is_null (i));
+		
 		if (i.glyphs != null) {
 			open_glyph_signal ((!) i.glyphs);
-			((!) i.glyphs).get_current ().close_path ();
+			GlyphCollection gc = (!) i.glyphs;
+			gc.get_current ().close_path ();
 		} else {
 			open_new_glyph_signal (i.character);
 		}
@@ -1296,6 +1344,10 @@ public class OverView : FontDisplay {
 			return;
 		}
 		
+		if (!KeyBindings.has_shift ()) {
+			selected_items.clear ();
+		}
+		
 		for (int j = 0; j < visible_items.size; j++) {
 			i = visible_items.get (j);
 			
@@ -1305,6 +1357,7 @@ public class OverView : FontDisplay {
 				
 				if (KeyBindings.has_shift ()) {
 					if (selected_item.glyphs != null) {
+						
 						selected_index = selected_items.index_of ((!) selected_item.glyphs);
 						if (selected_index == -1) {
 							selected_items.add ((!) selected_item.glyphs);
@@ -1315,8 +1368,6 @@ public class OverView : FontDisplay {
 							selected_item = get_selected_item ();
 						}
 					}
-					
-					update = true;
 				} else {
 					selected_items.clear ();
 					if (selected_item.glyphs != null) {
@@ -1324,16 +1375,15 @@ public class OverView : FontDisplay {
 					}
 				}
 				
-				if (is_null(i.version_menu)) {
-					update = true;
+				if (!is_null (i.version_menu)) {
+					update = !((!)i).version_menu.menu_visible;
 				} else {
-					VersionList v = (!) i.version_menu;
-					update = !v.menu_visible;
+					update = true;
 				}
 			}
 			index++;
 		}
-
+	
 		if (update) {
 			update_item_list ();
 		}
@@ -1379,7 +1429,20 @@ public class OverView : FontDisplay {
 	}
 	
 	public void open_current_glyph () {
-		open_overview_item (selected_item);
+		// keep this object even if open_glyph_signal closes the display
+		this.ref ();
+		 
+		selected_item = get_selected_item ();
+		if (selected_item.glyphs != null) {
+			open_glyph_signal ((!) selected_item.glyphs);
+			GlyphCollection? gc2 = selected_item.glyphs;
+			GlyphCollection gc = (!) selected_item.glyphs;
+			gc.get_current ().close_path ();
+		} else {
+			open_new_glyph_signal (selected_item.character);
+		}
+		
+		this.unref ();
 	}
 
 	public override void update_scrollbar () {
@@ -1432,6 +1495,7 @@ public class OverView : FontDisplay {
 		double character_height;
 		
 		entry = ((!)character_info).get_entry ();
+
 		lines = entry.split ("\n");
 		
 		foreach (string line in entry.split ("\n")) {
@@ -1511,6 +1575,7 @@ public class OverView : FontDisplay {
 			
 			character_start = y + 10 + i * UCD_LINE_HEIGHT;
 			character_height = h - character_start;
+
 			draw_fallback_character (cr, x, character_start, character_height);
 		}
 	}
@@ -1519,7 +1584,11 @@ public class OverView : FontDisplay {
 	void draw_fallback_character (Context cr, double x, double y, double height)
 	requires (character_info != null) {
 		unichar c = ((!)character_info).unicode;
-		
+
+		if (height < 0) {
+			return;
+		}
+
 		cr.save ();
 		Text character = new Text ();
 		character.set_use_cache (false);
@@ -1644,6 +1713,13 @@ public class OverView : FontDisplay {
 		}
 		
 		f.touch ();
+		
+		update_item_list ();
+		GlyphCanvas.redraw ();
+	}
+
+	public override bool needs_modifier () {
+		return true;
 	}
 	
 	public class OverViewUndoItem {

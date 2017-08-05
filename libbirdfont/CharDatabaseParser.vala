@@ -46,7 +46,7 @@ public class CharDatabaseParser : GLib.Object {
 				f.delete ();
 			}
 			
-			open_database ();
+			open_database (OPEN_READWRITE);
 			create_tables ();
 			parse_all_entries ();
 		} catch (GLib.Error e) {
@@ -54,9 +54,9 @@ public class CharDatabaseParser : GLib.Object {
 		}
 	}
 	
-	public void open_database () {
+	public void open_database (int access_mode) {
 		File f = get_database_file ();
-		int rc = Database.open ((!) f.get_path (), out database);
+		int rc = Database.open_v2 ((!) f.get_path (), out database, access_mode);
 
 		db = (!) database;
 

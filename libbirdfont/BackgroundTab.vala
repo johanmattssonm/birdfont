@@ -14,7 +14,6 @@
 
 using Math;
 using Cairo;
-using SvgBird;
 
 namespace BirdFont {
 

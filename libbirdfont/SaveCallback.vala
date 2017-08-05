@@ -28,7 +28,7 @@ public class SaveCallback : GLib.Object {
 	}
 	
 	public void save_as ()  {
-		if (unlikely (MenuTab.has_suppress_event ())) {
+		if (MenuTab.has_suppress_event ()) {
 			warn_if_test ("Event suppressed");
 			return;
 		}
@@ -54,7 +54,6 @@ public class SaveCallback : GLib.Object {
 				file_name = @"$(f)";
 				file = File.new_for_path (file_name);
 				font_file_path = (!) file.get_path ();
-				
 				if (!file.query_exists ()) {
 					save ();
 				} else {

@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-"""
-Copyright (C) 2013 2014 2015 Johan Mattsson
+""" Copyright (C) 2013 2014 2015 Johan Mattsson
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -107,6 +106,7 @@ install ('resources/linux/birdfont_window_icon.png', '/share/birdfont', 644)
 install ('resources/linux/birdfont.desktop', '/share/applications', 644)
 install ('resources/ucd.sqlite', '/share/birdfont', 644)
 install ('resources/codepages.sqlite', '/share/birdfont', 644)
+install ('resources/Roboto-Regular.ttf', '/share/birdfont', 644)
 
 install ('resources/linux/256x256/birdfont.png', '/share/icons/hicolor/256x256/apps', 644)
 install ('resources/linux/128x128/birdfont.png', '/share/icons/hicolor/128x128/apps', 644)
@@ -130,7 +130,8 @@ elif not options.libdir:
 	if platform.dist()[0] == 'Ubuntu' or platform.dist()[0] == 'Debian':
 		process = subprocess.Popen(['dpkg-architecture', '-qDEB_HOST_MULTIARCH'], stdout=subprocess.PIPE)
 		out, err = process.communicate()
-		libdir = '/lib/' + out.decode('UTF-8').rstrip ('\n')
+		out = out.decode('ascii')
+		libdir = '/lib/' + out.rstrip ('\n')
 	else:
 		p = platform.machine()
 		if p == 'i386' or p == 's390' or p == 'ppc' or p == 'armv7hl':

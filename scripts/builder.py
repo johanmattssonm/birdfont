@@ -106,7 +106,7 @@ class Builder(object):
             command = command.replace('OBJECT_FILE', object_path)
             yield {
                 'basename': 'compile ' + csource,
-                'file_dep': [build_file, csource] + copied_cheader,
+                'file_dep': [build_file, csource] + bindep + copied_cheader,
                 'actions': [command],
                 'targets': [path.join(build_directory, object_file)],
             }
@@ -114,7 +114,7 @@ class Builder(object):
         object_paths = [path.join(build_directory, f) for f in object_files] 
         yield {
             'basename': source_directory,
-            'file_dep': object_paths + [build_file],
+            'file_dep': object_paths + [build_file] + bindep,
             'actions': [linker_command],
             'targets': [path.join('build', 'bin', target_binary)]
         }
@@ -138,7 +138,10 @@ def is_up_to_date(task):
 
     for dep in task['file_dep']:
         if not path.isfile(dep):
-            print('Dependency is not created yet: ' + dep + ' needed for ' + task['targets'])
+            targets = " ".join(str(x) for x in task['targets'])
+            print('Build failed because dependency is not created yet: ' + dep)
+            print()
+            print('Targetes depending on ' + dep + ":\n" + targets)
             exit(1)
 
     target_times = []

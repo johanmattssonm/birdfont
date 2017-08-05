@@ -22,19 +22,24 @@
 
 namespace BirdFont {
 
-public class Color : SvgBird.Color {
+public class Color {
+	public double r;
+	public double g;
+	public double b;
+	public double a;
+	
 	public Color (double r, double g, double b, double a) {
-		base (r, g, b, a);
+		this.r = r;
+		this.g = g;
+		this.b = b;
+		this.a = a;
 	}
 
-	public Color.create_copy (SvgBird.Color color) {
-		base (color.r, color.g, color.b, color.a);
-	}
-	
 	public Color.hsba (double h, double s, double v, double a) {
 		double hue, saturation, value;
 		double f, p, q, t;
-		double r, g, b;
+
+		this.a = a;
 
 		if (s == 0.0) {
 			r = v;
@@ -95,8 +100,6 @@ public class Color : SvgBird.Color {
 				assert_not_reached ();
 			}
 		}
-		
-		base (r, g, b, a);
 	}
 
 	public void to_hsva (out double h, out double s, out double v, out double a) {
@@ -201,9 +204,21 @@ public class Color : SvgBird.Color {
 	public static Color magenta () {
 		return new Color (103.0 / 255, 33.0 / 255, 120.0 / 255, 1);
 	}
-		
-	public new Color copy () {
+	
+	public string to_string () {
+		return @"r: $r, g: $g, b: $b, a: $a";
+	}
+	
+	public Color copy () {
 		return new Color (r, g, b, a);
+	}
+
+	public string to_rgb_hex () {
+		string s = "#";
+		s += Font.to_hex_code ((unichar) Math.rint (r  * 254));
+		s += Font.to_hex_code ((unichar) Math.rint (g  * 254));
+		s += Font.to_hex_code ((unichar) Math.rint (b  * 254));
+		return s;
 	}
 }
 

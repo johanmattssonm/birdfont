@@ -74,7 +74,7 @@ public abstract class FontDisplay : GLib.Object {
 	public virtual void double_click (uint button, double ex, double ey) {
 	}
 
-  public virtual void magnify (double magnification) {
+	public virtual void magnify (double magnification) {
 	}
 
 	public virtual void tap_down (int finger, int x, int y) {

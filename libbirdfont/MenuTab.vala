@@ -12,8 +12,6 @@
 	Lesser General Public License for more details.
 */
 
-using SvgBird;
-
 namespace BirdFont {
 
 public class MenuTab : FontDisplay {
@@ -124,7 +122,8 @@ public class MenuTab : FontDisplay {
 		Font current_font = BirdFont.get_current_font ();
 		string ttf_name = ExportSettings.get_file_name (current_font) + ".ttf";
 		string ttf_name_mac = ExportSettings.get_file_name_mac (current_font) + ".ttf";
-
+		
+		print (@"$ttf_name == $ttf_name_mac");
 		if (ttf_name == ttf_name_mac) {
 			MainWindow.show_message (t_("You need to choose a different name for the TTF file with Mac adjustmets."));
 			ttf_name_mac = ExportSettings.get_file_name_mac (current_font) + " Mac.ttf";
@@ -211,7 +210,12 @@ public class MenuTab : FontDisplay {
 	public static void signal_file_exported () {
 		IdleSource idle = new IdleSource ();
 		idle.set_callback (() => {
-			export_callback.file_exported ();
+			export_callback.file_exported ();			
+			
+			if (ExportTool.error_message != null) {
+				MainWindow.show_message (t_("Can't create TTF font.") + "\n" + (!) ExportTool.error_message);
+			}
+
 			return false;
 		});
 		idle.attach (null);
@@ -277,7 +281,6 @@ public class MenuTab : FontDisplay {
 		
 		DrawingTools.set_stroke_tool_visibility ();
 
-
 		string lock_grid = f.settings.get_setting ("lock_grid");
 		bool lg = bool.parse (lock_grid);		
 		GridTool.lock_grid = lg;
@@ -328,7 +331,6 @@ public class MenuTab : FontDisplay {
 		MainWindow.get_toolbox ().update_expanders ();
 		MainWindow.get_toolbox ().update_all_expanders ();
 		Toolbox.redraw_tool_box ();
-		OverViewItem.glyph_scale = 1;
 	}
 	
 	// FIXME: background thread
@@ -436,6 +438,8 @@ public class MenuTab : FontDisplay {
 		} else {
 			MainWindow.show_dialog (new SaveDialog (dialog));
 		}
+		
+		MainWindow.native_window.update_window_size ();
 	} 
 	
 	public static void show_export_settings_tab () {
@@ -647,29 +651,29 @@ public class MenuTab : FontDisplay {
 		Gee.ArrayList<Path> paths = new Gee.ArrayList<Path> ();
 		
 		// selected objects
-		foreach (Path p in g.get_active_paths ()) {
+		foreach (Path p in g.active_paths) {
 			paths.add (PenTool.simplify (p, false, PenTool.simplification_threshold));
 		}
 		
 		// selected segments
 		if (paths.size == 0) {
-			foreach (Path p in g.get_active_paths ()) {
+			foreach (Path p in g.get_all_paths ()) {
 				g.add_active_path (null, p);
 			}
 			
-			foreach (Path p in g.get_active_paths ()) {
+			foreach (Path p in g.active_paths) {
 				paths.add (PenTool.simplify (p, true, PenTool.simplification_threshold));
 			}
 		}
 		
 		g.store_undo_state ();
 		
-		foreach (SvgBird.Object o in g.active_paths) {
-			g.layers.remove (o);
+		foreach (Path p in g.active_paths) {
+			g.layers.remove_path (p);
 		}
 
-		foreach (Path p in g.get_active_paths ()) {
-			LayerUtils.remove_path (g.layers, p);
+		foreach (Path p in g.active_paths) {
+			g.layers.remove_path (p);
 		}
 				
 		foreach (Path p in paths) {

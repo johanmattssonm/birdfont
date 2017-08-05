@@ -20,15 +20,15 @@ public class KernList : GLib.Object {
 	public delegate void KernIterator (Kern k);
 	public delegate void PairFormat1Iterator (PairFormat1 k);
 
-	GlyfTable glyf_table;
-	uint num_pairs;
+	public GlyfTable glyf_table;
+	public uint num_pairs;
 	
 	public KernList (GlyfTable glyf_table) {
 		this.glyf_table = glyf_table;
 		num_pairs = 0;
 		pairs = new Gee.ArrayList<PairFormat1> (); 
 	}
-	
+		
 	/** @return number of pairs. */
 	public uint fetch_all_pairs () {
 		PairFormat1 current_pairs = new PairFormat1 ();
@@ -50,21 +50,37 @@ public class KernList : GLib.Object {
 			if (unlikely (kerning_pair.character.get_name () == "")) {
 				warning ("No name for glyph");
 			}
-
+			
+			
+			string glyph_name = kerning_pair.character.get_name ();
 			current_pairs = new PairFormat1 ();
-			gid_left = (uint16) glyf_table.get_gid (kerning_pair.character.get_name ());
+			gid_left = (uint16) glyf_table.get_gid (glyph_name);
+
+			if (unlikely (gid_left == -1)) {
+				warning("Ignoring kerning for missing character: $(glyph_name)");			
+				return;
+			}		
+			
 			current_pairs.left = gid_left;
 			pairs.add (current_pairs);
 			
 			if (unlikely (kerning_pair.kerning.size == 0)) {
-				warning (@"No kerning pairs for character: $((kerning_pair.character.get_name ()))");
+				warning (@"No kerning pairs for character (left): $(glyph_name)");
 			}
 			
 			i = 0;
 			num_pairs += kerning_pair.kerning.size;
 			foreach (Kerning k in kerning_pair.kerning) {
-				gid_right = (uint16) glyf_table.get_gid (k.get_glyph ().get_name ());
-				current_pairs.pairs.add (new Kern (gid_left, gid_right, (int16) Math.rint (k.val * HeadTable.UNITS)));
+				string right_name = k.get_glyph ().get_name ();
+				gid_right = (uint16) glyf_table.get_gid (right_name);
+
+				if (unlikely (gid_right == -1)) {
+					warning("Ignoring kerning for missing character (right): $(right_name)");
+				} else {
+					int16 kerning_value = (int16) Math.rint (k.val * HeadTable.UNITS);
+					Kern kern = new Kern (gid_left, gid_right, kerning_value);
+					current_pairs.pairs.add (kern);
+				}							
 			}
 			
 			current_pairs.pairs.sort ((a, b) => {
@@ -122,6 +138,18 @@ public class KernList : GLib.Object {
 			iter (p);
 			
 			i++;
+		}
+	}
+	
+	public void all_single_kern (PairFormat1Iterator iter) {
+		foreach (PairFormat1 p in pairs) {
+			foreach (Kern k in p.pairs) {
+				PairFormat1 single = new PairFormat1 ();
+				single.left = p.left;
+				single.pairs.add (k);
+				
+				iter (single);
+			}
 		}
 	}
 }

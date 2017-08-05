@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012 2014 2016 Johan Mattsson
+	Copyright (C) 2012 2014 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -32,7 +32,7 @@ public class MainWindow : GLib.Object {
 	public static Dialog dialog;
 	public static SpacingTab spacing_tab;
 	public static Task blocking_background_task;
-	public static Help help;
+	public static Scrollbar scrollbar;
 	
 	/** Number of pixels per mm */
 	public static double units = 1;
@@ -56,15 +56,15 @@ public class MainWindow : GLib.Object {
 		dialog = new Dialog ();
 		spacing_tab = new SpacingTab ();
 		blocking_background_task = new Task (null);
-		help = new Help ();
+		scrollbar = new Scrollbar ();		
 		
 		tools.select_tool (DrawingTools.bezier_tool);
 	}
-	
-	public static Help get_help () {
-		return help;
-	}
 
+	public static bool has_scrollbar () {
+		return scrollbar.is_visible ();
+	}	
+	
 	public static void abort_task () {
 		blocking_background_task.cancel ();
 	}
@@ -112,7 +112,14 @@ public class MainWindow : GLib.Object {
 		}
 	}
 
-	public static void  show_message (string text) {
+	public static void show_message (string text) {
+		Tab t = MainWindow.get_tab_bar ().get_selected_tab ();
+		string tab_name = t.get_display ().get_name ();
+
+		if (tab_name == "Preview") {
+			MenuTab.select_overview ();
+		}
+		
 		MessageDialog md = new MessageDialog (text);
 		show_dialog (md);
 	}
@@ -222,16 +229,6 @@ public class MainWindow : GLib.Object {
 	public static bool select_tab (Tab t) {
 		return tabs.selected_open_tab (t);
 	}
-
-	public static OverView get_overview () {
-		foreach (Tab t in tabs.tabs) {
-			if (t.get_display () is OverView) {
-				return (OverView) t.get_display ();
-			}
-		}
-		
-		return overview;
-	}
 	
 	public static SpacingClassTab get_spacing_class_tab () {
 		return spacing_class_tab;
@@ -259,40 +256,27 @@ public class MainWindow : GLib.Object {
 	
 	public static void hide_scrollbar () {
 		if (!is_null (MainWindow.native_window)) {
-			MainWindow.native_window.set_scrollbar_size (-1);
+			MainWindow.scrollbar.set_size (-1);
 		}
 	}	
 
 	public static void show_scrollbar () {
 		if (!is_null (MainWindow.native_window)) {
-			MainWindow.native_window.set_scrollbar_size (scrollbar_size);
+			MainWindow.scrollbar.set_size (scrollbar_size);
 		}
 	}
 	
 	public static void set_scrollbar_size (double size) {
 		if (!is_null (MainWindow.native_window)) {
 			scrollbar_size = size;
-			MainWindow.native_window.set_scrollbar_size (size);
+			MainWindow.scrollbar.set_size (size);
 		}
 	}
 	
 	public static void set_scrollbar_position (double position) {
 		if (!is_null (MainWindow.native_window)) {
-			MainWindow.native_window.set_scrollbar_position (position);
+			MainWindow.scrollbar.set_position (position);
 		}
-	}
-
-	/** Reaload all paths and help lines from disk. */
-	public static void clear_glyph_cache () {
-		Glyph g;
-		foreach (Tab t in get_tab_bar ().tabs) {
-			if (t.get_display () is Glyph) {
-				g = (Glyph) t.get_display ();
-				g.add_help_lines ();
-			}
-		}
-		
-		GlyphCanvas.redraw ();
 	}
 		
 	public static void close_all_tabs () {
@@ -346,6 +330,16 @@ public class MainWindow : GLib.Object {
 	
 	public static void set_toolbox (Toolbox tb) {
 		tools = tb;
+	}
+
+	public static OverView get_overview () {
+		foreach (Tab t in tabs.tabs) {
+			if (t.get_display () is OverView) {
+				return (OverView) t.get_display ();
+			}
+		}
+		
+		return overview;
 	}
 }
 

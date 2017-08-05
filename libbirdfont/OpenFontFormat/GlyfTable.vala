@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012 2013 2014 Johan Mattsson
+	Copyright (C) 2012, 2013, 2014 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -35,7 +35,7 @@ public class GlyfTable : OtfTable {
 	public HeadTable head_table;
 	public HmtxTable hmtx_table;
 	public LocaTable loca_table;
-	public CmapTable cmap_table; // cmap and post is null when inistialized and set in parse method
+	public CmapTable cmap_table; // cmap and post is tables are null when initialized and set in parse method
 	public PostTable post_table;
 	public KernTable kern_table;
 	
@@ -113,15 +113,17 @@ public class GlyfTable : OtfTable {
 		
 		foreach (GlyphCollection gc in glyphs) {
 			g = gc.get_current ();
+
+			printd (@"adding glyph: $(gc.get_name ())\n");
+						
 			// set values for loca table
 			assert (fd.length () % 4 == 0);
 			location_offsets.add (fd.length ());
 			process_glyph (g, fd);
 
-			printd (@"adding glyph: $(g.name)\n");
 			printd (@"glyf length: $(fd.length () - last_len)\n");
 			printd (@"loca fd.length (): $(fd.length ())\n");
-
+			
 			last_len = fd.length ();
 		}
 
@@ -144,7 +146,7 @@ public class GlyfTable : OtfTable {
 		bool unassigned;
 		
 		// add notdef character and other special characters first
-		glyphs.add (font.get_not_def_character ());
+		glyphs.add (font.get_notdef_character ());
 		glyphs.add (font.get_null_character ());
 		glyphs.add (font.get_nonmarking_return ());
 		glyphs.add (font.get_space ());
@@ -163,7 +165,7 @@ public class GlyfTable : OtfTable {
 			g.remove_empty_paths ();
 			unassigned = gc.is_unassigned ();
 
-			if (unassigned && gc.get_name () != ".notdef") {
+			if (unassigned) {
 				unassigned_glyphs.add (gc);
 			}
 			
@@ -194,13 +196,20 @@ public class GlyfTable : OtfTable {
 		foreach (GlyphCollection ug in unassigned_glyphs) {
 			glyphs.add (ug);
 		}
+		
+		
+		int gid = 0;
+		foreach (GlyphCollection ug in glyphs) {
+			printd (@"Glyph: $(ug.get_name ()) GID: $(gid)\n");
+			gid++;
+		}
 	}
 
 	public void process_glyph (Glyph g, FontData fd) throws GLib.Error {
 		uint16 end_point;
 		uint16 npoints;
 		int16 ncontours;
-		int16 nflags;
+		uint16 nflags;
 		int glyph_offset;
 		uint len; 
 		uint coordinate_length;
@@ -214,6 +223,12 @@ public class GlyfTable : OtfTable {
 		
 		g.remove_empty_paths ();
 		glyf_data = g.get_ttf_data ();
+	
+		int points = glyf_data.get_num_points ();
+		if (unlikely (points >= uint16.MAX)) {
+			warning (@"Too many points in glyph $(g.get_name ()) ($points)");
+			throw new FileError.FAILED (t_("Too many control points") + " " + t_("in") + @" $(g.get_name ())");
+		}
 		
 		this.glyf_data.add (glyf_data);
 		
@@ -266,6 +281,7 @@ public class GlyfTable : OtfTable {
 		// flags		
 		nflags = glyf_data.get_nflags ();
 		if (unlikely (nflags != npoints)) {
+			print ("glyf table data:\n");
 			fd.dump ();
 			warning (@"(nflags != npoints)  ($nflags != $npoints) in glyph $(g.name). ncontours: $ncontours");
 		}
@@ -298,18 +314,22 @@ public class GlyfTable : OtfTable {
 
 		// save bounding box for head table
 		if (glyf_data.bounding_box_xmin < this.xmin) {
+			printd (@"YMin in $(g.get_name ())\n");
 			this.xmin = glyf_data.bounding_box_xmin;
 		}
 		
 		if (glyf_data.bounding_box_ymin < this.ymin) {
+			printd (@"YMin in $(g.get_name ())\n");
 			this.ymin = glyf_data.bounding_box_ymin;
 		}
 		
 		if (glyf_data.bounding_box_xmax > this.xmax) {
+			printd (@"XMax in $(g.get_name ())\n");
 			this.xmax = glyf_data.bounding_box_xmax;
 		}
 		
 		if (glyf_data.bounding_box_ymax > this.ymax) {
+			printd (@"YMax in $(g.get_name ())\n");
 			this.ymax = glyf_data.bounding_box_ymax;
 		}
 		
@@ -477,7 +497,7 @@ public class GlyfTable : OtfTable {
 
 		end_points = new uint16[ncontours + 1];
 		for (int i = 0; i < ncontours; i++) {
-			end_points[i] = dis.read_ushort (); // FIXME: mind shot vector is negative
+			end_points[i] = dis.read_ushort (); // FIXA: mind shot vector is negative
 			
 			if (i > 0 && end_points[i] < end_points[i -1]) {
 				warning (@"Next endpoint has bad value in $(name.str). (end_points[i] > end_points[i -1])  ($(end_points[i]) > $(end_points[i -1])) i: $i ncontours: $ncontours");

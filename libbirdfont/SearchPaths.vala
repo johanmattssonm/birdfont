@@ -94,7 +94,7 @@ public class SearchPaths {
 		f = get_file (@"/usr/share/birdfont/" + d + "/", name);
 		if (likely (f.query_exists ())) return f;
 
-		return f;
+		return f;		
 	}
 		
 	public static string get_locale_directory () {

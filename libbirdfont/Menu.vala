@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2014 - 2016 Johan Mattsson
+	Copyright (C) 2014 2015 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -287,37 +287,17 @@ public class Menu : AbstractMenu {
 
 		MenuItem import_svg = add_menu_item (t_("Import SVG file"), "import svg file", "Glyph");
 		import_svg.action.connect (() => {
-			SvgParser.import (SvgType.REGULAR);
+			SvgParser.import ();
 			show_menu = false;
 		});
 		export_menu.items.add (import_svg);
-				
+		
 		MenuItem import_svg_folder = add_menu_item (t_("Import SVG folder"), "import svg folder", "");
 		import_svg_folder.action.connect (() => {
-			SvgParser.import_folder (SvgType.REGULAR);
+			SvgParser.import_folder ();
 			show_menu = false;
 		});
 		export_menu.items.add (import_svg_folder);
-
-		if (BirdFont.has_argument ("--test")) {
-			MenuItem import_color_svg;
-			import_color_svg = add_menu_item (t_("Import SVG file")  + ", " + t_("color"),
-				"import svg file color", "Glyph");
-			import_color_svg.action.connect (() => {
-				SvgParser.import (SvgType.COLOR);
-				show_menu = false;
-			});
-			export_menu.items.add (import_color_svg);
-
-			MenuItem import_svg_color_folder;
-			import_svg_color_folder = add_menu_item (t_("Import SVG folder") + ", " + t_("color"), 
-				"import svg folder color", "");
-			import_svg_color_folder.action.connect (() => {
-				SvgParser.import_folder (SvgType.COLOR);
-				show_menu = false;
-			});
-			export_menu.items.add (import_svg_color_folder);
-		}
 		
 		MenuItem import_background_image = add_menu_item (t_("Import Background Image"), "import background image");
 		import_background_image.action.connect (() => {
@@ -412,7 +392,12 @@ public class Menu : AbstractMenu {
 
 		MenuItem next_kerning_pair = add_menu_item (t_("Select Next Kerning Pair"), "select next kerning pair");
 		next_kerning_pair.action.connect (() => {
-			KerningDisplay.next_pair ();
+			if (KerningDisplay.right_to_left)  {
+				KerningDisplay.previous_pair ();			
+			} else {
+				KerningDisplay.next_pair ();
+			}
+			
 			show_menu = false;
 		});
 		next_kerning_pair.add_display("Kerning");
@@ -421,7 +406,12 @@ public class Menu : AbstractMenu {
 
 		MenuItem previous_kerning_pair = add_menu_item (t_("Select Previous Kerning Pair"), "select previous kerning pair");
 		previous_kerning_pair.action.connect (() => {
-			KerningDisplay.previous_pair ();
+			if (KerningDisplay.right_to_left)  {
+				KerningDisplay.next_pair ();			
+			} else {
+				KerningDisplay.previous_pair ();
+			}
+			
 			show_menu = false;
 		});
 		previous_kerning_pair.add_display("Kerning");
@@ -509,16 +499,7 @@ public class Menu : AbstractMenu {
 			show_menu = false;
 		});
 		menu.items.add (version);
-
-		MenuItem help = add_menu_item (t_("Help"), "help");
-		help.action.connect (() => {
-			Help help_box = MainWindow.get_help ();
-			help_box.set_visible (!help_box.is_visible ());
-			GlyphCanvas.redraw ();
-			show_menu = false;
-		});
-		menu.items.add (help);
-			
+	
 		set_current_menu (menu);
 		top_menu = menu;
 		

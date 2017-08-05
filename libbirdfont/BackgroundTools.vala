@@ -112,7 +112,6 @@ public class BackgroundTools : ToolCollection  {
 			add_part (selection);
 		}
 		
-		parts.clear_cache ();
 		parts.redraw ();
 	}
 
@@ -182,13 +181,13 @@ public class BackgroundTools : ToolCollection  {
 		});
 		label.has_delete_button = true;
 		parts.add_tool (label, 0);
-
-		parts.redraw ();
-		parts.clear_cache ();
+		parts.redraw ();		
 		
 		if (!is_null (MainWindow.get_toolbox ())) {
-			MainWindow.get_toolbox ().update_expanders ();
-			Toolbox.redraw_tool_box ();
+				MainWindow.get_toolbox ().update_expanders ();
+				parts.clear_cache ();
+				Toolbox.redraw_tool_box ();
+				GlyphCanvas.redraw ();
 		}
 	}
 

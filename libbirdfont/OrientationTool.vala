@@ -30,11 +30,8 @@ public class OrientationTool : Tool {
 		select_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
 			
-			foreach (Object o in g.active_paths) {
-				if (o is PathObject) {
-					PathObject p = (PathObject) o;
-					p.get_path ().reverse ();
-				}
+			foreach (Path p in g.active_paths) {
+				p.reverse ();
 			}
 
 			count_down = true;
@@ -57,17 +54,13 @@ public class OrientationTool : Tool {
 		bool has_clockwise_paths = false;
 		bool has_counter_clockwise_paths = false;
 		
-		foreach (Object o in glyph.active_paths) {
-			if (o is PathObject) {
-				Path p = ((PathObject) o).get_path ();
-				
-				if (p.is_clockwise ()) {
-					has_clockwise_paths = true;
-				}
-				
-				if (!p.is_clockwise ()) {
-					has_counter_clockwise_paths = true;
-				}
+		foreach (Path p in glyph.active_paths) {
+			if (p.is_clockwise ()) {
+				has_clockwise_paths = true;
+			}
+			
+			if (!p.is_clockwise ()) {
+				has_counter_clockwise_paths = true;
 			}
 		}
 		

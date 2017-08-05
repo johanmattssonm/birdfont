@@ -41,6 +41,11 @@ public class SpacingClass : GLib.Object  {
 		update (next);
 	}
 	
+	public void update_class (string value, bool first) {
+		update_first = first;
+		update (value);
+	}
+	
 	void update (string val) {
 		listener = new TextListener (t_("Character"), val, t_("Set"));
 		
@@ -48,7 +53,7 @@ public class SpacingClass : GLib.Object  {
 			string v = text;
 			
 			if (v.has_prefix ("U+") || v.has_prefix ("u+")) {
-				v = (!) Font.to_unichar (val).to_string ();
+				v = ((!) Font.to_unichar (v).to_string ()).dup ();
 			}
 			
 			if (update_first) {
@@ -56,12 +61,11 @@ public class SpacingClass : GLib.Object  {
 			} else {
 				next = v.dup ();
 			}
-			
-			updated (this);
 		});
 		
 		listener.signal_submit.connect (() => {
 			TabContent.hide_text_input ();
+			updated (this);
 		});
 		
 		TabContent.show_text_input (listener);

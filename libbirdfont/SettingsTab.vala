@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2014 2015 Johan Mattsson
+	Copyright (C) 2014 2015 2016 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -18,6 +18,8 @@ using Math;
 namespace BirdFont {
 
 public class SettingsTab : SettingsDisplay {
+
+	string restart_message = "You need to restart the program in order to apply this setting.";	
 	
 	public SettingsTab () {
 		base ();
@@ -43,13 +45,13 @@ public class SettingsTab : SettingsDisplay {
 
 		stroke_width.new_value_action.connect ((self) => {
 			Glyph g = MainWindow.get_current_glyph ();
-			CanvasSettings.stroke_width = stroke_width.get_value ();
+			Path.stroke_width = stroke_width.get_value ();
 			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);
 			Preferences.set ("stroke_width_for_open_paths", stroke_width.get_display_value ());
 			MainWindow.get_toolbox ().redraw ((int) stroke_width.x, (int) stroke_width.y, 70, 70);
 		});
 		
-		CanvasSettings.stroke_width = stroke_width.get_value ();
+		Path.stroke_width = stroke_width.get_value ();
 		
 		// adjust precision
 		string precision_value = Preferences.get ("precision");
@@ -81,7 +83,7 @@ public class SettingsTab : SettingsDisplay {
 
 		Tool show_all_line_handles = new Tool ("show_all_line_handles");
 		show_all_line_handles.select_action.connect((self) => {
-			CanvasSettings.show_all_line_handles = !CanvasSettings.show_all_line_handles;
+			Path.show_all_line_handles = !Path.show_all_line_handles;
 			Glyph g = MainWindow.get_current_glyph ();
 			g.redraw_area (0, 0, g.allocation.width, g.allocation.height);			
 		});
@@ -89,11 +91,11 @@ public class SettingsTab : SettingsDisplay {
 
 		Tool fill_open_path = new Tool ("fill_open_path");
 		fill_open_path.select_action.connect((self) => {
-			CanvasSettings.fill_open_path = true;	
+			Path.fill_open_path = true;	
 		});
 		
 		fill_open_path.deselect_action.connect((self) => {
-			CanvasSettings.fill_open_path = false;	
+			Path.fill_open_path = false;	
 		});
 		tools.add (new SettingsItem (fill_open_path, t_("Fill open paths.")));
 
@@ -141,6 +143,25 @@ public class SettingsTab : SettingsDisplay {
 			DrawingTools.pen_tool.set_simplification_threshold (simplification_threshold.get_value ());
 		});
 
+		Tool translate_ui = new Tool ("translate");
+		translate_ui.select_action.connect((self) => {
+			Preferences.set ("translate", @"true");	
+			ThemeTab.redraw_ui ();
+			translate_ui.selected = true;
+			MainWindow.show_dialog (new MessageDialog (restart_message));
+		});
+		
+		translate_ui.deselect_action.connect((self) => {
+			Preferences.set ("translate", @"false");
+			translate_ui.selected = false;
+			MainWindow.show_dialog (new MessageDialog (restart_message));
+			ThemeTab.redraw_ui ();
+		});
+
+		string translate_setting = Preferences.get ("translate");
+		translate_ui.selected = translate_setting == "" || translate_setting == "true";		
+		tools.add (new SettingsItem (translate_ui, t_("Translate")));
+		
 		Tool themes = new Tool ("open_theme_tab");
 		themes.set_icon ("theme");
 		themes.select_action.connect((self) => {

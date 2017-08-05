@@ -26,7 +26,7 @@ public class OtfFeatureTable : Table {
 	static const int REPLACEMENT_GLYPH = 3;
 	static const int ALTERNATE_ENTRY = 4;
 	
-	GlyphCollection glyph_collection;
+	GlyphCollection? glyph_collection = null;
 	GlyphCollection? replacement_glyph = null;
 	string alternate_name = "";
 	TextListener listener;
@@ -34,9 +34,24 @@ public class OtfFeatureTable : Table {
 	Gee.ArrayList<AlternateItem> undo_items;
 	// FIXME: implement redo
 	
-	public OtfFeatureTable (GlyphCollection gc) {
+	bool ignore_input = false;
+	
+	public OtfFeatureTable (GlyphCollection? gc) {
 		glyph_collection = gc;
 		undo_items = new Gee.ArrayList<AlternateItem> ();
+	}
+
+	public override void selected_canvas () {
+		ignore_input = true; // make sure that tripple clicks in overview are ignored
+
+		TimeoutSource input_delay = new TimeoutSource (250);
+		input_delay.set_callback(() => {
+			ignore_input = false;
+			return false;
+		});
+		input_delay.attach (null);
+		
+		base.selected_canvas ();
 	}
 
 	public override Gee.ArrayList<Row> get_rows () {
@@ -45,15 +60,21 @@ public class OtfFeatureTable : Table {
 
 	public override void selected_row (Row row, int column, bool delete_button) {
 		int row_index = row.get_index ();
-		GLib.Object o;
+		Object o;
 		String s;
 		AlternateItem a;
+		
+		if (ignore_input) {
+			return;
+		}
 		
 		if (row_index == SOURCE_GLYPH) {
 			GlyphSelection gs = new GlyphSelection ();
 			
 			gs.selected_glyph.connect ((gc) => {
-				glyph_collection = gc;		
+				glyph_collection = gc;
+				replacement_glyph = null;
+				Tool.yield ();		
 				MainWindow.get_tab_bar ().select_tab_name (get_name ());
 			});
 			
@@ -62,7 +83,8 @@ public class OtfFeatureTable : Table {
 			GlyphSelection gs = new GlyphSelection ();
 			
 			gs.selected_glyph.connect ((gc) => {
-				replacement_glyph = gc;		
+				replacement_glyph = gc;
+				Tool.yield ();		
 				MainWindow.get_tab_bar ().select_tab_name (get_name ());
 			});
 			
@@ -102,7 +124,15 @@ public class OtfFeatureTable : Table {
 		row = new Row.headline (t_("Glyph Substitutions"));
 		rows.add (row);
 		
-		row = new Row.columns_1 (t_("Glyph") + ": " + glyph_collection.get_name (), SOURCE_GLYPH, false);
+		string glyph = "";
+		
+		if (glyph_collection == null) {
+			glyph = t_("New glyph");
+		} else {
+			glyph = ((!) glyph_collection).get_name ();
+		}
+		
+		row = new Row.columns_1 (t_("Glyph") + ": " + glyph, SOURCE_GLYPH, false);
 		rows.add (row);
 		
 		string replacement = t_("New glyph");
@@ -176,7 +206,14 @@ public class OtfFeatureTable : Table {
 	}	
 
 	public void add_new_alternate (string tag) {
-		GlyphCollection gc = glyph_collection;
+		GlyphCollection gc;
+		
+		if (glyph_collection == null) {
+			MainWindow.show_message (t_("Select a glyph to create an alternate for."));
+			return;
+		}
+		
+		gc = (!) glyph_collection;
 		
 		listener = new TextListener (t_("Glyph name"), "", t_("Add"));
 		
@@ -190,19 +227,15 @@ public class OtfFeatureTable : Table {
 			OverView overview = MainWindow.get_overview ();
 			
 			font = BirdFont.get_current_font ();
-			
-			if (alternate_name == "" || gc.is_unassigned ()) {
-				MainWindow.tabs.close_display (this);
-				return;
-			}
-			
+
 			if (font.glyph_name.has_key (alternate_name)) {
 				MainWindow.show_message (t_("All glyphs must have unique names."));
 			} else {
 				alt = new GlyphCollection.with_glyph ('\0', alternate_name);
 				alt.set_unassigned (true);
 				font.add_new_alternate (gc, alt, tag);
-				MainWindow.tabs.close_display (this);
+				update_rows ();
+				GlyphCanvas.redraw ();
 				MainWindow.get_overview ().update_item_list ();
 				overview.open_glyph_signal (alt);
 			}
@@ -212,7 +245,8 @@ public class OtfFeatureTable : Table {
 			GlyphCollection replacement = (!) replacement_glyph;
 			Font f = BirdFont.get_current_font ();
 			f.add_alternate (gc.get_name (), replacement.get_name (), tag);
-			MainWindow.tabs.close_display (this);
+			update_rows ();
+			GlyphCanvas.redraw ();
 		} else {
 			TabContent.show_text_input (listener);
 		}		

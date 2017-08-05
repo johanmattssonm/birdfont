@@ -100,18 +100,9 @@ public class GlyphSequence : GLib.Object {
 
 			foreach (Alternate a in alternates) {
 				GlyphSequence old = new GlyphSequence ();
-				string name;
-				Glyph? g;
-				
-				name = a.glyph_name;
-				
-				if (name == "space") {
-					name = " ";
-				}
-				
-				g = font.get_glyph_by_name (name);
+				Glyph? g = font.get_glyph_by_name (a.glyph_name);
 
-				if (likely (g != null)) {
+				if (g != null) {
 					old.add (g);
 						
 					if (a.alternates.size > 0) {
@@ -119,7 +110,7 @@ public class GlyphSequence : GLib.Object {
 						string alt_name = a.alternates.get (0);
 						Glyph? alt = font.get_glyph_by_name (alt_name);
 						
-						if (likely (alt != null)) {
+						if (alt != null) {
 							GlyphSequence replacement = new GlyphSequence ();
 							replacement.add (alt);
 							ligature_sequence.replace (old, replacement);

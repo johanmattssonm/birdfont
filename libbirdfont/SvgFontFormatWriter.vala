@@ -14,7 +14,7 @@
 
 namespace BirdFont {
 
-class SvgFontFormatWriter : GLib.Object  {
+class SvgFontFormatWriter : Object  {
 
 	DataOutputStream os;
 
@@ -56,10 +56,14 @@ class SvgFontFormatWriter : GLib.Object  {
 		put ("""<svg>""");
 
 		// (metadata goes here)
-
-		put ("<defs>");
-
-		put (@"<font id=\"$font_name\" horiz-adv-x=\"250\" >");
+		
+		string font_id = font_name.replace (" ", "-");
+		font_id = B.XmlParser.encode (font_id); 
+		
+		Glyph space = font.get_space ().get_current ();
+		double space_width = space.get_width ();
+		
+		put (@"<font id=\"$font_id\" horiz-adv-x=\"$(to_float (space_width))\" >");
 		put (@"<font-face units-per-em=\"$(to_float (units_per_em))\" ascent=\"$(to_float (ascent))\" descent=\"$(to_float (descent))\" />");
 
 		// (missing-glyph goes here)
@@ -108,7 +112,6 @@ class SvgFontFormatWriter : GLib.Object  {
 		});	
 
 		put ("</font>");
-		put ("</defs>");
 		put ("</svg>");
 	}
 

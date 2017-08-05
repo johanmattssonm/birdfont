@@ -80,6 +80,27 @@ public class KerningClasses : GLib.Object {
 		}
 	}
 
+	/** Copy kerning pairs for newly created spacing classes. */
+	public void copy_single_kerning_pairs (string from_spacing_class, string to_spacing_class) {
+		double? kerning;
+		
+		foreach (string left in single_kerning_letters_left) {	
+			kerning = get_kerning_for_single_glyphs (left, from_spacing_class);
+			
+			if (kerning != null) {
+				set_kerning_for_single_glyphs (left, to_spacing_class, (!) kerning);
+			}
+		}
+
+		foreach (string right in single_kerning_letters_right) {	
+			kerning = get_kerning_for_single_glyphs (from_spacing_class, right);
+			
+			if (kerning != null) {
+				set_kerning_for_single_glyphs (to_spacing_class, right, (!) kerning);
+			}
+		}		
+	}
+
 	/** Class based gpos kerning. */
 	public double get_kerning_for_pair (string a, string b, GlyphRange? gr_left, GlyphRange? gr_right) {
 		double k = 0;
@@ -127,34 +148,19 @@ public class KerningClasses : GLib.Object {
 		return 0;
 	}
 
-	public void update_space_class (string c) {
-		double? k;
-		
-		foreach (string l in single_kerning_letters_left) {	
-			k = get_kerning_for_single_glyphs (l, c);
-			
-			if (k != null) {
-				set_kerning_for_single_glyphs (l, c, (!) k);
-			}
-		}
-
-		foreach (string r in single_kerning_letters_right) {	
-			k = get_kerning_for_single_glyphs (c, r);
-			
-			if (k != null) {
-				set_kerning_for_single_glyphs (c, r, (!) k);
-			}
-		}		
-	}
-
 	public double? get_kerning_for_single_glyphs (string first, string next) {
 		double? k = null;
+		double? kerning = null;
 		string left = GlyphRange.serialize (first);
 		string right = GlyphRange.serialize (next);
 
 		foreach (string l in get_spacing_class (left)) {
 			foreach (string r in get_spacing_class (right)) {
-				k = single_kerning.get (@"$l - $r");
+				kerning = single_kerning.get (@"$l - $r");
+				
+				if (kerning != null) {
+					k = kerning;
+				}				
 			}
 		}
 		

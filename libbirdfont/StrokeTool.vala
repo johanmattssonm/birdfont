@@ -14,9 +14,14 @@
 
 using Cairo;
 using Math;
-using SvgBird;
 
 namespace BirdFont {
+
+public enum LineCap {
+	BUTT,
+	SQUARE,
+	ROUND
+}
 
 public class StrokeTool : GLib.Object {
 	
@@ -26,7 +31,7 @@ public class StrokeTool : GLib.Object {
 	public static bool show_stroke_tools = false;
 	public static bool convert_stroke = false;
 	
-	public static SvgBird.LineCap line_cap = SvgBird.LineCap.BUTT;
+	public static LineCap line_cap = LineCap.BUTT;
 	
 	StrokeTask task;
 
@@ -46,27 +51,22 @@ public class StrokeTool : GLib.Object {
 		convert_stroke = true;	
 		g.store_undo_state ();
 		
-		foreach (SvgBird.Object o in g.active_paths) {
-			if (o is PathObject) {
-				PathObject path = (PathObject) o;
-				Path p = path.get_path ();
-				
-				if (p.stroke > 0) {
-					paths.append (p.get_completed_stroke ());
-				}
+		foreach (Path p in g.active_paths) {
+			if (p.stroke > 0) {
+				paths.append (p.get_completed_stroke ());
 			}
 		}
 
 		if (paths.paths.size > 0) {
-			foreach (SvgBird.Object o in g.active_paths) {
-				g.layers.remove (o);
+			foreach (Path p in g.active_paths) {
+				g.layers.remove_path (p);
 			}
 			
 			g.active_paths.clear ();
 
 			foreach (Path np in paths.paths) {
 				g.add_path (np);
-				g.active_paths.add (new PathObject.for_path (np));
+				g.active_paths.add (np);
 			}
 			
 			PenTool.update_orientation ();
@@ -134,15 +134,11 @@ public class StrokeTool : GLib.Object {
 		
 		g.store_undo_state ();
 
-		foreach (SvgBird.Object object in g.active_paths) {
-			if (object is PathObject) {
-				Path p = ((PathObject) object).get_path ();
-				
-				if (p.stroke == 0) {
-					o.add (p);
-				} else {
-					o.append (p.get_completed_stroke ());
-				}
+		foreach (Path p in g.active_paths) {
+			if (p.stroke == 0) {
+				o.add (p);
+			} else {
+				o.append (p.get_completed_stroke ());
 			}
 		}
 						
@@ -221,8 +217,8 @@ public class StrokeTool : GLib.Object {
 			return;
 		}
 				
-		foreach (SvgBird.Object object in g.active_paths) {
-			g.layers.remove (object);
+		foreach (Path p in g.active_paths) {
+			g.delete_path (p);
 		}
 		
 		g.clear_active_paths ();
@@ -230,9 +226,8 @@ public class StrokeTool : GLib.Object {
 		remove_merged_curve_parts (new_paths);
 	
 		foreach (Path p in new_paths.paths) {
-			PathObject path = new PathObject.for_path (p);
-			g.add_object (path);
-			g.add_active_object (null, path);
+			g.add_path (p);
+			g.add_active_path (null, p);
 		}
 		
 		PenTool.update_orientation ();
@@ -1076,7 +1071,7 @@ public class StrokeTool : GLib.Object {
 		return simplified;
 	}
 	
-	Path fit_bezier_path (Path p, int start, int stop, double error) {
+	public static Path fit_bezier_path (Path p, int start, int stop, double error) {
 		int index, size;
 		Path simplified;
 		double[] lines;
@@ -1146,9 +1141,9 @@ public class StrokeTool : GLib.Object {
 	}
 
 	void add_line_cap (Path path, Path stroke1, Path stroke2, bool last_cap) {
-		if (path.line_cap == SvgBird.LineCap.SQUARE) {
+		if (path.line_cap == LineCap.SQUARE) {
 			add_square_cap (path, stroke1, stroke2, last_cap);
-		} else if (path.line_cap == SvgBird.LineCap.ROUND) {
+		} else if (path.line_cap == LineCap.ROUND) {
 			add_round_cap (path, stroke1, stroke2, last_cap);
 		}
 	}

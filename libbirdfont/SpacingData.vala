@@ -69,7 +69,7 @@ public class SpacingData : GLib.Object {
 					add_connections (s.next);
 				}
 			}
-
+			
 			if (s.next == glyph) {
 				if (!has_connection (s.first)) {
 					add_connections (s.first);
@@ -83,11 +83,11 @@ public class SpacingData : GLib.Object {
 	}
 
 	public void add_class (string first, string next) {
-		SpacingClass s = new SpacingClass (first, next);
-		s.updated.connect (update_all_rows);
-		s.updated.connect (update_kerning);
-		classes.add (s);
-		update_kerning (s);
+		SpacingClass spacing_class = new SpacingClass (first, next);
+		spacing_class.updated.connect (update_all_rows);
+		spacing_class.updated.connect (update_kerning);
+		classes.add (spacing_class);
+		update_kerning (spacing_class);
 	}
 
 	void update_all_rows (SpacingClass s) {
@@ -103,14 +103,18 @@ public class SpacingData : GLib.Object {
 			return;
 		}
 
-		kerning_classes.update_space_class (s.next);
+		if (s.next == "" || s.first == "") {
+			return;
+		}
+		
+		kerning_classes.copy_single_kerning_pairs (s.first, s.next);
+		
 		g = font.get_glyph_collection (s.next);
 		if (g != null) {
 			gc = (!) g;
 			gc.get_current ().update_spacing_class ();
 		}
 
-		kerning_classes.update_space_class (s.first);
 		g = font.get_glyph_collection (s.first);
 		if (g != null) {
 			gc = (!) g;

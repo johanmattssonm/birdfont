@@ -219,6 +219,12 @@ public class EditPoint : GLib.Object {
 	/** Make handles symmetrical. */
 	public void set_reflective_handles (bool symmetrical) {
 		reflective_point = symmetrical;
+		
+		if (symmetrical) {
+			get_left_handle ().convert_to_curve ();
+			get_right_handle ().convert_to_curve ();
+			process_tied_handle ();
+		}
 	}
 
 	/** Flip handles if next point on path is in the other direction. 
@@ -267,12 +273,6 @@ public class EditPoint : GLib.Object {
 		tie_handles = tie;
 	}
 	
-	public void process_symmetrical_handles () {
-		process_tied_handle ();
-		right_handle.process_symmetrical_handle ();
-		left_handle.process_symmetrical_handle ();
-	}
-	
 	public void to_curve () {
 		convert_from_line_to_curve (get_right_handle ());
 		convert_from_line_to_curve (get_left_handle ());
@@ -294,7 +294,6 @@ public class EditPoint : GLib.Object {
 		}
 	}
 
-	/** This can only be performed if the path has been closed. */
 	public void process_tied_handle () 
 	requires (next != null && prev != null) {
 		double a, b, c, length, angle;

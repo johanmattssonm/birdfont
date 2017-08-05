@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012 2014 2016 Johan Mattsson
+	Copyright (C) 2012, 2014 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -66,8 +66,6 @@ public class Tool : Widget {
 	bool show_bg = true;
 	
 	public string tip = "";
-	string extented_description = "";
-	TextArea? help = null;
 	
 	public bool persistent = false;
 	public bool editor_events = false;
@@ -84,9 +82,8 @@ public class Tool : Widget {
 	public signal void redraw_tool ();
 	
 	/** Create tool with a certain name and load icon "name".png */
-	public Tool (string? name = null, string tip = "", string extended_description = "") {
+	public Tool (string? name = null, string tip = "") {
 		this.tip = tip;
-		this.extented_description = extended_description;
 		
 		icon_font = new Text ();
 		
@@ -125,37 +122,10 @@ public class Tool : Widget {
 		panel_move_action.connect ((self, x, y) => {
 			if (is_active ()) {
 				wait_for_tooltip ();
-				
-				Help help_box = MainWindow.get_help ();
-				
-				if (help == null) {
-					help = update_help ();
-				}
-				
-				help_box.set_help_text ((!) help);
 				redraw ();
 			}
 			return false;
 		});
-	}
-	
-	public virtual void clear_cache () {
-		help = null;
-	}
-	
-	public TextArea? update_help () {
-		string t = get_tip ();
-		string description = t;
-		
-		if (t != "" && extented_description != "") {
-			description += "\n\n";
-		}
-		
-		if (extented_description != "") {
-			description += extented_description;
-		}
-		
-		return Help.create_help_text (description);
 	}
 	
 	public virtual string get_tip () {
@@ -251,10 +221,6 @@ public class Tool : Widget {
 	}
 	
 	public string get_key_binding () {
-		if (is_null (MainWindow.get_menu ())) {
-			return "";
-		}
-		
 		ToolItem? ti = MainWindow.get_menu ().get_item_for_tool (this);
 		ToolItem t;
 		

@@ -18,28 +18,6 @@ public class ToolItem : MenuItem {
 
 	public Tool tool;
 
-	public override uint modifiers { 
-		get {
-			return base.modifiers;
-		} 
-		
-		set {
-			base.modifiers = value;
-			tool.update_help ();
-		}
-	}
-	
-	public override unichar key { 
-		get {
-			return base.key;
-		} 
-		
-		set {
-			base.key = value;
-			tool.update_help ();
-		}
-	}
-	
 	public ToolItem (Tool tool) {
 		base (tool.tip, tool.name);
 		

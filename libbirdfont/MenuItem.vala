@@ -23,8 +23,8 @@ public class MenuItem : GLib.Object {
 	public double y;
 	
 	// key bindings
-	public virtual uint modifiers { get; set; default = NONE; }
-	public virtual unichar key { get; set; default = '\0'; }
+	public uint modifiers = NONE;
+	public unichar key = '\0';
 	
 	public Gee.ArrayList<string> displays = new Gee.ArrayList<string> ();	
 	
