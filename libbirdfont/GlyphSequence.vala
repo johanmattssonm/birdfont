@@ -160,8 +160,12 @@ public class GlyphSequence : GLib.Object {
 				glyph = substitute (i + backtrack.length (), input.length (), replacement);
 				
 				advance = backtrack.length () + replacement.length ();
-				i += advance + 1;
-				
+				i += advance;
+
+				if (replacement.length () == 0) {
+					i++;
+				}
+
 				if (advance <= 0) {
 					warning ("No advancement.");
 					return;
