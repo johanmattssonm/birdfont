@@ -309,13 +309,23 @@ public class BezierTool : Tool {
 		EditPoint first, last;
 		
 		first = current_path.get_first_point ();
-		if (first.get_right_handle ().length == 0) {
-			first.convert_to_line ();
+		
+		if (first.get_left_handle ().length == 0) {
+			first.get_left_handle ().convert_to_line ();
 		}
-
+				
+		if (first.get_right_handle ().length == 0) {
+			first.get_right_handle ().convert_to_line ();
+		}
+		
 		last = current_path.get_last_point ();
+		
 		if (last.get_left_handle ().length == 0) {
-			last.convert_to_line ();
+			last.get_left_handle ().convert_to_line ();
+		}
+		
+		if (last.get_right_handle ().length == 0) {
+			last.get_right_handle ().convert_to_line ();
 		}
 	}
 			

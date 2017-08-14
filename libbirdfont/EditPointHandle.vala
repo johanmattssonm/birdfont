@@ -150,6 +150,9 @@ public class EditPointHandle : GLib.Object {
 	}
 
 	public void convert_to_line () {
+		parent.tie_handles = false;
+		parent.reflective_point = false;
+		
 		switch (type) {
 			case PointType.QUADRATIC:
 				type = PointType.LINE_QUADRATIC;
