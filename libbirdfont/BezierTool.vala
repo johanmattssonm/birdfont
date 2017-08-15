@@ -309,9 +309,12 @@ public class BezierTool : Tool {
 		EditPoint first, last;
 		
 		first = current_path.get_first_point ();
-		
+
+		first.tie_handles = false;
+		first.reflective_point = false;
+
 		if (first.get_left_handle ().length == 0) {
-			first.get_left_handle ().convert_to_line ();
+			first.get_left_handle ().length = 0.001;
 		}
 				
 		if (first.get_right_handle ().length == 0) {
@@ -319,9 +322,12 @@ public class BezierTool : Tool {
 		}
 		
 		last = current_path.get_last_point ();
-		
+
+		last.tie_handles = false;
+		last.reflective_point = false;
+
 		if (last.get_left_handle ().length == 0) {
-			last.get_left_handle ().convert_to_line ();
+			last.get_left_handle ().length = 0.001;
 		}
 		
 		if (last.get_right_handle ().length == 0) {
