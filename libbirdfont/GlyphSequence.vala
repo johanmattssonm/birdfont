@@ -222,11 +222,19 @@ public class GlyphSequence : GLib.Object {
 
 	public string to_string () {
 		StringBuilder s = new StringBuilder();
-		foreach (Glyph g in glyph) {
-			if (g.unichar_code == '\0') {
-				s.append(@"[$(g.name)]");
+		foreach (Glyph? g in glyph) {
+			
+			if (g != null) {
+				Glyph gl = (!) g;
+ 
+				if (gl.unichar_code == '\0') {
+					s.append(@"[$(gl.name)]");
+				} else {
+					string unichar_code = (!) gl.unichar_code.to_string ();
+					s.append(unichar_code);
+				}
 			} else {
-				s.append(@"$((!) g.unichar_code)");
+				s.append(@"[null]");
 			}
 		}
 
