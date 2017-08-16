@@ -1918,7 +1918,7 @@ public class SvgParser {
 				ep.set_point_type (PointType.CUBIC); // TODO: quadratic
 				ep.get_right_handle ().set_point_type (PointType.LINE_CUBIC);
 
-				if (b[i -1].type == 'L' || first_point) {
+				if (first_point || b[i -1].type == 'L') {
 					// ep.get_left_handle ().set_point_type (PointType.LINE_CUBIC);
 				} else {
 					ep.get_left_handle ().set_point_type (PointType.CUBIC);
