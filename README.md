@@ -7,8 +7,8 @@ export SVG, EOT and TTF fonts.
 
     Author: Johan Mattsson and others see AUTHORS for full attribution.
     License: GNU GPL v3
-    Webpage: http://birdfont.org
-    Bugtracker: http://birdfont.org/bugtracker/my_view_page.php
+    Webpage: https://birdfont.org
+    Bugtracker: https://birdfont.org/bugtracker/my_view_page.php
 
 ## Building from Source
 
@@ -56,9 +56,9 @@ Configure the project with ./configure --nonnull
 ## Packages
 
 Windows and Mac binaries can be downloaded from
-http://birdfont.org Many Linux distributions have packages of
+https://birdfont.org Many Linux distributions have packages of
 Birdfont in their repositories. There is a BSD package in OpenBSD.
 
-[birdfont]: http://birdfont.org/images/birdfont_logo2.png "Birdfont logo"
-[xmlbird]: http://birdfont.org/xmlbird.php "XML Bird – XML Parser for programs written in VALA"
+[birdfont]: https://birdfont.org/images/birdfont_logo2.png "Birdfont logo"
+[xmlbird]: https://birdfont.org/xmlbird.php "XML Bird – XML Parser for programs written in VALA"
 
