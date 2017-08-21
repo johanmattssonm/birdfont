@@ -97,7 +97,7 @@ public class SettingsTab : SettingsDisplay {
 		fill_open_path.deselect_action.connect((self) => {
 			Path.fill_open_path = false;	
 		});
-		tools.add (new SettingsItem (fill_open_path, t_("Fill open paths.")));
+		tools.add (new SettingsItem (fill_open_path, t_("Fill paths.")));
 
 		Tool ttf_units = new Tool ("ttf_units");
 		ttf_units.select_action.connect((self) => {
