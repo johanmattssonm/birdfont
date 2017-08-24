@@ -112,7 +112,7 @@ install ('resources/linux/256x256/birdfont.png', '/share/icons/hicolor/256x256/a
 install ('resources/linux/128x128/birdfont.png', '/share/icons/hicolor/128x128/apps', 644)
 install ('resources/linux/48x48/birdfont.png', '/share/icons/hicolor/48x48/apps', 644)
 
-install ('resources/linux/birdfont.appdata.xml', '/share/appdata', 644)
+install ('resources/linux/birdfont.appdata.xml', '/share/metainfo', 644)
 
 if os.path.isfile ('build/bin/birdfont'):
 	install ('build/bin/birdfont', '/bin', 755)
