@@ -238,13 +238,14 @@ public class KerningTools : ToolCollection  {
 				warning ("Tool is not kerning range");
 				return;
 			}
-			
+
 			k = (KerningRange) t;
 			if (k.glyph_range.get_all_ranges () == kerning_class.glyph_range.get_all_ranges ()) {
 				return;
 			}
 		}
-		
+
+		kerning_class.h += 50;
 		classes.add_tool (kerning_class);
 	}
 	

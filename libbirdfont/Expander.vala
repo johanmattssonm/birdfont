@@ -192,7 +192,9 @@ public class Expander : GLib.Object {
 
 					if (previous is ZoomBar) {
 						content_height += 7 * scale;
-					}
+					} else if (previous is KerningRange) {
+						content_height += 10 * scale;
+					} 
 										
 					previous = t;
 					first_row = false;
@@ -201,7 +203,7 @@ public class Expander : GLib.Object {
 			
 			content_height += 5 * scale;
 		}
-		
+
 		if (unlikely (content_height < 0)) {
 			warning (@"content_height < 0");	
 		}
