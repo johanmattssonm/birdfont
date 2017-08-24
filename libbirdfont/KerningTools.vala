@@ -245,7 +245,6 @@ public class KerningTools : ToolCollection  {
 			}
 		}
 
-		kerning_class.h += 50;
 		classes.add_tool (kerning_class);
 	}
 	

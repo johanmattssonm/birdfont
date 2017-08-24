@@ -152,7 +152,11 @@ public class NameTable : OtfTable {
 	public string validate_full_name (string s) {
 		string n = name_validation (s, true);
 		string regular_suffix = " Regular";
-		
+
+		n = n.replace ("-Regular", " Regular");
+		n = n.replace ("-Bold", " Bold");
+		n = n.replace ("-Italic", " Italic");
+
 		if (n.has_suffix (regular_suffix)) {
 			n = n.substring (0, n.length - regular_suffix.length);
 		}
