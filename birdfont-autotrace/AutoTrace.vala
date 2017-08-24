@@ -66,7 +66,7 @@ class AutoTrace {
 		stdout.printf (t_("Usage:"));
 		stdout.printf (arg[0]);
 		stdout.printf (" [" + t_("OPTION") + " ...] " + t_("FILE") + " ..." + "\n");
-		stdout.printf ("-c, --cutoff                    " + t_("brighness cutoff, from 0.001 to 2, the default value is 1") + "\n");
+		stdout.printf ("-c, --cutoff                    " + t_("brightness cutoff, from 0.001 to 2, the default value is 1") + "\n");
 		stdout.printf ("-d, --details                   " + t_("details, from 0.001 to 9.999, the default value is 1") + "\n");
 		stdout.printf ("-h, --help                      " + t_("print this message") + "\n");
 		stdout.printf ("-q, --quadratic                 " + t_("use quadratic control points") + "\n");
