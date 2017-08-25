@@ -119,7 +119,7 @@ public class OverViewItem : GLib.Object {
 		w = width;
 		h = height;
 
-		scale_box = (height / DEFAULT_HEIGHT) * 0.75;
+		scale_box = (height / DEFAULT_HEIGHT) * 0.65;
 
 		s = Screen.create_background_surface ((int) width, (int) height - 20);
 		c = new Context (s);
