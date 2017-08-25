@@ -1750,7 +1750,7 @@ msgid "Your fonts have been exported."
 msgstr "Dina fonter har exporterats."
 
 #: birdfont-autotrace/AutoTrace.vala:69
-msgid "brighness cutoff, from 0.001 to 2, the default value is 1"
+msgid "brightness cutoff, from 0.001 to 2, the default value is 1"
 msgstr "tröskelvärde för svärta, från 0.001 till 2, standardväred är 1"
 
 #: birdfont-autotrace/AutoTrace.vala:70

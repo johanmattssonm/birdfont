@@ -1,7 +1,9 @@
-<application>
-	<id type="desktop">birdfont.desktop</id>
+<?xml version="1.0" encoding="UTF-8"?>
+<component>
+	<id>org.birdfont.birdfont</id>
 	<metadata_license>GPL-3.0+</metadata_license>
 	<project_license>GPL-3.0+</project_license>
+	<name>birdfont</name>
 	<summary>Font editor</summary>
 	<description>
 		<p>
@@ -10,8 +12,21 @@
 		</p>
 	</description>
 	<url type="homepage">http://birdfont.org/</url>
+	<url type="donation">http://birdfont.org/</url>
+	<url type="bugtracker">https://birdfont.org/bugtracker/my_view_page.php</url>
+	<releases>
+		<release version="2.19.4" date="2017-08-17" />
+		<release version="2.19.3" date="2017-08-16" />
+		<release version="2.19.0" date="2017-06-30" />
+	</releases>
 	<screenshots>
-		<screenshot type="default">http://birdfont.org/images/birdfont_font_editor.png</screenshot>
+		<screenshot>
+		<caption>Birdfont on Linux</caption>
+		<image type="source" width="1280" height="800">http://birdfont.org/images/birdfont_font_editor.png</image>
+		</screenshot>
 	</screenshots>
-	<updatecontact>johan.mattsson.m@gmail.com</updatecontact>
-</application>
+	<provides>
+		<binary>birdfont</binary>
+	</provides>
+	<update_contact>johan.mattsson.m@gmail.com</update_contact>
+</component>

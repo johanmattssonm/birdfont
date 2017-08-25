@@ -1755,7 +1755,7 @@ msgid "Your fonts have been exported."
 msgstr "Die Schriftart wurde exportiert."
 
 #: birdfont-autotrace/AutoTrace.vala:69
-msgid "brighness cutoff, from 0.001 to 2, the default value is 1"
+msgid "brightness cutoff, from 0.001 to 2, the default value is 1"
 msgstr "Helligkeitsgrenzwert von 0.001 bis 2, der Standardwert ist 1"
 
 #: birdfont-autotrace/AutoTrace.vala:70

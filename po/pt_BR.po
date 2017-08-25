@@ -1751,7 +1751,7 @@ msgid "Your fonts have been exported."
 msgstr "Suas fontes foram exportadas com sucesso."
 
 #: birdfont-autotrace/AutoTrace.vala:69
-msgid "brighness cutoff, from 0.001 to 2, the default value is 1"
+msgid "brightness cutoff, from 0.001 to 2, the default value is 1"
 msgstr "cortar brilho, de 0.001 a 2, o valor padrão é 1"
 
 #: birdfont-autotrace/AutoTrace.vala:70
