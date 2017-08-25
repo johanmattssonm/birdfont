@@ -531,6 +531,8 @@ public class Glyph : FontDisplay {
 		base_line.position_updated.connect ((pos) => {
 				Font f = BirdFont.get_current_font ();
 				f.base_line = pos;
+				OverView o = MainWindow.get_overview ();
+				o.reset_cache ();
 			});
 
 		double bp = BirdFont.get_current_font ().bottom_position;

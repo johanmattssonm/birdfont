@@ -118,8 +118,8 @@ public class OverViewItem : GLib.Object {
 		
 		w = width;
 		h = height;
-		
-		scale_box = width / DEFAULT_WIDTH;
+
+		scale_box = (height / DEFAULT_HEIGHT) * 0.75;
 
 		s = Screen.create_background_surface ((int) width, (int) height - 20);
 		c = new Context (s);
@@ -131,15 +131,15 @@ public class OverViewItem : GLib.Object {
 		glyph_height = y2 - y1;
 		
 		c.save ();
-		c.scale (glyph_scale * Screen.get_scale (), glyph_scale * Screen.get_scale ());
+		c.scale (scale_box * Screen.get_scale (), scale_box * Screen.get_scale ());
 
 		g.add_help_lines ();
 		
-		gx = ((w / glyph_scale) - glyph_width) / 2 - g.get_left_side_bearing ();
-		gy = (h / glyph_scale) - 25 / glyph_scale;
-		
-		c.translate (gx - Glyph.xc () - g.get_lsb (), g.get_baseline () + gy - Glyph.yc ());
-		
+		gx = ((w / scale_box) - glyph_width) / 2 - g.get_left_side_bearing ();
+		gy = h / scale_box + g.get_baseline () - 20 / scale_box - 20;
+
+		c.translate (gx - Glyph.xc () - g.get_lsb (), gy - Glyph.yc ());
+
 		g.draw_paths (c, color);
 		c.restore ();
 		
@@ -165,8 +165,6 @@ public class OverViewItem : GLib.Object {
 		h = height;
 		
 		scale_box = width / DEFAULT_WIDTH;
-		adjust_scale ();
-
 		s = Screen.create_background_surface ((int) width, (int) height - 20);
 		c = new Context (s);
 		
@@ -295,33 +293,6 @@ public class OverViewItem : GLib.Object {
 		
 		draw_caption (cr);
 		draw_menu (cr);
-	}
-
-	public void adjust_scale () {
-		double x1, x2, y1, y2, glyph_width, glyph_height, scale, gx;
-		Glyph g;
-		Font font;
-		
-		if (glyphs != null) {
-			font = BirdFont.get_current_font ();
-			g = ((!) glyphs).get_current ();
-			g.boundaries (out x1, out y1, out x2, out y2);
-		
-			glyph_width = x2 - x1;
-			glyph_height = y2 - y1;
-
-			if (glyph_scale == 1) {
-				// caption height is 20
-				glyph_scale = (height - 20) / (font.top_limit - font.bottom_limit);	
-			}
-			
-			scale = glyph_scale;			
-			gx = ((width / scale) - glyph_width) / 2;
-		
-			if (gx < 0) {
-				glyph_scale = 1 + 2 * gx / width;
-			}
-		}
 	}
 
 	private void draw_thumbnail (Context cr, double x, double y) {		

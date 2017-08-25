@@ -141,6 +141,12 @@ public class OverView : FontDisplay {
 		}
 	}
 
+	public void reset_cache () {
+		foreach (OverViewItem i in visible_items) {
+			i.clear_cache ();
+		}
+	}
+
 	public Glyph? get_selected_glyph () {
 		if (selected_items.size == 0) {
 			return null;
@@ -641,9 +647,7 @@ public class OverView : FontDisplay {
 				selected_index = selected_items.index_of ((!) glyphs);
 				selected_item = (selected_index != -1);
 			}
-			
-			item.adjust_scale ();
-			
+						
 			selected_item |= (i == selected);
 			item.selected = selected_item;
 			
