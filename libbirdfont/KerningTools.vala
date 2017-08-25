@@ -129,9 +129,8 @@ public class KerningTools : ToolCollection  {
 
 		Tool right_to_left = new Tool ("right_to_left", t_("Right to left"));
 		right_to_left.select_action.connect ((self) => {
-			KerningDisplay d = MainWindow.get_kerning_display ();
-			d.right_to_left = !d.right_to_left;
-			right_to_left.set_selected (d.right_to_left);
+			KerningDisplay.right_to_left = !KerningDisplay.right_to_left;
+			right_to_left.set_selected (KerningDisplay.right_to_left);
 			GlyphCanvas.redraw ();
 		});
 		kerning_tools.add_tool (right_to_left);

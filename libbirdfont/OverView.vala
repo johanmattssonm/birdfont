@@ -93,7 +93,6 @@ public class OverView : FontDisplay {
 				TabBar tabs = MainWindow.get_tab_bar ();
 				string n = glyph_collection.get_current ().name;
 				bool selected = tabs.select_char (n);
-				Glyph g = glyph_collection.get_current (); 
 				GlyphTab glyph_tab;
 				
 				if (!selected) {
@@ -1439,7 +1438,6 @@ public class OverView : FontDisplay {
 		selected_item = get_selected_item ();
 		if (selected_item.glyphs != null) {
 			open_glyph_signal ((!) selected_item.glyphs);
-			GlyphCollection? gc2 = selected_item.glyphs;
 			GlyphCollection gc = (!) selected_item.glyphs;
 			gc.get_current ().close_path ();
 		} else {

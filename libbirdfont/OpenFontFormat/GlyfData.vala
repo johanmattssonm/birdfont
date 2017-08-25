@@ -57,7 +57,6 @@ public class GlyfData : GLib.Object {
 	}
 		
 	public GlyfData (Glyph g) {
-		bool process;
 		PathList all_quadratic = g.get_quadratic_paths (); 
 		PathList qp = new PathList ();
 		
@@ -149,7 +148,6 @@ public class GlyfData : GLib.Object {
 		end_points.clear ();
 		end_point = 0;
 		
-		int path_number = 0;
 		foreach (Path quadratic in paths) {
 			if (unlikely (quadratic.points.size == 0)) {
 				warning (@"No points in path (before conversion $(quadratic.points.size))");

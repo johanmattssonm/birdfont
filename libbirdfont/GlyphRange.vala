@@ -479,7 +479,6 @@ public class GlyphRange {
 	}
 	
 	public unichar get_character (uint32 index) {
-		int64 ti;
 		string chr;
 		UniRange r;
 		unichar c;		

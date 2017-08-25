@@ -168,7 +168,6 @@ public class Text : Widget {
 		}	
 
 		if (word_with_ligatures.glyph.size > 0) {
-			double none = 0;
 			g = word_with_ligatures.glyph.get (0);
 			if (g != null) {
 				margin_left = ((!) g).get_left_side_bearing ();
@@ -359,10 +358,6 @@ public class Text : Widget {
 	}
 	
 	public void draw_at_baseline (Context cr, double px, double py, string cacheid = "") {
-		double x, y;
-		double ratio;
-		double cc_y;
-
 		if (cache == null) {
 			cache = draw_on_cache_surface (cacheid);
 		}

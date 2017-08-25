@@ -99,7 +99,6 @@ public class OverViewItem : GLib.Object {
 		}
 		
 		Glyph g;
-		Font font;
 		double gx, gy;
 		double x1, x2, y1, y2;
 		double scale_box;
@@ -150,16 +149,10 @@ public class OverViewItem : GLib.Object {
 	}
 
 	public void draw_background () {
-		Glyph g;
-		Font font;
-		double gx, gy;
-		double x1, x2, y1, y2;
 		double scale_box;
 		double w, h;
-		double glyph_width, glyph_height;
 		Surface s;
 		Context c;
-		Color color = Color.black ();
 		
 		w = width;
 		h = height;
