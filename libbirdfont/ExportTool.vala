@@ -603,6 +603,23 @@ os.put_string (
 			critical (@"$(e.message)");
 		}
 	}
+	
+	static bool can_write (File folder) {
+		File test = get_child (folder, "text.tmp");
+		bool writable = false;
+		
+		try {
+			writable = FileUtils.set_contents ((!) test.get_path (), "test");
+			
+			if (writable) {
+				FileUtils.remove ((!) test.get_path ());
+			}
+		} catch (GLib.Error e) {
+			writable = false;
+		}
+		
+		return writable;
+	}
 }
 
 }

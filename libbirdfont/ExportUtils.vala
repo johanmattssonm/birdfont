@@ -17,6 +17,7 @@ static void print_export_help (string[] arg) {
 	stdout.printf (t_("Usage:"));
 	stdout.printf (arg[0]);
 	stdout.printf (" [" + t_("OPTION") + "...] " + t_("FILE") +"\n");
+	stdout.printf ("    --filter [CHARACTERS]       " + t_("include only these characters") + "\n");	
 	stdout.printf ("-h, --help                      " + t_("print this message") + "\n");
 	stdout.printf ("-o, --output [DIRECTORY]        " + t_("write files to this directory") + "\n");
 	stdout.printf ("-s, --svg                       " + t_("write svg file") + "\n");
@@ -28,6 +29,7 @@ static void print_export_help (string[] arg) {
 public static int run_export (string[] arg) {
 	string output_directory = ".";
 	string file_name = "";
+	string filter_characters = "";
 	bool specific_formats = false;	
 	bool write_ttf = false;
 	bool write_svg = false;	
@@ -44,7 +46,7 @@ public static int run_export (string[] arg) {
 
 	Theme.set_default_colors ();
 	BirdFont.current_font = BirdFont.new_font ();
-	BirdFont.current_glyph_collection = new GlyphCollection.with_glyph ( '\0', "null");
+	BirdFont.current_glyph_collection = new GlyphCollection.with_glyph ('\0', "null");
 	main_window = new MainWindow ();
 	
 	// FIXME: create a option for this and add structure the log messages
@@ -82,7 +84,13 @@ public static int run_export (string[] arg) {
 			specific_formats = true;
 			continue;
 		}
-		
+
+		if (arg[i] == "--filter" && i + 1 < arg.length) {
+			filter_characters = arg[i + 1];
+			i++;
+			continue;
+		}
+				
 		if (arg[i].has_prefix ("-")) {
 			print_export_help (arg);
 			return 1;
@@ -122,6 +130,16 @@ public static int run_export (string[] arg) {
 		}
 		
 		return 1;
+	}
+
+	if (filter_characters != "") {
+		stdout.printf ("Exporting only  %s\n", filter_characters);
+
+		
+		int characters_count = filter_characters.char_count ();
+		for (int i = 0; i < characters_count; i++) {
+			filter_characters.get_char (filter_characters.index_of_nth_char (i));
+		}
 	}
 
 	directory = File.new_for_path (output_directory);
