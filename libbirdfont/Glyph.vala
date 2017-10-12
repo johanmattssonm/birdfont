@@ -2418,7 +2418,7 @@ public class Glyph : FontDisplay {
 			foreach (Path p2 in get_visible_paths ()) {
 				if (p1 != p2) {
 					inside = true;
-					outline = p2.flatten ();
+					outline = p2.flatten (100);
 
 					foreach (EditPoint ep in p1.points) {
 						if (!SvgParser.is_inside (ep, outline)) {

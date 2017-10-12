@@ -172,7 +172,7 @@ static void add_arc_points (BezierPoints[] bezier_points, ref int bi, double x0,
 		
 		bezier_points[bi].x2 = cx + rx * cos (theta + 2 * step / 4);
 		bezier_points[bi].y2 = cy + ry * sin (theta + 2 * step / 4);
-						
+		
 		bi++;
 	}
 }

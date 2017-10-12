@@ -142,7 +142,8 @@ public class SvgParser {
 			p.update_region_boundaries ();
 		}
 		
-		glyph.close_path ();	
+		glyph.close_path ();
+		glyph.fix_curve_orientation ();
 	}
 	
 	public static string replace (string content, string start, string stop, string replacement) {
@@ -1052,12 +1053,15 @@ public class SvgParser {
 		int large_arc;
 		int arc_sweep;
 		double arc_dest_x, arc_dest_y;
-
+		double first_point_x = 0; 
+		double first_point_y = 0;
+		bool set_first = true;
+		
 		font = BirdFont.get_current_font ();
 		
 		data = add_separators (d);
 		c = data.split (" ");
-		bezier_points = new BezierPoints[8 * c.length + 1]; // the arc instruction can use up to eight points
+		bezier_points = new BezierPoints[8 * c.length + 2]; // the arc instruction can use up to eight points
 		
 		for (int i = 0; i < 2 * c.length + 1; i++) {
 			bezier_points[i] = new BezierPoints ();
@@ -1072,7 +1076,7 @@ public class SvgParser {
 				while (i + 2 < c.length && is_point (c[i + 1])) {
 					bezier_points[bi].type = 'M';
 					bezier_points[bi].svg_type = 'm';
-					
+							
 					px += parse_double (c[++i]);
 					
 					if (svg_glyph) {
@@ -1083,6 +1087,11 @@ public class SvgParser {
 					
 					bezier_points[bi].x0 = px;
 					bezier_points[bi].y0 = py;
+
+					first_point_x = px; 
+					first_point_y = py;
+					set_first = false;
+					
 					bi++;
 				}
 			} else if (c[i] == "M") {
@@ -1100,21 +1109,26 @@ public class SvgParser {
 					
 					bezier_points[bi].x0 = px;
 					bezier_points[bi].y0 = py;
+
+					first_point_x = px; 
+					first_point_y = py;
+					set_first = false;
+					
 					bi++;
 				}
 			} else if (c[i] == "h") {
 				while (i + 1 < c.length && is_point (c[i + 1])) {
 					bezier_points[bi].type = 'L';
 					bezier_points[bi].svg_type = 'h';
-					
-					px += parse_double (c[++i]);
 
+					px += parse_double (c[++i]);
+					
 					bezier_points[bi].x0 = px;
 					bezier_points[bi].y0 = py;
 					bi++;
 				}
-			} else if (i + 1 < c.length && c[i] == "H") {
-				while (is_point (c[i + 1])) {
+			} else if (c[i] == "H") {
+				while (i + 1 < c.length && is_point (c[i + 1])) {
 					bezier_points[bi].type = 'L';
 					bezier_points[bi].svg_type = 'H';
 					
@@ -1505,7 +1519,7 @@ public class SvgParser {
 					bi++;				
 				}
 			} else if (c[i] == "a") {
-				while (i + 7 < c.length && is_point (c[i + 1])) {					
+				while (i + 7 < c.length && is_point (c[i + 1])) {
 					arc_rx = parse_double (c[++i]);
 					arc_ry = parse_double (c[++i]);
 					
@@ -1528,11 +1542,9 @@ public class SvgParser {
 					
 					px = cx;
 					py = cy;
-					
-					
 				}
 			} else if (i + 7 < c.length && c[i] == "A") {
-				while (is_point (c[i + 1])) {					
+				while (is_point (c[i + 1])) {			
 					arc_rx = parse_double (c[++i]);
 					arc_ry = parse_double (c[++i]);
 					
@@ -1558,20 +1570,37 @@ public class SvgParser {
 					
 					
 				}
-			} else if (c[i] == "z") {
+			} else if (c[i] == "z" || c[i] == "Z") {
+				if (format == SvgFormat.INKSCAPE 
+					&& Path.distance (px, first_point_x, py, first_point_y) > 0.001) {
+					
+					px = first_point_x;
+					py = first_point_y;
+					
+					bezier_points[bi].type = 'L';
+					bezier_points[bi].svg_type = 'l';
+					bezier_points[bi].x0 = px;
+					bezier_points[bi].y0 = py;
+					
+					bi++;
+				}
+				
 				bezier_points[bi].type = 'z';
 				bezier_points[bi].svg_type = 'z';
 				
-				bi++;
-			} else if (c[i] == "Z") {
-				bezier_points[bi].type = 'z';
-				bezier_points[bi].svg_type = 'z';
-									
+				set_first = true;
 				bi++;
 			} else if (c[i] == "") {
 			} else if (c[i] == " ") {
 			} else {
-				warning (@"Unknown instruction: $(c[i])");
+				
+				print (@"\n\nSVG:");
+				for (int dd = 0; dd <= i; dd++) {
+					print (@"$(c[dd]) ");
+				}
+				print (@"\n");
+				
+				warning (@"Unknown instruction: $(c[i]), i: $(i)");
 			}
 		}
 		
@@ -1838,7 +1867,7 @@ public class SvgParser {
 		}
 
 		foreach (Path p in path_list.paths) {
-			p.remove_points_on_points ();
+			p.remove_points_on_points (0.2);
 		}
 				
 		return path_list;
