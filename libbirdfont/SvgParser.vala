@@ -1571,9 +1571,7 @@ public class SvgParser {
 					
 				}
 			} else if (c[i] == "z" || c[i] == "Z") {
-				// FIXME: check with Illustrator
-				if (format == SvgFormat.INKSCAPE 
-					&& Path.distance (px, first_point_x, py, first_point_y) > 0.001) {
+				if (Path.distance (px, first_point_x, py, first_point_y) > 0.001) {
 					
 					px = first_point_x;
 					py = first_point_y;
