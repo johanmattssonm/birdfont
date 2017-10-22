@@ -131,8 +131,8 @@ public class Os2Table : OtfTable {
 		fd.add_u16 (glyf_table.get_first_char ()); // usFirstCharIndex
 		fd.add_u16 (glyf_table.get_last_char ()); // usLastCharIndex
 
-		int16 ascender = (int16) rint (font.top_limit * HeadTable.UNITS);
-		int16 descender = (int16) rint (font.bottom_limit * HeadTable.UNITS);
+		int16 ascender = (int16) rint ((font.top_limit - font.base_line) * HeadTable.UNITS);
+		int16 descender = (int16) rint ((font.bottom_limit - font.base_line) * HeadTable.UNITS);
 	
 		fd.add_16 (ascender); // sTypoAscender
 		fd.add_16 (descender); // sTypoDescender
