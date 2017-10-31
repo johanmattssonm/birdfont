@@ -58,7 +58,7 @@ class SvgFontFormatWriter : Object  {
 		// (metadata goes here)
 		
 		string font_id = font_name.replace (" ", "-");
-		font_id = B.XmlParser.encode (font_id); 
+		font_id = BirdFontFile.encode (font_id); 
 		
 		Glyph space = font.get_space ().get_current ();
 		double space_width = space.get_width ();

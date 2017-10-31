@@ -65,10 +65,10 @@ public class FontSettings : GLib.Object {
 			
 			foreach (var k in settings.keys) {
 				sb.append ("\t<setting key=\"");
-				sb.append (XmlParser.encode (k));
+				sb.append (BirdFontFile.encode (k));
 				sb.append ("\" ");
 				sb.append ("value=\"");
-				sb.append (XmlParser.encode (settings.get (k)));
+				sb.append (BirdFontFile.encode (settings.get (k)));
 				sb.append ("\" />\n");
 			}
 			
@@ -114,11 +114,11 @@ public class FontSettings : GLib.Object {
 		string v = "";
 		foreach (Attribute a in tag.get_attributes ()) {
 			if (a.get_name () == "key") {
-				key = XmlParser.decode (a.get_content ());
+				key = BirdFontFile.decode (a.get_content ());
 			}
 
 			if (a.get_name () == "value") {
-				v = XmlParser.decode (a.get_content ());
+				v = BirdFontFile.decode (a.get_content ());
 			}
 		}
 		

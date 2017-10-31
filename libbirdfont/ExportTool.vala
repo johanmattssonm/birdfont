@@ -61,7 +61,7 @@ public class ExportTool : GLib.Object {
 		string name;
 		StringBuilder s;
 
-		name = XmlParser.encode (glyph.get_name ());
+		name = BirdFontFile.encode (glyph.get_name ());
 		s = new StringBuilder ();
 		
 		s.append ("""<?xml version="1.0" encoding="utf-8"?>
