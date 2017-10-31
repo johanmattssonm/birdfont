@@ -759,15 +759,15 @@ class BirdFontFile : GLib.Object {
 			}
 
 			if (t.get_name () == "postscript_name") {
-				font.postscript_name = XmlParser.decode (t.get_content ());
+				font.postscript_name = decode (t.get_content ());
 			}
 			
 			if (t.get_name () == "name") {
-				font.name = XmlParser.decode (t.get_content ());
+				font.name = decode (t.get_content ());
 			}
 
 			if (t.get_name () == "subfamily") {
-				font.subfamily = XmlParser.decode (t.get_content ());
+				font.subfamily = decode (t.get_content ());
 			}
 
 			if (t.get_name () == "bold") {
@@ -803,7 +803,7 @@ class BirdFontFile : GLib.Object {
 			}
 			
 			if (t.get_name () == "license_url") {
-				font.license_url = XmlParser.decode (t.get_content ());
+				font.license_url = decode (t.get_content ());
 			}
 
 			if (t.get_name () == "trademark") {
