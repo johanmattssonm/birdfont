@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013 2014 2015 2016 Johan Mattsson
+	Copyright (C) 2013 2014 2015 2016 2017 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -197,8 +197,8 @@ class BirdFontFile : GLib.Object {
 			
 			foreach (string alt in alternate.alternates) {
 				os.put_string (@"<alternate ");
-				os.put_string (@"glyph=\"$glyph_name\" ");
-				os.put_string (@"replacement=\"$alt\" ");
+				os.put_string (@"glyph=\"$(encode (glyph_name))\" ");
+				os.put_string (@"replacement=\"$(encode (alt))\" ");
 				os.put_string (@"tag=\"$(tag)\" />\n");
 			}
 		}
@@ -280,7 +280,7 @@ class BirdFontFile : GLib.Object {
 					os.put_string (Font.to_hex (sc.first.get_char ()));
 				} else {
 					os.put_string ("name:");
-					os.put_string (XmlParser.encode (sc.first));
+					os.put_string (encode (sc.first));
 				}
 				
 				os.put_string ("\" ");
@@ -291,7 +291,7 @@ class BirdFontFile : GLib.Object {
 					os.put_string (Font.to_hex (sc.next.get_char ()));
 				} else {
 					os.put_string ("name:");
-					os.put_string (XmlParser.encode (sc.next));
+					os.put_string (encode (sc.next));
 				}
 				
 				os.put_string ("\" ");
@@ -312,13 +312,13 @@ class BirdFontFile : GLib.Object {
 				
 				os.put_string ("<kerning ");
 				os.put_string ("left=\"");
-				os.put_string (range);
+				os.put_string (encode (range));
 				os.put_string ("\" ");
 				
 				range = classes.classes_last.get (i).get_all_ranges ();
 				
 				os.put_string ("right=\"");
-				os.put_string (range);
+				os.put_string (encode (range));
 				os.put_string ("\" ");
 				
 				os.put_string ("hadjustment=\"");
@@ -330,11 +330,11 @@ class BirdFontFile : GLib.Object {
 				try {
 					os.put_string ("<kerning ");
 					os.put_string ("left=\"");
-					os.put_string (l);
+					os.put_string (encode (l));
 					os.put_string ("\" ");
 					
 					os.put_string ("right=\"");
-					os.put_string (r);
+					os.put_string (encode (r));
 					os.put_string ("\" ");
 					
 					os.put_string ("hadjustment=\"");
@@ -391,7 +391,7 @@ class BirdFontFile : GLib.Object {
 		os.put_string (@"\t<bottom_limit>$(round (font.bottom_limit))</bottom_limit>\n");
 		
 		foreach (Line guide in font.custom_guides) {
-			os.put_string (@"\t<custom_guide label=\"$(guide.label)\">$(round (guide.pos))</custom_guide>\n");
+			os.put_string (@"\t<custom_guide label=\"$(encode (guide.label))\">$(round (guide.pos))</custom_guide>\n");
 		}
 		
 		os.put_string ("</horizontal>\n");
@@ -401,7 +401,7 @@ class BirdFontFile : GLib.Object {
 		os.put_string ("<collection ");
 		
 		if (gc.is_unassigned ()) {
-			os.put_string (@"name=\"$(gc.get_name ())\"");
+			os.put_string (@"name=\"$(encode (gc.get_name ()))\"");
 		} else {
 			os.put_string (@"unicode=\"$(Font.to_hex (gc.get_unicode_character ()))\"");
 		}
@@ -779,27 +779,27 @@ class BirdFontFile : GLib.Object {
 			}
 			
 			if (t.get_name () == "full_name") {
-				font.full_name = XmlParser.decode (t.get_content ());
+				font.full_name = decode (t.get_content ());
 			}
 			
 			if (t.get_name () == "unique_identifier") {
-				font.unique_identifier = XmlParser.decode (t.get_content ());
+				font.unique_identifier = decode (t.get_content ());
 			}
 
 			if (t.get_name () == "version") {
-				font.version = XmlParser.decode (t.get_content ());
+				font.version = decode (t.get_content ());
 			}
 
 			if (t.get_name () == "description") {
-				font.description = XmlParser.decode (t.get_content ());
+				font.description = decode (t.get_content ());
 			}
 			
 			if (t.get_name () == "copyright") {
-				font.copyright = XmlParser.decode (t.get_content ());
+				font.copyright = decode (t.get_content ());
 			}
 
 			if (t.get_name () == "license") {
-				font.license = XmlParser.decode (t.get_content ());
+				font.license = decode (t.get_content ());
 			}
 			
 			if (t.get_name () == "license_url") {
@@ -807,23 +807,23 @@ class BirdFontFile : GLib.Object {
 			}
 
 			if (t.get_name () == "trademark") {
-				font.trademark = XmlParser.decode (t.get_content ());
+				font.trademark = decode (t.get_content ());
 			}
 			
 			if (t.get_name () == "manufacturer") {
-				font.manufacturer = XmlParser.decode (t.get_content ());
+				font.manufacturer = decode (t.get_content ());
 			}
 			
 			if (t.get_name () == "designer") {
-				font.designer = XmlParser.decode (t.get_content ());
+				font.designer = decode (t.get_content ());
 			}
 			
 			if (t.get_name () == "vendor_url") {
-				font.vendor_url = XmlParser.decode (t.get_content ());
+				font.vendor_url = decode (t.get_content ());
 			}
 			
 			if (t.get_name () == "designer_url") {
-				font.designer_url = XmlParser.decode (t.get_content ());
+				font.designer_url = decode (t.get_content ());
 			}
 			
 			if (t.get_name () == "kerning") {
@@ -869,11 +869,11 @@ class BirdFontFile : GLib.Object {
 		
 		foreach (Attribute attribute in tag.get_attributes ()) {
 			if (attribute.get_name () == "glyph") {
-				glyph_name = unserialize (attribute.get_content ());
+				glyph_name = unserialize (decode (attribute.get_content ()));
 			}
 			
 			if (attribute.get_name () == "replacement") {
-				alt = unserialize (attribute.get_content ());
+				alt = unserialize (decode (attribute.get_content ()));
 			}
 
 			if (attribute.get_name () == "tag") {
@@ -1080,7 +1080,7 @@ class BirdFontFile : GLib.Object {
 					first = (!) Font.to_unichar (attr.get_content ()).to_string ();
 				} else if (attr.get_content ().has_prefix ("name:")) {
 					name = attr.get_content ().substring ("name:".length);
-					first = XmlParser.decode (name);
+					first = decode (name);
 				}
 			}
 
@@ -1089,7 +1089,7 @@ class BirdFontFile : GLib.Object {
 					next = (!) Font.to_unichar (attr.get_content ()).to_string ();
 				} else if (attr.get_content ().has_prefix ("name:")) {
 					name = attr.get_content ().substring ("name:".length);
-					next = XmlParser.decode (name);
+					next = decode (name);
 				}
 			}		
 		}
@@ -1109,11 +1109,11 @@ class BirdFontFile : GLib.Object {
 			foreach (Attribute attr in tag.get_attributes ()) {
 				if (attr.get_name () == "left") {
 
-					range_left.parse_ranges (unserialize (attr.get_content ()));
+					range_left.parse_ranges (unserialize (decode (attr.get_content ())));
 				}
 
 				if (attr.get_name () == "right") {
-					range_right.parse_ranges (unserialize (attr.get_content ()));
+					range_right.parse_ranges (unserialize (decode (attr.get_content ())));
 				}
 
 				if (attr.get_name () == "hadjustment") {
@@ -1239,7 +1239,7 @@ class BirdFontFile : GLib.Object {
 				label = "";
 				foreach (Attribute attr in t.get_attributes ()) {
 					if (attr.get_name () == "label") {
-						label = attr.get_content ();
+						label = decode (attr.get_content ());
 					}
 				}
 				
@@ -1297,7 +1297,7 @@ class BirdFontFile : GLib.Object {
 			// set name because either name or unicode is set in the bf file
 			if (attribute.get_name () == "name") { 
 				unicode = '\0';
-				name = attribute.get_content ();
+				name = decode (attribute.get_content ());
 				unassigned = true;
 			}
 
@@ -1811,8 +1811,8 @@ class BirdFontFile : GLib.Object {
 		ligatures.get_ligatures ((subst, liga) => {
 			try {
 				string lig = serialize_attribute (liga);
-				string sequence = serialize_attribute (subst);
-				os.put_string (@"<ligature sequence=\"$(sequence)\" replacement=\"$(lig)\"/>\n");
+				string sequence = serialize_attribute (encode (subst));
+				os.put_string (@"<ligature sequence=\"$(encode (sequence))\" replacement=\"$(encode (lig))\"/>\n");
 			} catch (GLib.IOError e) {
 				warning (e.message);
 			}
@@ -1840,19 +1840,19 @@ class BirdFontFile : GLib.Object {
 		
 		foreach (Attribute a in t.get_attributes ()) {
 			if (a.get_name () == "ligature") {
-				ligature = a.get_content ();
+				ligature = decode (a.get_content ());
 			}
 
 			if (a.get_name () == "backtrack") {
-				backtrack = a.get_content ();
+				backtrack = decode (a.get_content ());
 			}
 
 			if (a.get_name () == "input") {
-				input = a.get_content ();
+				input = decode (a.get_content ());
 			}
 			
 			if (a.get_name () == "lookahead") {
-				lookahead = a.get_content ();
+				lookahead = decode (a.get_content ());
 			}
 		}
 		
@@ -1867,16 +1867,39 @@ class BirdFontFile : GLib.Object {
 		
 		foreach (Attribute a in t.get_attributes ()) {
 			if (a.get_name () == "sequence") {
-				sequence = a.get_content ();
+				sequence = decode (a.get_content ());
 			}
 
 			if (a.get_name () == "replacement") {
-				ligature = a.get_content ();
+				ligature = decode (a.get_content ());
 			}
 		}
 		
 		ligatures = font.get_ligatures ();
 		ligatures.add_ligature (sequence, ligature);
+	}
+	
+	public static string decode (string s) {
+		string t;
+		t = s.replace ("&quot;", "\"");
+		t = t.replace ("&apos;", "'");
+		t = t.replace ("&lt;", "<");
+		t = t.replace ("&gt;", ">");
+		t = t.replace ("&amp;", "&");
+		return t;
+	}
+
+	/**
+	 * Replace ", ' < > and & with encoded characters.
+	 */
+	public static string encode (string s) {
+		string t;
+		t = s.replace ("&", "&amp;");
+		t = t.replace ("\"", "&quot;");
+		t = t.replace ("'", "&apos;");
+		t = t.replace ("<", "&lt;");
+		t = t.replace (">", "&gt;");	
+		return t;
 	}
 }
 
