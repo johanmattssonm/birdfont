@@ -1736,7 +1736,7 @@ public class SvgParser {
 		}
 
 		if (b[0].type != 'M') {
-			warning ("Path must begin with M or m.");
+			warning ("Path must begin with M or m. Not $(b[0].type	)");
 			return path_list;
 		}
 		
