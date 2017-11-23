@@ -77,7 +77,12 @@ public class OverViewItem : GLib.Object {
 		if (glyphs == null) {
 			label = new Text ();
 		} else {
-			label = new Text ((!) character.to_string (), 17);		
+			if (character != '\0') {
+				label = new Text ((!) character.to_string (), 17);
+			} else {
+				label = new Text ((!) info.get_name (), 17);
+			}
+			
 			truncate_label ();
 		}
 		
