@@ -377,25 +377,14 @@ public class ResizeTool : Tool {
 			selected_path.reset_stroke ();
 		}
 		
-		// move paths relative to the updated xmin and xmax
-		get_selection_min (out selection_minx, out selection_miny);
-		dx = resize_pos_x - selection_minx;
-		dy = resize_pos_y - selection_miny;
-		
-		foreach (Path selected_path in glyph.active_paths) {
-			selected_path.move (dx, dy);			
-		}
-		
 		if (glyph.active_paths.size > 0) {
 			update_selection_box ();
 			objects_resized (selection_box_width, selection_box_height);
 		}
 
 		if (!selected) {
-			double w;
-			w = (ratio_x * glyph.get_width () - glyph.get_width ()) / 2.0;
-			glyph.left_limit -= w; 
-			glyph.right_limit += w;
+			glyph.left_limit *= ratio_x; 
+			glyph.right_limit *= ratio_x;
 			glyph.clear_active_paths ();
 			glyph.remove_lines ();
 			glyph.add_help_lines ();
@@ -481,7 +470,7 @@ public class ResizeTool : Tool {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		x = double.MAX;
 		y = double.MAX;
-		foreach (Path p in glyph.active_paths) {
+		foreach (Path p in glyph.active_paths) {			
 			if (p.xmin < x) {
 				x = p.xmin;
 			}
