@@ -35,6 +35,11 @@ public class LoadCallback : GLib.Object {
 						+ " " + t_("You need an older version of Birdfont to open it."));
 				}
 			}
+			
+			if (f.has_svg) {
+				MainWindow.show_message (t_("This font has color glyphs but your version of BirdFont does not have color support.")
+						+ " " + t_("Check birdfont.org for other versions."));
+			}
 		});
 	}
 

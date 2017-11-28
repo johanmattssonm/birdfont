@@ -28,6 +28,8 @@ class BirdFontFile : GLib.Object {
 	
 	public static const int MIN_FORMAT_MAJOR = 0;
 	public static const int MIN_FORMAT_MINOR = 0;
+
+	public bool has_svg_glyphs = false;	
 		
 	public BirdFontFile (Font f) {
 		font = f;
@@ -1438,6 +1440,10 @@ class BirdFontFile : GLib.Object {
 			if (t.get_name () == "path") {
 				path = parse_path (t);
 				layer.add_path (path);
+			}
+			
+			if (t.get_name () == "embedded") {
+				font.has_svg = true;
 			}
 		}
 		

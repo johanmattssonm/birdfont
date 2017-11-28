@@ -126,7 +126,8 @@ public class Font : GLib.Object {
 	public int format_minor = 0;
 	
 	public int units_per_em = 1024;
-
+	public bool has_svg = false;
+	
 	public Font () {
 		KerningClasses kerning_classes;
 		
