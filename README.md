@@ -21,7 +21,7 @@ packages with a -dev or -devel affix:
     libgee-0.8-dev
     libglib2.0-dev 
     libgtk-3-dev 
-    libwebkit2gtk-3.0-dev 
+    libwebkit2gtk-4.0-dev
     libnotify-dev
     libsqlite3-dev
 
