@@ -1,15 +1,7 @@
 /*
 	Copyright (C) 2012 2015 Johan Mattsson
 
-	This library is free software; you can redistribute it and/or modify 
-	it under the terms of the GNU Lesser General Public License as 
-	published by the Free Software Foundation; either version 3 of the 
-	License, or (at your option) any later version.
-
-	This library is distributed in the hope that it will be useful, but 
-	WITHOUT ANY WARRANTY; without even the implied warranty of 
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
-	Lesser General Public License for more details.
+	All rights reserved.
 */
 
 using Gee;
@@ -53,22 +45,37 @@ public class CharDatabase {
 		Statement statement;
 		string select;
 		unichar c;
+		string query = s.strip ();
 		
-		if (s.has_prefix ("U+") || s.has_prefix ("u+")) {
-			c = Font.to_unichar (s.down ());
+		if (query.has_prefix ("U+") || query.has_prefix ("u+")) {
+			c = Font.to_unichar (query.down ());
 			
 			if (c != '\0') {
 				result.add_single (c);
 			}
 		}
 
-		if (s.char_count () == 1) {
+		if (query.char_count () == 1) {
 			result.add_single (s.get_char (0));
 		}
 
-		select = "SELECT unicode FROM Words "
-			 + "WHERE word GLOB '" + s.replace ("'", "''") + "';";
-					
+		string[] terms = query.split (" ");
+		
+		bool first = true;
+		select = "";
+		
+		foreach (string term in terms) {
+			if (first) {
+				select = "SELECT unicode FROM Words "
+					 + "WHERE word GLOB '" + term.replace ("'", "''") + "' ";
+			} else {
+				select += "OR word GLOB '" + term.replace ("'", "''") + "' ";
+			}
+			
+			first = false;
+		}
+		select += ";";
+		
 		rc = db.prepare_v2 (select, select.length, out statement, null);
 		
 		if (rc == Sqlite.OK) {
@@ -86,7 +93,10 @@ public class CharDatabase {
 					break;
 				} else if (rc == Sqlite.ROW) {
 					c = (unichar) statement.column_int64 (0);
-					ucd_result.add_single (c);
+					
+					if (has_all_terms (c, query)) {
+						ucd_result.add_single (c);
+					}
 				} else {
 					warning ("Error: %d, %s\n", rc, db.errmsg ());
 					break;
@@ -134,6 +144,43 @@ public class CharDatabase {
 		}
 		
 		return false;		
+	}
+
+	static bool has_term (unichar c, string term) {
+		Statement statement;
+		string select = "SELECT unicode FROM Words "
+			+ "WHERE word GLOB '" + term.replace ("'", "''") + "' "
+			+ @"AND unicode = $((int64) c);";
+		
+		int rc = db.prepare_v2 (select, select.length, out statement, null);
+
+		if (rc == Sqlite.OK) {
+			rc = statement.step ();
+			
+			if (rc == Sqlite.DONE) {
+				return false;
+			} else if (rc == Sqlite.ROW) {
+				c = (unichar) statement.column_int64 (0);
+				return true;
+			}
+		} else {
+			warning ("Error: %d, %s\n", rc, db.errmsg ());
+			return false;
+		}
+			
+		return false;
+	}
+	
+	static bool has_all_terms (unichar c, string query) {
+		string[] terms = query.split (" ");
+		
+		foreach (string term in terms) {
+			if (!has_term (c, term)) {
+				return false;
+			}
+		}
+		
+		return true;
 	}
 	
 	public static string get_unicode_database_entry (unichar c) {
