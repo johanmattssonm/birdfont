@@ -86,6 +86,12 @@ public class PointTool : Tool {
 		tip += HiddenTools.move_along_axis.get_key_binding ();
 		tip += " - ";
 		tip += t_ ("on axis") + "\n";
+
+		tip += t_ ("backspace") + " - ";
+		tip += t_ ("delete points") + "\n";
+			
+		tip += t_ ("shift + backspace") + " - ";
+		tip += t_ ("delete points and break paths") + "\n";
 				
 		return tip;
 	}
