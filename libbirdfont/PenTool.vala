@@ -1042,6 +1042,7 @@ public class PenTool : Tool {
 		}
 		
 		if (button == 3 && !KeyBindings.has_shift () ) {
+			glyph.clear_active_paths ();
 			selected_path = active_path;
 			move_point_event (x, y);
 			
@@ -1451,7 +1452,8 @@ public class PenTool : Tool {
 			
 			glyph.clear_active_paths ();
 			glyph.add_active_path (null, path);
-			
+			path.close ();
+
 			if (direction_changed) {
 				path.reverse ();
 				update_selection ();
