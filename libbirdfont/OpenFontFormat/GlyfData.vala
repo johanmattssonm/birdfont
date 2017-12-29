@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012, 2013, 2014 Johan Mattsson
+	Copyright (C) 2012, 2013, 2014 2017 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -16,20 +16,20 @@ using Math;
 
 namespace BirdFont {
 
-public class CoordinateFlags {
+public class CoordinateFlags : GLib.Object {
 	/** TTF coordinate flags. */
 
-	public static const uint8 NONE           = 0;
-	public static const uint8 ON_PATH        = 1 << 0;
-	public static const uint8 X_SHORT_VECTOR = 1 << 1;
-	public static const uint8 Y_SHORT_VECTOR = 1 << 2;
-	public static const uint8 REPEAT         = 1 << 3;
+	public const uint8 NONE           = 0;
+	public const uint8 ON_PATH        = 1 << 0;
+	public const uint8 X_SHORT_VECTOR = 1 << 1;
+	public const uint8 Y_SHORT_VECTOR = 1 << 2;
+	public const uint8 REPEAT         = 1 << 3;
 
 	// same flag or short vector sign flag
-	public static const uint8 X_IS_SAME               = 1 << 4; 
-	public static const uint8 Y_IS_SAME               = 1 << 5;
-	public static const uint8 X_SHORT_VECTOR_POSITIVE = 1 << 4;
-	public static const uint8 Y_SHORT_VECTOR_POSITIVE = 1 << 5;
+	public const uint8 X_IS_SAME               = 1 << 4; 
+	public const uint8 Y_IS_SAME               = 1 << 5;
+	public const uint8 X_SHORT_VECTOR_POSITIVE = 1 << 4;
+	public const uint8 Y_SHORT_VECTOR_POSITIVE = 1 << 5;
 
 }
 
@@ -64,17 +64,22 @@ public class GlyfData : GLib.Object {
 						
 		int i = 0;
 		foreach (Path p in all_quadratic.paths) {
-			if (p.points.size > 0) {
-				if (likely (!is_empty (p))) {
-					// Add points at extrema
-					p.add_extrema ();
-					qp.add (p);
-				} else {
-					warning (@"Path number $i is empty in $(glyph.get_name ())");
-				}
-				i++;
+			if (p.points.size < 2) {
+				warning (@"Missing points, $(points.size) points in path.");
+				continue;
 			}
+
+			if (likely (!is_empty (p))) {
+				qp.add (p);
+			} else {
+				warning (@"Path number $i is empty in $(glyph.get_name ())");
+			}
+			
+			i++;
 		}
+
+		// Add points at extrema
+		add_extrema_to_path (qp);
 		
 		points.clear ();
 		paths.clear ();
@@ -94,7 +99,137 @@ public class GlyfData : GLib.Object {
 			process_bounding_box ();
 		}
 	}
+	
+	public static void add_extrema_to_path (PathList path_list) {
+		double x0, y0, x1, y1, x2, y2, x3, y3;
+		double minx, maxx, miny, maxy;
+		Path path_minx, path_maxx, path_miny, path_maxy;
+		
+		path_minx = new Path ();
+		path_maxx = new Path ();
+		path_miny = new Path ();
+		path_maxy = new Path ();
+		
+		minx = Glyph.CANVAS_MAX;
+		miny = Glyph.CANVAS_MAX;
+		maxx = Glyph.CANVAS_MIN;
+		maxy = Glyph.CANVAS_MIN;
+		
+		x0 = 0;
+		y0 = 0;	
+		x1 = 0;
+		y1 = 0;	
+		x2 = 0;
+		y2 = 0;
+		x3 = 0;
+		y3 = 0;
+		
+		foreach (Path next_path in path_list.paths) {	
+			if (next_path.points.size < 2) {
+				warning (@"Missing points, $(next_path.points.size) points in path.");
+				continue;
+			}
+		
+			next_path.all_of_path ((x, y) => {
+				if (x < minx) {
+					x0 = x;
+					y0 = y;
+					minx = x;
+					path_minx = next_path;
+				}
+				
+				if (x > maxx) {
+					x1 = x;
+					y1 = y;
+					maxx = x;
+					path_maxx = next_path;
+				}
 
+				if (y < miny) {
+					x2 = x;
+					y2 = y;
+					miny = y;
+					path_miny = next_path;
+				}
+						
+				if (y > maxy) {
+					x3 = x;
+					y3 = y;
+					maxy = y;
+					path_maxy = next_path;
+				}
+				
+				return true;
+			}, 3000);
+		}
+		
+		if (!has_extrema (path_minx, x0 + 0.001, true, true)) {
+			path_minx.insert_new_point_on_path_at (x0 - 0.001, y0);
+		}
+		
+		if (!has_extrema (path_maxx, x1 - 0.001, true, false)) {
+			path_maxx.insert_new_point_on_path_at (x1 + 0.001, y1);
+		}
+		
+		if (!has_extrema (path_maxy, y2 + 0.001, false, true)) {
+			path_maxy.insert_new_point_on_path_at (x2, y2 - 0.001);
+		}
+		
+		if (!has_extrema (path_miny, y3 - 0.001, false, false)) {
+			path_miny.insert_new_point_on_path_at (x3, y3 + 0.001);
+		}
+	}
+	
+	public static bool has_extrema (Path path, double coordinate, bool x, bool min) {
+		bool has_extrema = false;
+
+		if (x && min) {
+			path.all_segments ((start, stop) => {
+				if (start.x < coordinate) {
+					has_extrema = true;
+					return false;
+				}
+				
+				return true;
+			});
+		}
+		
+		if (x && !min) {
+			path.all_segments ((start, stop) => {
+				if (start.x > coordinate) {
+					has_extrema = true;
+					return false;
+				}
+				
+				return true;
+			});
+		}
+		
+		if (!x && min) {
+			path.all_segments ((start, stop) => {
+				if (start.y < coordinate) {
+					has_extrema = true;
+					return false;
+				}
+				
+				return true;
+			});
+		}
+		
+		if (!x && !min) {
+			path.all_segments ((start, stop) => {
+				if (start.y > coordinate) {
+					has_extrema = true;
+					return false;
+				}
+				
+				return true;
+			});
+		}
+		
+		return has_extrema;
+	}
+	
 	bool is_empty (Path p) {
 		EditPoint? last = null;
 		

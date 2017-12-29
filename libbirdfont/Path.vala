@@ -2174,63 +2174,6 @@ public class Path : GLib.Object {
 		find_intersection (p1.x, p1.y, p2.x, p2.y, q1.x, q1.y, q2.x, q2.y, out point_x, out point_y);
 	}
 		
-	public void add_extrema () {
-		double x0, y0, x1, y1, x2, y2, x3, y3;
-		double minx, maxx, miny, maxy;
-		
-		if (unlikely (points.size < 2)) {
-			warning (@"Missing points, $(points.size) points in path.");
-			return;
-		}
-		
-		minx = Glyph.CANVAS_MAX;
-		miny = Glyph.CANVAS_MAX;
-		maxx = Glyph.CANVAS_MIN;
-		maxy = Glyph.CANVAS_MIN;
-		
-		x0 = 0;
-		y0 = 0;	
-		x1 = 0;
-		y1 = 0;	
-		x2 = 0;
-		y2 = 0;
-		x3 = 0;
-		y3 = 0;
-				
-		all_of_path ((x, y) => {
-			if (x < minx) {
-				x0 = x;
-				y0 = y;
-				minx = x;
-			}
-			
-			if (x > maxx) {
-				x1 = x;
-				y1 = y;
-				maxx = x;
-			}
-
-			if (y < miny) {
-				x2 = x;
-				y2 = y;
-				miny = y;
-			}
-					
-			if (y > maxy) {
-				x3 = x;
-				y3 = y;
-				maxy = y;
-			}
-			
-			return true;
-		});
-		
-		insert_new_point_on_path_at (x0 - 0.001, y0);
-		insert_new_point_on_path_at (x1 + 0.001, y1);
-		insert_new_point_on_path_at (x2, y2 - 0.001);
-		insert_new_point_on_path_at (x3, y3 + 0.001);
-	}
-	
 	public EditPoint insert_new_point_on_path_at (double x, double y) {
 		EditPoint ep = new EditPoint ();
 		EditPoint prev, next;

@@ -44,7 +44,6 @@ class TestCases {
 		add (test_preview, "Preview");
 		add (test_kerning, "Kerning");
 		add (test_boundaries, "Boundaries");
-		add (test_extrema, "Extrema");
 		add (test_codepages, "Codepages");
 		add (test_double_quadratic, "Double quadratic");
 		add (test_raster_path, "Raster path");
@@ -177,23 +176,6 @@ class TestCases {
 				glyph.update_view ();
 				Tool.yield ();
 			}
-		}
-	}
-	
-	public static void test_extrema () {
-		Glyph g;
-		SvgParser parser = new SvgParser ();
-		
-		test_open_next_glyph ();
-		g = MainWindow.get_current_glyph ();
-		
-		parser.set_format (SvgFormat.INKSCAPE);
-		parser.add_path_to_glyph ("m -163.59375,-250.78125 c -42.43208,51.5679 -78.92929,123.30265 -109.59375,216.03125 l 94.9375,31.375 c 27.9767,-84.600883 60.86301,-146.18598 91.875,-183.875 48.545803,-62.79748 104.513616,-52.47212 139.34375,-5.46875 25.619399,35.30837 51.38402,95.22476 69.625,178.625 l 97.6875,-21.375 c -20.20842,-92.39565 -48.64621,-164.00261 -86.375,-216 -88.811818,-115.9163 -218.868232,-92.82539 -297.5,0.6875 z", g);
-		
-		Toolbox.select_tool_by_name ("full_glyph");
-		
-		foreach (Path p in g.get_all_paths ()) {
-			p.add_extrema ();
 		}
 	}
 	
