@@ -30,7 +30,7 @@ if ! git diff --exit-code > /dev/null; then
 	exit 1
 fi
 
-git tag -a v$version -m "Version $version"
+git tag -s v$version -m "Version $version"
 
 if [ $? -ne 0 ] ; then
 	echo "Can't create release tag"
