@@ -11,8 +11,8 @@
 			EOT and SVG format.
 		</p>
 	</description>
-	<url type="homepage">http://birdfont.org/</url>
-	<url type="donation">http://birdfont.org/</url>
+	<url type="homepage">https://birdfont.org/</url>
+	<url type="donation">https://birdfont.org/</url>
 	<url type="bugtracker">https://birdfont.org/bugtracker/my_view_page.php</url>
 	<releases>
 		<release version="2.19.4" date="2017-08-17" />
@@ -22,7 +22,7 @@
 	<screenshots>
 		<screenshot>
 		<caption>Birdfont on Linux</caption>
-		<image type="source" width="1280" height="800">http://birdfont.org/images/birdfont_font_editor.png</image>
+		<image type="source" width="1280" height="800">https://birdfont.org/images/birdfont_font_editor.png</image>
 		</screenshot>
 	</screenshots>
 	<provides>
