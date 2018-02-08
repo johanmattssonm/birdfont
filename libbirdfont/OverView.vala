@@ -105,7 +105,7 @@ public class OverView : FontDisplay {
 
 			this.open_new_glyph_signal.connect ((character) => {
 				// ignore control characters
-				if (character <= 0x1F) { 
+				if (character <= 0x1F || character == 0xFFFF) { 
 					return;
 				}
 				
