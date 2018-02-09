@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013 2015 Johan Mattsson
+	Copyright (C) 2013 2015 2018 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -46,23 +46,30 @@ public class CharDatabaseParser : GLib.Object {
 				f.delete ();
 			}
 			
-			open_database (OPEN_READWRITE);
-			create_tables ();
-			parse_all_entries ();
+			bool open = open_database (OPEN_READWRITE | OPEN_CREATE);
+			
+			if (open) {
+				create_tables ();
+				parse_all_entries ();
+			}
 		} catch (GLib.Error e) {
 			warning (e.message);
 		}
 	}
 	
-	public void open_database (int access_mode) {
+	public bool open_database (int access_mode) {
 		File f = get_database_file ();
 		int rc = Database.open_v2 ((!) f.get_path (), out database, access_mode);
 
 		db = (!) database;
 
 		if (rc != Sqlite.OK) {
+			stderr.printf ("File: %s\n", (!) f.get_path ());
 			stderr.printf ("Can't open database: %d, %s\n", rc, db.errmsg ());
+			return false;
 		}
+		
+		return true;
 	}
 	
 	public void create_tables () {
@@ -70,8 +77,8 @@ public class CharDatabaseParser : GLib.Object {
 		string? errmsg;
 		string description_table = """
 			CREATE TABLE Description (
-				unicode        INTEGER     PRIMARY KEY    NOT NULL,
-				description    TEXT                       NOT NULL
+				unicode         INTEGER     PRIMARY KEY    NOT NULL,
+				description     TEXT                       NOT NULL
 			);
 		""";
 
@@ -107,17 +114,52 @@ public class CharDatabaseParser : GLib.Object {
 			INSERT INTO Words (unicode, word)
 			VALUES (""" + @"$((int64) character)" + """, '""" + w.replace ("'", "''") + "');";
 		int ec = db.exec (query, null, out errmsg);
+		
 		if (ec != Sqlite.OK) {
 			stderr.printf (query);
 			warning ("Error: %s\n", (!) errmsg);
 		}
 	}
 	
+	/** medial, isolated etc. */
+	public string get_context_substitution (string description) {
+		string[] lines = description.split ("\n");
+		return_val_if_fail (lines.length > 0, "NONE");
+		
+		string first_line = lines[0];
+		string type = "NONE";
+		
+		if (first_line.has_suffix ("INITIAL FORM")) {
+			type = "INITIAL";
+		} else if (first_line.has_suffix ("MEDIAL FORM")) {
+			type = "MEDIAL";
+		} else if (first_line.has_suffix ("FINAL FORM")) {
+			type = "FINAL";
+		} else if (first_line.has_suffix ("ISOLATED FORM")) {
+			type = "ISOLATED";
+		} 
+		
+		return type;
+	}
+	
+	public string get_name (string description) {
+		string[] lines = description.split ("\n");
+		return_val_if_fail (lines.length > 0, "NONE");
+		
+		string first_line = lines[0];
+		int separator = first_line.index_of ("\t");
+		string name = first_line.substring (separator + "\t".length);
+		return name.strip ();
+	}
+	
+
 	public void insert_entry (int64 character, string description) {
 		string? errmsg;
+		
 		string query = """
 			INSERT INTO Description (unicode, description)
-			VALUES (""" + @"$((int64) character)" + """, '""" + description.replace ("'", "''") + "');";
+			VALUES (""" + @"$((int64) character)" + ", "
+				+ "'" + description.replace ("'", "''") + "');";
 		
 		int ec = db.exec (query, null, out errmsg);
 		
@@ -149,6 +191,7 @@ public class CharDatabaseParser : GLib.Object {
 		index_values = index_values.replace ("\n\t*", "");
 		index_values = index_values.replace ("\n\t=", "");
 		index_values = index_values.replace ("\n\t#", "");
+		index_values = index_values.replace (",", " ");
 		index_values = index_values.replace (" - ", " ");
 		index_values = index_values.replace ("(", "");
 		index_values = index_values.replace (")", "");
@@ -169,11 +212,14 @@ public class CharDatabaseParser : GLib.Object {
 		
 		foreach (string s in e) {
 			r = s.split ("\n");
-			foreach (string t in r) {  
-				d = t.split (" ");
-				foreach (string token in d) {
-					if (token != "") {
-						insert_lookup ((int64) ch, token);
+			
+			foreach (string t in r) {			
+				if (!t.has_prefix ("\t~")) {
+					d = t.split (" ");
+					foreach (string token in d) {
+						if (token != "") {
+							insert_lookup ((int64) ch, token);
+						}
 					}
 				}
 			}
