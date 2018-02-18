@@ -65,34 +65,25 @@ def has_posixvala ():
 		print (OKGREEN + 'Using posix profile.' + ENDC)			
 	return 'True'
 
-def configure(gtk, libbgee, valac, pkg_config):
+def configure(libbgee, valac, pkg_config):
 	global gee
 	
 	if not test_program_version(valac, 0, 16, 0):
 		print (FAIL + 'valac is too old.' + ENDC)
 		exit (1)
 
-	if gtk:
-		libs = [
-				'cairo', 
-				'gdk-pixbuf-2.0',
-				'gio-2.0', 
-				'glib-2.0', 
-				'gtk+-3.0',
-				'webkit2gtk-4.0', 
-				'libsoup-2.4',
-				'libnotify',
-				'sqlite3',
-				'xmlbird'
-				]
-	else:
-		libs = [
-				'gio-2.0', 
-				'glib-2.0', 
-				'sqlite3',
-				'fontconfig',
-				'xmlbird'
-				]
+	libs = [
+			'cairo', 
+			'gdk-pixbuf-2.0',
+			'gio-2.0', 
+			'glib-2.0', 
+			'gtk+-3.0',
+			'webkit2gtk-4.0', 
+			'libsoup-2.4',
+			'libnotify',
+			'sqlite3',
+			'xmlbird'
+			]
 
 	test_library_version(pkg_config, 'xmlbird', True, '1.2.0')
 
@@ -124,7 +115,6 @@ parser = OptionParser()
 parser.add_option('-p', '--prefix', dest='prefix', help='Install prefix', metavar='PREFIX')
 parser.add_option('-d', '--dest', dest='dest', help='Install to this directory', metavar='DEST')
 parser.add_option('-c', '--cc', dest='cc', help='C compiler', metavar='CC')
-parser.add_option('-g', '--gtk', dest='gtk', help='Build Gtk version, default is True', metavar='GTK')
 parser.add_option('-e', '--gee', dest='gee', help='Version of libgee', metavar='GEE')
 parser.add_option('-v', '--valac', dest='valac', help='Vala compiler', metavar='VALAC')
 parser.add_option('-P', '--pkg-config', dest='pkg_config', help='Package config tool', metavar='PKG_CONFIG')
@@ -172,10 +162,6 @@ if not options.dest:
 	options.dest = ''
 if not options.cc:
 	options.cc = 'gcc'
-if not options.gtk:
-	options.gtk = True
-if options.gtk == 'False':
-	options.gtk = False
 if not options.gee:
 	options.gee = 'Any'
 if not options.valac:
@@ -187,7 +173,7 @@ if not options.nonnull:
 else:
 	options.nonnull = True
 	
-configure(options.gtk, options.gee, options.valac, options.pkg_config)
+configure(options.gee, options.valac, options.pkg_config)
 
 configfile.write_config(options.prefix)
 configfile.write_compile_parameters(options.prefix,
@@ -199,5 +185,4 @@ configfile.write_compile_parameters(options.prefix,
 									options.nonnull,
 									valacflags,
 									cflags,
-									ldflags,
-									options.gtk)
+									ldflags)

@@ -38,7 +38,7 @@ def write_config (prefix):
     f.write("}")
 
 def write_compile_parameters(prefix, dest, cc, gee, valac, pkg_config,
-                             non_null, valacflags, cflags, ldflags, gtk):
+                             non_null, valacflags, cflags, ldflags):
     settings = {
         'prefix': prefix,
         'dest': dest,
@@ -61,8 +61,6 @@ def write_compile_parameters(prefix, dest, cc, gee, valac, pkg_config,
     f.write("#!/usr/bin/python3\n")
     for k, v in settings.items():
         f.write("%s = %s\n" % (k.upper().replace('-', '_'), autoquote(v)))
-
-    f.write("GTK = " + str(gtk) + "\n")
 
     f.write("SETTINGS = {\n")
     for k, v in settings.items():
