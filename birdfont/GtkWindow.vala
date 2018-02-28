@@ -190,10 +190,12 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		stdout.printf (d);
 	}
 
-	public void dump_clipboard_target (Clipboard clipboard, Atom[] atoms) {
-		foreach (Atom target in atoms) {
-			print ("Target: " + target.name () + "\n");
-			clipboard.request_contents (target, dump_clipboard_content);
+	public void dump_clipboard_target (Clipboard clipboard, Atom[]? atoms) {
+		if (atoms != null) {
+			foreach (Atom target in (!) atoms) {
+				print ("Target: " + target.name () + "\n");
+				clipboard.request_contents (target, dump_clipboard_content);
+			}
 		}
 	}
 	
