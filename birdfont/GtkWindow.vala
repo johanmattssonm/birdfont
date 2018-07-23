@@ -128,16 +128,33 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		}
 
 		key_press_event.connect ((t, event) => {
-			TabContent.key_press (event.keyval);
-
+			unichar c;
+			
+			c = keyval_to_unicode (event.keyval);
+			
+			if (c != '\0') {
+				TabContent.key_press (c);
+			} else {
+				TabContent.key_press (event.keyval);
+			}
+			
 			return false;
 		});
 		
 		key_release_event.connect ((t, event) => {
-			TabContent.key_release (event.keyval);
+			unichar c;
+			
+			c = keyval_to_unicode (event.keyval);
+			
+			if (c != '\0') {
+				TabContent.key_release (c);
+			} else {
+				TabContent.key_release (event.keyval);
+			}
 			
 			return false;
 		});
+		
 		
 		size_allocate.connect(() => {
 			GlyphCanvas.redraw ();
