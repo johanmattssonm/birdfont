@@ -1,3 +1,9 @@
+birdfont (2.22.0) stable;
+
+  * Support for input from Cyrillic keyboards and other layouts in the kerning tab.
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  tis 24 jul 2018 18:56:02 CEST
+
 birdfont (2.19.0) stable;
 
   * Huge amount of kerning pairs supported in the extended GPOS table
