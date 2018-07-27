@@ -40,6 +40,8 @@ public class SaveCallback : GLib.Object {
 			OverwriteBfFile dialog;
 			string file_name;
 			
+			is_done = true;
+			
 			if (fn != null) {
 				f = (!) fn;
 
