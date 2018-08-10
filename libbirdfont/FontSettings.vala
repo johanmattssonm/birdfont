@@ -42,7 +42,9 @@ public class FontSettings : GLib.Object {
 	
 	File get_settings_file () {
 		File config_directory = BirdFont.get_settings_directory ();
-		return get_child (config_directory, font_name.replace (".bf", ".config"));
+		string settings_file = font_name.replace (".bf", ".config");
+		settings_file = settings_file.replace (".birdfont", ".config");
+		return get_child (config_directory, settings_file);
 	}
 	
 	public void save (string font_file_name) {

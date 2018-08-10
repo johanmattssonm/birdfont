@@ -342,14 +342,14 @@ public class Font : GLib.Object {
 		
 		StringBuilder sb = new StringBuilder ();
 		sb.append (Environment.get_home_dir ());
-		sb.append (@"/$(get_name ()).bf");
+		sb.append (@"/$(get_name ()).birdfont");
 		
 		f = File.new_for_path (sb.str);
 
 		while (f.query_exists ()) {
 			sb.erase ();
 			sb.append (Environment.get_home_dir ());
-			sb.append (@"/$(get_name ())$(++i).bf");
+			sb.append (@"/$(get_name ())$(++i).birdfont");
 			f = File.new_for_path (sb.str);
 		}
 		
@@ -730,7 +730,7 @@ public class Font : GLib.Object {
 		File file;
 		string backup_file;
 		
-		new_file = get_child (dir, @"$(name).bf");
+		new_file = get_child (dir, @"$(name).birdfont");
 		backup_file = (!) ((!) new_file).get_path ();
 		
 		try {
@@ -751,7 +751,7 @@ public class Font : GLib.Object {
 		string backup_file;
 		BirdFontFile birdfont_file = new BirdFontFile (this);
 
-		temp_file = get_child (dir, @"$(name).bf");
+		temp_file = get_child (dir, @"$(name).birdfont");
 		backup_file = (!) ((!) temp_file).get_path ();
 		backup_file = backup_file.replace (" ", "_");
 		
@@ -817,8 +817,8 @@ public class Font : GLib.Object {
 			return;			
 		}
 				
-		if (!path.has_suffix (".bf")) {
-			warning ("Expecting .bf format.");
+		if (!path.has_suffix (".bf") && !path.has_suffix (".birdfont")) {
+			warning ("Expecting .bf or .birdfont format.");
 			return;
 		}
 		
@@ -886,7 +886,11 @@ public class Font : GLib.Object {
 			format = FontFormat.FFI;
 		}
 
-		if (path.has_suffix (".bf") || path.has_suffix (".BF")) {
+		if (path.has_suffix (".bf")
+			|| path.has_suffix (".BF")
+			|| path.has_suffix (".BIRDFONT")
+			|| path.has_suffix (".birdfont")) {
+			
 			loaded = parse_bf_file (path);
 			format = FontFormat.BIRDFONT;
 		}

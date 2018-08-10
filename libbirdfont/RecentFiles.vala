@@ -164,11 +164,6 @@ public class RecentFiles : Table {
 					continue;
 				}
 				
-				// ignore backup of the current font
-				if (file_name == @"$(font.get_name ()).bf") {
-					continue;
-				}
-				
 				backup_font = new Font ();
 				backup_font.set_font_file ((!) get_child (dir, file_name).get_path ());
 				backups.insert (0, backup_font);

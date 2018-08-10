@@ -67,7 +67,7 @@ public static int run_import (string[] arg) {
 		if (!font.load ()) {
 			warning (@"Failed to load font $bf_file.\n");
 			
-			if (!bf_file.has_suffix (".bf")) {
+			if (!bf_file.has_suffix (".bf") && !bf_file.has_suffix (".birdfont")) {
 				warning (@"Is it a .bf file?\n");
 			}
 			

@@ -49,8 +49,8 @@ public class SaveCallback : GLib.Object {
 				font_file_path = f;
 				save ();
 #else
-				if (!f.has_suffix (".bf")) {
-					f = @"$f.bf";
+				if (!f.has_suffix (".bf") && !f.has_suffix (".birdfont")) {
+					f = @"$f.birdfont";
 				}
 				
 				file_name = @"$(f)";
@@ -95,7 +95,9 @@ public class SaveCallback : GLib.Object {
 			f.delete_backup ();
 			fn = f.get_path ();
 			
-			if (f.font_file != null && fn.has_suffix (".bf")) {
+			if (f.font_file != null
+				&& (fn.has_suffix (".bf") || fn.has_suffix (".birdfont"))) {
+				
 				f.set_font_file (fn);
 				MainWindow.native_window.save ();
 			} else {

@@ -81,7 +81,7 @@ class BirdFontFile : GLib.Object {
 		bool ok;
 		XmlParser parser;
 		
-		font.font_file = "typeface.bf";
+		font.font_file = "typeface.birdfont";
 		parser = new XmlParser (xml_data);
 		ok = load_xml (parser);
 		
