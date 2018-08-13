@@ -114,7 +114,7 @@ public class DirectoryTable : OtfTable {
 			tables.add (hmtx_table);
 
 			// It looks like the old kerning table is no longer needed
-			// since the most browsers uses the GPOS table
+			// since most browsers uses the GPOS table
 			// but Windows does not accept fonts without a kern table.
 			
 			tables.add (kern_table);
