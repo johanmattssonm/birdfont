@@ -97,6 +97,23 @@ public class ExportSettings : TableLayout {
 		
 		widgets.add (new Text (t_("Formats"), label_size, label_margin));
 
+		CheckBox otf = new CheckBox ("OTF", label_size);
+
+		otf.updated.connect ((c) => {
+			if (c) {
+				MessageDialog dialog;
+				dialog = MainWindow.show_message (t_("You need the plus version to export OTF fonts."));
+				MainWindow.show_dialog (dialog);
+				
+				otf.checked = false;
+			}
+		});
+
+		otf.checked = false;
+		
+		widgets.add (otf);
+		focus_ring.add (otf);
+		
 		ttf = new CheckBox ("TTF", label_size);
 		ttf.updated.connect ((c) => {
 			Font f = BirdFont.get_current_font ();

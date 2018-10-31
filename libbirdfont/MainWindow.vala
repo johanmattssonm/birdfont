@@ -112,7 +112,7 @@ public class MainWindow : GLib.Object {
 		}
 	}
 
-	public static void show_message (string text) {
+	public static MessageDialog show_message (string text) {
 		Tab t = MainWindow.get_tab_bar ().get_selected_tab ();
 		string tab_name = t.get_display ().get_name ();
 
@@ -122,6 +122,8 @@ public class MainWindow : GLib.Object {
 		
 		MessageDialog md = new MessageDialog (text);
 		show_dialog (md);
+		
+		return md;
 	}
 
 	public static void hide_dialog () {
