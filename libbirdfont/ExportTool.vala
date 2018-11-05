@@ -232,17 +232,18 @@ public class ExportTool : GLib.Object {
 		fc.add_extension ("svg");
 		MainWindow.file_chooser (t_("Save"), fc, FileChooser.SAVE);
 	}
-	
-	public static void generate_html_document (string html_file, Font font) {
-		File file = File.new_for_path (html_file);
-		DataOutputStream os;
-		string name;
 
-#if MAC 
-		name = ExportSettings.get_file_name_mac (font);
-#else
-		name = ExportSettings.get_file_name (font);
-#endif
+	public static void generate_html_template () {
+		File config_dir = BirdFont.get_settings_directory ();
+		File file = get_child (config_dir, "preview.html");
+		string name = "_NAME_";
+		DataOutputStream os;
+		
+		if (file.query_exists ()) {
+			printd("Preview template exists.\n");
+			return;
+		}
+		
 		try {
 			os = new DataOutputStream (file.create(FileCreateFlags.REPLACE_DESTINATION));
 
@@ -271,6 +272,13 @@ os.put_string (
 		}
 	""");
 
+	os.put_string ("""
+		@font-face {
+			font-family: '"""); os.put_string (@"$(name)");              os.put_string ("""OTF';
+			src: url('""");     os.put_string (@"$(name).otf"); os.put_string ("""') format('opentype');
+		} 
+		""");
+		
 	os.put_string ("""
 		@font-face {
 			font-family: '"""); os.put_string (@"$(name)");              os.put_string ("""TTF';
@@ -327,6 +335,10 @@ os.put_string (
 			os.put_string (@"$(name)");
 			os.put_string ("EOT'");
 
+			os.put_string (", '");
+			os.put_string (@"$(name)");
+			os.put_string ("OTF'");
+			
 			os.put_string (", '");
 			os.put_string (@"$(name)");
 			os.put_string ("TTF'");
@@ -424,15 +436,8 @@ os.put_string (
 </div>
 
 <div>
-	<h3 class="big"></h3>
-	<p class="big">OTF features, like swashes alternates &amp; </span> small caps, can be added 
-		to the font.</span>
-	</p>
-</div>
-
-<div>
 	<h4 class="smaller">Headline 16pt</h4>
-	<p class="smaller">Ett litet stycke svalhjärta.</p>	
+	<p class="smaller">The quick brown fox jumps over the lazy dog</p>	
 </div>
 
 <div>
@@ -448,8 +453,42 @@ os.put_string (
 
 		} catch (GLib.Error e) {
 			warning (e.message);
+		}		
+	}
+	
+	public static void generate_html_document (string html_file, Font font) {
+		File config_dir = BirdFont.get_settings_directory ();
+		File template = get_child (config_dir, "preview.html");
+	
+		if (!template.query_exists ()) {
+			generate_html_template ();
+			get_child (config_dir, "preview.html");
+		}
+		
+		if (!template.query_exists ()) {
+			warning ("Preview template does not exists.");
+			return;
+		}
+		
+		string html_data;
+		FileUtils.get_contents ((!) template.get_path (), out html_data);
+		
+		string name;
+#if MAC 
+		name = ExportSettings.get_file_name_mac (font);
+#else
+		name = ExportSettings.get_file_name (font);
+#endif
+
+		html_data = html_data.replace ("_NAME_", name);
+
+		try {
+			FileUtils.set_contents (html_file, html_data);
+		} catch (FileError e) {
+			warning (e.message);
 		}
 	}
+	
 
 	public static string get_export_folder () {
 		Font font = BirdFont.get_current_font ();
