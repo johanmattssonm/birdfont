@@ -494,7 +494,7 @@ public class ResizeTool : Tool {
 				continue;
 			}
 			
-			if (h * ratio < 1 || w * ratio < 1) {
+			if (h * ratio < 0.0001 || w * ratio < 0.0001) {
 				return false;
 			}
 		}
