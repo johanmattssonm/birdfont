@@ -273,6 +273,14 @@ public class OverView : FontDisplay {
 			OverView o = MainWindow.get_overview ();
 			string q = o.search_query;
 			
+			if (q == "*") {
+ 				q = "star";
+ 			}
+						
+			if (q == "?") {
+				q = "question";
+			}
+
 			if (q.char_count () > 1) {
 				q = q.down ();
 			}
