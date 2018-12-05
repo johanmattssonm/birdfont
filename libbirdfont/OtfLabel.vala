@@ -41,7 +41,7 @@ public class OtfLabel : LabelTool {
 		otf_feature_activity (enabled, tag);
 	}
 	
-	/** @return translated string representation of a OTF feature tag. */
+	/** @return translated string representation of an OTF feature tag. */
 	public static string get_string (string tag) {
 		if (tag == "salt") {
 			return t_("Stylistic Alternate") + " (salt)";
