@@ -1196,11 +1196,23 @@ class BirdFontFile : GLib.Object {
 			}
 		}
 	}
+		
+	private bool has_grid (string v) {
+		foreach (string g in font.grid_width) {
+			if (g == v) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
 	
 	private void parse_grid (Tag tag) {
 		foreach (Attribute attr in tag.get_attributes ()) {
-			if (attr.get_name () == "width") {
-				font.grid_width.add (attr.get_content ());
+			string v = attr.get_content ();
+			
+			if (attr.get_name () == "width" && !has_grid (v)) {
+				font.grid_width.add (v);
 			}
 		}		
 	}
