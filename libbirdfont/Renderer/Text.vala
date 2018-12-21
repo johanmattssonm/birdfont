@@ -393,6 +393,11 @@ public class Text : Widget {
 
 		double w = get_sidebearing_extent () * screen_scale + x + margin_left + 1;
 		
+		if (!w.is_normal () || !h.is_normal ())  {
+			warning (@"Bad text size, h: $h w: $w");
+			return Screen.create_background_surface (1, 1);
+		}
+		
 		cache_surface = Screen.create_background_surface ((int) w, (int) h);
 		cr = new Context (cache_surface);
 		cr.scale (screen_scale, screen_scale);
