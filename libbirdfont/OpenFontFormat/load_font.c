@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013 2014 2015 Johan Mattsson
+	Copyright (C) 2013 2014 2015 2018 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -198,6 +198,11 @@ void create_contour (guint unicode, FT_Vector* points, char* flags, int* length,
 				f[j] = HIDDEN_CURVE;
 
 				j++;
+			}
+			
+			if (i == 0) { // A fix for FiraCode Regular
+				i++; 
+				continue;
 			}
 			
 			f[j] = QUADRATIC_OFF_CURVE;
@@ -693,26 +698,42 @@ GString* load_glyph (FontFace* font, guint unicode) {
 	return glyph;
 }
 
-/** Get char code for a glyph.
+/** Get all character codes for a glyph.
  * @gid glyph id
- * @return character code
+ * @return array of character codes
  */
-FT_ULong get_charcode (FT_Face face, FT_UInt gid) {
-	FT_ULong charcode;
+FT_ULong* get_charcodes (FT_Face face, FT_UInt gid) {
+	FT_ULong charcode = 0;
 	FT_UInt gindex;
-	
+	const int MAX = 255;
+	FT_ULong* result = malloc (sizeof (FT_ULong) * (MAX + 1));
+	guint results = 0;
 	// TODO: find the lookup function in freetype
-	
+    
 	charcode = FT_Get_First_Char (face, &gindex);
+
 	while (gindex != 0) {
+
+		if (results >= MAX) {
+			g_warning ("Too many code points in font for one GID");
+			break;
+		}
+		
 		charcode = FT_Get_Next_Char (face, charcode, &gindex);
-		if (gindex == gid) {
-			return charcode;			
+		if (gindex == gid && charcode != 0) {
+			result[results] = charcode;
+			results++;
 		}
 	}
 	
-	g_warning ("Can not find unicode value for gid %d.", gid);
-	return 0;
+	if (results == 0) {
+		g_warning ("Can not find unicode value for gid %d.", gid);
+	}
+	
+	result[results] = 0;
+	results++;	
+		
+	return result;
 }
 
 /** Height of letter. */
@@ -841,6 +862,7 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 	gchar line_position_buffer[80];
 	gchar* line_position = (gchar*) &line_position_buffer;
 	int name_index;
+	double gap;
 	
 	*err = OK;
 
@@ -859,6 +881,8 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 	
 	if (face->style_name != NULL) {
 		g_string_append_printf (bf, "<subfamily>%s</subfamily>\n", g_markup_escape_text (face->style_name, -1));
+	} else {
+		g_string_append_printf (bf, "<subfamily></subfamily>\n");
 	}
 	
 	// full name
@@ -867,6 +891,8 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 		g_string_append (bf, "<full_name>");
 		append_description (bf, &name_table_data);
 		g_string_append (bf, "</full_name>\n");
+	} else {
+		g_string_append (bf, "<full_name></full_name>\n");
 	}
 
 	// unique identifier
@@ -875,6 +901,8 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 		g_string_append (bf, "<unique_identifier>");
 		append_description (bf, &name_table_data);
 		g_string_append (bf, "</unique_identifier>\n");
+	} else {
+		g_string_append (bf, "<unique_identifier></unique_identifier>\n");
 	}
 
 	// version
@@ -883,6 +911,8 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 		g_string_append (bf, "<version>");
 		append_description (bf, &name_table_data);
 		g_string_append (bf, "</version>\n");
+	} else {
+		g_string_append (bf, "<version></version>\n");
 	}
 
 	name_index = getIndexForNameId (face, 10);
@@ -890,6 +920,8 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 		g_string_append (bf, "<description>");
 		append_description (bf, &name_table_data);
 		g_string_append (bf, "</description>\n");
+	} else {
+		g_string_append (bf, "<description></description>\n");
 	}
 	
 	// copyright
@@ -898,6 +930,8 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 		g_string_append (bf, "<copyright>");
 		append_description (bf, &name_table_data);
 		g_string_append (bf, "</copyright>\n");
+	} else {
+		g_string_append (bf, "<copyright></copyright>\n");
 	}
 
 	name_index = getIndexForNameId (face, 7);
@@ -905,6 +939,8 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 		g_string_append (bf, "<trademark>");
 		append_description (bf, &name_table_data);
 		g_string_append (bf, "</trademark>\n");
+	} else {
+		g_string_append (bf, "<trademark></trademark>\n");
 	}
 
 	name_index = getIndexForNameId (face, 8);
@@ -912,6 +948,8 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 		g_string_append (bf, "<manefacturer>");
 		append_description (bf, &name_table_data);
 		g_string_append (bf, "</manefacturer>\n");
+	} else {
+		g_string_append (bf, "<manefacturer></manefacturer>\n");
 	}
 
 	name_index = getIndexForNameId (face, 9);
@@ -919,6 +957,8 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 		g_string_append (bf, "<designer>");
 		append_description (bf, &name_table_data);
 		g_string_append (bf, "</designer>\n");
+	} else {
+		g_string_append (bf, "<designer></designer>\n");
 	}
 
 	name_index = getIndexForNameId (face, 11);
@@ -926,6 +966,8 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 		g_string_append (bf, "<vendor_url>");
 		append_description (bf, &name_table_data);
 		g_string_append (bf, "</vendor_url>\n");
+	} else {
+		g_string_append (bf, "<vendor_url></vendor_url>\n");
 	}
 
 	name_index = getIndexForNameId (face, 12);
@@ -933,6 +975,8 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 		g_string_append (bf, "<designer_url>");
 		append_description (bf, &name_table_data);
 		g_string_append (bf, "</designer_url>\n");
+	} else {
+		g_string_append (bf, "<designer_url></designer_url>\n");
 	}
 
 	name_index = getIndexForNameId (face, 13);
@@ -940,6 +984,8 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 		g_string_append (bf, "<license>");
 		append_description (bf, &name_table_data);
 		g_string_append (bf, "</license>\n");
+	} else {
+		g_string_append (bf, "<license></license>\n");
 	}
 	
 	name_index = getIndexForNameId (face, 14);
@@ -947,6 +993,8 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 		g_string_append (bf, "<license_url>");
 		append_description (bf, &name_table_data);
 		g_string_append (bf, "</license_url>\n");
+	} else {
+		g_string_append (bf, "<license_url></license_url>\n");
 	}
 		
 	g_string_append_printf (bf, "<backup>%s</backup>\n", g_markup_escape_text (file, -1));
@@ -970,6 +1018,10 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 	
 	g_ascii_formatd (line_position, 80, "%f", face->descender * units);
 	g_string_append_printf (bf, "\t<bottom_limit>%s</bottom_limit>\n", line_position);		
+	
+	gap = (face->height - (face->ascender - face->descender)) * units;
+	g_ascii_formatd (line_position, 80, "%f", gap);
+	g_string_append_printf (bf, "\t<line_gap>%s</line_gap>\n", line_position);		
 	
 	g_string_append_printf (bf, "</horizontal>\n");
 
@@ -1003,24 +1055,38 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 			return bf;
 		}
 
-		charcode = get_charcode (face, i);
-		glyph = g_string_new ("");
-						
-		if (charcode > 32) { // not control character
-			g_string_append_printf (glyph, "<collection unicode=\"U+%x\">\n", (guint)charcode);
-			g_string_append_printf (glyph, "\t<glyph left=\"%f\" right=\"%f\" selected=\"true\">\n", 0.0, face->glyph->metrics.horiAdvance * units);
+		FT_ULong* charcodes = get_charcodes (face, i);
+		int charcode_index = 0;
+		
+		while (TRUE) {	
+			charcode = charcodes[charcode_index];
 			
-			bf_data = get_bf_path (charcode, face, units_per_em, err);
-			g_string_append (glyph, bf_data->str);	
-						
-			g_string_append (glyph, "\t</glyph>\n");
-			g_string_append_printf (glyph, "</collection>\n");
-		} else {
-			g_warning ("Ignoring control character, %d.", (guint)charcode);
-		}
+			if (charcode == 0) {
+				free (charcodes);
+				charcodes = NULL;
+				break;
+			}
+			
+			glyph = g_string_new ("");
+			
+			if (charcode > 32) { // not control character
+				g_string_append_printf (glyph, "<collection unicode=\"U+%x\">\n", (guint)charcode);
+				g_string_append_printf (glyph, "\t<glyph left=\"%f\" right=\"%f\" selected=\"true\">\n", 0.0, face->glyph->metrics.horiAdvance * units);
+				
+				bf_data = get_bf_path (charcode, face, units_per_em, err);
+				g_string_append (glyph, bf_data->str);	
+							
+				g_string_append (glyph, "\t</glyph>\n");
+				g_string_append_printf (glyph, "</collection>\n");
+			} else {
+				g_warning ("Ignoring control character, %d.", (guint)charcode);
+			}
 
-		g_string_append (bf, glyph->str);
-		g_string_free (glyph, TRUE);
+			g_string_append (bf, glyph->str);
+			g_string_free (glyph, TRUE);
+			
+			charcode_index++;
+		}
 	}
 
 	bird_font_open_font_format_reader_append_kerning (bf, file);

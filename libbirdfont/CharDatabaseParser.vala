@@ -39,7 +39,7 @@ public class CharDatabaseParser : GLib.Object {
 	public void regenerate_database () {
 		File f = get_database_file ();
 		
-		stdout.printf ("Please use the other script.\n"));
+		stdout.printf ("Please use the other script.\n");
 		stdout.printf ("Generating sqlite database in: %s\n", (!) f.get_path ());		
 		
 		try {
