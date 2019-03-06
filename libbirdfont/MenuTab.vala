@@ -155,7 +155,17 @@ public class MenuTab : FontDisplay {
 			show_export_settings_tab ();
 		} else {
 			MenuTab.export_callback = new ExportCallback ();
-			MenuTab.export_callback.export_fonts_in_background ();			
+			MenuTab.export_callback.export_fonts_in_background ();
+			
+			MenuTab.export_callback.file_exported.connect (() => {
+				string first_export = Preferences.@get ("first_export_done");
+				
+				if (first_export == "") {
+					Preferences.@set ("first_export_done", "true");
+					MainWindow.show_message (t_("Congratulations to your first font!\n\n"
+						+ "Please consider supporting the project by purchasing the pro version at birdfont.org."));
+				}
+			});		
 		}
 	}
 	

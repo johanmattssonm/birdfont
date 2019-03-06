@@ -159,6 +159,11 @@ public class SearchPaths {
 		File f;
 		string bundle_path = (BirdFont.bundle_path != null) ? (!) BirdFont.bundle_path : "";
 		
+		f = (!) File.new_for_path ("./resources/NamesList.txt");
+		if (f.query_exists ()) {
+			return f;
+		}
+		
 		f = (!) File.new_for_path (PREFIX + "/share/unicode/NamesList.txt");
 		if (f.query_exists ()) {
 			return f;
@@ -173,7 +178,7 @@ public class SearchPaths {
 		if (f.query_exists ()) {
 			return f;
 		}
-			
+
 		f = (!) File.new_for_path ("/usr/share/unicode/NamesList.txt");
 		if (f.query_exists ()) {
 			return f;
