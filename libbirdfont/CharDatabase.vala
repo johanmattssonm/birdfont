@@ -25,6 +25,8 @@ public class CharDatabase {
 	
 	public static void open_database () {
 		File f = get_database_file ();
+		printd (@"Open database: " + (!) f.get_path () + "\n");
+		
 		int rc = Database.open_v2 ((!) f.get_path (), out database, OPEN_READONLY);
 
 		db = (!) database;
