@@ -17,7 +17,7 @@ using Cairo;
 
 namespace BirdFont {
 
-/** Create Beziér curves. */
+/** Create Bezier curves. */
 public class BezierTool : Tool {
 	
 	public const uint NONE = 0;
@@ -88,7 +88,7 @@ public class BezierTool : Tool {
 	}
 	
 	public override string get_tip () {
-		string tip = t_ ("Create Beziér curves") + "\n";
+		string tip = t_ ("Create Bézier curves") + "\n";
 		
 		tip += HiddenTools.bezier_line.get_key_binding ();
 		tip += " - ";
