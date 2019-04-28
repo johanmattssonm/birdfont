@@ -25,6 +25,7 @@ public class DefaultCharacterSet {
 		add_language (t_("Default Language"), "", "");
 		add_language (t_("Private Use Area"), "PRIVATE_USE", "");
 		
+		add_language (_("Czech"), "cs", "A Á B C Č D Ď E É Ě F G H Ch I Í J K L M N Ň O Ó P Q R Ř S Š T Ť U Ú Ů V W X Y Ý Z Ž a á b c č d ď e é ě f g h ch i í j k l m n ň o ó p q r ř s š t ť u ú ů v w x y ý z ž");
 		add_language (t_("Chinese"), "zh", "");
 		add_language (t_("English"), "en", "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z a b c d e f g h i j k l m n o p q r s t u v w x y z");
 		add_language (t_("Greek"), "el", "Α Β Γ Δ Ε Ζ Η Θ Ι Κ Λ Μ Ν Ξ Ο Π Ρ Σ Τ Υ Φ Χ Ψ Ω α β γ δ ε ζ η θ ι κ λ μ ν ξ ο π ρ σ ς τ υ φ χ ψ ω");
