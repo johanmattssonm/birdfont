@@ -24,6 +24,8 @@ public class ExportSettings : TableLayout {
 	CheckBox ttf;
 	CheckBox eot;
 	CheckBox svg;
+	CheckBox svg_table;
+	CheckBox colr_table;
 	Button export_action;
 	Button name_tab;
 	
@@ -147,6 +149,32 @@ public class ExportSettings : TableLayout {
 
 		svg.margin_bottom = 20 * MainWindow.units;
 
+		widgets.add (new Text (t_("Color Tables"), label_size, label_margin));
+
+		svg_table = new CheckBox (t_("Embedded SVG table"), label_size);
+		svg_table.checked = false;
+
+		svg_table.updated.connect ((c) => {
+				show_plus_version_needed_for_color_tables();
+				svg_table.checked = false;
+		});
+
+		widgets.add (svg_table);
+		focus_ring.add (svg_table);
+
+		colr_table = new CheckBox (t_("COLR and CPAL tables"), label_size);
+		colr_table.checked = false;
+
+		colr_table.updated.connect ((c) => {
+				show_plus_version_needed_for_color_tables();
+				colr_table.checked = false;	
+		});
+		
+		widgets.add (colr_table);
+		focus_ring.add (colr_table);
+	
+		colr_table.margin_bottom = 20 * MainWindow.units;
+
 		name_tab = new Button (t_("Name and Description"), margin);
 		name_tab.action.connect ((c) => {
 			MenuTab.show_description ();
@@ -228,6 +256,12 @@ public class ExportSettings : TableLayout {
 		}
 		
 		return "";
+	}
+	
+	public void show_plus_version_needed_for_color_tables () {
+		MessageDialog dialog;
+		dialog = MainWindow.show_message (t_("You need the plus version to export color fonts."));
+		MainWindow.show_dialog (dialog);
 	}
 }
 

@@ -178,8 +178,10 @@ public class SettingsTab : SettingsDisplay {
 		num_backups.set_min (0);
 		num_backups.set_value ("20");
 
-		if (Preferences.get ("num_backups") != "") {
-			Preferences.set ("num_backups", num_backups.get_short_display_value ());
+		string current_num_backups = Preferences.get ("num_backups");
+		
+		if (current_num_backups != "") {
+			num_backups.set_value (current_num_backups);
 		}
 
 		num_backups.new_value_action.connect ((self) => {

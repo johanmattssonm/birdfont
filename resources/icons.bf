@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <font>
-<format>2.2</format>
+<format>3.12</format>
 
 <postscript_name>BirdfontIcons</postscript_name>
 <name>Birdfont Icons</name>
@@ -11,8 +11,7 @@
 <unique_identifier>JM: Birdfont Tool Box Icons</unique_identifier>
 <version>Version 1.0</version>
 <description>An icon font for the font editor Birdfont.</description>
-<copyright>Copyright 2015
-GNU Lesser General Public License</copyright>
+<copyright>Copyright 2015</copyright>
 <license></license>
 <license_url></license_url>
 <weight>400</weight>
@@ -22,6 +21,8 @@ GNU Lesser General Public License</copyright>
 <designer></designer>
 <vendor_url></vendor_url>
 <designer_url></designer_url>
+<underline_position>-10.0000000000</underline_position>
+<underline_thickness>3.5000000000</underline_thickness>
 
 <horizontal>
 	<top_limit>84.0000000000</top_limit>
@@ -30,6 +31,7 @@ GNU Lesser General Public License</copyright>
 	<base_line>0.0000000000</base_line>
 	<bottom_position>-20.0000000000</bottom_position>
 	<bottom_limit>-27.0000000000</bottom_limit>
+	<line_gap>10.0000000000</line_gap>
 	<custom_guide label="Middle">27.0000000000</custom_guide>
 </horizontal>
 
@@ -38,13 +40,24 @@ GNU Lesser General Public License</copyright>
 <grid width="4.0000"/>
 <background scale="1.0000" />
 
-<collection unicode="U+20">
+<base_filename>Typeface</base_filename>
+<base_filename_mac>Typeface Mac</base_filename_mac>
+<export_ttf_font>true</export_ttf_font>
+<export_otf_font>true</export_otf_font>
+<export_eot_font>true</export_eot_font>
+<export_svg_font>true</export_svg_font>
+<export_colr_table>true</export_colr_table>
+<export_svg_table>true</export_svg_table>
+
+<default_foreground_color></default_foreground_color>
+
+<collection unicode="U+20" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="0" right="27">
 	</glyph>
 </collection>
 
-<collection name=".notdef">
+<collection name=".notdef" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-20" right="33">
 		<layer name= "Layer" visible="true">
@@ -54,67 +67,67 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+30">
+<collection unicode="U+30" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection unicode="U+31">
+<collection unicode="U+31" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection unicode="U+32">
+<collection unicode="U+32" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection unicode="U+33">
+<collection unicode="U+33" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection unicode="U+34">
+<collection unicode="U+34" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection unicode="U+35">
+<collection unicode="U+35" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection unicode="U+36">
+<collection unicode="U+36" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection unicode="U+37">
+<collection unicode="U+37" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection unicode="U+38">
+<collection unicode="U+38" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection unicode="U+39">
+<collection unicode="U+39" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection unicode="U+41">
+<collection unicode="U+41" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -122,7 +135,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+42">
+<collection unicode="U+42" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -130,7 +143,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+43">
+<collection unicode="U+43" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -138,7 +151,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+44">
+<collection unicode="U+44" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -146,7 +159,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+45">
+<collection unicode="U+45" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -154,7 +167,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+46">
+<collection unicode="U+46" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -162,7 +175,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+47">
+<collection unicode="U+47" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -170,13 +183,13 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+48">
+<collection unicode="U+48" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection unicode="U+49">
+<collection unicode="U+49" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -184,7 +197,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+4a">
+<collection unicode="U+4a" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -192,7 +205,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+4b">
+<collection unicode="U+4b" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -200,7 +213,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+4c">
+<collection unicode="U+4c" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -208,7 +221,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+4d">
+<collection unicode="U+4d" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -216,7 +229,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+4e">
+<collection unicode="U+4e" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -224,7 +237,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+4f">
+<collection unicode="U+4f" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -232,7 +245,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+50">
+<collection unicode="U+50" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -240,7 +253,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+51">
+<collection unicode="U+51" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -248,7 +261,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+52">
+<collection unicode="U+52" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -256,7 +269,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+53">
+<collection unicode="U+53" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -264,7 +277,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+54">
+<collection unicode="U+54" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -272,7 +285,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+55">
+<collection unicode="U+55" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -280,7 +293,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+56">
+<collection unicode="U+56" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -288,7 +301,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+57">
+<collection unicode="U+57" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -297,7 +310,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+58">
+<collection unicode="U+58" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -305,7 +318,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+59">
+<collection unicode="U+59" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -313,7 +326,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+5a">
+<collection unicode="U+5a" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -321,19 +334,19 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+5f">
+<collection unicode="U+5f" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection unicode="U+61">
+<collection unicode="U+61" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection name="add_layer">
+<collection name="add_layer" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -344,7 +357,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="add_new_theme">
+<collection name="add_new_theme" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-24" right="28">
 		<layer name= "Layer" visible="true">
@@ -354,7 +367,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="alternate">
+<collection name="alternate" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -370,7 +383,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="apply_stroke">
+<collection name="apply_stroke" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-26.53515625" right="29.796903565002076">
 		<layer name= "Layer" visible="true">
@@ -381,7 +394,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="auto_trace_resolution">
+<collection name="auto_trace_resolution" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-27.706519058400005" right="32.620610941599999">
 		<layer name= "Layer" visible="true">
@@ -394,7 +407,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="auto_trace_simplify">
+<collection name="auto_trace_simplify" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-20.814081653529328" right="25.14631642100748">
 		<layer name= "Layer" visible="true">
@@ -414,7 +427,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="autotrace">
+<collection name="autotrace" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="43.327433628318595">
 		<layer name= "Layer" visible="true">
@@ -445,7 +458,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+62">
+<collection unicode="U+62" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -455,7 +468,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="background_help_lines">
+<collection name="background_help_lines" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="37.189826465707966">
 		<layer name= "Layer" visible="true">
@@ -469,7 +482,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="bezier_line">
+<collection name="bezier_line" svg="false" colr="false" auto_generate="false">
 	<selected id="2"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
@@ -487,7 +500,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="bezier_tool">
+<collection name="bezier_tool" svg="false" colr="false" auto_generate="false">
 	<selected id="2"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
@@ -501,13 +514,35 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+63">
+<collection unicode="U+63" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection name="circle">
+<collection name="center_glyph" svg="false" colr="false" auto_generate="false">
+	<selected id="0"/>
+	<glyph id="0" left="-27.652329749100002" right="32.878920250900002">
+		<layer name= "Layer" visible="true">
+			<path data="B 29.9965223387,27.1848376682 M 28.9849888695,26.1796400254 M 10.4404193576,7.8114420580 M 8.0576630238,5.4582453101 M 8.0306454877,8.7888866996 M 7.9639287148,17.0135317634 M -2.0506528780,16.9322953623 M -2.0104557110,9.2059313133 M -2.0062819254,5.9204224502 M -4.3810333412,8.1670504448 M -23.3777581179,25.9814724299 M -24.4280865227,26.9699446372 M -23.4168093500,27.9977991163 M -4.8763945679,46.8871184333 M -2.5391368757,49.2626050201 M -2.4439658069,45.9325164793 M -2.2716449561,38.6604024989 M 7.5397912399,38.6493553616 M 7.4807937631,45.9223885998 M 7.4532248487,49.3210022625 M 9.8743213661,46.9387967189 M 28.9692113437,28.1961555037 M 29.9971023687,27.1848423733 M 29.9965223387,27.1848376682" />
+			<path data="B 25.9858656682,27.1749628914 M 10.3172307715,42.5465599464 M 10.3604220707,37.2220652081 M 10.3718172220,35.8173048942 M 8.9669844043,35.8059091548 M -3.6542675013,35.8394814266 M -5.0365182258,35.8509640384 M -5.0700219566,37.2102271811 M -5.2038429535,42.5339867483 M -20.3956503671,27.0480090852 M -4.8466265835,12.4685038033 M -4.8717527440,18.3369590500 M -4.8831478953,19.7417193639 M -3.4783875813,19.7531145152 M 9.3457146394,19.8571412188 M 10.7731686296,19.8687204570 M 10.7845637809,18.4639601430 M 10.8356581689,12.1651961548 M 25.9859378779,27.1749997314 M 25.9858656682,27.1749628914" />
+		</layer>
+	</glyph>
+</collection>
+
+<collection name="center_glyph_vertically" svg="false" colr="false" auto_generate="false">
+	<selected id="1"/>
+	<glyph id="0" left="-28" right="28">
+	</glyph>
+	<glyph id="1" left="-27.652329749100002" right="32.878920250900002">
+		<layer name= "Layer" visible="true">
+			<path data="B 3.1278955413,0.1373447266 M 2.1341611313,1.1601419610 M -16.0238837802,19.9105328887 M -18.3500788012,22.3196570875 M -15.0193444420,22.3091384939 M -6.7944697998,22.2831640079 M -6.7628424642,32.2980251424 M -14.4891688727,32.3449022097 M -17.7745161356,32.3777544854 M -15.5012687229,34.7270368937 M 2.5261041796,53.5217970448 M 3.5263502144,54.5609192381 M 4.5427429102,53.5381229543 M 23.2219229006,34.7860137545 M 25.5709190885,32.4221341145 M 22.2399694917,32.3644972729 M 14.9663753481,32.2741399093 M 14.8447596661,22.4634512539 M 22.1179959199,22.4404820802 M 25.5167044497,22.4297488215 M 23.1073658148,20.0356521357 M 4.1507263605,1.1531935146 M 3.1278937095,0.1367646804 M 3.1278955413,0.1373447266" />
+			<path data="B 3.1632191869,4.1478579955 M 18.7104166237,19.6422688397 M 13.3857732603,19.6590842783 M 11.9809737346,19.6635206919 M 11.9854103772,21.0683927234 M 12.1612147712,33.6884648142 M 12.1882738250,35.0704983606 M 13.5478282196,35.0886818495 M 18.8727578032,35.1624986384 M 3.5589664675,50.5278594087 M -11.1948415470,35.1441256631 M -5.3264758015,35.1031161107 M -3.9216762759,35.0986796971 M -3.9261126895,33.6938801713 M -3.9666128524,20.8694199855 M -3.9711209354,19.4419261501 M -5.3759204611,19.4463625637 M -11.6748602697,19.4662548698 M 3.1632552108,4.1477853752 M 3.1632191869,4.1478579955" />
+		</layer>
+	</glyph>
+</collection>
+
+<collection name="circle" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28.419182948490214">
 		<layer name= "Layer" visible="true">
@@ -518,7 +553,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="close">
+<collection name="close" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28.419182948490214">
 		<layer name= "Layer" visible="true">
@@ -530,7 +565,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="close_path">
+<collection name="close_path" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28.419182948490214">
 		<layer name= "Layer" visible="true">
@@ -540,7 +575,46 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="contrast_threshold">
+<collection name="colr_foreground" svg="false" colr="false" auto_generate="false">
+	<selected id="0"/>
+	<glyph id="0" left="-28" right="26">
+		<layer name= "Layer" visible="true">
+			<path data="S -14.0000000000,40.0000000000 L 14.0000000000,40.0000000000 L 14.0000000000,12.0000000000 L -14.0000000000,12.0000000000 L -14.0000000000,40.0000000000" />
+		</layer>
+	</glyph>
+</collection>
+
+<collection name="colr_to_svg" svg="false" colr="false" auto_generate="false">
+	<selected id="1"/>
+	<glyph id="0" left="-28" right="28">
+	</glyph>
+	<glyph id="1" left="-28" right="33.862433862433868">
+		<layer name= "Layer" visible="true">
+			<path data="B 34.3254804570,26.6640051228 C 34.3254804570,9.9415082514 20.6799217729,-3.7040504328 3.9574249015,-3.7040504328 C -12.7650719699,-3.7040504328 -26.4106306541,9.9415082514 -26.4106306541,26.6640051228 C -26.4106306541,43.3865019942 -12.7650719699,57.0320606783 3.9574249015,57.0320606783 C 20.6799217729,57.0320606783 34.3254804570,43.3865019942 34.3254804570,26.6640051228" />
+			<path data="B -22.7818603517,26.3703235474 C -22.7818603517,11.3842246394 -10.7368991365,-0.6607365759 4.2491997715,-0.6607365759 C 19.2352986795,-0.6607365759 31.2802598947,11.3842246394 31.2802598947,26.3703235474 C 31.2802598947,41.3564224554 19.2352986795,53.4013836706 4.2491997715,53.4013836706 C -10.7368991365,53.4013836706 -22.7818603517,41.3564224554 -22.7818603517,26.3703235474" />
+			<path data="B 4.1333148836,47.3825686003 C 15.6563248826,47.3825686003 24.9178551430,38.1210383400 24.9178551430,26.5980283409 C 24.9178551430,15.0750183418 15.6563248826,5.8134880813 4.1333148836,5.8134880813 C -7.3896951155,5.8134880813 -16.6512253759,15.0750183418 -16.6512253759,26.5980283409 C -16.6512253759,38.1210383400 -7.3896951155,47.3825686003 4.1333148836,47.3825686003" />
+			<path data="B -10.0896075338,26.8546176487 C -10.0896075338,18.7812258749 -3.6006812703,12.2922996114 4.4727105035,12.2922996114 C 12.5461022772,12.2922996114 19.0350285407,18.7812258749 19.0350285407,26.8546176487 C 19.0350285407,34.9280094225 12.5461022772,41.4169356859 4.4727105035,41.4169356859 C -3.6006812703,41.4169356859 -10.0896075338,34.9280094225 -10.0896075338,26.8546176487" />
+		</layer>
+	</glyph>
+</collection>
+
+<collection name="contextual_form" svg="false" colr="false" auto_generate="false">
+	<selected id="0"/>
+	<glyph id="0" left="-27.998349999999959" right="28.001652499999977">
+		<layer name= "Layer" visible="true">
+			<path data="S 22.4447736236,21.7004576217 Q 22.4447736236,18.2238976217 20.7455536236,16.2512376217 Q 19.1830536236,14.4543676217 16.1752336236,14.4543676217 M 13.6361736236,14.4543676217 M 13.6361736236,18.0481176217 M 15.1010236236,18.0481176217 Q 17.0346136236,18.0481176217 17.8939836236,18.9074876217 Q 18.8510236236,19.8645176217 18.8510236236,21.9348376217 M 18.8510236236,44.8449876217 M 22.4447736236,44.8449876217 M 22.4447736236,21.7004576217" />
+			<path data="S 4.3783636236,18.0676476217 Q 0.5893036236,14.4543676217 -3.3560163764,14.4543676217 M -5.6606963764,14.4543676217 M -5.6606963764,18.0481176217 M -3.7856963764,18.0481176217 Q -1.6958563764,18.0481176217 -0.4067963764,18.8293676217 Q 0.7455536236,19.5324876217 1.5268036236,20.2942076217 Q -0.3677263764,21.9543676217 -1.6958563764,23.7121776217 Q -2.2817963764,24.4738976217 -2.2817963764,25.3527976217 Q -2.2817963764,25.9582676217 -2.0278863764,26.7590476217 Q -1.7153863764,27.8332676216 0.3158636236,28.8488976217 Q 2.0541436236,29.7277976217 4.3783636236,29.7277976217 Q 6.7025836236,29.7277976217 8.4408636236,28.8488976217 Q 10.4721136236,27.8332676217 10.7846136236,26.7590476217 Q 11.0385236236,25.9582676217 11.0385236236,25.3527976217 Q 11.0385236236,24.4738976217 10.4525836236,23.7121776217 Q 8.9486736236,21.7981176217 7.2299236236,20.2942076217 Q 7.8353936236,19.6887376216 9.1635236236,18.8293676217 Q 10.3549236236,18.0481176217 12.5424236236,18.0481176217 M 14.4174236236,18.0481176217 M 14.4174236236,14.4543676217 M 12.1127336236,14.4543676217 Q 8.1674236236,14.4543676217 4.3783636236,18.0676476217" />
+			<path data="S 5.4721136236,25.9777976217 Q 4.8861736236,26.1145176217 4.3783636236,26.1145176217 Q 3.8705536236,26.1145176217 3.2846136236,25.9777976217 Q 2.3666436236,25.7434276217 2.3666436236,25.1184276217 Q 2.3666436236,24.5520176217 4.3783636236,22.6965476217 Q 6.3900836236,24.5520176217 6.3900836236,25.1184276217 Q 6.3900836236,25.7434276217 5.4721136236,25.9777976217" />
+			<path data="B 2.9135236236,35.9387376217 M 5.8432036236,35.9387376217 M 5.8432036236,33.0090476217 M 2.9135236236,33.0090476217 M 2.9135236236,35.9387376217" />
+			<path data="S -13.5513263764,19.9621776217 Q -13.8442963764,20.7824876218 -14.0981963764,21.7395176217 Q -14.3521063764,22.7160876217 -14.5864763764,24.6887376217 Q -16.9302263764,24.4543676218 -18.5317963764,23.1457676217 Q -20.6997663764,21.4074876217 -20.6606963764,20.1965476217 Q -20.6411963764,19.3957676217 -18.8833563764,18.9074876217 Q -17.1255463764,18.4192076216 -13.5513263764,19.9621776217" />
+			<path data="S -14.8599163764,27.5012376217 Q -14.9380163764,28.2629576217 -14.9966363764,29.1027976217 M -11.4028863764,29.1027976217 Q -11.3833863764,25.8215476217 -10.6802263764,22.4231176217 Q -10.2700763764,20.4504576217 -9.1763263764,18.9074876217 Q -8.5708563764,18.0481176217 -6.3833563764,18.0481176217 M -4.9185163764,18.0481176217 M -4.9185163764,14.4543676217 M -7.4575763764,14.4543676217 Q -9.2153863764,14.4543676217 -10.6411663764,15.4504576217 Q -11.5200763764,16.0559276217 -12.2622663764,17.2082676217 Q -14.9575763764,15.7824876217 -18.0044463764,15.7824876217 Q -19.0981963764,15.7824876217 -20.2310163764,16.0754576217 Q -23.9224163764,17.0129576217 -23.9224163764,20.0207676217 Q -23.9224163764,23.3996776217 -19.9380463764,25.8801476217 Q -17.8091363764,27.2082676217 -14.8599163764,27.5012376217" />
+			<path data="B -15.0356963764,34.9621776217 M -12.1060163764,34.9621776217 M -12.1060163764,32.0324876217 M -15.0356963764,32.0324876217 M -15.0356963764,34.9621776217" />
+			<path data="B -19.9185163764,34.9621776217 M -16.9888263764,34.9621776217 M -16.9888263764,32.0324876217 M -19.9185163764,32.0324876217 M -19.9185163764,34.9621776217" />
+		</layer>
+	</glyph>
+</collection>
+
+<collection name="contrast_threshold" svg="false" colr="false" auto_generate="false">
 	<selected id="2"/>
 	<glyph id="1" left="-32.797247476493389" right="33.128416240320774">
 		<layer name= "Layer" visible="true">
@@ -556,11 +630,10 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="convert_point">
+<collection name="convert_point" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="39.866883116883095">
 		<layer name= "Layer" visible="true">
-			<path data="B 3.9642857143,22.8074856233 C 4.3741991342,17.1386544545 3.9642857143,22.8074856233 3.9642857143,22.8074856233 O" />
 			<path data="B 35.8021538398,27.0204160000 C 35.8021538398,9.9212630000 21.8808918398,-4.0000000000 4.7817378398,-4.0000000000 C -12.3174171602,-4.0000000000 -26.1563978602,9.9212630000 -26.1563978602,27.0204160000 C -26.1563978602,44.1195700000 -12.3174171602,58.0408320000 4.7817378398,58.0408320000 C 21.8808918398,58.0408320000 35.8021538398,44.1195700000 35.8021538398,27.0204160000" />
 			<path data="B -22.6182601602,27.0204160000 C -22.6182601602,11.8765420000 -10.3621371602,-0.3795800000 4.7817378398,-0.3795800000 C 19.9256118398,-0.3795800000 32.1817338398,11.8765420000 32.1817338398,27.0204160000 C 32.1817338398,42.1642910000 19.9256118398,54.4204120000 4.7817378398,54.4204120000 C -10.3621371602,54.4204120000 -22.6182601602,42.1642910000 -22.6182601602,27.0204160000" />
 			<path data="B 14.6984074055,39.0221009282 M 14.6984074055,35.2593004605 C 13.4971060435,36.3781091338 12.2134241489,37.2142878196 10.8472893630,37.7678365176 C 9.4928767082,38.3213381824 8.0501862759,38.5980998683 6.5191818867,38.5981251942 C 3.5042063504,38.5980998723 1.1958871870,37.6735963722 -0.4057756036,35.8246038511 C -2.0075107530,33.9873479329 -2.8083421483,31.3257150548 -2.8083421483,27.8396943630 C -2.8083421483,24.3654247459 -2.0075107530,21.7037918678 -0.4057756036,19.8547848749 C 1.1958871870,18.0175434285 3.5042063504,17.0989263018 6.5191818867,17.0989299411 C 8.0501862759,17.0989263047 9.4928767082,17.3757024812 10.8472893630,17.9292186178 C 12.2134241489,18.4827419902 13.4971060435,19.3189206759 14.6984074055,20.4377546749 M 14.6984074055,16.7102834078 C 13.4500004425,15.8623283219 12.1250740126,15.2263629119 10.7236281157,14.8023835600 C 9.3339043499,14.3784078260 7.8617638721,14.1664181500 6.3071705031,14.1664181500 C 2.3147356577,14.1664181500 -0.8297621914,15.3853533599 -3.1263230444,17.8232237798 C -5.4228477178,20.2728669819 -6.5711462340,23.6116880977 -6.5711462340,27.8396943630 C -6.5711462340,32.0794517030 -5.4228477178,35.4182728188 -3.1263230444,37.8561649463 C -0.8297621914,40.3057864407 2.3147356577,41.5306080422 6.3071705031,41.5306369853 C 7.8853166726,41.5306080425 9.3692154609,41.3186256017 10.7589392267,40.8946679574 C 12.1604213030,40.4824432981 13.4735532430,39.8582542883 14.6984074055,39.0221009282" />
@@ -568,7 +641,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="create_line">
+<collection name="create_line" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-35.507575757575779" right="47.63528138528136">
 		<layer name= "Layer" visible="true">
@@ -584,7 +657,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="cubic_points">
+<collection name="cubic_points" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-34.667748917748938" right="34.617965367965347">
 		<layer name= "Layer" visible="true">
@@ -595,7 +668,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="curve_orientation">
+<collection name="curve_orientation" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-26.309523809523803" right="45.383597883597901">
 		<layer name= "Layer" visible="true">
@@ -606,7 +679,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="cut_background">
+<collection name="cut_background" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -618,13 +691,22 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+64">
+<collection unicode="U+64" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection name="delete_background">
+<collection name="default_shaper" svg="false" colr="false" auto_generate="false">
+	<selected id="0"/>
+	<glyph id="0" left="-28" right="28.000000249999999">
+		<layer name= "Layer" visible="true">
+			<path data="B 9.2712044205,40.0063080998 M 9.2712044205,36.1586480998 Q 7.0251114205,37.2328680998 5.0329234205,37.7602080998 Q 3.0407364205,38.2875580998 1.1852674205,38.2875580998 Q -2.0373885795,38.2875580998 -3.7952015795,37.0375580998 Q -5.5334825795,35.7875580998 -5.5334825795,33.4828680998 Q -5.5334825795,31.5492780998 -4.3811385795,30.5531780998 Q -3.2092635795,29.5766180998 0.0329234205,28.9711480998 M 2.4157364205,28.4828680998 Q 6.8297984205,27.6430280998 8.9196424205,25.5141180998 Q 11.0290174205,23.4047380998 11.0290174205,19.8500580998 Q 11.0290174205,15.6117780998 8.1774544205,13.4242780998 Q 5.3454234205,11.2367780998 -0.1428575795,11.2367780998 Q -2.2131705795,11.2367780998 -4.5569205795,11.7055280998 Q -6.8811385795,12.1742780998 -9.3811385795,13.0922380998 M -9.3811385795,17.1547380998 Q -6.9787955795,15.8070880998 -4.6741075795,15.1234880998 Q -2.3694205795,14.4398980998 -0.1428575795,14.4398980998 Q 3.2360484205,14.4398980998 5.0719864205,15.7680280998 Q 6.9079234205,17.0961480998 6.9079234205,19.5570880998 Q 6.9079234205,21.7055280998 5.5797984205,22.9164580998 Q 4.2712044205,24.1273980998 1.2633924205,24.7328680998 M -1.1389515795,25.2016180998 Q -5.5530135795,26.0805280998 -7.5256705795,27.9555280998 Q -9.4983265795,29.8305280998 -9.4983265795,33.1703680998 Q -9.4983265795,37.0375580998 -6.7834825795,39.2641180998 Q -4.0491075795,41.4906780998 0.7360484205,41.4906780998 Q 2.7868294205,41.4906780998 4.9157364205,41.1195880998 Q 7.0446424205,40.7484880998 9.2712044205,40.0063080998" />
+		</layer>
+	</glyph>
+</collection>
+
+<collection name="delete_background" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -634,7 +716,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="delete_button">
+<collection name="delete_button" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -644,7 +726,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="double_points">
+<collection name="double_points" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-32.109195402298838" right="30.195402298850588">
 		<layer name= "Layer" visible="true">
@@ -657,7 +739,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="dropdown_menu">
+<collection name="dropdown_menu" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-4" right="69.259259259299995">
 		<layer name= "Layer" visible="true">
@@ -668,13 +750,23 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+65">
+<collection unicode="U+65" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection name="export_fonts">
+<collection name="empty_ttf_fallback" svg="false" colr="false" auto_generate="false">
+	<selected id="0"/>
+	<glyph id="0" left="-28" right="33.862433862433868">
+		<layer name= "Layer" visible="true">
+			<path data="B 34.3254804570,26.6640051228 C 34.3254804570,9.9415082514 20.6799217729,-3.7040504328 3.9574249015,-3.7040504328 C -12.7650719699,-3.7040504328 -26.4106306541,9.9415082514 -26.4106306541,26.6640051228 C -26.4106306541,43.3865019942 -12.7650719699,57.0320606783 3.9574249015,57.0320606783 C 20.6799217729,57.0320606783 34.3254804570,43.3865019942 34.3254804570,26.6640051228" />
+			<path data="B -22.7818603517,26.3703235474 C -22.7818603517,11.3842246394 -10.7368991365,-0.6607365759 4.2491997715,-0.6607365759 C 19.2352986795,-0.6607365759 31.2802598947,11.3842246394 31.2802598947,26.3703235474 C 31.2802598947,41.3564224554 19.2352986795,53.4013836706 4.2491997715,53.4013836706 C -10.7368991365,53.4013836706 -22.7818603517,41.3564224554 -22.7818603517,26.3703235474" />
+		</layer>
+	</glyph>
+</collection>
+
+<collection name="export_fonts" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -686,14 +778,18 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+66">
-	<selected id="1"/>
+<collection unicode="U+66" svg="false" colr="false" auto_generate="false">
+	<selected id="2"/>
 	<glyph id="1" left="-28" right="28">
+	</glyph>
+	<glyph id="2" left="-28" right="28">
+		<layer name= "Layer" visible="true">
+		</layer>
 	</glyph>
 </collection>
 
-<collection name="fill_open_path">
-	<selected id="2"/>
+<collection name="fill_open_path" svg="false" colr="false" auto_generate="false">
+	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 		<layer name= "Layer" visible="true">
 			<path data="S -0.2780397996,53.5540339373 D -0.4787617502,44.1702827471 10.7616674829,34.4352681433 18.9912674572,32.0767852239 L -17.7408495012,7.3879853012 D -24.7159372842,10.1980926094 -31.8415665303,22.2414096449 -33.5978835979,29.0659559651 L -0.2780397996,53.5540339373" />
@@ -702,15 +798,9 @@ GNU Lesser General Public License</copyright>
 			<path data="S 20.5970430619,29.4673998662 D 20.7475845249,27.7612632862 21.0368231956,24.3479035865 21.1992089137,22.6428535461 T D 21.5386338606,19.0788916033 20.9876924408,12.2264072708 22.0020967160,8.7930389553 T D 22.6544430555,6.5850974988 19.3425308708,1.0150633698 24.6114820738,-0.0387268708 D 25.6229853866,-2.3256039259 32.0194908220,0.0892791620 34.6389755349,-0.6413119342 D 35.0082951213,-0.7442923568 35.7152396570,-1.0452105263 36.0526332575,-1.2430585744 T D 37.5552573165,-2.1241992855 30.3597419609,-6.6954840741 28.6259210856,-6.8632731910 T D 25.5433280673,-7.1615886443 18.0287124900,-7.8305619034 16.5826040501,-6.6625512404 T D 15.2779113712,-5.6087609997 15.0771894206,-4.1033463703 14.5753845441,-3.2502780803 D 13.3208723529,-3.6517219815 10.8479121895,-4.5926707441 9.5573357794,-4.8560536850 T D 8.3732365230,-5.0977065945 4.0149052595,-6.2243025271 4.7400089652,-5.2574975862 T D 6.9453257908,-2.3170751521 15.8590422964,2.0507095369 17.7869357536,5.1800438445 T D 19.5525849586,8.0460251630 18.0718220515,13.8972459582 18.5898235559,17.2233608802 T D 19.0256157857,20.0216057233 18.5378374875,26.0353905753 19.9948772102,28.4637901133 T L 20.5970430619,29.4673998662" />
 		</layer>
 	</glyph>
-	<glyph id="2" left="-28" right="40.354299363057336">
-		<layer name= "Layer" visible="true">
-			<path data="B 29.0119849101,18.0144481635 M 32.1593026648,15.3077548944 M 28.0677895836,14.8356572312 M 13.1180302486,13.0102129334 M 8.4285267940,-1.2156633181 M 6.9178142717,-5.8422204176 M 5.0294236189,-1.3730292059 M -18.3551472991,54.0512364556 M -15.4910881422,56.1284661737 M 29.0119849101,18.0144481635" />
-			<path data="B 6.4771897859,4.5439281731 M 10.0021856713,15.2448085393 M 10.3798638019,16.3463697534 M 11.5128981936,16.5037356412 M 23.4727056618,17.9515018084 M -11.9660922569,48.3231181418 M 6.4771897859,4.5439281731" />
-		</layer>
-	</glyph>
 </collection>
 
-<collection name="flip_horizontal">
+<collection name="flip_horizontal" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-23.6099694818" right="36.936734610499997">
 		<layer name= "Layer" visible="true">
@@ -721,7 +811,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="flip_vertical">
+<collection name="flip_vertical" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28.616126296005103" right="40.464025466000002">
 		<layer name= "Layer" visible="true">
@@ -732,7 +822,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="full_glyph">
+<collection name="full_glyph" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -741,7 +831,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="full_height">
+<collection name="full_height" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -753,13 +843,13 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+67">
+<collection unicode="U+67" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection name="generate_html_document">
+<collection name="generate_html_document" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -771,13 +861,36 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+68">
+<collection name="glyph_width" svg="false" colr="false" auto_generate="false">
+	<selected id="0"/>
+	<glyph id="0" left="-28" right="28">
+		<layer name= "Layer" visible="true">
+			<path data="S -64.0000000000,28.0000000000 L -64.0000000000,28.0000000000 O" />
+			<path data="B 20.0000000000,13.0000000000 C 18.3605694424,13.0000000000 16.7211388847,13.0000000000 15.0817083271,13.0000000000 C 13.7650538134,13.0000000000 12.4483992998,13.0000000000 11.1317447862,13.0000000000 C 9.8150902725,13.0000000000 8.4984357589,13.0000000000 7.1817812453,13.0000000000 C 5.8651267317,13.0000000000 4.5484722180,13.0000000000 3.2318177044,13.0000000000 C 1.9151631908,13.0000000000 0.5985086772,13.0000000000 -0.7181458365,13.0000000000 C -2.0348003501,13.0000000000 -3.3514548637,13.0000000000 -4.6681093774,13.0000000000 C -5.9847638910,13.0000000000 -7.3014184046,13.0000000000 -8.6180729182,13.0000000000 C -9.9347274319,13.0000000000 -11.2513819455,13.0000000000 -12.5680364591,13.0000000000 C -14.3785643061,13.0000000000 -16.1890921530,13.0000000000 -17.9996200000,13.0000000000 M -17.9996200000,15.0000000000 C -16.1890921530,15.0000000000 -14.3785643061,15.0000000000 -12.5680364591,15.0000000000 C -11.2513819455,15.0000000000 -9.9347274319,15.0000000000 -8.6180729182,15.0000000000 C -7.3014184046,15.0000000000 -5.9847638910,15.0000000000 -4.6681093774,15.0000000000 C -3.3514548637,15.0000000000 -2.0348003501,15.0000000000 -0.7181458365,15.0000000000 C 0.5985086772,15.0000000000 1.9151631908,15.0000000000 3.2318177044,15.0000000000 C 4.5484722180,15.0000000000 5.8651267317,15.0000000000 7.1817812453,15.0000000000 C 8.4984357589,15.0000000000 9.8150902725,15.0000000000 11.1317447862,15.0000000000 C 12.4483992998,15.0000000000 13.7650538134,15.0000000000 15.0817083271,15.0000000000 C 16.7211388847,15.0000000000 18.3605694424,15.0000000000 20.0000000000,15.0000000000 M 20.0000000000,13.0000000000" />
+			<path data="B 19.0000000000,8.0000000000 C 19.0000000000,8.5177149129 19.0000000000,9.0354298259 19.0000000000,9.5531447388 C 19.0000000000,9.9689303747 19.0000000000,10.3847160106 19.0000000000,10.8005016465 C 19.0000000000,11.2162872824 19.0000000000,11.6320729182 19.0000000000,12.0478585541 C 19.0000000000,12.4636441900 19.0000000000,12.8794298259 19.0000000000,13.2952154618 C 19.0000000000,13.7110010976 19.0000000000,14.1267867335 19.0000000000,14.5425723694 C 19.0000000000,14.9583580053 19.0000000000,15.3741436412 19.0000000000,15.7899292771 C 19.0000000000,16.2057149129 19.0000000000,16.6215005488 19.0000000000,17.0372861847 C 19.0000000000,17.4530718206 19.0000000000,17.8688574565 19.0000000000,18.2846430924 C 19.0000000000,18.8563887282 19.0000000000,19.4281343641 19.0000000000,19.9998800000 M 21.0000000000,19.9998800000 C 21.0000000000,19.4281343641 21.0000000000,18.8563887282 21.0000000000,18.2846430924 C 21.0000000000,17.8688574565 21.0000000000,17.4530718206 21.0000000000,17.0372861847 C 21.0000000000,16.6215005488 21.0000000000,16.2057149129 21.0000000000,15.7899292771 C 21.0000000000,15.3741436412 21.0000000000,14.9583580053 21.0000000000,14.5425723694 C 21.0000000000,14.1267867335 21.0000000000,13.7110010976 21.0000000000,13.2952154618 C 21.0000000000,12.8794298259 21.0000000000,12.4636441900 21.0000000000,12.0478585541 C 21.0000000000,11.6320729182 21.0000000000,11.2162872824 21.0000000000,10.8005016465 C 21.0000000000,10.3847160106 21.0000000000,9.9689303747 21.0000000000,9.5531447388 C 21.0000000000,9.0354298259 21.0000000000,8.5177149129 21.0000000000,8.0000000000 M 19.0000000000,8.0000000000" />
+			<path data="B -19.0000000000,8.0000000000 C -19.0000000000,8.5177149129 -19.0000000000,9.0354298259 -19.0000000000,9.5531447388 C -19.0000000000,9.9689303747 -19.0000000000,10.3847160106 -19.0000000000,10.8005016465 C -19.0000000000,11.2162872824 -19.0000000000,11.6320729182 -19.0000000000,12.0478585541 C -19.0000000000,12.4636441900 -19.0000000000,12.8794298259 -19.0000000000,13.2952154618 C -19.0000000000,13.7110010976 -19.0000000000,14.1267867335 -19.0000000000,14.5425723694 C -19.0000000000,14.9583580053 -19.0000000000,15.3741436412 -19.0000000000,15.7899292771 C -19.0000000000,16.2057149129 -19.0000000000,16.6215005488 -19.0000000000,17.0372861847 C -19.0000000000,17.4530718206 -19.0000000000,17.8688574565 -19.0000000000,18.2846430924 C -19.0000000000,18.8563887282 -19.0000000000,19.4281343641 -19.0000000000,19.9998800000 M -17.0000000000,19.9998800000 C -17.0000000000,19.4281343641 -17.0000000000,18.8563887282 -17.0000000000,18.2846430924 C -17.0000000000,17.8688574565 -17.0000000000,17.4530718206 -17.0000000000,17.0372861847 C -17.0000000000,16.6215005488 -17.0000000000,16.2057149129 -17.0000000000,15.7899292771 C -17.0000000000,15.3741436412 -17.0000000000,14.9583580053 -17.0000000000,14.5425723694 C -17.0000000000,14.1267867335 -17.0000000000,13.7110010976 -17.0000000000,13.2952154618 C -17.0000000000,12.8794298259 -17.0000000000,12.4636441900 -17.0000000000,12.0478585541 C -17.0000000000,11.6320729182 -17.0000000000,11.2162872824 -17.0000000000,10.8005016465 C -17.0000000000,10.3847160106 -17.0000000000,9.9689303747 -17.0000000000,9.5531447388 C -17.0000000000,9.0354298259 -17.0000000000,8.5177149129 -17.0000000000,8.0000000000 M -19.0000000000,8.0000000000" />
+		</layer>
+	</glyph>
+</collection>
+
+<collection name="glyph_width_left_overview" svg="false" colr="false" auto_generate="false">
+	<selected id="0"/>
+	<glyph id="0" left="-28" right="28">
+		<layer name= "Layer" visible="true">
+			<path data="S -64.0000000000,28.0000000000 L -64.0000000000,28.0000000000 O" />
+			<path data="B -19.0000000000,8.0000000000 C -19.0000000000,8.5177149129 -19.0000000000,9.0354298259 -19.0000000000,9.5531447388 C -19.0000000000,9.9689303747 -19.0000000000,10.3847160106 -19.0000000000,10.8005016465 C -19.0000000000,11.2162872824 -19.0000000000,11.6320729182 -19.0000000000,12.0478585541 C -19.0000000000,12.4636441900 -19.0000000000,12.8794298259 -19.0000000000,13.2952154618 C -19.0000000000,13.7110010976 -19.0000000000,14.1267867335 -19.0000000000,14.5425723694 C -19.0000000000,14.9583580053 -19.0000000000,15.3741436412 -19.0000000000,15.7899292771 C -19.0000000000,16.2057149129 -19.0000000000,16.6215005488 -19.0000000000,17.0372861847 C -19.0000000000,17.4530718206 -19.0000000000,17.8688574565 -19.0000000000,18.2846430924 C -19.0000000000,18.8563887282 -19.0000000000,19.4281343641 -19.0000000000,19.9998800000 M -17.0000000000,19.9998800000 C -17.0000000000,19.4281343641 -17.0000000000,18.8563887282 -17.0000000000,18.2846430924 C -17.0000000000,17.8688574565 -17.0000000000,17.4530718206 -17.0000000000,17.0372861847 C -17.0000000000,16.6215005488 -17.0000000000,16.2057149129 -17.0000000000,15.7899292771 C -17.0000000000,15.3741436412 -17.0000000000,14.9583580053 -17.0000000000,14.5425723694 C -17.0000000000,14.1267867335 -17.0000000000,13.7110010976 -17.0000000000,13.2952154618 C -17.0000000000,12.8794298259 -17.0000000000,12.4636441900 -17.0000000000,12.0478585541 C -17.0000000000,11.6320729182 -17.0000000000,11.2162872824 -17.0000000000,10.8005016465 C -17.0000000000,10.3847160106 -17.0000000000,9.9689303747 -17.0000000000,9.5531447388 C -17.0000000000,9.0354298259 -17.0000000000,8.5177149129 -17.0000000000,8.0000000000 M -19.0000000000,8.0000000000" />
+			<path data="B -0.7181458365,13.0000000000 C -2.0348003501,13.0000000000 -3.3514548637,13.0000000000 -4.6681093774,13.0000000000 C -5.9847638910,13.0000000000 -7.3014184046,13.0000000000 -8.6180729182,13.0000000000 C -9.9347274319,13.0000000000 -11.2513819455,13.0000000000 -12.5680364591,13.0000000000 C -14.3785643061,13.0000000000 -16.1890921530,13.0000000000 -17.9996200000,13.0000000000 M -17.9996200000,15.0000000000 C -16.1890921530,15.0000000000 -14.3785643061,15.0000000000 -12.5680364591,15.0000000000 C -11.2513819455,15.0000000000 -9.9347274319,15.0000000000 -8.6180729182,15.0000000000 C -7.3014184046,15.0000000000 -5.9847638910,15.0000000000 -4.6681093774,15.0000000000 C -3.3514548637,15.0000000000 -2.0348003501,15.0000000000 -0.7181458365,15.0000000000 C -0.7181458365,14.0000000000 -0.7181458365,13.6666666667 -0.7181458365,13.0000000000" />
+		</layer>
+	</glyph>
+</collection>
+
+<collection unicode="U+68" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection name="height">
+<collection name="height" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-27.652329749100002" right="32.878920250900002">
 		<layer name= "Layer" visible="true">
@@ -787,7 +900,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="help_lines">
+<collection name="help_lines" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="37.189826465707966">
 		<layer name= "Layer" visible="true">
@@ -797,7 +910,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="high_contrast_background">
+<collection name="high_contrast_background" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-27.108818331300004" right="27.110524290899999">
 		<layer name= "Layer" visible="true">
@@ -808,13 +921,13 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+69">
+<collection unicode="U+69" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection name="info_icon">
+<collection name="info_icon" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="33.597883597883616">
 		<layer name= "Layer" visible="true">
@@ -826,7 +939,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="insert_background">
+<collection name="insert_background" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-21.955947524900004" right="31.169052475099999">
 		<layer name= "Layer" visible="true">
@@ -838,7 +951,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="insert_glyph_from_overview">
+<collection name="insert_glyph_from_overview" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -848,7 +961,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="insert_unichar">
+<collection name="insert_unichar" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -858,19 +971,30 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+6a">
+<collection name="interpolate_stroke" svg="false" colr="false" auto_generate="false">
+	<selected id="0"/>
+	<glyph id="0" left="-28.000548750000064" right="27.999454999999955">
+		<layer name= "Layer" visible="true">
+			<path data="S 1.8763184305,30.0773944417 Q 4.4226194573,30.0773944417 5.7377465312,31.1966500019 Q 7.0528736052,32.3159055620 7.0528736052,34.4984431593 Q 7.0528736052,36.6530154850 5.7377465312,37.7722710451 Q 4.4226194573,38.9195062034 1.8763184305,38.9195062034 M -4.0837227996,38.9195062034 M -4.0837227996,30.0773944417 M 1.8763184305,30.0773944417" />
+			<path data="S 2.2400675335,11.8055420505 Q 5.4859158210,11.8055420505 7.1088328016,13.1766283208 Q 8.7597293803,14.5477145911 8.7597293803,17.3178810565 Q 8.7597293803,20.0320739989 7.1368123998,21.3751806711 Q 5.5138954192,22.7462669414 2.2400675335,22.7462669414 M -4.0837227996,22.7462669414 M -4.0837227996,11.8055420505 M 2.2400675335,11.8055420505" />
+			<path data="S 12.2574083781,26.8315461542 Q 15.7271077777,25.8242233133 17.6298350666,23.1100160444 Q 19.5325766821,20.3958231019 19.5325766821,16.4504562066 Q 19.5325766821,10.4064761819 15.4472831428,7.4404382028 Q 11.3620039300,4.4744145501 3.0235535888,4.4744145501 M -14.8565557748,4.4744145501 M -14.8565557748,46.2506337038 M 1.3166834872,46.2506337038 Q 10.0188972579,46.2506337038 13.9083049568,43.6203795559 Q 17.8257065805,40.9901254080 17.8257065805,35.1979760936 Q 17.8257065805,32.1480136463 16.3986611137,29.9934413207 Q 14.9716013205,27.8668629197 12.2574083781,26.8315461542" />
+		</layer>
+	</glyph>
+</collection>
+
+<collection unicode="U+6a" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection unicode="U+6b">
+<collection unicode="U+6b" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection name="kerning_class">
+<collection name="kerning_class" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -880,7 +1004,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="kerning_text_input">
+<collection name="kerning_text_input" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -889,13 +1013,13 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+6c">
+<collection unicode="U+6c" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection name="layer_hidden">
+<collection name="layer_hidden" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -904,7 +1028,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="layer_visible">
+<collection name="layer_visible" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -914,7 +1038,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="left_arrow">
+<collection name="left_arrow" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="25.184466019417457">
 		<layer name= "Layer" visible="true">
@@ -925,7 +1049,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="line_cap_butt">
+<collection name="line_cap_butt" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -935,7 +1059,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="line_cap_round">
+<collection name="line_cap_round" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -945,7 +1069,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="line_cap_square">
+<collection name="line_cap_square" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="32">
 		<layer name= "Layer" visible="true">
@@ -955,7 +1079,46 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="lock_grid">
+<collection name="line_join_bevel" svg="false" colr="false" auto_generate="false">
+	<selected id="0"/>
+	<glyph id="0" left="-28" right="28">
+		<layer name= "Layer" visible="true">
+			<path data="B 1.2443550015,27.6476650912 C 0.9485818732,27.1100920331 0.6528087449,26.5725189751 0.3570356166,26.0349459171 C -0.1703961623,25.0763290343 -0.6978279411,24.1177121516 -1.2252597200,23.1590952689 C -1.7526914988,22.2004783861 -2.2801232777,21.2418615034 -2.8075550565,20.2832446207 C -3.3349868354,19.3246277379 -3.8624186142,18.3660108552 -4.3898503931,17.4073939725 C -4.9172821719,16.4487770898 -5.4447139508,15.4901602070 -5.9721457296,14.5315433243 C -6.4995775085,13.5729264416 -7.0270092873,12.6143095588 -7.5544410662,11.6556926761 C -8.2797109932,10.3375013489 -9.0049809202,9.0193100217 -9.7302508472,7.7011186945 M -18.4916669306,12.5216568610 C -17.7663970036,13.8398481882 -17.0411270766,15.1580395153 -16.3158571496,16.4762308425 C -15.7884253707,17.4348477252 -15.2609935919,18.3934646079 -14.7335618130,19.3520814907 C -14.2061300342,20.3106983734 -13.6786982553,21.2693152561 -13.1512664765,22.2279321388 C -12.6238346976,23.1865490216 -12.0964029188,24.1451659043 -11.5689711399,25.1037827870 C -11.0415393611,26.0623996698 -10.5141075822,27.0210165525 -9.9866758034,27.9796334352 C -9.4592440245,28.9382503180 -8.9318122457,29.8968672007 -8.4043804668,30.8554840834 C -7.8769486880,31.8141009661 -7.3495169091,32.7727178489 -6.8220851303,33.7313347316 C -6.2946533514,34.6899516143 -5.7672215726,35.6485684971 -5.2397897937,36.6071853798 C -4.5830588394,37.8008058735 -3.9263278850,38.9944263673 -3.2695969306,40.1880468610 M 5.4270732958,40.3021530523 C 6.2105765746,38.9627859608 6.9940798534,37.6234188694 7.7775831322,36.2840517779 C 8.3473634480,35.3100354272 8.9171437639,34.3360190765 9.4869240797,33.3620027257 C 10.0567043956,32.3879863750 10.6264847114,31.4139700243 11.1962650272,30.4399536736 C 11.7660453431,29.4659373228 12.3358256589,28.4919209721 12.9056059748,27.5179046214 C 13.4753862906,26.5438882707 14.0451666064,25.5698719199 14.6149469223,24.5958555692 C 15.1847272381,23.6218392185 15.7545075540,22.6478228678 16.3242878698,21.6738065170 C 16.8940681856,20.6997901663 17.4638485015,19.7257738156 18.0336288173,18.7517574649 C 18.6034091332,17.7777411141 19.1731894490,16.8037247634 19.7429697648,15.8297084127 C 20.4524309418,14.6169132926 21.1618921188,13.4041181725 21.8713532958,12.1913230524 C 18.9941548023,10.5082187953 16.1169563089,8.8251145381 13.2397578154,7.1420102810 C 12.5302966384,8.3548054012 11.8208354614,9.5676005213 11.1113742844,10.7803956415 C 10.5415939685,11.7544119922 9.9718136527,12.7284283429 9.4020333369,13.7024446937 C 8.8322530210,14.6764610444 8.2624727052,15.6504773951 7.6926923893,16.6244937458 C 7.1229120735,17.5985100966 6.5531317576,18.5725264473 5.9833514418,19.5465427980 C 5.4135711260,20.5205591487 4.8437908101,21.4945754995 4.2740104943,22.4685918502 C 3.7042301784,23.4426082009 3.1344498626,24.4166245516 2.5646695468,25.3906409023 C 2.1245646983,26.1429822986 1.6844598499,26.8953236949 1.2443550015,27.6476650912" />
+		</layer>
+	</glyph>
+</collection>
+
+<collection name="line_join_miter" svg="false" colr="false" auto_generate="false">
+	<selected id="0"/>
+	<glyph id="0" left="-28" right="28">
+		<layer name= "Layer" visible="true">
+			<path data="B 1.2443550015,27.6476650912 C 0.9485818732,27.1100920331 0.6528087449,26.5725189751 0.3570356166,26.0349459171 C -0.1703961623,25.0763290343 -0.6978279411,24.1177121516 -1.2252597200,23.1590952689 C -1.7526914988,22.2004783861 -2.2801232777,21.2418615034 -2.8075550565,20.2832446207 C -3.3349868354,19.3246277379 -3.8624186142,18.3660108552 -4.3898503931,17.4073939725 C -4.9172821719,16.4487770898 -5.4447139508,15.4901602070 -5.9721457296,14.5315433243 C -6.4995775085,13.5729264416 -7.0270092873,12.6143095588 -7.5544410662,11.6556926761 C -8.2797109932,10.3375013489 -9.0049809202,9.0193100217 -9.7302508472,7.7011186945 M -18.4916669306,12.5216568610 C -17.7663970036,13.8398481882 -17.0411270766,15.1580395153 -16.3158571496,16.4762308425 C -15.7884253707,17.4348477252 -15.2609935919,18.3934646079 -14.7335618130,19.3520814907 C -14.2061300342,20.3106983734 -13.6786982553,21.2693152561 -13.1512664765,22.2279321388 C -12.6238346976,23.1865490216 -12.0964029188,24.1451659043 -11.5689711399,25.1037827870 C -11.0415393611,26.0623996698 -10.5141075822,27.0210165525 -9.9866758034,27.9796334352 C -9.4592440245,28.9382503180 -8.9318122457,29.8968672007 -8.4043804668,30.8554840834 C -7.8769486880,31.8141009661 -7.3495169091,32.7727178489 -6.8220851303,33.7313347316 C -6.2946533514,34.6899516143 -5.7672215726,35.6485684971 -5.2397897937,36.6071853798 C -4.5830588394,37.8008058735 -3.9263278850,38.9944263673 -3.2695969306,40.1880468610 M -0.1251902539,45.9030633760 M 2.1333166467,45.9326965131 M 5.4270732958,40.3021530523 C 6.2105765746,38.9627859608 6.9940798534,37.6234188694 7.7775831322,36.2840517779 C 8.3473634480,35.3100354272 8.9171437639,34.3360190765 9.4869240797,33.3620027257 C 10.0567043956,32.3879863750 10.6264847114,31.4139700243 11.1962650272,30.4399536736 C 11.7660453431,29.4659373228 12.3358256589,28.4919209721 12.9056059748,27.5179046214 C 13.4753862906,26.5438882707 14.0451666064,25.5698719199 14.6149469223,24.5958555692 C 15.1847272381,23.6218392185 15.7545075540,22.6478228678 16.3242878698,21.6738065170 C 16.8940681856,20.6997901663 17.4638485015,19.7257738156 18.0336288173,18.7517574649 C 18.6034091332,17.7777411141 19.1731894490,16.8037247634 19.7429697648,15.8297084127 C 20.4524309418,14.6169132926 21.1618921188,13.4041181725 21.8713532958,12.1913230524 C 18.9941548023,10.5082187953 16.1169563089,8.8251145381 13.2397578154,7.1420102810 C 12.5302966384,8.3548054012 11.8208354614,9.5676005213 11.1113742844,10.7803956415 C 10.5415939685,11.7544119922 9.9718136527,12.7284283429 9.4020333369,13.7024446937 C 8.8322530210,14.6764610444 8.2624727052,15.6504773951 7.6926923893,16.6244937458 C 7.1229120735,17.5985100966 6.5531317576,18.5725264473 5.9833514418,19.5465427980 C 5.4135711260,20.5205591487 4.8437908101,21.4945754995 4.2740104943,22.4685918502 C 3.7042301784,23.4426082009 3.1344498626,24.4166245516 2.5646695468,25.3906409023 C 2.1245646983,26.1429822986 1.6844598499,26.8953236949 1.2443550015,27.6476650912" />
+		</layer>
+	</glyph>
+</collection>
+
+<collection name="line_join_round" svg="false" colr="false" auto_generate="false">
+	<selected id="0"/>
+	<glyph id="0" left="-28" right="28">
+		<layer name= "Layer" visible="true">
+			<path data="B -3.2720051912,40.1836646169 C -2.8524257576,40.9462578940 -2.2075838180,41.6170082200 -1.4614715488,42.0652401791 C -0.7167385968,42.5126435041 0.1769626052,42.7661153440 1.0456779451,42.7775417728 C 1.9143932849,42.7889682017 2.8142383727,42.5587119584 3.5706949940,42.1314295166 C 4.7625020452,41.4582405820 5.4272384246,40.3022496492 5.4270732958,40.3021530523 C 6.2105765746,38.9627859608 6.9940798534,37.6234188694 7.7775831322,36.2840517779 C 8.3473634480,35.3100354272 8.9171437639,34.3360190765 9.4869240797,33.3620027257 C 10.0567043956,32.3879863750 10.6264847114,31.4139700243 11.1962650272,30.4399536736 C 11.7660453431,29.4659373228 12.3358256589,28.4919209721 12.9056059748,27.5179046214 C 13.4753862906,26.5438882707 14.0451666064,25.5698719199 14.6149469223,24.5958555692 C 15.1847272381,23.6218392185 15.7545075540,22.6478228678 16.3242878698,21.6738065170 C 16.8940681856,20.6997901663 17.4638485015,19.7257738156 18.0336288173,18.7517574649 C 18.6034091332,17.7777411141 19.1731894490,16.8037247634 19.7429697648,15.8297084127 C 20.4524309418,14.6169132926 21.1618921188,13.4041181725 21.8713532958,12.1913230524 C 18.9941548023,10.5082187953 16.1169563089,8.8251145381 13.2397578154,7.1420102810 C 12.5302966384,8.3548054012 11.8208354614,9.5676005213 11.1113742844,10.7803956415 C 10.5415939685,11.7544119922 9.9718136527,12.7284283429 9.4020333369,13.7024446937 C 8.8322530210,14.6764610444 8.2624727052,15.6504773951 7.6926923893,16.6244937458 C 7.1229120735,17.5985100966 6.5531317576,18.5725264473 5.9833514418,19.5465427980 C 5.4135711260,20.5205591487 4.8437908101,21.4945754995 4.2740104943,22.4685918502 C 3.7042301784,23.4426082009 3.1344498626,24.4166245516 2.5646695468,25.3906409023 C 2.1245646983,26.1429822986 1.6844598499,26.8953236949 1.2443550015,27.6476650912 C 0.9485818732,27.1100920331 0.6528087449,26.5725189751 0.3570356166,26.0349459171 C -0.1703961623,25.0763290343 -0.6978279411,24.1177121516 -1.2252597200,23.1590952689 C -1.7526914988,22.2004783861 -2.2801232777,21.2418615034 -2.8075550565,20.2832446207 C -3.3349868354,19.3246277379 -3.8624186142,18.3660108552 -4.3898503931,17.4073939725 C -4.9172821719,16.4487770898 -5.4447139508,15.4901602070 -5.9721457296,14.5315433243 C -6.4995775085,13.5729264416 -7.0270092873,12.6143095588 -7.5544410662,11.6556926761 C -8.2797109932,10.3375013489 -9.0049809202,9.0193100217 -9.7302508472,7.7011186945 M -18.4916669306,12.5216568610 C -17.7663970036,13.8398481882 -17.0411270766,15.1580395153 -16.3158571496,16.4762308425 C -15.7884253707,17.4348477252 -15.2609935919,18.3934646079 -14.7335618130,19.3520814907 C -14.2061300342,20.3106983734 -13.6786982553,21.2693152561 -13.1512664765,22.2279321388 C -12.6238346976,23.1865490216 -12.0964029188,24.1451659043 -11.5689711399,25.1037827870 C -11.0415393611,26.0623996698 -10.5141075822,27.0210165525 -9.9866758034,27.9796334352 C -9.4592440245,28.9382503180 -8.9318122457,29.8968672007 -8.4043804668,30.8554840834 C -7.8769486880,31.8141009661 -7.3495169091,32.7727178489 -6.8220851303,33.7313347316 C -6.2946533514,34.6899516143 -5.7672215726,35.6485684971 -5.2397897937,36.6071853798 C -4.5838623231,37.7993455273 -3.9279333920,38.9915048712 -3.2720051912,40.1836646169" />
+		</layer>
+	</glyph>
+</collection>
+
+<collection name="load_backups" svg="false" colr="false" auto_generate="false">
+	<selected id="0"/>
+	<glyph id="0" left="-28" right="28.419182948490214">
+		<layer name= "Layer" visible="true">
+			<path data="B -16.8539434354,8.4904021356 C -7.2040282779,-1.0078120254 8.1834094532,-0.8859093394 17.6816257187,8.7640079562 C 27.1798419842,18.4139252519 27.1372685083,33.8819677551 17.4873533507,43.3801819162 C 7.8374360551,52.8783981817 -7.7099185537,52.7552030981 -17.2081348193,43.1052858024 C -21.7813500583,38.4590293267 -23.8962352084,33.0277514558 -24.0000000000,27.0000000000 M -19.0000000000,27.0000000000 M -26.0000000000,20.0000000000 M -32.0000000000,27.0000000000 M -28.0000000000,27.0000000000 C -28.3354645076,35.4258804236 -24.9216333198,40.4261520902 -19.7865916944,45.6432081784 C -8.9167662751,56.6866413223 8.9818216504,56.8284286883 20.0252476674,45.9586102838 C 31.0686672703,35.0887981927 31.1299087258,17.2695180226 20.2600833065,6.2260848787 C 9.3902578872,-4.8173482651 -8.3484181493,-4.9578383232 -19.3918377522,5.9119737680 L -16.8539434354,8.4904021356" />
+			<path data="S -4.0000000000,27.0000000000 L -2.0000000000,46.0000000000 L 1.0000000000,46.0000000000 L 3.0000000000,27.0000000000 L -4.0000000000,27.0000000000 O" />
+			<path data="S 13.9014749360,15.1295779206 L 11.9513788652,12.8498574740 L -3.7869146771,23.6806522913 L 1.0000000000,29.0000000000 L 13.9014749360,15.1295779206" />
+			<path data="S 3.1531669605,22.3988622978 D 2.5069768376,21.7526721750 0.6898654648,21.0000000000 -0.2239853708,21.0000000000 T D -1.1378362065,21.0000000000 -2.9549475793,21.7526721750 -3.6011377022,22.3988622978 T D -4.2473278250,23.0450524207 -5.0000000000,24.8621637935 -5.0000000000,25.7760146292 T D -5.0000000000,26.6898654648 -4.2473278250,28.5069768376 -3.6011377022,29.1531669605 T D -2.9549475793,29.7993570834 -1.1378362065,30.5520292584 -0.2239853708,30.5520292584 T D 0.6898654648,30.5520292584 2.5069768376,29.7993570834 3.1531669605,29.1531669605 T D 3.7993570834,28.5069768376 4.5520292584,26.6898654648 4.5520292584,25.7760146292 T D 4.5520292584,24.8621637935 3.7993570834,23.0450524207 3.1531669605,22.3988622978 T" />
+		</layer>
+	</glyph>
+</collection>
+
+<collection name="lock_grid" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -965,13 +1128,28 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+6d">
+<collection name="log" svg="false" colr="false" auto_generate="false">
+	<selected id="0"/>
+	<glyph id="0" left="-28" right="28">
+		<layer name= "Layer" visible="true">
+			<path data="S -20.0000000000,36.0000000000 L -8.0000000000,52.0000000000 L 20.0000000000,52.0000000000 L 20.0000000000,28.0000000000 L 20.0000000000,0.0000000000 L -20.0000000000,0.0000000000 L -20.0000000000,36.0000000000" />
+			<path data="S -16.0000000000,4.0000000000 L 16.0000000000,4.0000000000 L 16.0000000000,48.0000000000 L -5.3544973545,48.0000000000 L -16.0000000000,33.6190476190 L -16.0000000000,4.0000000000" />
+			<path data="S -0.8888888889,33.9444444444 L -16.8941798942,30.3730158730 L -17.5555555556,33.0185185185 L -4.1957671958,35.9285714286 L -5.1216931217,47.9656084656 L -1.6825396825,48.8915343915 L -0.8888888889,33.9444444444" />
+			<path data="B -10.3715598760,28.6694709359 M -10.4847606901,21.0020080494 M -6.2714230475,20.9398032160 M -6.2859688760,19.9545664885 M -11.6700000000,20.0340551949 M -11.5422533576,28.6867548089 C -11.1520221971,28.6809935179 -10.7617910366,28.6752322269 -10.3715598760,28.6694709359" />
+			<path data="S -3.8947495776,26.8290191920 Q -4.6564031604,25.8895930821 -4.6806176956,24.2494630928 Q -4.7047466612,22.6151290160 -3.9711579873,21.6536266779 Q -3.2317733843,20.6920398916 -1.9567612146,20.6732158793 Q -0.6817479235,20.6543918505 0.0741097418,21.5939031935 Q 0.8357633362,22.5333300884 0.8598923017,24.1676641652 Q 0.8841068369,25.8077941545 0.1505181515,26.7692957076 Q -0.5772746181,27.7307119154 -1.8522879093,27.7495359442 Q -3.1273000789,27.7683599565 -3.8947495776,26.8290191920" />
+			<path data="S 1.0530379638,27.4341938997 Q 2.1246260133,26.2010508359 2.0943364478,24.1494390907 Q 2.0641324519,22.1036232580 0.9565220751,20.8968557982 Q -0.1510027320,19.6958842509 -1.9707936749,19.7227512628 Q -3.7963794089,19.7497038277 -4.8737633644,20.9829329097 Q -5.9453514073,22.2160764221 -5.9150618417,24.2676881673 Q -5.8847722762,26.3192999125 -4.7772474757,27.5202710111 Q -3.6638411913,28.7269525649 -1.8382554573,28.7000000000 Q -0.0184645144,28.6731329882 1.0530379638,27.4341938997" />
+			<path data="B 9.8143400330,23.2760852540 M 7.9018212178,23.3043212807 M 7.9160247842,24.2663754793 M 10.9876464894,24.2210267007 M 10.9328001433,20.5061035588 Q 10.2476236909,20.0350874117 9.4267768457,19.7979444842 Q 8.6060155702,19.5665974693 7.6787334825,19.5802876675 Q 5.6503042661,19.6102349711 4.5202481987,20.8094608811 Q 3.3960724920,22.0143971506 3.4273032573,24.1297594482 Q 3.4586195757,26.2509165369 4.6177908535,27.4163452233 Q 5.7828424837,28.5874837083 7.8112717001,28.5575364048 Q 8.6574166191,28.5450440986 9.4135492834,28.3251967400 Q 10.1754756189,28.1052639569 10.8127887164,27.6900805296 M 10.7943925142,26.4440453434 Q 10.1534237193,27.0042021570 9.4272962609,27.2931678126 Q 8.7011688008,27.5821333560 7.8955919053,27.5940267244 Q 6.3076217647,27.6174711825 5.4947495313,26.7425655900 Q 4.6876732154,25.8675747643 4.6617474034,24.1115343738 Q 4.6359071609,22.3612898959 5.4168009708,21.4628536027 Q 6.2034907097,20.5643328613 7.7914608503,20.5408884032 Q 8.4115808797,20.5317330812 8.8999440789,20.6288676688 Q 9.3883928808,20.7318004120 9.7800290257,20.9520880474 C 9.7914659950,21.7267515399 9.8029030306,22.5014195184 9.8143400330,23.2760852540" />
+		</layer>
+	</glyph>
+</collection>
+
+<collection unicode="U+6d" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection name="menu_icon">
+<collection name="menu_icon" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-20.425287356321846" right="23.574712643678154">
 		<layer name= "Layer" visible="true">
@@ -982,21 +1160,21 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="move">
+<collection name="move" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="44.833598726114666">
 		<layer name= "Layer" visible="true">
-			<path data="B 9.2101015654,58.3081660170 M 19.0538515654,43.7144660170 M 21.0851015654,40.8706660170 M 17.5851015654,40.8706660170 M 9.5538515654,40.8706660170 M 9.5538515654,30.8081660170 M 9.5538515654,28.7768660170 M 22.3713276801,28.7768660170 M 22.3713276801,25.1831660170 M 9.5538515654,25.1831660170 M 9.5538515654,22.3394660170 M 9.5538515654,12.4018660170 M 17.8976015654,12.4018660170 M 21.4288515654,12.4018660170 M 19.3663515654,9.5581660170 M 9.3038515654,-5.0043339830 M 7.8351015654,-7.1605339830 M 6.3663515654,-5.0043339830 M -3.5711484346,9.5581660170 M -5.4773984346,12.4018660170 M -2.1023984346,12.4018660170 M 5.9288515654,12.4018660170 M 5.9288515654,22.3394660170 M 5.9288515654,25.1831660170 M -6.5086484346,25.1831660170 M -6.5086484346,16.8081660170 M -6.5086484346,13.3081660170 M -9.3211484346,15.3394660170 M -23.9148984346,25.4018660170 M -26.0711484346,26.8706660170 M -23.9148984346,28.3394660170 M -9.3211484346,38.2768660170 M -6.5086484346,40.2144660170 M -6.5086484346,36.8081660170 M -6.5086484346,28.7768660170 M 5.9288515654,28.7768660170 M 5.9288515654,30.8081660170 M 5.9288515654,40.8706660170 M -2.4461484346,40.8706660170 M -5.8211484346,40.8706660170 M -3.9148984346,43.7144660170 M 6.1476015654,58.3081660170 M 7.7413515654,60.4331660170 M 9.2101015654,58.3081660170" />
-			<path data="B 0.9601015654,44.4956660170 M 14.1788515654,44.4956660170 M 7.6163515654,53.9956660170 M 0.9601015654,44.4956660170" />
-			<path data="B 24.8038515654,38.6206660170 M 39.3976015654,28.5581660170 M 41.5538515654,26.9644660170 M 39.3976015654,25.4956660170 M 24.8038515654,15.5581660170 M 21.9913515654,13.6518660170 M 21.9913515654,17.1518660170 M 21.9913515654,37.1518660170 M 21.9913515654,40.5581660170 M 24.8038515654,38.6206660170" />
-			<path data="B 25.5851015654,20.5268660170 M 35.0851015654,27.0894660170 M 25.5851015654,33.7768660170 M 25.5851015654,20.5268660170" />
-			<path data="B -19.7273984346,26.8706660170 M -10.1336484346,20.1831660170 M -10.1336484346,33.4331660170 M -19.7273984346,26.8706660170" />
-			<path data="B 7.8351015654,-0.8481339830 M 14.5226015654,8.7768660170 M 1.3038515654,8.7768660170 M 7.8351015654,-0.8481339830" />
+			<path data="B 9.8480325999,58.3081660170 M 19.6917825999,43.7144660170 M 21.7230325999,40.8706660170 M 18.2230325999,40.8706660170 M 10.1917825999,40.8706660170 M 10.1917825999,30.8081660170 M 10.1917825999,28.7768660170 M 23.0092587146,28.7768660170 M 23.0092587146,25.1831660170 M 10.1917825999,25.1831660170 M 10.1917825999,22.3394660170 M 10.1917825999,12.4018660170 M 18.5355325999,12.4018660170 M 22.0667825999,12.4018660170 M 20.0042825999,9.5581660170 M 9.9417825999,-5.0043339830 M 8.4730325999,-7.1605339830 M 7.0042825999,-5.0043339830 M -2.9332174001,9.5581660170 M -4.8394674001,12.4018660170 M -1.4644674001,12.4018660170 M 6.5667825999,12.4018660170 M 6.5667825999,22.3394660170 M 6.5667825999,25.1831660170 M -5.8707174001,25.1831660170 M -5.8707174001,16.8081660170 M -5.8707174001,13.3081660170 M -8.6832174001,15.3394660170 M -23.2769674001,25.4018660170 M -25.4332174001,26.8706660170 M -23.2769674001,28.3394660170 M -8.6832174001,38.2768660170 M -5.8707174001,40.2144660170 M -5.8707174001,36.8081660170 M -5.8707174001,28.7768660170 M 6.5667825999,28.7768660170 M 6.5667825999,30.8081660170 M 6.5667825999,40.8706660170 M -1.8082174001,40.8706660170 M -5.1832174001,40.8706660170 M -3.2769674001,43.7144660170 M 6.7855325999,58.3081660170 M 8.3792825999,60.4331660170 M 9.8480325999,58.3081660170" />
+			<path data="B 1.5980325999,44.4956660170 M 14.8167825999,44.4956660170 M 8.2542825999,53.9956660170 M 1.5980325999,44.4956660170" />
+			<path data="B 25.4417825999,38.6206660170 M 40.0355325999,28.5581660170 M 42.1917825999,26.9644660170 M 40.0355325999,25.4956660170 M 25.4417825999,15.5581660170 M 22.6292825999,13.6518660170 M 22.6292825999,17.1518660170 M 22.6292825999,37.1518660170 M 22.6292825999,40.5581660170 M 25.4417825999,38.6206660170" />
+			<path data="B 26.2230325999,20.5268660170 M 35.7230325999,27.0894660170 M 26.2230325999,33.7768660170 M 26.2230325999,20.5268660170" />
+			<path data="B -19.0894674001,26.8706660170 M -9.4957174001,20.1831660170 M -9.4957174001,33.4331660170 M -19.0894674001,26.8706660170" />
+			<path data="B 8.4730325999,-0.8481339830 M 15.1605325999,8.7768660170 M 1.9417825999,8.7768660170 M 8.4730325999,-0.8481339830" />
 		</layer>
 	</glyph>
 </collection>
 
-<collection name="move_background">
+<collection name="move_background" svg="false" colr="false" auto_generate="false">
 	<selected id="2"/>
 	<glyph id="1" left="-28" right="44.817675159235684">
 		<layer name= "Layer" visible="true">
@@ -1036,7 +1214,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="move_canvas">
+<collection name="move_canvas" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="44.524681528662434">
 		<layer name= "Layer" visible="true">
@@ -1046,7 +1224,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="move_layer">
+<collection name="move_layer" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="51.107526881720446">
 		<layer name= "Layer" visible="true">
@@ -1059,13 +1237,29 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+6e">
+<collection unicode="U+6e" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection name="new_font">
+<collection name="new_color_font" svg="false" colr="false" auto_generate="false">
+	<selected id="1"/>
+	<glyph id="0" left="-28" right="28">
+	</glyph>
+	<glyph id="1" left="-28" right="28">
+		<layer name= "Layer" visible="true">
+			<path data="S -27.6186719014,36.1073052380 L -15.6186719014,52.1073052380 L 27.9405876155,52.3219157141 L 27.9405876155,28.3219157141 L 27.9405876155,0.3219157141 L -27.6186719014,0.1073052380 L -27.6186719014,36.1073052380" />
+			<path data="S -23.6186719014,4.1073052380 L 23.9405876155,4.3219157141 L 23.9405876155,48.3219157141 L -12.9731692559,48.1073052380 L -23.6186719014,33.7263528570 L -23.6186719014,4.1073052380" />
+			<path data="S -8.5075607903,34.0517496824 L -24.5128517956,30.4803211110 L -25.1742274570,33.1258237565 L -11.8144390972,36.0358766666 L -12.7403650231,48.0729137036 L -9.3012115839,48.9988396295 L -8.5075607903,34.0517496824" />
+			<path data="B -21.7935982384,12.2956017484 M -20.4108773282,13.8794457001 C -19.0784371784,12.4967247899 -17.2180490447,11.5916711032 -15.3073776365,11.5916711032 C -12.8939011387,11.5916711032 -11.4357590879,12.7984093521 -11.4357590879,14.6085167255 C -11.4357590879,16.4940452394 -12.7681992378,17.0974143638 -14.5028854706,17.8767661496 M -17.1677682843,19.0332236381 C -18.8773141369,19.7622946635 -20.9136849320,21.0695944331 -20.9136849320,23.7596151130 C -20.9136849320,26.6004780740 -18.4499276738,28.6619892492 -15.1062545950,28.6619892492 C -12.9190415189,28.6619892492 -10.9832322446,27.7317951823 -9.6759324749,26.3742146523 M -10.9078111040,24.8909322213 C -12.0391282124,25.9468281891 -13.3967087424,26.6256184541 -15.1062545950,26.6256184541 C -17.1929086645,26.6256184541 -18.5504891945,25.5697224863 -18.5504891945,23.9104573941 C -18.5504891945,22.1254904009 -16.9415048626,21.4467001359 -15.5085006780,20.8433310115 M -12.8687607585,19.7120139031 C -10.7318284427,18.7818198363 -9.0725633505,17.5248008270 -9.0725633505,14.7844993868 C -9.0725633505,11.8682152852 -11.4860398483,9.5553003082 -15.3325180167,9.5553003082 C -17.9471200701,9.5553003082 -20.1846139066,10.6111962760 -21.7935982384,12.2956017484" />
+			<path data="B -7.9247478676,28.3100239266 M -5.4861309897,28.3100239266 M -2.4944257476,18.3292929929 C -1.8407758627,16.1672202970 -1.4133893996,14.4073936840 -0.7094587544,12.2453209880 C -0.0306684894,14.4073936840 0.5224198747,16.1672202970 1.1760697595,18.3292929929 M 4.1426346214,28.3100239266 M 6.5058303589,28.3100239266 M 0.6481217756,9.8821252506 M -2.0418989042,9.8821252506 M -7.9247478676,28.3100239266" />
+			<path data="B 7.6497176573,19.0835043985 C 7.6497176573,25.0417745025 11.2196516436,28.6619892492 16.0968853996,28.6619892492 C 18.6612041786,28.6619892492 20.3456096510,27.5055317606 21.4015056188,26.3742146523 M 20.1444866095,24.8657918412 C 19.2142925426,25.8462666684 18.0326946739,26.6256184541 16.1471661600,26.6256184541 C 12.4515302727,26.6256184541 10.0380537749,23.7596151130 10.0380537749,19.1589255390 C 10.0380537749,14.5079552047 12.2252668511,11.5916711032 16.1723065402,11.5916711032 C 17.5047466900,11.5916711032 18.7869060795,11.9939171862 19.5159771049,12.6727074512 M 19.5159771049,17.4996604468 M 15.6192181761,17.4996604468 M 15.6192181761,19.4354697211 M 21.6529094206,19.4354697211 M 21.6529094206,11.6922326239 C 20.4713115519,10.4603539948 18.4349407569,9.5553003082 15.9460431185,9.5553003082 C 11.0939497427,9.5553003082 7.6497176573,13.1000939143 7.6497176573,19.0835043985" />
+		</layer>
+	</glyph>
+</collection>
+
+<collection name="new_font" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -1076,7 +1270,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="new_point_on_path">
+<collection name="new_point_on_path" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="35.482683982683966">
 		<layer name= "Layer" visible="true">
@@ -1095,7 +1289,17 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="next">
+<collection name="new_unicode_point" svg="false" colr="false" auto_generate="false">
+	<selected id="0"/>
+	<glyph id="0" left="-28" right="28">
+		<layer name= "Layer" visible="true">
+			<path data="B -23.9627497204,40.7030541930 M -20.4583797204,40.7030541930 M -20.4583797204,25.0456541930 C -20.4583897204,22.2835541930 -19.9577697204,20.2925541930 -18.9565097204,19.0726541930 C -17.9552697204,17.8642541930 -16.3325597204,17.2600541930 -14.0883697204,17.2600541930 C -11.8557197204,17.2600541930 -10.2387597204,17.8642541930 -9.2374997204,19.0726541930 C -8.2362697204,20.2925541930 -7.7356397204,22.2835541930 -7.7356197204,25.0456541930 M -7.7356197204,40.7030541930 M -4.2312497204,40.7030541930 M -4.2312497204,24.6140541930 C -4.2312797204,21.2535541930 -5.0656497204,18.7158541930 -6.7343797204,17.0011541930 C -8.3916297204,15.2863541930 -10.8429597204,14.4289541930 -14.0883697204,14.4289541930 C -17.3453197204,14.4289541930 -19.8081497204,15.2863541930 -21.4768997204,17.0011541930 C -23.1341397204,18.7158541930 -23.9627597204,21.2535541930 -23.9627497204,24.6140541930 M -23.9627497204,40.7030541930" />
+			<path data="B 15.1204602796,37.0951541930 M 15.1204602796,27.4797541930 M 24.7359002796,27.4797541930 M 24.7359002796,24.5450541930 M 15.1204602796,24.5450541930 M 15.1204602796,14.9295541930 M 12.2202902796,14.9295541930 M 12.2202902796,24.5450541930 M 2.6048602796,24.5450541930 M 2.6048602796,27.4797541930 M 12.2202902796,27.4797541930 M 12.2202902796,37.0951541930 M 15.1204602796,37.0951541930" />
+		</layer>
+	</glyph>
+</collection>
+
+<collection name="next" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -1104,7 +1308,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="next_kerning_string">
+<collection name="next_kerning_string" svg="false" colr="false" auto_generate="false">
 	<selected id="2"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
@@ -1115,13 +1319,24 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+6f">
+<collection unicode="U+6f" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection name="open_font">
+<collection name="ok" svg="false" colr="false" auto_generate="false">
+	<selected id="0"/>
+	<glyph id="0" left="-54.028077083563687" right="3.9719229164363128">
+		<layer name= "Layer" visible="true">
+			<path data="B 1.0822149902,27.0852772369 C 1.0500971292,25.6402405273 0.9452625451,24.2407004160 0.7339507857,22.8110180360 C 0.5469324604,21.8236884513 0.3242793786,20.8633623268 0.0577948629,19.8944540829 C -0.4119513323,18.4273439986 -0.4922479050,18.1964329908 -0.8814565047,17.2752660638 C -1.0699767619,16.8593817429 -1.2504937835,16.4397758997 -1.4470172761,16.0276131010 C -1.9207874516,15.0958020594 -2.4216420264,14.1997676075 -2.9674837778,13.3082611803 C -3.5488413676,12.4382099668 -4.1532293767,11.6071818927 -4.8014519858,10.7857322932 C -6.3175919208,9.0117229536 -7.9558360268,7.4671481011 -9.8371864622,6.0894184187 C -10.7193307053,5.4997435863 -11.6074032296,4.9595856011 -12.5360246512,4.4461905486 C -13.4020848272,4.0128386674 -13.8469801253,3.7817287672 -14.7857448963,3.3937997163 C -14.7905395931,3.3918692250 -14.7953342899,3.3899387337 -14.8001289867,3.3880082424 C -16.2059380664,2.8635135890 -17.5956850705,2.4248776877 -19.0546524157,2.0755000873 C -20.0788811774,1.8718252014 -21.0927162197,1.7107748828 -22.1295458721,1.5861875688 C -23.1043214259,1.5062287874 -23.5209706409,1.4620820206 -24.5537503941,1.4464173283 C -24.5570864123,1.4463862581 -24.5604224305,1.4463551880 -24.5637584487,1.4463241179 C -25.9525042988,1.4699458245 -27.2969863204,1.5610874113 -28.6720958061,1.7545579154 C -29.6618914020,1.9342170677 -30.6252341747,2.1499893774 -31.5973640615,2.4087446284 C -34.0085279043,3.1567440343 -36.2415185795,4.1402926683 -38.3946916462,5.4489283371 C -39.2760016317,6.0375667357 -40.1138158990,6.6505074603 -40.9423554195,7.3113695640 C -42.7076292761,8.8430864844 -44.2586639027,10.4950909744 -45.6383993769,12.3797798507 C -46.2272650232,13.2607352025 -46.7667266364,14.1475149415 -47.2793103520,15.0749398964 C -48.2942553101,17.1051804004 -49.0836639636,19.1638219945 -49.6368277382,21.3637782858 C -49.8425405505,22.3504705616 -50.0047326953,23.3260753605 -50.1302317593,24.3261451279 C -50.3280206361,26.6425808707 -50.2874445671,28.9017920209 -49.9637546195,31.2002955813 C -49.7812210255,32.2056814363 -49.5605181230,33.1825473261 -49.2968390894,34.1698416442 C -48.5496695183,36.5648305539 -47.5717405240,38.7844142921 -46.2714074385,40.9247722091 C -45.6824674352,41.8065535808 -45.0691750239,42.6445688276 -44.4076803390,43.4733193327 C -42.8757637393,45.2369490681 -41.2227601572,46.7855350938 -39.3386151921,48.1640131647 C -38.4584380180,48.7523364669 -37.5723419307,49.2917093013 -36.6460434465,49.8043704686 C -34.6151526549,50.8218963640 -32.5564990536,51.6155521436 -30.3550651898,52.1703986637 C -29.3669145668,52.3765464553 -28.3902135103,52.5386019189 -27.3885390611,52.6634889105 C -25.0416144144,52.8608486284 -22.7581436991,52.8071382194 -20.4313243231,52.4706524755 C -19.4276404231,52.2842756237 -18.4518377603,52.0604774028 -17.4661863490,51.7944814236 C -15.1003525142,51.0517878615 -12.9035041629,50.0908743846 -10.7857941480,48.8075361452 C -9.9009638419,48.2166463607 -9.0616330592,47.6010907116 -8.2314904025,46.9355443377 C -6.4766484472,45.4010352037 -4.9393437642,43.7412671430 -3.5666187289,41.8593991543 C -2.9810264528,40.9831536509 -2.4422766609,40.1006073331 -1.9294974212,39.1798490051 C -0.9016998418,37.1488072627 -0.0953014202,35.0930743688 0.4644024046,32.8876938286 C 0.6718711792,31.8950553415 0.8335689592,30.9149145465 0.9567786029,29.9083342701 C 0.9839218540,29.5712357046 1.0110651052,29.2341371392 1.0382083563,28.8970385737 C 1.0602116733,27.9911579053 1.0675461122,27.6891976825 1.0822149902,27.0852772369" />
+			<path data="B -15.8046941364,10.3976525368 C -15.1265127747,10.7667703865 -14.4772779823,11.1551079772 -13.8323641637,11.5796511217 C -12.9166239790,12.2401809482 -12.0674213275,12.9261866754 -11.2604077424,13.7473350303 C -10.4531558680,14.6045098566 -10.8314933718,14.1838536288 -10.1210791503,15.0054084455 C -9.6365597037,15.6119838738 -9.1843636419,16.2257692601 -8.7491614225,16.8686408808 C -7.7131030367,18.5381065115 -7.1555278294,19.8719224211 -7.1360580748,19.9180031309 C -6.9981874566,20.2737875778 -6.8526931525,20.6267109410 -6.7224462201,20.9853564716 C -6.6352772172,21.2253834170 -6.5586085426,21.4691764505 -6.4840322138,21.7134094146 C -6.2863665769,22.4138046370 -6.1205028703,23.1081667714 -5.9803195435,23.8222914643 C -5.8098413652,24.9257844710 -5.7023986102,26.0161655801 -5.7076558894,27.1352619899 C -5.7075523408,27.1443596163 -5.7074487921,27.1534572426 -5.7073452435,27.1625548689 C -5.7362886948,28.6159883450 -5.7018114220,27.9694921679 -5.7853214244,29.1032335182 C -5.8684007977,29.8240578909 -5.9788056735,30.5262811443 -6.1220422381,31.2375886898 C -6.3820614928,32.2947456915 -6.6945322701,33.3141476479 -7.1298603781,34.3151114425 C -7.1323957980,34.3211302110 -7.1349312179,34.3271489795 -7.1374666379,34.3331677480 C -7.6254392444,35.4259379162 -7.3793292403,34.9073186672 -7.8702017065,35.8916682628 C -8.2437389462,36.5721730399 -8.6362214945,37.2249822575 -9.0633549727,37.8731740394 C -9.7316701314,38.8021496625 -10.4346459631,39.6778444924 -11.2474962419,40.4873623628 C -11.2517099265,40.4916488828 -11.2559236111,40.4959354028 -11.2601372957,40.5002219228 C -12.0995696780,41.3162618562 -11.6866722520,40.9343201943 -12.4945690708,41.6506356092 C -13.0886207197,42.1338978922 -13.6893481418,42.5816349219 -14.3229947488,43.0116486454 C -15.2946332990,43.6104894814 -16.2774250152,44.1405743291 -17.3410639245,44.5631096944 C -17.3475632385,44.5657855103 -17.3540625525,44.5684613262 -17.3605618665,44.5711371421 C -18.7516879098,45.0969635224 -18.1185675048,44.8799225068 -19.2524540707,45.2436534129 C -19.9734040006,45.4429838896 -20.6871503313,45.6119537973 -21.4216108387,45.7532547191 C -22.4782063443,45.9131125820 -23.5226939753,46.0178879680 -24.5936033907,46.0116061085 C -24.5996741089,46.0116356381 -24.6057448272,46.0116651678 -24.6118155455,46.0116946974 C -26.0768926815,45.9742566826 -25.4255298158,46.0120194236 -26.5671905724,45.9233489520 C -27.2920742028,45.8378264813 -27.9992028109,45.7256560742 -28.7147296653,45.5815141324 C -29.7752123577,45.3220413187 -30.7997379913,45.0115416313 -31.8060101092,44.5810741304 C -31.8122932930,44.5784751373 -31.8185764768,44.5758761441 -31.8248596606,44.5732771510 C -32.9110141198,44.0958752593 -32.3953185428,44.3373747893 -33.3745854236,43.8544408552 C -34.0522123769,43.4851954930 -34.7009986151,43.0966483272 -35.3455149431,42.6722693249 C -36.2717157234,42.0045641029 -37.1420616283,41.3014111853 -37.9449838844,40.4854720035 C -37.9494529151,40.4810305398 -37.9539219459,40.4765890760 -37.9583909767,40.4721476123 C -38.7775717218,39.6211117645 -38.3942519251,40.0390906451 -39.1129502061,39.2224449732 C -39.5972072711,38.6240650596 -40.0469515838,38.0189244630 -40.4790153908,37.3818504819 C -41.0788555869,36.4102774994 -41.6123403505,35.4273942992 -42.0397263486,34.3653224149 C -42.0422693237,34.3592104529 -42.0448122988,34.3530984909 -42.0473552740,34.3469865289 C -42.5971206776,32.8984617204 -42.3744039992,33.5504846307 -42.7415516718,32.4000092022 C -42.9386993198,31.6803757779 -43.1047243156,30.9685114544 -43.2426780975,30.2352927911 C -43.3949178669,29.2024115878 -43.4923345192,28.1812722259 -43.4830052114,27.1349123402 C -43.4830208725,27.1284882585 -43.4830365336,27.1220641768 -43.4830521948,27.1156400950 C -43.4424147309,25.6449858959 -43.4814236633,26.2986604864 -43.3908012560,25.1532947462 C -43.3043899862,24.4268692243 -43.1915921136,23.7178968588 -43.0471116297,23.0007699196 C -42.7880970609,21.9402238822 -42.4787188121,20.9148959739 -42.0502308252,19.9078822988 C -42.0477400633,19.9018355711 -42.0452493014,19.8957888435 -42.0427585395,19.8897421158 C -41.5679731211,18.8056422958 -41.8083280892,19.3204373514 -41.3273617352,18.3427231914 C -40.9590946823,17.6657969251 -40.5714400477,17.0179697048 -40.1477064981,16.3743250952 C -39.4798056039,15.4482593656 -38.7762352418,14.5786776591 -37.9593249296,13.7766905898 C -37.9547577778,13.7721031006 -37.9501906259,13.7675156114 -37.9456234741,13.7629281222 C -37.0926833763,12.9432045301 -37.5114958158,13.3267623950 -36.6934161549,12.6076527065 C -36.0943420219,12.1232328680 -35.4884953620,11.6731647451 -34.8508701551,11.2407699474 C -33.8793884250,10.6408214033 -32.8965747872,10.1068297122 -31.8348357467,9.6787236672 C -31.8288263810,9.6762198425 -31.8228170152,9.6737160178 -31.8168076495,9.6712121932 C -30.3334240440,9.1091406348 -30.9979866534,9.3348911250 -29.8330122684,8.9655092840 C -29.1269288143,8.7726807563 -28.4272089223,8.6110765033 -27.7078932215,8.4757492812 C -26.6753761232,8.3236713643 -25.6710995876,8.2558834993 -24.6270231377,8.2360293824 C -23.4485171524,8.2787208285 -24.0162161587,8.2458539792 -22.9236419566,8.3295925996 C -22.1469389429,8.4185744472 -21.3871923459,8.5346425860 -20.6195667100,8.6827039779 C -19.1954276565,9.0150094466 -17.8514042863,9.4613082524 -16.5108347902,10.0498608241 C -16.2727585065,10.1601487537 -16.0376793138,10.2769808690 -15.8046941364,10.3976525368" />
+			<path data="S -33.8564915956,31.5259895520 L -25.8564915956,23.5259895520 L -15.8564915956,37.5259895520 L -11.8564915956,33.5259895520 L -25.8564915956,15.5259895520 L -37.8564915956,27.5259895520 L -33.8564915956,31.5259895520" />
+		</layer>
+	</glyph>
+</collection>
+
+<collection name="open_font" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-19.733203287977929" right="28.542195674601658">
 		<layer name= "Layer" visible="true">
@@ -1131,7 +1346,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="orientation_arrow">
+<collection name="orientation_arrow" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -1140,7 +1355,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="orientation_both">
+<collection name="orientation_both" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-26.309523809523803" right="45.383597883597901">
 		<layer name= "Layer" visible="true">
@@ -1151,7 +1366,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="orientation_clockwise">
+<collection name="orientation_clockwise" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-26.309523809523803" right="45.383597883597901">
 		<layer name= "Layer" visible="true">
@@ -1161,7 +1376,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="orientation_counter_clockwise">
+<collection name="orientation_counter_clockwise" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-26.309523809523803" right="45.383597883597901">
 		<layer name= "Layer" visible="true">
@@ -1173,13 +1388,57 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+70">
+<collection name="overview_colr" svg="false" colr="false" auto_generate="false">
+	<selected id="1"/>
+	<glyph id="0" left="-28" right="28">
+	</glyph>
+	<glyph id="1" left="-28" right="28">
+		<layer name= "Layer" visible="true">
+			<path data="S -27.6186719014,36.1073052380 L -15.6186719014,52.1073052380 L 27.9405876155,52.3219157141 L 27.9405876155,28.3219157141 L 27.9405876155,0.3219157141 L -27.6186719014,0.1073052380 L -27.6186719014,36.1073052380" />
+			<path data="S -23.6186719014,4.1073052380 L 23.9405876155,4.3219157141 L 23.9405876155,48.3219157141 L -12.9731692559,48.1073052380 L -23.6186719014,33.7263528570 L -23.6186719014,4.1073052380" />
+			<path data="S -17.6078755070,29.4862748368 Q -18.7266491017,28.1810388057 -18.7266489549,25.9095892150 Q -18.7266488091,23.6550907406 -17.6926306264,22.3329037323 Q -16.6416613285,21.0276682718 -14.5566740176,21.0276683999 Q -13.7769226656,21.0276684478 -13.0649757877,21.1632774271 Q -12.3530289099,21.2988864039 -11.6580331527,21.5022998450 M -11.6580330673,20.1801127699 Q -12.3360777048,19.9258459808 -13.0649757001,19.8071881193 Q -13.7769225790,19.6885302574 -14.7770384436,19.6885301942 Q -16.6247101256,19.6885300622 -17.8621416683,20.4513302304 Q -19.0995732110,21.2141303861 -19.7267646069,22.6210725787 Q -20.3370048864,24.0280151962 -20.3370050091,25.9265402272 Q -20.3370051274,27.7572607929 -19.6759116796,29.1472523762 Q -18.9978671166,30.5541950769 -17.6926312082,31.3339465133 Q -16.3873953009,32.1306490655 -14.5227725025,32.1306491866 Q -12.6072963552,32.1306493043 -11.1834025359,31.4187025158 M -11.7936426412,30.1304176338 Q -12.3530294971,30.3846843429 -13.0480252805,30.5880976942 Q -13.7260699476,30.7915110453 -14.5397235323,30.7915109939 Q -16.4891019124,30.7915108852 -17.6078755070,29.4862748368" />
+			<path data="S 0.5854402789,22.6380250079 Q -0.0417509362,21.2480338506 -1.2961334955,20.4682824175 Q -2.5335649386,19.6885309861 -4.3473343879,19.6885308683 Q -6.2289083025,19.6885307672 -7.4832909627,20.4682820176 Q -8.7207225065,21.2480332897 -9.3309627860,22.6549754834 Q -9.9412030655,24.0619181008 -9.9412031871,25.9434920155 Q -9.9412033065,27.7911636975 -9.3309632078,29.1811552775 Q -8.7207231102,30.5880979738 -7.4832916672,31.3678494059 Q -6.2289091078,32.1476008384 -4.3303840768,32.1476009617 Q -2.5166146275,32.1476010856 -1.2791830837,31.3678498068 Q -0.0417515409,30.6050496511 0.5854398549,29.1981070348 Q 1.2295823660,27.8081155358 1.2295824876,25.9265416212 Q 1.2295826092,24.0449677065 0.5854402789,22.6380250079" />
+			<path data="S -7.3646332677,22.3159532835 Q -6.3984195515,21.0107178067 -4.3473344733,21.0107179434 Q -2.2962493952,21.0107180900 -1.3469869640,22.3159536724 Q -0.3807734176,23.6381408100 -0.3807735655,25.9265415171 Q -0.3807737134,28.2149422241 -1.3300363122,29.5032270052 Q -2.2792989121,30.8084629068 -4.3303839902,30.8084627701 Q -6.3984201847,30.8084626430 -7.3646337322,29.5032266152 Q -8.3308472808,28.2149417103 -8.3308471329,25.9265410032 Q -8.3308469850,23.6381402962 -7.3646332677,22.3159532835" />
+			<path data="B 3.9120962597,31.9611392146 M 5.4376967311,31.9611393132 M 5.4376974257,21.2141319721 M 10.7264457264,21.2141323139 M 10.7264458140,19.8580430060 M 3.9120970420,19.8580425656 C 3.9120967812,23.8924081152 3.9120965205,27.9267736649 3.9120962597,31.9611392146" />
+			<path data="S 19.4467362755,31.0966332848 Q 20.5316077765,30.2490775375 20.5316078883,28.5200636700 Q 20.5316079507,27.5538500381 20.1756345490,26.9097075939 Q 19.8196611474,26.2655651496 19.2602743331,25.8756894375 Q 18.7178386351,25.4858137264 18.1075984597,25.2824002908 M 21.4300176146,19.8580436978 M 19.6501503980,19.8580435828 M 16.7176069465,24.8586222922 M 14.3105471537,24.8586221367 M 14.3105474769,19.8580432377 M 12.7849470056,19.8580431391 M 12.7849462233,31.9611397880 M 16.1243174153,31.9611400039 Q 18.3788158896,31.9611401541 19.4467362755,31.0966332848" />
+			<path data="B 14.3105467801,30.6389528115 M 14.3105470705,26.1469069791 M 16.1243177911,26.1469070964 Q 17.5990649134,26.1469072018 18.2771095301,26.7232451914 Q 18.9551541457,27.3165343074 18.9551540723,28.4522591027 Q 18.9551539956,29.6388372471 18.2432070772,30.1304195752 Q 17.5312601577,30.6389530201 16.0395619190,30.6389529232 C 15.4632235394,30.6389528858 14.8868851598,30.6389528489 14.3105467801,30.6389528115" />
+		</layer>
+	</glyph>
+</collection>
+
+<collection name="overview_monochrome" svg="false" colr="false" auto_generate="false">
+	<selected id="1"/>
+	<glyph id="0" left="-28" right="28">
+	</glyph>
+	<glyph id="1" left="-28" right="28">
+		<layer name= "Layer" visible="true">
+			<path data="S -27.6186719014,36.1073052380 L -15.6186719014,52.1073052380 L 27.9405876155,52.3219157141 L 27.9405876155,28.3219157141 L 27.9405876155,0.3219157141 L -27.6186719014,0.1073052380 L -27.6186719014,36.1073052380" />
+			<path data="S -23.6186719014,4.1073052380 L 23.9405876155,4.3219157141 L 23.9405876155,48.3219157141 L -12.9731692559,48.1073052380 L -23.6186719014,33.7263528570 L -23.6186719014,4.1073052380" />
+			<path data="S -11.6958598726,45.5000000000 L 21.7691082803,45.6178343949 L -21.3582802548,6.3789808917 L -21.4761146497,33.2452229299 L -11.6958598726,45.5000000000" />
+		</layer>
+	</glyph>
+</collection>
+
+<collection name="overview_svg" svg="false" colr="false" auto_generate="false">
+	<selected id="0"/>
+	<glyph id="0" left="-28" right="28">
+		<layer name= "Layer" visible="true">
+			<path data="S -27.6186719014,36.1073052380 L -15.6186719014,52.1073052380 L 27.9405876155,52.3219157141 L 27.9405876155,28.3219157141 L 27.9405876155,0.3219157141 L -27.6186719014,0.1073052380 L -27.6186719014,36.1073052380" />
+			<path data="S -23.6186719014,4.1073052380 L 23.9405876155,4.3219157141 L 23.9405876155,48.3219157141 L -12.9731692559,48.1073052380 L -23.6186719014,33.7263528570 L -23.6186719014,4.1073052380" />
+			<path data="B -21.7935982384,18.7472567001 M -20.4108773282,20.3311006518 C -19.0784371784,18.9483797416 -17.2180490447,18.0433260549 -15.3073776365,18.0433260549 C -12.8939011387,18.0433260549 -11.4357590879,19.2500643038 -11.4357590879,21.0601716772 C -11.4357590879,22.9457001911 -12.7681992378,23.5490693155 -14.5028854706,24.3284211013 M -17.1677682843,25.4848785898 C -18.8773141369,26.2139496152 -20.9136849320,27.5212493848 -20.9136849320,30.2112700647 C -20.9136849320,33.0521330257 -18.4499276738,35.1136442009 -15.1062545950,35.1136442009 C -12.9190415189,35.1136442009 -10.9832322446,34.1834501340 -9.6759324749,32.8258696040 M -10.9078111040,31.3425871730 C -12.0391282124,32.3984831408 -13.3967087424,33.0772734058 -15.1062545950,33.0772734058 C -17.1929086645,33.0772734058 -18.5504891945,32.0213774380 -18.5504891945,30.3621123458 C -18.5504891945,28.5771453526 -16.9415048626,27.8983550876 -15.5085006780,27.2949859632 M -12.8687607585,26.1636688548 C -10.7318284427,25.2334747880 -9.0725633505,23.9764557787 -9.0725633505,21.2361543385 C -9.0725633505,18.3198702369 -11.4860398483,16.0069552599 -15.3325180167,16.0069552599 C -17.9471200701,16.0069552599 -20.1846139066,17.0628512277 -21.7935982384,18.7472567001" />
+			<path data="B -7.9247478676,34.7616788783 M -5.4861309897,34.7616788783 M -2.4944257476,24.7809479446 C -1.8407758627,22.6188752487 -1.4133893996,20.8590486357 -0.7094587544,18.6969759397 C -0.0306684894,20.8590486357 0.5224198747,22.6188752487 1.1760697595,24.7809479446 M 4.1426346214,34.7616788783 M 6.5058303589,34.7616788783 M 0.6481217756,16.3337802023 M -2.0418989042,16.3337802023 M -7.9247478676,34.7616788783" />
+			<path data="B 7.6497176573,25.5351593502 C 7.6497176573,31.4934294542 11.2196516436,35.1136442009 16.0968853996,35.1136442009 C 18.6612041786,35.1136442009 20.3456096510,33.9571867123 21.4015056188,32.8258696040 M 20.1444866095,31.3174467929 C 19.2142925426,32.2979216201 18.0326946739,33.0772734058 16.1471661600,33.0772734058 C 12.4515302727,33.0772734058 10.0380537749,30.2112700647 10.0380537749,25.6105804907 C 10.0380537749,20.9596101564 12.2252668511,18.0433260549 16.1723065402,18.0433260549 C 17.5047466900,18.0433260549 18.7869060795,18.4455721379 19.5159771049,19.1243624029 M 19.5159771049,23.9513153985 M 15.6192181761,23.9513153985 M 15.6192181761,25.8871246728 M 21.6529094206,25.8871246728 M 21.6529094206,18.1438875756 C 20.4713115519,16.9120089465 18.4349407569,16.0069552599 15.9460431185,16.0069552599 C 11.0939497427,16.0069552599 7.6497176573,19.5517488660 7.6497176573,25.5351593502" />
+		</layer>
+	</glyph>
+</collection>
+
+<collection unicode="U+70" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection name="pen_tool">
+<collection name="pen_tool" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="40.883429529426067">
 		<layer name= "Layer" visible="true">
@@ -1191,7 +1450,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="point_tool">
+<collection name="point_tool" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="40.354299363057336">
 		<layer name= "Layer" visible="true">
@@ -1201,7 +1460,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="prev">
+<collection name="prev" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -1210,7 +1469,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="previous_kerning_string">
+<collection name="previous_kerning_string" svg="false" colr="false" auto_generate="false">
 	<selected id="2"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
@@ -1221,7 +1480,17 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="progress">
+<collection name="process_ligatures" svg="false" colr="false" auto_generate="false">
+	<selected id="0"/>
+	<glyph id="0" left="-27.998168750000104" right="28.001412500000015">
+		<layer name= "Layer" visible="true">
+			<path data="B 9.8522832058,34.4049499729 M 9.8522832058,7.8726883953 M 5.4697216424,7.8726883953 M 5.4697216424,31.0173487627 M -6.4934853207,31.0173487627 M -6.4934853207,7.8726883953 M -10.8760462144,7.8726883953 M -10.8760462144,31.0173487627 M -15.0454036622,31.0173487627 M -15.0454036622,34.4049499729 M -10.8760462144,34.4049499729 M -10.8760462144,36.2527321467 Q -10.8760462144,40.5879141993 -8.8387473363,42.6489024980 Q -6.7777597074,44.7335801503 -2.5373353372,44.7335801503 M 1.8452255565,44.7335801503 M 1.8452255565,41.1090834617 M -2.3241298821,41.1090834617 Q -4.6693925675,41.1090834617 -5.5932833195,40.1615032890 Q -6.4934853207,39.2139224466 -6.4934853207,36.7502119885 M -6.4934853207,34.4049499729 M 9.8522832058,34.4049499729" />
+			<path data="B 5.4697216424,44.6862011082 M 9.8522832058,44.6862011082 M 9.8522832058,39.1665429357 M 5.4697216424,39.1665429357 M 5.4697216424,44.6862011082" />
+		</layer>
+	</glyph>
+</collection>
+
+<collection name="progress" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-38.02807708356368" right="-11.034366391739779">
 		<layer name= "Layer" visible="true">
@@ -1230,13 +1499,13 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+71">
+<collection unicode="U+71" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection name="quadratic_points">
+<collection name="quadratic_points" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-33.827922077922103" right="35.457792207792181">
 		<layer name= "Layer" visible="true">
@@ -1247,13 +1516,13 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+72">
+<collection unicode="U+72" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection name="rectangle">
+<collection name="rectangle" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="44.879928315412215">
 		<layer name= "Layer" visible="true">
@@ -1263,7 +1532,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="resize">
+<collection name="resize" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -1273,7 +1542,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="resize_handle">
+<collection name="resize_handle" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="20.375000000000004">
 		<layer name= "Layer" visible="true">
@@ -1282,7 +1551,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="resize_handle_horizontal">
+<collection name="resize_handle_horizontal" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="20.375000000000004">
 		<layer name= "Layer" visible="true">
@@ -1291,7 +1560,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="resize_overview">
+<collection name="resize_overview" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -1301,7 +1570,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="reverse_path">
+<collection name="reverse_path" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-26.309523809523803" right="45.383597883597901">
 		<layer name= "Layer" visible="true">
@@ -1312,7 +1581,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="right_arrow">
+<collection name="right_arrow" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="25.184466019417457">
 		<layer name= "Layer" visible="true">
@@ -1323,7 +1592,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="right_to_left">
+<collection name="right_to_left" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -1335,7 +1604,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="rotation">
+<collection name="rotation" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="45.892473118279582">
 		<layer name= "Layer" visible="true">
@@ -1347,13 +1616,13 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+73">
+<collection unicode="U+73" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-45" right="47">
 	</glyph>
 </collection>
 
-<collection name="save_font">
+<collection name="save_font" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-24" right="26">
 		<layer name= "Layer" visible="true">
@@ -1368,7 +1637,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="scale_background">
+<collection name="scale_background" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -1378,7 +1647,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="search">
+<collection name="search" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -1388,7 +1657,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="select_all">
+<collection name="select_all" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-42.201298701298718" right="45.14069264069262">
 		<layer name= "Layer" visible="true">
@@ -1423,7 +1692,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="select_background">
+<collection name="select_background" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -1434,7 +1703,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="settings">
+<collection name="settings" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -1444,7 +1713,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="show_all_line_handles">
+<collection name="show_all_line_handles" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-34.656084656084666" right="36.904761904761905">
 		<layer name= "Layer" visible="true">
@@ -1460,7 +1729,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="show_background">
+<collection name="show_background" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-23.425538003800003" right="32.2307119962">
 		<layer name= "Layer" visible="true">
@@ -1472,7 +1741,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="show_grid">
+<collection name="show_grid" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-36" right="48">
 		<layer name= "Layer" visible="true">
@@ -1490,7 +1759,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="show_layers">
+<collection name="show_layers" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="26">
 		<layer name= "Layer" visible="true">
@@ -1501,7 +1770,17 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="show_xheight_helplines">
+<collection name="show_underline" svg="false" colr="false" auto_generate="false">
+	<selected id="0"/>
+	<glyph id="0" left="-28" right="28">
+		<layer name= "Layer" visible="true">
+			<path data="S -12.7656250000,13.2812500000 L 12.1078050626,13.2812500000 L 12.1078050626,10.0965429433 L -12.7656250000,10.0965429433 L -12.7656250000,13.2812500000" />
+			<path data="B -0.5019000000,39.7019062500 M -5.1344300000,27.1400062500 M 4.1475300000,27.1400062500 M -0.5019000000,39.7019062500 M -2.4293000000,43.0664062500 M 1.4424000000,43.0664062500 M 11.0625000000,17.8243062500 M 7.5120200000,17.8243062500 M 5.2126700000,24.2996062500 M -6.1657600000,24.2996062500 M -8.4651100000,17.8243062500 M -12.0663100000,17.8243062500 M -2.4293000000,43.0664062500 M -0.5019000000,39.7019062500" />
+		</layer>
+	</glyph>
+</collection>
+
+<collection name="show_xheight_helplines" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-31.518584070796479" right="34.046017699115026">
 		<layer name= "Layer" visible="true">
@@ -1513,7 +1792,29 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="skew">
+<collection name="size_alignment_baseline" svg="false" colr="false" auto_generate="false">
+	<selected id="0"/>
+	<glyph id="0" left="-28" right="28">
+		<layer name= "Layer" visible="true">
+			<path data="S -2.6282944665,44.1123853013 L 2.9863255541,44.1123853013 L 17.5789480276,10.1945577996 L 8.4840291363,10.1330392599 L 4.2114252067,19.8947055634 L -5.0674326722,19.9511106222 L -9.2093654744,10.3326222262 L -17.9074243588,10.2405792751 L -2.6282944665,44.1123853013" />
+			<path data="S 3.1319161897,23.8742199877 L 0.0944988015,32.7103432989 L -3.4491548181,23.9202414633 L 3.1319161897,23.8742199877" />
+			<path data="S -17.9657769880,5.4261906416 L 17.3718251161,5.4261906416 L 17.3718251161,0.6074267183 L -17.9657769880,0.6074267183 L -17.9657769880,5.4261906416" />
+		</layer>
+	</glyph>
+</collection>
+
+<collection name="size_alignment_top" svg="false" colr="false" auto_generate="false">
+	<selected id="0"/>
+	<glyph id="0" left="-28" right="28">
+		<layer name= "Layer" visible="true">
+			<path data="S -2.6282944665,44.1123853013 L 2.9863255541,44.1123853013 L 17.5789480276,10.1945577996 L 8.4840291363,10.1330392599 L 4.2114252067,19.8947055634 L -5.0674326722,19.9511106222 L -9.2093654744,10.3326222262 L -17.9074243588,10.2405792751 L -2.6282944665,44.1123853013" />
+			<path data="S 3.1319161897,23.8742199877 L 0.0944988015,32.7103432989 L -3.4491548181,23.9202414633 L 3.1319161897,23.8742199877" />
+			<path data="S -17.5213325436,52.8706350860 L 17.8162695605,52.8706350860 L 17.8162695605,48.0518711627 L -17.5213325436,48.0518711627 L -17.5213325436,52.8706350860" />
+		</layer>
+	</glyph>
+</collection>
+
+<collection name="skew" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-17.339080459770098" right="22.850574712643692">
 		<layer name= "Layer" visible="true">
@@ -1523,7 +1824,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="skew_overview">
+<collection name="skew_overview" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-17.339080459770098" right="22.850574712643692">
 		<layer name= "Layer" visible="true">
@@ -1533,7 +1834,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="spin_button">
+<collection name="spin_button" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-22.111134617800001" right="49.367576713691193">
 		<layer name= "Layer" visible="true">
@@ -1543,7 +1844,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="stop">
+<collection name="stop" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-38.02807708356368" right="-11.034366391739779">
 		<layer name= "Layer" visible="true">
@@ -1552,7 +1853,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="stroke_to_outline">
+<collection name="stroke_to_outline" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -1564,7 +1865,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="svg_to_birdfont">
+<collection name="svg_to_birdfont" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -1574,7 +1875,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="symmetric">
+<collection name="symmetric" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-40.784482758620676" right="42.890804597701162">
 		<layer name= "Layer" visible="true">
@@ -1590,7 +1891,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+74">
+<collection unicode="U+74" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -1598,7 +1899,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="theme">
+<collection name="theme" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="30.785031847133773">
 		<layer name= "Layer" visible="true">
@@ -1615,7 +1916,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="tie_point">
+<collection name="tie_point" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="46">
 		<layer name= "Layer" visible="true">
@@ -1631,7 +1932,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="track">
+<collection name="track" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="42.053343949044596">
 		<layer name= "Layer" visible="true">
@@ -1644,7 +1945,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="transform">
+<collection name="transform" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -1657,7 +1958,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="translate">
+<collection name="translate" svg="false" colr="false" auto_generate="false">
 	<selected id="0"/>
 	<glyph id="0" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -1667,7 +1968,18 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="ttf_units">
+<collection name="ttf_fallback" svg="false" colr="false" auto_generate="false">
+	<selected id="0"/>
+	<glyph id="0" left="-28" right="33.862433862433868">
+		<layer name= "Layer" visible="true">
+			<path data="B 34.3254804570,26.6640051228 C 34.3254804570,9.9415082514 20.6799217729,-3.7040504328 3.9574249015,-3.7040504328 C -12.7650719699,-3.7040504328 -26.4106306541,9.9415082514 -26.4106306541,26.6640051228 C -26.4106306541,43.3865019942 -12.7650719699,57.0320606783 3.9574249015,57.0320606783 C 20.6799217729,57.0320606783 34.3254804570,43.3865019942 34.3254804570,26.6640051228" />
+			<path data="B -22.7818603517,26.3703235474 C -22.7818603517,11.3842246394 -10.7368991365,-0.6607365759 4.2491997715,-0.6607365759 C 19.2352986795,-0.6607365759 31.2802598947,11.3842246394 31.2802598947,26.3703235474 C 31.2802598947,41.3564224554 19.2352986795,53.4013836706 4.2491997715,53.4013836706 C -10.7368991365,53.4013836706 -22.7818603517,41.3564224554 -22.7818603517,26.3703235474" />
+			<path data="B -16.6512253759,26.5980283409 C -16.6512253759,15.0750183418 -7.3896951155,5.8134880813 4.1333148836,5.8134880813 C 15.6563248826,5.8134880813 24.9178551430,15.0750183418 24.9178551430,26.5980283409 C 24.9178551430,38.1210383400 15.6563248826,47.3825686003 4.1333148836,47.3825686003 C -7.3896951155,47.3825686003 -16.6512253759,38.1210383400 -16.6512253759,26.5980283409" />
+		</layer>
+	</glyph>
+</collection>
+
+<collection name="ttf_units" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="33.862433862433868">
 		<layer name= "Layer" visible="true">
@@ -1678,13 +1990,13 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+75">
+<collection unicode="U+75" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection name="undo_tool">
+<collection name="undo_tool" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -1695,7 +2007,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="update_webview">
+<collection name="update_webview" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -1705,19 +2017,19 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+76">
+<collection unicode="U+76" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection unicode="U+77">
+<collection unicode="U+77" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection name="width">
+<collection name="width" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-25.106321839080444" right="50.063218390804607">
 		<layer name= "Layer" visible="true">
@@ -1727,13 +2039,13 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+78">
+<collection unicode="U+78" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection name="x_coordinate">
+<collection name="x_coordinate" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="33.383116883116863">
 		<layer name= "Layer" visible="true">
@@ -1742,13 +2054,13 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+79">
+<collection unicode="U+79" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection name="y_coordinate">
+<collection name="y_coordinate" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="33.238095238095255">
 		<layer name= "Layer" visible="true">
@@ -1757,13 +2069,13 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection unicode="U+7a">
+<collection unicode="U+7a" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 	</glyph>
 </collection>
 
-<collection name="zoom_1_1">
+<collection name="zoom_1_1" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -1774,7 +2086,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="zoom_background_image">
+<collection name="zoom_background_image" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -1786,7 +2098,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="zoom_boundaries">
+<collection name="zoom_boundaries" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -1796,7 +2108,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="zoom_in">
+<collection name="zoom_in" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-24" right="28">
 		<layer name= "Layer" visible="true">
@@ -1806,7 +2118,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="zoom_out">
+<collection name="zoom_out" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-24" right="28">
 		<layer name= "Layer" visible="true">
@@ -1815,7 +2127,7 @@ GNU Lesser General Public License</copyright>
 	</glyph>
 </collection>
 
-<collection name="zoom_tool">
+<collection name="zoom_tool" svg="false" colr="false" auto_generate="false">
 	<selected id="1"/>
 	<glyph id="1" left="-28" right="28">
 		<layer name= "Layer" visible="true">
@@ -1826,117 +2138,144 @@ GNU Lesser General Public License</copyright>
 </collection>
 
 
+<ligature sequence="o r i e n t a t i o n _ c o u n t e r _ c l o c k w i s e" replacement="orientation_counter_clockwise" priority="1"/>
+<ligature sequence="i n s e r t _ g l y p h _ f r o m _ o v e r v i e w" replacement="insert_glyph_from_overview" priority="1"/>
+<ligature sequence="g l y p h _ w i d t h _ l e f t _ o v e r v i e w" replacement="glyph_width_left_overview" priority="1"/>
+<ligature sequence="h i g h _ c o n t r a s t _ b a c k g r o u n d" replacement="high_contrast_background" priority="1"/>
+<ligature sequence="r e s i z e _ h a n d l e _ h o r i z o n t a l" replacement="resize_handle_horizontal" priority="1"/>
+<ligature sequence="c e n t e r _ g l y p h _ v e r t i c a l l y" replacement="center_glyph_vertically" priority="1"/>
+<ligature sequence="p r e v i o u s _ k e r n i n g _ s t r i n g" replacement="previous_kerning_string" priority="1"/>
+<ligature sequence="s i z e _ a l i g n m e n t _ b a s e l i n e" replacement="size_alignment_baseline" priority="1"/>
+<ligature sequence="g e n e r a t e _ h t m l _ d o c u m e n t" replacement="generate_html_document" priority="1"/>
+<ligature sequence="s h o w _ x h e i g h t _ h e l p l i n e s" replacement="show_xheight_helplines" priority="1"/>
+<ligature sequence="a u t o _ t r a c e _ r e s o l u t i o n" replacement="auto_trace_resolution" priority="1"/>
+<ligature sequence="b a c k g r o u n d _ h e l p _ l i n e s" replacement="background_help_lines" priority="1"/>
+<ligature sequence="o r i e n t a t i o n _ c l o c k w i s e" replacement="orientation_clockwise" priority="1"/>
+<ligature sequence="s h o w _ a l l _ l i n e _ h a n d l e s" replacement="show_all_line_handles" priority="1"/>
+<ligature sequence="z o o m _ b a c k g r o u n d _ i m a g e" replacement="zoom_background_image" priority="1"/>
+<ligature sequence="a u t o _ t r a c e _ s i m p l i f y" replacement="auto_trace_simplify" priority="1"/>
+<ligature sequence="n e x t _ k e r n i n g _ s t r i n g" replacement="next_kerning_string" priority="1"/>
+<ligature sequence="o v e r v i e w _ m o n o c h r o m e" replacement="overview_monochrome" priority="1"/>
+<ligature sequence="c o n t r a s t _ t h r e s h o l d" replacement="contrast_threshold" priority="1"/>
+<ligature sequence="e m p t y _ t t f _ f a l l b a c k" replacement="empty_ttf_fallback" priority="1"/>
+<ligature sequence="i n t e r p o l a t e _ s t r o k e" replacement="interpolate_stroke" priority="1"/>
+<ligature sequence="k e r n i n g _ t e x t _ i n p u t" replacement="kerning_text_input" priority="1"/>
+<ligature sequence="s i z e _ a l i g n m e n t _ t o p" replacement="size_alignment_top" priority="1"/>
+<ligature sequence="c u r v e _ o r i e n t a t i o n" replacement="curve_orientation" priority="1"/>
+<ligature sequence="d e l e t e _ b a c k g r o u n d" replacement="delete_background" priority="1"/>
+<ligature sequence="i n s e r t _ b a c k g r o u n d" replacement="insert_background" priority="1"/>
+<ligature sequence="n e w _ p o i n t _ o n _ p a t h" replacement="new_point_on_path" priority="1"/>
+<ligature sequence="n e w _ u n i c o d e _ p o i n t" replacement="new_unicode_point" priority="1"/>
+<ligature sequence="o r i e n t a t i o n _ a r r o w" replacement="orientation_arrow" priority="1"/>
+<ligature sequence="p r o c e s s _ l i g a t u r e s" replacement="process_ligatures" priority="1"/>
+<ligature sequence="s e l e c t _ b a c k g r o u n d" replacement="select_background" priority="1"/>
+<ligature sequence="s t r o k e _ t o _ o u t l i n e" replacement="stroke_to_outline" priority="1"/>
+<ligature sequence="o r i e n t a t i o n _ b o t h" replacement="orientation_both" priority="1"/>
+<ligature sequence="q u a d r a t i c _ p o i n t s" replacement="quadratic_points" priority="1"/>
+<ligature sequence="s c a l e _ b a c k g r o u n d" replacement="scale_background" priority="1"/>
+<ligature sequence="c o l r _ f o r e g r o u n d" replacement="colr_foreground" priority="1"/>
+<ligature sequence="c o n t e x t u a l _ f o r m" replacement="contextual_form" priority="1"/>
+<ligature sequence="f l i p _ h o r i z o n t a l" replacement="flip_horizontal" priority="1"/>
+<ligature sequence="l i n e _ c a p _ s q u a r e" replacement="line_cap_square" priority="1"/>
+<ligature sequence="l i n e _ j o i n _ b e v e l" replacement="line_join_bevel" priority="1"/>
+<ligature sequence="l i n e _ j o i n _ m i t e r" replacement="line_join_miter" priority="1"/>
+<ligature sequence="l i n e _ j o i n _ r o u n d" replacement="line_join_round" priority="1"/>
+<ligature sequence="m o v e _ b a c k g r o u n d" replacement="move_background" priority="1"/>
+<ligature sequence="r e s i z e _ o v e r v i e w" replacement="resize_overview" priority="1"/>
+<ligature sequence="s h o w _ b a c k g r o u n d" replacement="show_background" priority="1"/>
+<ligature sequence="s v g _ t o _ b i r d f o n t" replacement="svg_to_birdfont" priority="1"/>
+<ligature sequence="z o o m _ b o u n d a r i e s" replacement="zoom_boundaries" priority="1"/>
+<ligature sequence="c u t _ b a c k g r o u n d" replacement="cut_background" priority="1"/>
+<ligature sequence="d e f a u l t _ s h a p e r" replacement="default_shaper" priority="1"/>
+<ligature sequence="f i l l _ o p e n _ p a t h" replacement="fill_open_path" priority="1"/>
+<ligature sequence="i n s e r t _ u n i c h a r" replacement="insert_unichar" priority="1"/>
+<ligature sequence="l i n e _ c a p _ r o u n d" replacement="line_cap_round" priority="1"/>
+<ligature sequence="n e w _ c o l o r _ f o n t" replacement="new_color_font" priority="1"/>
+<ligature sequence="s h o w _ u n d e r l i n e" replacement="show_underline" priority="1"/>
+<ligature sequence="u p d a t e _ w e b v i e w" replacement="update_webview" priority="1"/>
+<ligature sequence="a d d _ n e w _ t h e m e" replacement="add_new_theme" priority="1"/>
+<ligature sequence="c o n v e r t _ p o i n t" replacement="convert_point" priority="1"/>
+<ligature sequence="d e l e t e _ b u t t o n" replacement="delete_button" priority="1"/>
+<ligature sequence="d o u b l e _ p o i n t s" replacement="double_points" priority="1"/>
+<ligature sequence="d r o p d o w n _ m e n u" replacement="dropdown_menu" priority="1"/>
+<ligature sequence="f l i p _ v e r t i c a l" replacement="flip_vertical" priority="1"/>
+<ligature sequence="k e r n i n g _ c l a s s" replacement="kerning_class" priority="1"/>
+<ligature sequence="l a y e r _ v i s i b l e" replacement="layer_visible" priority="1"/>
+<ligature sequence="l i n e _ c a p _ b u t t" replacement="line_cap_butt" priority="1"/>
+<ligature sequence="o v e r v i e w _ c o l r" replacement="overview_colr" priority="1"/>
+<ligature sequence="r e s i z e _ h a n d l e" replacement="resize_handle" priority="1"/>
+<ligature sequence="r i g h t _ t o _ l e f t" replacement="right_to_left" priority="1"/>
+<ligature sequence="s k e w _ o v e r v i e w" replacement="skew_overview" priority="1"/>
+<ligature sequence="a p p l y _ s t r o k e" replacement="apply_stroke" priority="1"/>
+<ligature sequence="c e n t e r _ g l y p h" replacement="center_glyph" priority="1"/>
+<ligature sequence="c u b i c _ p o i n t s" replacement="cubic_points" priority="1"/>
+<ligature sequence="e x p o r t _ f o n t s" replacement="export_fonts" priority="1"/>
+<ligature sequence="l a y e r _ h i d d e n" replacement="layer_hidden" priority="1"/>
+<ligature sequence="l o a d _ b a c k u p s" replacement="load_backups" priority="1"/>
+<ligature sequence="o v e r v i e w _ s v g" replacement="overview_svg" priority="1"/>
+<ligature sequence="r e v e r s e _ p a t h" replacement="reverse_path" priority="1"/>
+<ligature sequence="t t f _ f a l l b a c k" replacement="ttf_fallback" priority="1"/>
+<ligature sequence="x _ c o o r d i n a t e" replacement="x_coordinate" priority="1"/>
+<ligature sequence="y _ c o o r d i n a t e" replacement="y_coordinate" priority="1"/>
+<ligature sequence="b e z i e r _ l i n e" replacement="bezier_line" priority="1"/>
+<ligature sequence="b e z i e r _ t o o l" replacement="bezier_tool" priority="1"/>
+<ligature sequence="c o l r _ t o _ s v g" replacement="colr_to_svg" priority="1"/>
+<ligature sequence="c r e a t e _ l i n e" replacement="create_line" priority="1"/>
+<ligature sequence="f u l l _ h e i g h t" replacement="full_height" priority="1"/>
+<ligature sequence="g l y p h _ w i d t h" replacement="glyph_width" priority="1"/>
+<ligature sequence="m o v e _ c a n v a s" replacement="move_canvas" priority="1"/>
+<ligature sequence="r i g h t _ a r r o w" replacement="right_arrow" priority="1"/>
+<ligature sequence="s h o w _ l a y e r s" replacement="show_layers" priority="1"/>
+<ligature sequence="s p i n _ b u t t o n" replacement="spin_button" priority="1"/>
+<ligature sequence="c l o s e _ p a t h" replacement="close_path" priority="1"/>
+<ligature sequence="f u l l _ g l y p h" replacement="full_glyph" priority="1"/>
+<ligature sequence="h e l p _ l i n e s" replacement="help_lines" priority="1"/>
+<ligature sequence="l e f t _ a r r o w" replacement="left_arrow" priority="1"/>
+<ligature sequence="m o v e _ l a y e r" replacement="move_layer" priority="1"/>
+<ligature sequence="p o i n t _ t o o l" replacement="point_tool" priority="1"/>
+<ligature sequence="s e l e c t _ a l l" replacement="select_all" priority="1"/>
+<ligature sequence="a d d _ l a y e r" replacement="add_layer" priority="1"/>
+<ligature sequence="a l t e r n a t e" replacement="alternate" priority="1"/>
+<ligature sequence="a u t o t r a c e" replacement="autotrace" priority="1"/>
+<ligature sequence="i n f o _ i c o n" replacement="info_icon" priority="1"/>
+<ligature sequence="l o c k _ g r i d" replacement="lock_grid" priority="1"/>
+<ligature sequence="m e n u _ i c o n" replacement="menu_icon" priority="1"/>
+<ligature sequence="o p e n _ f o n t" replacement="open_font" priority="1"/>
+<ligature sequence="r e c t a n g l e" replacement="rectangle" priority="1"/>
+<ligature sequence="s a v e _ f o n t" replacement="save_font" priority="1"/>
+<ligature sequence="s h o w _ g r i d" replacement="show_grid" priority="1"/>
+<ligature sequence="s y m m e t r i c" replacement="symmetric" priority="1"/>
+<ligature sequence="t i e _ p o i n t" replacement="tie_point" priority="1"/>
+<ligature sequence="t r a n s f o r m" replacement="transform" priority="1"/>
+<ligature sequence="t r a n s l a t e" replacement="translate" priority="1"/>
+<ligature sequence="t t f _ u n i t s" replacement="ttf_units" priority="1"/>
+<ligature sequence="u n d o _ t o o l" replacement="undo_tool" priority="1"/>
+<ligature sequence="z o o m _ t o o l" replacement="zoom_tool" priority="1"/>
+<ligature sequence="n e w _ f o n t" replacement="new_font" priority="1"/>
+<ligature sequence="p e n _ t o o l" replacement="pen_tool" priority="1"/>
+<ligature sequence="p r o g r e s s" replacement="progress" priority="1"/>
+<ligature sequence="r o t a t i o n" replacement="rotation" priority="1"/>
+<ligature sequence="s e t t i n g s" replacement="settings" priority="1"/>
+<ligature sequence="z o o m _ 1 _ 1" replacement="zoom_1_1" priority="1"/>
+<ligature sequence="z o o m _ o u t" replacement="zoom_out" priority="1"/>
+<ligature sequence="z o o m _ i n" replacement="zoom_in" priority="1"/>
+<ligature sequence="c i r c l e" replacement="circle" priority="1"/>
+<ligature sequence="h e i g h t" replacement="height" priority="1"/>
+<ligature sequence="r e s i z e" replacement="resize" priority="1"/>
+<ligature sequence="s e a r c h" replacement="search" priority="1"/>
+<ligature sequence="c l o s e" replacement="close" priority="1"/>
+<ligature sequence="t h e m e" replacement="theme" priority="1"/>
+<ligature sequence="t r a c k" replacement="track" priority="1"/>
+<ligature sequence="w i d t h" replacement="width" priority="1"/>
+<ligature sequence="m o v e" replacement="move" priority="1"/>
+<ligature sequence="n e x t" replacement="next" priority="1"/>
+<ligature sequence="p r e v" replacement="prev" priority="1"/>
+<ligature sequence="s k e w" replacement="skew" priority="1"/>
+<ligature sequence="s t o p" replacement="stop" priority="1"/>
+<ligature sequence="l o g" replacement="log" priority="1"/>
+<ligature sequence="o k" replacement="ok" priority="1"/>
 
-<ligature sequence="o r i e n t a t i o n _ c o u n t e r _ c l o c k w i s e" replacement="orientation_counter_clockwise"/>
-<ligature sequence="i n s e r t _ g l y p h _ f r o m _ o v e r v i e w" replacement="insert_glyph_from_overview"/>
-<ligature sequence="r e s i z e _ h a n d l e _ h o r i z o n t a l" replacement="resize_handle_horizontal"/>
-<ligature sequence="h i g h _ c o n t r a s t _ b a c k g r o u n d" replacement="high_contrast_background"/>
-<ligature sequence="p r e v i o u s _ k e r n i n g _ s t r i n g" replacement="previous_kerning_string"/>
-<ligature sequence="s h o w _ x h e i g h t _ h e l p l i n e s" replacement="show_xheight_helplines"/>
-<ligature sequence="g e n e r a t e _ h t m l _ d o c u m e n t" replacement="generate_html_document"/>
-<ligature sequence="s h o w _ a l l _ l i n e _ h a n d l e s" replacement="show_all_line_handles"/>
-<ligature sequence="b a c k g r o u n d _ h e l p _ l i n e s" replacement="background_help_lines"/>
-<ligature sequence="a u t o _ t r a c e _ r e s o l u t i o n" replacement="auto_trace_resolution"/>
-<ligature sequence="z o o m _ b a c k g r o u n d _ i m a g e" replacement="zoom_background_image"/>
-<ligature sequence="o r i e n t a t i o n _ c l o c k w i s e" replacement="orientation_clockwise"/>
-<ligature sequence="a u t o _ t r a c e _ s i m p l i f y" replacement="auto_trace_simplify"/>
-<ligature sequence="n e x t _ k e r n i n g _ s t r i n g" replacement="next_kerning_string"/>
-<ligature sequence="k e r n i n g _ t e x t _ i n p u t" replacement="kerning_text_input"/>
-<ligature sequence="c o n t r a s t _ t h r e s h o l d" replacement="contrast_threshold"/>
-<ligature sequence="o r i e n t a t i o n _ a r r o w" replacement="orientation_arrow"/>
-<ligature sequence="d e l e t e _ b a c k g r o u n d" replacement="delete_background"/>
-<ligature sequence="n e w _ p o i n t _ o n _ p a t h" replacement="new_point_on_path"/>
-<ligature sequence="i n s e r t _ b a c k g r o u n d" replacement="insert_background"/>
-<ligature sequence="s e l e c t _ b a c k g r o u n d" replacement="select_background"/>
-<ligature sequence="s t r o k e _ t o _ o u t l i n e" replacement="stroke_to_outline"/>
-<ligature sequence="c u r v e _ o r i e n t a t i o n" replacement="curve_orientation"/>
-<ligature sequence="s c a l e _ b a c k g r o u n d" replacement="scale_background"/>
-<ligature sequence="q u a d r a t i c _ p o i n t s" replacement="quadratic_points"/>
-<ligature sequence="o r i e n t a t i o n _ b o t h" replacement="orientation_both"/>
-<ligature sequence="r e s i z e _ o v e r v i e w" replacement="resize_overview"/>
-<ligature sequence="l i n e _ c a p _ s q u a r e" replacement="line_cap_square"/>
-<ligature sequence="m o v e _ b a c k g r o u n d" replacement="move_background"/>
-<ligature sequence="f l i p _ h o r i z o n t a l" replacement="flip_horizontal"/>
-<ligature sequence="s h o w _ b a c k g r o u n d" replacement="show_background"/>
-<ligature sequence="z o o m _ b o u n d a r i e s" replacement="zoom_boundaries"/>
-<ligature sequence="s v g _ t o _ b i r d f o n t" replacement="svg_to_birdfont"/>
-<ligature sequence="l i n e _ c a p _ r o u n d" replacement="line_cap_round"/>
-<ligature sequence="i n s e r t _ u n i c h a r" replacement="insert_unichar"/>
-<ligature sequence="c u t _ b a c k g r o u n d" replacement="cut_background"/>
-<ligature sequence="u p d a t e _ w e b v i e w" replacement="update_webview"/>
-<ligature sequence="f i l l _ o p e n _ p a t h" replacement="fill_open_path"/>
-<ligature sequence="s k e w _ o v e r v i e w" replacement="skew_overview"/>
-<ligature sequence="l a y e r _ v i s i b l e" replacement="layer_visible"/>
-<ligature sequence="l i n e _ c a p _ b u t t" replacement="line_cap_butt"/>
-<ligature sequence="r e s i z e _ h a n d l e" replacement="resize_handle"/>
-<ligature sequence="d r o p d o w n _ m e n u" replacement="dropdown_menu"/>
-<ligature sequence="f l i p _ v e r t i c a l" replacement="flip_vertical"/>
-<ligature sequence="d e l e t e _ b u t t o n" replacement="delete_button"/>
-<ligature sequence="c o n v e r t _ p o i n t" replacement="convert_point"/>
-<ligature sequence="d o u b l e _ p o i n t s" replacement="double_points"/>
-<ligature sequence="k e r n i n g _ c l a s s" replacement="kerning_class"/>
-<ligature sequence="a d d _ n e w _ t h e m e" replacement="add_new_theme"/>
-<ligature sequence="r i g h t _ t o _ l e f t" replacement="right_to_left"/>
-<ligature sequence="l a y e r _ h i d d e n" replacement="layer_hidden"/>
-<ligature sequence="y _ c o o r d i n a t e" replacement="y_coordinate"/>
-<ligature sequence="x _ c o o r d i n a t e" replacement="x_coordinate"/>
-<ligature sequence="c u b i c _ p o i n t s" replacement="cubic_points"/>
-<ligature sequence="r e v e r s e _ p a t h" replacement="reverse_path"/>
-<ligature sequence="e x p o r t _ f o n t s" replacement="export_fonts"/>
-<ligature sequence="a p p l y _ s t r o k e" replacement="apply_stroke"/>
-<ligature sequence="f u l l _ h e i g h t" replacement="full_height"/>
-<ligature sequence="s h o w _ l a y e r s" replacement="show_layers"/>
-<ligature sequence="b e z i e r _ t o o l" replacement="bezier_tool"/>
-<ligature sequence="r i g h t _ a r r o w" replacement="right_arrow"/>
-<ligature sequence="b e z i e r _ l i n e" replacement="bezier_line"/>
-<ligature sequence="c r e a t e _ l i n e" replacement="create_line"/>
-<ligature sequence="s p i n _ b u t t o n" replacement="spin_button"/>
-<ligature sequence="m o v e _ c a n v a s" replacement="move_canvas"/>
-<ligature sequence="c l o s e _ p a t h" replacement="close_path"/>
-<ligature sequence="l e f t _ a r r o w" replacement="left_arrow"/>
-<ligature sequence="h e l p _ l i n e s" replacement="help_lines"/>
-<ligature sequence="m o v e _ l a y e r" replacement="move_layer"/>
-<ligature sequence="s e l e c t _ a l l" replacement="select_all"/>
-<ligature sequence="p o i n t _ t o o l" replacement="point_tool"/>
-<ligature sequence="f u l l _ g l y p h" replacement="full_glyph"/>
-<ligature sequence="a l t e r n a t e" replacement="alternate"/>
-<ligature sequence="l o c k _ g r i d" replacement="lock_grid"/>
-<ligature sequence="s a v e _ f o n t" replacement="save_font"/>
-<ligature sequence="i n f o _ i c o n" replacement="info_icon"/>
-<ligature sequence="s h o w _ g r i d" replacement="show_grid"/>
-<ligature sequence="a u t o t r a c e" replacement="autotrace"/>
-<ligature sequence="u n d o _ t o o l" replacement="undo_tool"/>
-<ligature sequence="t i e _ p o i n t" replacement="tie_point"/>
-<ligature sequence="s y m m e t r i c" replacement="symmetric"/>
-<ligature sequence="z o o m _ t o o l" replacement="zoom_tool"/>
-<ligature sequence="r e c t a n g l e" replacement="rectangle"/>
-<ligature sequence="t t f _ u n i t s" replacement="ttf_units"/>
-<ligature sequence="m e n u _ i c o n" replacement="menu_icon"/>
-<ligature sequence="o p e n _ f o n t" replacement="open_font"/>
-<ligature sequence="a d d _ l a y e r" replacement="add_layer"/>
-<ligature sequence="t r a n s f o r m" replacement="transform"/>
-<ligature sequence="t r a n s l a t e" replacement="translate"/>
-<ligature sequence="s e t t i n g s" replacement="settings"/>
-<ligature sequence="z o o m _ o u t" replacement="zoom_out"/>
-<ligature sequence="r o t a t i o n" replacement="rotation"/>
-<ligature sequence="p e n _ t o o l" replacement="pen_tool"/>
-<ligature sequence="z o o m _ 1 _ 1" replacement="zoom_1_1"/>
-<ligature sequence="p r o g r e s s" replacement="progress"/>
-<ligature sequence="n e w _ f o n t" replacement="new_font"/>
-<ligature sequence="z o o m _ i n" replacement="zoom_in"/>
-<ligature sequence="h e i g h t" replacement="height"/>
-<ligature sequence="r e s i z e" replacement="resize"/>
-<ligature sequence="c i r c l e" replacement="circle"/>
-<ligature sequence="s e a r c h" replacement="search"/>
-<ligature sequence="t h e m e" replacement="theme"/>
-<ligature sequence="w i d t h" replacement="width"/>
-<ligature sequence="t r a c k" replacement="track"/>
-<ligature sequence="c l o s e" replacement="close"/>
-<ligature sequence="s k e w" replacement="skew"/>
-<ligature sequence="m o v e" replacement="move"/>
-<ligature sequence="p r e v" replacement="prev"/>
-<ligature sequence="n e x t" replacement="next"/>
-<ligature sequence="s t o p" replacement="stop"/>
 
-<kerning left="settings" right="l" hadjustment="3.8289794922" />
+
+
 </font>
