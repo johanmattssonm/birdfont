@@ -87,8 +87,6 @@ public class LoadCallback : GLib.Object {
 			Font f = BirdFont.get_current_font ();
 			
 			if (fn != null) {
-				f.delete_backup ();
-				
 				f = BirdFont.new_font ();
 				
 				f.set_file ((!) fn);

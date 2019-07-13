@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2014 2015 Johan Mattsson
+	Copyright (C) 2014 2015 2019 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -17,10 +17,11 @@ namespace BirdFont {
 public class Task : GLib.Object {
 	
 	public delegate void Runnable ();
+	public signal void done ();
 	Runnable task;
 	bool cancelled = false;
 	bool cancelable = false;
-
+	
 	public Task.empty () {
 	}
 		
@@ -63,14 +64,14 @@ public class Task : GLib.Object {
 	}
 		
 	public virtual void run () {
-		if (task == null) {
-			warning ("No task set.");
-			return;
-		}
-		
 		task ();
 		
-		warning ("Task is done.");
+		IdleSource idle = new IdleSource ();
+		idle.set_callback (() => {
+			done ();
+			return false;
+		});
+		idle.attach (null);
 	}
 
 	public void* perform_task() {

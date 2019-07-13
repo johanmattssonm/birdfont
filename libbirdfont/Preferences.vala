@@ -60,6 +60,56 @@ public class Preferences {
 		
 		return files;
 	}
+	
+	public static File get_backup_directory () {
+		File config_directory = BirdFont.get_settings_directory ();
+		File backup_directory = get_child (config_directory, "backup");
+		
+		if (!backup_directory.query_exists ()) {
+			int error = DirUtils.create ((!) backup_directory.get_path (), 0766);
+			
+			if (error == -1) {
+				warning (@"Failed to create backup directory: $((!) backup_directory.get_path ())\n");
+			}
+		}
+		
+		return backup_directory;
+	}
+	
+	public static File get_backup_directory_for_font (string bf_file_name) {
+		if (bf_file_name == "") {
+			warning ("no filename.");
+		}
+		
+		if (bf_file_name.index_of ("/") > -1) {
+			warning ("Expecting a file and not a folder got: " + bf_file_name);
+		}
+		
+		File backup_directory = get_backup_directory ();
+		string subdir_name = bf_file_name;
+			
+		if (subdir_name.has_suffix (".bf")) {
+			subdir_name = subdir_name.substring (0, subdir_name.length - ".bf".length);
+		}
+		
+		if (subdir_name.has_suffix (".birdfont")) {
+			subdir_name = subdir_name.substring (0, subdir_name.length - ".birdfont".length);
+		}
+		
+		subdir_name += ".backup";
+				
+		File backup_subdir = get_child (backup_directory, subdir_name);
+		
+		if (!backup_subdir.query_exists ()) {
+			int error = DirUtils.create ((!) backup_subdir.get_path (), 0766);
+			
+			if (error == -1) {
+				warning (@"Failed to create backup directory: $((!) backup_subdir.get_path ())\n");
+			}
+		}
+
+		return backup_subdir;
+	}
 
 	public static void add_recent_files (string file) {
 		string escaped_string = file.replace ("\t", "\\t");

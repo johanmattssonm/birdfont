@@ -75,8 +75,6 @@ public static int run_import (string[] arg) {
 		}
 	}
 
-	font.save_backup ();
-
 	foreach (string f in svg_files) {
 		svg = File.new_for_path (f);
 		imported = import_svg_file (font, svg);
@@ -88,7 +86,7 @@ public static int run_import (string[] arg) {
 		}
 	}
 	
-	font.save_bf ();
+	font.save ();
 	
 	return 0;
 }

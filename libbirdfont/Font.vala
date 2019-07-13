@@ -356,8 +356,8 @@ public class Font : GLib.Object {
 		return sb.str;
 	}
 
-	public string get_file_name () {
-		string p = get_path ();
+	public static string get_file_from_full_path (string path) {
+		string p = path;
 		int i = p.last_index_of ("/");
 		
 		if (i == -1) {
@@ -365,8 +365,11 @@ public class Font : GLib.Object {
 		}
 		
 		p = p.substring (i + 1);
-		
 		return p;
+	}
+	
+	public string get_file_name () {
+		return get_file_from_full_path (get_path ());
 	}
 	
 	/** @return an absolute path to the font folder. */
@@ -723,47 +726,6 @@ public class Font : GLib.Object {
 		background_images.add (image);
 	}
 	
-	/** Delete temporary rescue files. */
-	public void delete_backup () {
-		File dir = BirdFont.get_backup_directory ();
-		File? new_file = null;
-		File file;
-		string backup_file;
-		
-		new_file = get_child (dir, @"$(name).birdfont");
-		backup_file = (!) ((!) new_file).get_path ();
-		
-		try {
-			file = File.new_for_path (backup_file);
-			if (file.query_exists ()) {
-				file.delete ();	
-			}
-		} catch (GLib.Error e) {
-			stderr.printf (@"Failed to delete backup\n");
-			warning (@"$(e.message) \n");
-		}
-	}
-	
-	/** Returns path to backup file. */
-	public string save_backup () {
-		File dir = BirdFont.get_backup_directory ();
-		File? temp_file = null;
-		string backup_file;
-		BirdFontFile birdfont_file = new BirdFontFile (this);
-
-		temp_file = get_child (dir, @"$(name).birdfont");
-		backup_file = (!) ((!) temp_file).get_path ();
-		backup_file = backup_file.replace (" ", "_");
-		
-		if (get_path () == backup_file) {
-			warning ("Refusing to write backup of a backup.");
-			return backup_file;
-		}
-		
-		birdfont_file.write_font_file (backup_file, true);
-		return backup_file;
-	}
-	
 	public void init_bfp (string directory) {
 		try {
 			bfp_file = new BirdFontPart (this);
@@ -794,12 +756,124 @@ public class Font : GLib.Object {
 		settings.save (get_file_name ());
 	}
 	
-	public bool save_bfp () {
+	private void save_backups () throws GLib.Error {
+		string num_backups = Preferences.get ("num_backups");
+		
+		if (num_backups == "") {
+			num_backups = "20";
+		}
+		
+		int backups = int.parse (num_backups);
+		
+		if (backups == 0) {
+			printd ("No backups according to settings. Skipping it.");
+			delete_old_backups (backups);
+			return;
+		}
+		
+		if (backups > 0) {
+			string path = (!) font_file;
+			string bf_data = "";
+
+			if (FileUtils.get_contents (path, out bf_data)) {
+				DateTime now = new DateTime.now_local ();
+				string time_stamp = now.to_string ();
+				
+				time_stamp = time_stamp.replace (":", "_");
+				time_stamp = time_stamp.replace ("-", "_");
+				
+				string fn = get_file_name ();
+				File backup_directory_for_font = Preferences.get_backup_directory_for_font (fn);
+				
+				if (!backup_directory_for_font.query_exists ()) {
+					int error = DirUtils.create ((!) backup_directory_for_font.get_path (), 0766);
+					
+					if (error == -1) {
+						stderr.printf (@"Failed to create backup directory: $((!) backup_directory_for_font.get_path ())\n");
+					}
+				}
+				
+				string file_name = get_file_name ();
+				
+				if (file_name.has_suffix (".bf")) {
+					file_name = file_name.substring (0, file_name.length - ".bf".length);
+				}
+				
+				if (file_name.has_suffix (".birdfont")) {
+					file_name = file_name.substring (0, file_name.length - ".birdfont".length);
+				}
+				
+				string backup_file_name = file_name + @"-$(time_stamp).bf_backup";
+				File backup_file = get_child (backup_directory_for_font, backup_file_name);
+				printd (@"Saving backup to: $((!) backup_file.get_path ())\n");
+				
+				FileUtils.set_contents ((!) backup_file.get_path (), bf_data);
+			} 			
+		}
+		
+		delete_old_backups (backups);
+	}
+	
+	public static Gee.ArrayList<string> get_sorted_backups (string font_file_name) {
+		Gee.ArrayList<string> backups = new Gee.ArrayList<string> ();
+
+		try {
+			File backup_directory_for_font = Preferences.get_backup_directory_for_font (font_file_name);
+			Dir dir = Dir.open ((!) backup_directory_for_font.get_path (), 0);
+			
+			string? name = null;
+			while ((name = dir.read_name ()) != null) {
+				string file_name = (!) name;
+				
+				printd (@"backup_directory_for_font: $((!) backup_directory_for_font.get_path ())\n");
+				printd (@"file_name $file_name\n");
+
+				File backup_file = get_child (backup_directory_for_font, file_name);
+				
+				if (FileUtils.test ((!) backup_file.get_path (), FileTest.IS_REGULAR)
+						&& file_name.has_suffix (".bf_backup")) {
+					backups.add ((!) backup_file.get_path ());
+				} else {
+					warning (@"$file_name does not seem to be a backup file.");
+				}
+			}
+		} catch (GLib.Error error) {
+			warning (error.message);
+			warning("Can't fetch backup files.");
+		}
+		
+		backups.sort ();
+		
+		return backups;
+	}
+	
+	public void delete_old_backups (int keep) {
+		try {
+			string file_name = get_file_name ();
+			Gee.ArrayList<string> backups = get_sorted_backups (file_name);
+			Gee.ArrayList<string> old_backups = new Gee.ArrayList<string> ();
+			
+			for (int i = 0; i < backups.size - keep; i++) {
+				string b = backups.get (i);
+				old_backups.add (b);
+			}
+			
+			foreach (string path in old_backups) {
+				printd (@"Deleting backup: $(path)\n");
+				File file = File.new_for_path (path);
+				file.delete ();
+			}
+		} catch (GLib.Error error) {
+			warning (error.message);
+			warning("Can't delet backup.");
+		}		
+	}
+	
+	private bool save_bfp () {
 		return bfp_file.save ();
 	}
 	
-	public void save_bf () {
-		Font font;
+	private void save_bf () {
 		BirdFontFile birdfont_file = new BirdFontFile (this);
 		string path;
 		bool file_written;
@@ -822,10 +896,11 @@ public class Font : GLib.Object {
 			return;
 		}
 		
-		if (file_written) {
-			// delete the backup when the font is saved
-			font = BirdFont.get_current_font ();
-			font.delete_backup ();
+		try {
+			save_backups ();
+		} catch (GLib.Error	 e) {
+			warning (e.message);
+			warning ("Can't save backup.");
 		}
 		
 		modified = false;
@@ -889,10 +964,15 @@ public class Font : GLib.Object {
 		if (path.has_suffix (".bf")
 			|| path.has_suffix (".BF")
 			|| path.has_suffix (".BIRDFONT")
-			|| path.has_suffix (".birdfont")) {
+			|| path.has_suffix (".birdfont")
+			|| path.has_suffix (".bf_backup")) {
 			
 			loaded = parse_bf_file (path);
 			format = FontFormat.BIRDFONT;
+			
+			if (path.has_suffix (".bf_backup")) {
+				font_file = null;
+			}
 		}
 
 		if (path.has_suffix (".bfp") || path.has_suffix (".BFP")) {

@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2015 Johan Mattsson
+	Copyright (C) 2015 2019 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -24,8 +24,7 @@ public class RecentFiles : Table {
 	const int NEW_FONT = -5;
 	const int CURRENT_FONT = -4;
 	const int RECENT_FONT = -3;
-	const int BACKUP = -2;
-	
+
 	public RecentFiles () {
 	}
 
@@ -34,21 +33,15 @@ public class RecentFiles : Table {
 	}
 
 	public override void selected_row (Row row, int column, bool delete_button) {	
-		Font f;
-		
 		if (row.get_index () == NEW_FONT) {
 			MenuTab.new_file ();
 			MenuTab.select_overview ();
 		} else if (row.get_index () == RECENT_FONT) {
 			return_if_fail (row.get_row_data () is Font);
-			f = (Font) row.get_row_data ();
+			Font f = (Font) row.get_row_data ();
 			MainWindow.scrollbar.set_size (0);
 			GlyphCanvas.redraw ();
 			load_font (f.get_path ());
-		} else if (row.get_index () == BACKUP) {
-			return_if_fail (row.get_row_data () is Font);
-			f = (Font) row.get_row_data ();
-			delete_backup (f.get_file_name ());
 		}
 
 		GlyphCanvas.redraw ();
@@ -57,7 +50,6 @@ public class RecentFiles : Table {
 	public override void update_rows () {
 		Row row;
 		Gee.ArrayList<Font> recent_fonts = get_recent_font_files ();
-		Gee.ArrayList<Font> backups = get_backups ();
 		Font current_font = BirdFont.get_current_font ();
 		
 		rows.clear ();
@@ -65,7 +57,7 @@ public class RecentFiles : Table {
 		if (recent_fonts.size == 0) {
 			row = new Row.headline (t_("No fonts created yet"));
 			rows.add (row);
-
+			
 			row = new Row.columns_1 (t_("Create a New Font"), NEW_FONT, false);
 			rows.add (row);	
 		}
@@ -88,17 +80,6 @@ public class RecentFiles : Table {
 		
 		foreach (Font font in recent_fonts) {
 			row = new Row.columns_1 (font.get_file_name (), RECENT_FONT, false);
-			row.set_row_data (font);
-			rows.add (row);
-		}
-
-		if (backups.size > 0) {			
-			row = new Row.headline (t_("Backups"));
-			rows.add (row);	
-		}
-		
-		foreach (Font font in backups) {
-			row = new Row.columns_1 (font.get_file_name (), BACKUP, true);
 			row.set_row_data (font);
 			rows.add (row);
 		}
@@ -143,52 +124,6 @@ public class RecentFiles : Table {
 		}
 		
 		return fonts;	
-	}
-
-	public Gee.ArrayList<Font> get_backups () {
-		FileEnumerator enumerator;
-		string file_name;
-		FileInfo? file_info;
-		Gee.ArrayList<Font> backups = new Gee.ArrayList<Font> ();
-		File dir = BirdFont.get_backup_directory ();
-		Font font = BirdFont.get_current_font ();
-		Font backup_font;
-
-		try {
-			enumerator = dir.enumerate_children (FileAttribute.STANDARD_NAME, 0);
-			while ((file_info = enumerator.next_file ()) != null) {
-				file_name = ((!) file_info).get_name ();
-				
-				// ignore old backup files
-				if (file_name.has_prefix ("current_font_")) {
-					continue;
-				}
-				
-				backup_font = new Font ();
-				backup_font.set_font_file ((!) get_child (dir, file_name).get_path ());
-				backups.insert (0, backup_font);
-			}
-		} catch (Error e) {
-			warning (e.message);
-		}
-	
-		return backups;	
-	}
-
-	public void delete_backup (string file_name) {
-		File backup_file;
-		
-		try {
-			backup_file = BirdFont.get_backup_directory ();
-			backup_file = get_child (backup_file, file_name);
-			if (backup_file.query_exists ()) {
-				backup_file.delete ();	
-			}
-		} catch (GLib.Error e) {
-			warning (e.message);
-		}
-		
-		selected_canvas ();
 	}
 	
 	public override void draw (WidgetAllocation allocation, Context cr) {
@@ -236,13 +171,17 @@ public class RecentFiles : Table {
 			if (MenuTab.has_suppress_event ()) {
 				return;
 			}
-			
+
 			f = BirdFont.new_font ();
-			
+						
 			MainWindow.close_all_tabs ();
-			
+			MenuTab.clear_font_settings ();
+
 			f.set_file (fn);
-			Preferences.add_recent_files (fn);
+
+			if (!fn.has_suffix (".bf_backup")) {	
+				Preferences.add_recent_files (fn);
+			}
 			
 			MainWindow.native_window.load (); // background thread
 		});

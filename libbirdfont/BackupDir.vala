@@ -1,6 +1,6 @@
 /*
-	Copyright (C) 2015 Johan Mattsson
-
+	Copyright (C) 2019 Johan Mattsson
+	
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
 	published by the Free Software Foundation; either version 3 of the 
@@ -12,14 +12,18 @@
 	Lesser General Public License for more details.
 */
 
+using Cairo;
+using Math;
+
 namespace BirdFont {
 
-/** Boxed string class. */
-public class String : GLib.Object {
-	public string c_str;
+public class BackupDir : GLib.Object {
+	public string folder_name;
+	public string modification_time;
 	
-	public String (string data) {
-		this.c_str = data;
+	public BackupDir (string folder_name, string modification_time) {
+		this.folder_name = folder_name;
+		this.modification_time = modification_time;
 	}
 }
 

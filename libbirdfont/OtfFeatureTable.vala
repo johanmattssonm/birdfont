@@ -94,7 +94,7 @@ public class OtfFeatureTable : Table {
 			o = (!) row.get_row_data ();
 			return_if_fail (o is String);
 			s = (String) o;
-			add_new_alternate (s.data);
+			add_new_alternate (s.c_str);
 		} else if (row_index == ALTERNATE_ENTRY) {
 			if (delete_button) {
 				return_if_fail (row.has_row_data ());

@@ -531,11 +531,6 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	}
 	
 	public void set_cursor (int visible) {
-		if (visible != NativeWindow.VISIBLE) {
-			get_window ().set_cursor (new Cursor (CursorType.BLANK_CURSOR));
-		} else {
-			get_window ().set_cursor (new Cursor (CursorType.ARROW));
-		}
 	}
 	
 	public double get_screen_scale () {
@@ -583,7 +578,7 @@ class TabbarCanvas : DrawingArea {
 			Gtk.Allocation alloc;
 			Context cr;						
 									
-			cr = cairo_create (get_window ());
+			cr = cairo_create ((!) get_window ());
 			get_allocation (out alloc);
 						
 			tabbar.draw (cr, alloc.width, alloc.height);
@@ -647,7 +642,7 @@ class ToolboxCanvas : DrawingArea {
 			Gtk.Allocation allocation;
 			get_allocation (out allocation);
 			
-			Context cw = cairo_create(get_window());
+			Context cw = cairo_create((!) get_window());
 			Toolbox.allocation_width = allocation.width;
 			Toolbox.allocation_height = allocation.height;
 			tb.draw (allocation.width, allocation.height, cw);
@@ -712,7 +707,7 @@ public class GlyphCanvasArea : DrawingArea  {
 			alloc.x = allocation.x;
 			alloc.y = allocation.y;
 			
-			Context cw = cairo_create (get_window());
+			Context cw = cairo_create ((!) get_window());
 			
 			Surface s = new Surface.similar (cw.get_target (), Cairo.Content.COLOR_ALPHA, alloc.width, alloc.height);
 			Context c = new Context (s); 

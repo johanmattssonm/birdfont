@@ -169,6 +169,32 @@ public class SettingsTab : SettingsDisplay {
 		});
 		tools.add (new SettingsItem (themes, t_("Color theme")));
 		
+		SpinButton num_backups = new SpinButton ("num_backups");
+		tools.add (new SettingsItem (num_backups, t_("Number of backups per font")));
+		
+		num_backups.set_integers (true);
+		
+		num_backups.set_max (100);
+		num_backups.set_min (0);
+		num_backups.set_value ("20");
+
+		if (Preferences.get ("num_backups") != "") {
+			Preferences.set ("num_backups", num_backups.get_short_display_value ());
+		}
+
+		num_backups.new_value_action.connect ((self) => {
+			Preferences.set ("num_backups", num_backups.get_short_display_value ());
+		});
+		
+		Tool load_backups = new Tool ("load_backups");
+		load_backups.select_action.connect((self) => {
+			BackupTab backups = new BackupTab ();
+			MainWindow.tabs.add_unique_tab (backups);
+			MainWindow.tabs.select_tab_name ("Backups");
+			load_backups.selected = false;
+		});
+		tools.add (new SettingsItem (load_backups, t_("Load a backup font")));
+		
 		tools.add (new SettingsItem.head_line (t_("Key Bindings")));
 		
 		foreach (MenuItem menu_item in MainWindow.get_menu ().sorted_menu_items) {

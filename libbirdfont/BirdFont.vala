@@ -406,17 +406,6 @@ public class BirdFont {
 		return settings;
 	}
 
-	internal static File get_backup_directory () {
-		File settings = get_settings_directory ();
-		File backup = get_child (settings, "backup");
-
-		if (!backup.query_exists ()) {
-			DirUtils.create ((!) backup.get_path (), 0755);
-		}
-
-		return backup;
-	}
-
 	public static bool has_argument (string param) {
 		if (is_null (args)) {
 			return false;

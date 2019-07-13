@@ -92,7 +92,6 @@ public class SaveCallback : GLib.Object {
 		if (f.is_bfp ()) {
 			MainWindow.native_window.save ();
 		} else {
-			f.delete_backup ();
 			fn = f.get_path ();
 			
 			if (f.font_file != null

@@ -217,6 +217,10 @@ public class MenuTab : FontDisplay {
 		}
 	}
 	
+	public static void clear_font_settings () {
+		Toolbox.background_tools = new BackgroundTools (); // clear toolbox selection of images
+	}
+		
 	public static void signal_file_exported () {
 		IdleSource idle = new IdleSource ();
 		idle.set_callback (() => {
@@ -230,7 +234,7 @@ public class MenuTab : FontDisplay {
 		});
 		idle.attach (null);
 	}
-	
+
 	public static void signal_file_saved () {
 		IdleSource idle = new IdleSource ();
 		idle.set_callback (() => {

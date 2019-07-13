@@ -37,6 +37,7 @@ public class SpinButton : Tool {
 	int step = 1;
 	
 	bool big_number = false;
+	bool integers = false;
 	
 	double last_active_time = 0;
 	bool waiting_for_icon_switch = false;
@@ -192,6 +193,11 @@ public class SpinButton : Tool {
 		big_number = b;
 	}
 	
+	public void set_integers (bool i) {
+		integers = i;
+		big_number = i;
+	}
+
 	public static string convert_to_string (double val) {
 		SpinButton sb = new SpinButton ();
 		sb.set_value_round (val);
@@ -357,6 +363,11 @@ public class SpinButton : Tool {
 			separator = v.substring (v.index_of_nth_char (3), 1);
 			n3 = (int8) int.parse (v.substring (v.index_of_nth_char (4), 1));
 			n4 = (int8) int.parse (v.substring (v.index_of_nth_char (5), 1));
+			
+			if (integers) {
+				n3 = 0;
+				n4 = 0;
+			}
 		}
 		
 		if (separator != ".") {
@@ -406,6 +417,18 @@ public class SpinButton : Tool {
 	}
 
 	public string get_short_display_value () {	
+		if (integers) {
+			if (n0 == 0 && n1 == 0) {
+				return @"$n2";
+			}
+			
+			if (n0 == 0) {
+				return @"$n1$n2";
+			}
+			
+			return @"$n0$n1$n2";
+		}
+			
 		if (!big_number) {
 			return @"$n0.$n1$n2$n3";
 		}
@@ -435,6 +458,10 @@ public class SpinButton : Tool {
 
 	public string get_display_value () {
 		string v;
+		
+		if (integers) {
+			return get_short_display_value ();
+		}
 		
 		if (!big_number) {
 			return @"$n0.$n1$n2$n3$n4";
