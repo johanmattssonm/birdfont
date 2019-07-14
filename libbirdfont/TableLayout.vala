@@ -25,7 +25,8 @@ public class TableLayout : FontDisplay {
 	public Gee.ArrayList<Widget> widgets = new Gee.ArrayList<Widget> ();
 	public Gee.ArrayList<Widget> focus_ring = new Gee.ArrayList<Widget> ();
 	public int focus_index = 0;
-	
+	bool ignore_input = true;
+		
 	public Widget? keyboard_focus = null;
 	
 	public TableLayout () {
@@ -125,6 +126,11 @@ public class TableLayout : FontDisplay {
 		Widget t;
 		Widget old;
 		CheckBox c;
+				
+		if (ignore_input) {
+			printd (@"Ignoring extra clicks.");
+			return;
+		}
 		
 		foreach (Widget w in widgets) {
 			if (w.is_over (x, y)) {
@@ -172,6 +178,11 @@ public class TableLayout : FontDisplay {
 	
 	public override void button_release (int button, double x, double y) {
 		Widget t;
+
+		if (ignore_input) {
+			printd (@"Ignoring extra clicks.");
+			return;
+		}
 		
 		if (keyboard_focus != null) {
 			t = (!) keyboard_focus;
@@ -231,6 +242,15 @@ public class TableLayout : FontDisplay {
 	}
 	
 	public override void selected_canvas () {
+		ignore_input = true;
+		
+		TimeoutSource input_delay = new TimeoutSource (250);
+		input_delay.set_callback(() => {
+			ignore_input = false;
+			return false;
+		});
+		input_delay.attach (null);
+		
 		KeyBindings.set_require_modifier (true);
 		update_scrollbar ();
 		GlyphCanvas.redraw ();
@@ -250,6 +270,29 @@ public class TableLayout : FontDisplay {
 
 	public override bool needs_modifier () {
 		return true;
+	}
+	
+	public override void double_click (uint button, double x, double y) {
+		Widget t;
+				
+		if (ignore_input) {
+			printd (@"Ignoring extra clicks.");
+			return;
+		}
+		
+		if (keyboard_focus != null) {
+			t = (!) keyboard_focus;
+			set_focus (t);
+			t.double_click (button, x, y);
+		}
+
+		foreach (Widget w in widgets) {
+			if (w.is_over (x, y)) {
+				w.double_click (button, x, y);
+			}
+		}
+					
+		GlyphCanvas.redraw ();
 	}
 }
 

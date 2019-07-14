@@ -69,6 +69,9 @@ public abstract class Widget : GLib.Object {
 	public virtual void button_release (uint button, double x, double y) {
 	}
 	
+	public virtual void double_click (uint button, double x, double y) {
+	}	
+	
 	public virtual bool motion (double x, double y) {
 		return false;
 	}

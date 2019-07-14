@@ -1660,6 +1660,44 @@ public class TextArea : Widget {
 			return c;
 		}
 	}
+	
+	public override void double_click (uint button, double x, double y) {
+		if (is_over (x, y)) {
+			carret = get_carret_at (x, y);
+			
+			Paragraph paragraph = paragraphs.get (carret.paragraph);
+			
+			int index = carret.character_index;
+			int prev_index = index;
+			unichar c;
+			
+			while (paragraph.text.get_prev_char (ref index, out c)) {
+				if (c == '\t' || c == ' ' || c == '\n') {
+					break;
+				}
+				
+				prev_index = index;
+			}
+			
+			carret.character_index = prev_index;
+			
+			selection_end = carret.copy ();
+			index = selection_end.character_index;
+		 
+			while (paragraph.text.get_next_char (ref index, out c)) {
+				if (c == '\t' || c == ' ' || c == '\n') {
+					break;
+				}
+				
+				prev_index = index;
+			}
+			
+			selection_end.character_index = prev_index;
+			show_selection = selection_is_visible ();			
+			
+			update_selection = true;
+		}
+	}
 }
 
 }

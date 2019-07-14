@@ -689,9 +689,7 @@ public class GlyphCanvasArea : DrawingArea  {
 		event_flags |= EventMask.SCROLL_MASK;
 		
 		add_events (event_flags);
-
-		bool button_down = false;
-
+		
 		glyph_canvas.signal_redraw_area.connect ((x, y, w, h) => {
 			queue_draw_area ((int)x, (int)y, (int)w, (int)h);
 		});
@@ -725,10 +723,6 @@ public class GlyphCanvasArea : DrawingArea  {
 		button_press_event.connect ((t, e)=> {
 			GtkWindow.reset_modifier (e.state);
 
-			if (button_down) {
-				warning (@"Button already is down. $(e.button)");
-			}
-			
 			if (e.time < last_press) {
 				warning ("Discarding event.");
 				return true;
@@ -738,7 +732,6 @@ public class GlyphCanvasArea : DrawingArea  {
 			
 			if (e.type == EventType.BUTTON_PRESS) {
 				TabContent.button_press (e.button, e.x, e.y);
-				button_down = true;
 			} else if (e.type == EventType.2BUTTON_PRESS) {
 				TabContent.double_click (e.button, e.x, e.y);
 			}
@@ -747,10 +740,6 @@ public class GlyphCanvasArea : DrawingArea  {
 		});
 		
 		button_release_event.connect ((t, e)=> {
-			if (!button_down) {
-				warning (@"Button is not down $(e.button)");
-			}
-			
 			if (e.time < last_release) {
 				warning ("Discarding event.");
 				return true;
@@ -758,9 +747,9 @@ public class GlyphCanvasArea : DrawingArea  {
 			
 			if (e.type == EventType.BUTTON_RELEASE) {
 				TabContent.button_release ((int) e.button, e.x, e.y);
-				last_release = e.time;
-				button_down = false;
 			}
+			
+			last_release = e.time;
 			
 			return true;
 		});
