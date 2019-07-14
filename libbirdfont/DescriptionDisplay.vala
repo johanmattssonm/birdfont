@@ -285,6 +285,30 @@ public class DescriptionDisplay : TableLayout {
 		copyright.set_editable (!disable_copyright);
 		base.selected_canvas ();
 	}
+	
+	public void paste (string text) {
+		if (0 <= focus_index < focus_ring.size) {
+			Widget widget = focus_ring.get (focus_index);
+			
+			if (widget is TextArea) {
+				TextArea text_area = (TextArea) widget;
+				text_area.insert_text (text);
+			}
+		}
+	}
+	
+	public string get_copy_selection () {
+		if (0 <= focus_index < focus_ring.size) {
+			Widget widget = focus_ring.get (focus_index);
+			
+			if (widget is TextArea) {
+				TextArea text_area = (TextArea) widget;
+				return text_area.get_selected_text ();
+			}
+		}
+		
+		return "";
+	}
 }
 
 }

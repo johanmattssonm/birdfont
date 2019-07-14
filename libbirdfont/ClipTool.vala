@@ -41,6 +41,18 @@ public class ClipTool : Tool {
 			MainWindow.native_window.set_inkscape_clipboard (data);
 		} else if (fd is OverView) {
 			copy_overview_glyphs ();
+		} else if (fd is DescriptionDisplay) {
+			DescriptionDisplay description_tab = (DescriptionDisplay) fd;
+			string t = description_tab.get_copy_selection ();
+			if (t != "") {
+				MainWindow.native_window.set_clipboard_text (t);
+			}
+		} else if (fd is ExportSettings) {
+			ExportSettings export_tab = (ExportSettings) fd;
+			string t = export_tab.get_copy_selection ();
+			if (t != "") {
+				MainWindow.native_window.set_clipboard_text (t);
+			}
 		}
 	}
 
@@ -98,10 +110,28 @@ public class ClipTool : Tool {
 			foreach (Path path in g.active_paths) {
 				path.move (dx, dy);
 			}
+		} else if (fd is SpacingTab) {
+			paste_letters_to_spacing_tab ();
 		} else if (fd is KerningDisplay) {
 			paste_letters_to_kerning_tab ();
 		} else if (fd is OverView) {
 			paste_to_overview ();
+		} else if (fd is DescriptionDisplay) {
+			DescriptionDisplay description_tab = (DescriptionDisplay) fd;
+			string clipboard_data = MainWindow.native_window.get_clipboard_data ();
+			
+			if (!clipboard_data.has_prefix ("<?xml")) {
+				description_tab.paste (clipboard_data);
+				GlyphCanvas.redraw ();
+			}
+		} else if (fd is ExportSettings) {
+			ExportSettings export_tab = (ExportSettings) fd;
+			string clipboard_data = MainWindow.native_window.get_clipboard_data ();
+			
+			if (!clipboard_data.has_prefix ("<?xml")) {
+				export_tab.paste (clipboard_data);
+				GlyphCanvas.redraw ();
+			}
 		}
 	}
 	
@@ -472,6 +502,15 @@ public class ClipTool : Tool {
 		
 		if (!clipboard_data.has_prefix ("<?xml")) {
 			kerning_display.add_text (clipboard_data);
+		}
+	}
+	
+	static void paste_letters_to_spacing_tab () {
+		string clipboard_data = MainWindow.native_window.get_clipboard_data ();
+		SpacingTab spacing_tab = MainWindow.get_spacing_tab ();
+		
+		if (!clipboard_data.has_prefix ("<?xml")) {
+			spacing_tab.add_text (clipboard_data);
 		}
 	}
 }
