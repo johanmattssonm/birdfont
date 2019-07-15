@@ -50,6 +50,8 @@ public class MessageDialog : Dialog {
 		message.layout ();
 
 		width = message.get_width ();
+		width += 10 * MainWindow.units;
+		
 		height = message.get_height ();
 		height += ok_button.get_height ();
 		height += 5 * MainWindow.units;

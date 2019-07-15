@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012 2014 2015 Johan Mattsson
+	Copyright (C) 2012 2014 2015 2019 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -264,6 +264,8 @@ os.put_string (
 			-ms-font-feature-settings: "kern";
 			-webkit-font-feature-settings: "kern";
 			-o-font-feature-settings: "kern";
+			
+			margin: 0 0 0 0;
 		}
 
 		@font-face {
@@ -294,10 +296,15 @@ os.put_string (
 		
 		""");
 		
-	os.put_string ("""	
+	os.put_string ("""
+	
+		section {
+			padding-left: 25px;
+		}
+		
 		h1 {
 			font-weight:normal;
-			margin: 0 0 5px 0;
+			margin: 10px 0 5px 0;
 			color: #afafaf;
 		}
 
@@ -323,11 +330,7 @@ os.put_string (
 			margin: 0 0 5px 0;
 			color: #000000;
 		}
-		
-		body {
-			margin: 30px 0 0 30px;
-		}
-		
+
 		div {
 			font-family: """);
 
@@ -417,36 +420,61 @@ os.put_string (
 			-webkit-font-feature-settings: "c2sc", "smcp";
 			font-feature-settings: "c2sc", "smcp";
 		}
+		
+		div.firefox_message {
+			background-color: #00A000;
+			font-size: 10pt;
+			padding: 10px 10px 10px 33px;
+			margin: 0 0 0 0;
+			width: 100%;
+			font-family: sans-serif;
+		}
 	</style>
+
+	<script>
+		window.onload = function() {
+			if (navigator.userAgent.indexOf("Firefox") > -1 && window.location.protocol == "file:") {
+				var parent = document.createElement("div");
+				var firefoxMessageBox = document.createElement("div");
+				firefoxMessageBox.classList.add("firefox_message");
+				var message = document.createTextNode("Firefox will not let you load fonts on your "
+					+ "local machine. Ways around it include uploading your files to a server "
+					+ "or usning Chrome.");				
+				firefoxMessageBox.appendChild(message);
+				parent.appendChild(firefoxMessageBox);
+				document.body.innerHTML = parent.innerHTML + document.body.innerHTML;
+			}
+		}
+	</script>
 """);
 	
 	os.put_string (
 """	
 </head>
 <body>
+<section>
+	<div>
+		<h1 class="bigger">Lorem ipsum</h1>
+		<p class="bigger">Dolor sit amet!</p>
+	</div>
 
-<div>
-	<h1 class="bigger">Lorem ipsum</h1>
-	<p class="bigger">Dolor sit amet!</p>
-</div>
+	<div>
+		<h2 class="big">Hamburgerfonstiv</h2>
+		<p class="big">""" + name + """</p>
+	</div>
 
-<div>
-	<h2 class="big">Hamburgerfonstiv</h2>
-	<p class="big">""" + name + """</p>
-</div>
+	<div>
+		<h4 class="smaller">Headline 16pt</h4>
+		<p class="smaller">The quick brown fox jumps over the lazy dog</p>	
+	</div>
 
-<div>
-	<h4 class="smaller">Headline 16pt</h4>
-	<p class="smaller">The quick brown fox jumps over the lazy dog</p>	
-</div>
-
-<div>
-	<h4 class="smaller">""" +  t_("Alphabet") + """</h4>
-	<p class="smaller">""" + t_("a b c d e f g h i j k l m n o p q r s t u v w x y z") + """</p>
-	<p class="smaller">""" + t_("A B C D E F G H I J K L M N O P Q R S T U V W X Y Z") + """</p>
-	<p class="smaller">0 1 2 3 4 5 6 7 8 9</p>
-</div>
-
+	<div>
+		<h4 class="smaller">""" +  t_("Alphabet") + """</h4>
+		<p class="smaller">""" + t_("a b c d e f g h i j k l m n o p q r s t u v w x y z") + """</p>
+		<p class="smaller">""" + t_("A B C D E F G H I J K L M N O P Q R S T U V W X Y Z") + """</p>
+		<p class="smaller">0 1 2 3 4 5 6 7 8 9</p>
+	</div>
+</section>
 </body>
 </html>
 """);
@@ -463,6 +491,8 @@ os.put_string (
 		if (!template.query_exists ()) {
 			generate_html_template ();
 			get_child (config_dir, "preview.html");
+		} else {
+			print ("HTML template exits.");	
 		}
 		
 		if (!template.query_exists ()) {
@@ -483,6 +513,7 @@ os.put_string (
 		html_data = html_data.replace ("_NAME_", name);
 
 		try {
+			print(html_data);
 			FileUtils.set_contents (html_file, html_data);
 		} catch (FileError e) {
 			warning (e.message);

@@ -163,7 +163,7 @@ public class MenuTab : FontDisplay {
 				if (first_export == "") {
 					Preferences.@set ("first_export_done", "true");
 					MainWindow.show_message (t_("Congratulations to your first font!\n\n"
-						+ "Please consider supporting the project by purchasing the pro version at birdfont.org."));
+						+ "Please consider supporting the project by purchasing the pro version at birdfont.org.\n"));
 				}
 			});		
 		}
