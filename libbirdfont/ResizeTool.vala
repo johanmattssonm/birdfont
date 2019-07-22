@@ -49,11 +49,11 @@ public class ResizeTool : Tool {
 		base (n, t_("Resize and rotate paths"));
 
 		proportional_handle = new Text ("resize_handle", 60);
-		proportional_handle.load_font ("icons.bf");
+		proportional_handle.load_font ("icons.birdfont");
 		Theme.text_color (proportional_handle, "Highlighted 1");
 
 		horizontal_handle = new Text ("resize_handle_horizontal", 60);
-		horizontal_handle.load_font ("icons.bf");
+		horizontal_handle.load_font ("icons.birdfont");
 		Theme.text_color (horizontal_handle, "Highlighted 1");
 	
 		select_action.connect((self) => {

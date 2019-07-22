@@ -219,7 +219,7 @@ public class LayerLabel : Tool {
 		
 		visibility = layer.visible ? "layer_visible" : "layer_hidden";
 		visibility_icon = new Text (visibility, 30 * Toolbox.get_scale ());
-		visibility_icon.load_font ("icons.bf");
+		visibility_icon.load_font ("icons.birdfont");
 		Theme.text_color (visibility_icon, "Text Tool Box");
 		visibility_center_y = y + h / 2.0;
 		visibility_center_y -= visibility_icon.get_height () / 2.0;

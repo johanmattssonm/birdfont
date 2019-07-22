@@ -333,7 +333,7 @@ public class Path : GLib.Object {
 		
 		if (arrow == null) {
 			arrow_icon = new Text ("orientation_arrow", size);
-			arrow_icon.load_font ("icons.bf");
+			arrow_icon.load_font ("icons.birdfont");
 			arrow = arrow_icon;
 		}
 		

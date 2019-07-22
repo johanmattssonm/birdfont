@@ -445,7 +445,7 @@ public class OverViewItem : GLib.Object {
 		Text icon;
 
 		icon = new Text ("dropdown_menu", 17);
-		icon.load_font ("icons.bf");
+		icon.load_font ("icons.birdfont");
 
 		if (selected) {
 			Theme.text_color (icon, "Overview Selected Foreground");

@@ -33,7 +33,7 @@ public class CharacterInfo : GLib.Object {
 		
 		if (info_icon == null) {
 			info_icon= new Text ("info_icon", 22);
-			((!) info_icon).load_font ("icons.bf");
+			((!) info_icon).load_font ("icons.birdfont");
 		}
 		
 		icon = (!) info_icon;
