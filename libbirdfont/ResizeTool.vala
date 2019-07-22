@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013 2015 Johan Mattsson
+	Copyright (C) 2013 2015 2019 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -351,15 +351,16 @@ public class ResizeTool : Tool {
 
 	public void resize_selected_paths (double ratio_x, double ratio_y) {
 		Glyph g = MainWindow.get_current_glyph ();
-		resize_glyph (g, ratio_x, ratio_y, true);
+		resize_glyph (g, ratio_x, ratio_y, true, true);
 	}
-	
-	public void resize_glyph (Glyph glyph, double ratio_x,
-			double ratio_y, bool selected = true) {
-					
-		double resize_pos_x = 0;
-		double resize_pos_y = 0;
-		double selection_minx, selection_miny, dx, dy;
+
+	public void resize_glyph (Glyph glyph,
+			double ratio_x,
+			double ratio_y,
+			bool selected = true,
+			bool relative_to_object = false) {
+				
+		Font font = BirdFont.get_current_font ();
 		
 		if (!selected) {
 			glyph.clear_active_paths ();
@@ -369,25 +370,38 @@ public class ResizeTool : Tool {
 			}
 		}
 		
-		get_selection_min (out resize_pos_x, out resize_pos_y);
-		
-		// resize paths
-		foreach (Path selected_path in glyph.active_paths) {
-			selected_path.resize (ratio_x, ratio_y);
-			selected_path.reset_stroke ();
+		foreach (Path path in glyph.active_paths) {
+			x = selection_box_center_x - selection_box_width / 2;
+			y = font.base_line;
+				
+			if (relative_to_object) {
+				y = selection_box_center_y - selection_box_height / 2;
+			}
+				
+			SvgTransforms transform = new SvgTransforms ();
+			transform.resize (ratio_x, ratio_y, x, y);
+			Matrix matrix = transform.get_matrix ();
+			path.transform (matrix);
+			path.reset_stroke ();
 		}
-		
+				
 		if (glyph.active_paths.size > 0) {
-			update_selection_box ();
-			objects_resized (selection_box_width, selection_box_height);
+			foreach (Path p in glyph.active_paths) {
+				p.update_region_boundaries ();
+			}
 		}
 
 		if (!selected) {
-			glyph.left_limit *= ratio_x; 
+			glyph.add_help_lines ();
+			glyph.left_limit *= ratio_x;
 			glyph.right_limit *= ratio_x;
 			glyph.clear_active_paths ();
 			glyph.remove_lines ();
 			glyph.add_help_lines ();
+
+			glyph.view_zoom = 1;
+			glyph.view_offset_x = 0;
+			glyph.view_offset_y = 0;
 		}
 	}
 

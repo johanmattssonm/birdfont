@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2012 - 2016 Johan Mattsson
+	Copyright (C) 2012 - 2016 2019 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -1147,7 +1147,45 @@ public class Path : GLib.Object {
 			ymin = e.y;
 		}
 	}
+	
+	public void transform (Matrix matrix) {
+		double x, y;
+		EditPointHandle handle;
 		
+		foreach (EditPoint point in points) {
+			x = point.x;
+			y = point.y;
+			
+			matrix.transform_point (ref x, ref y);
+			
+			point.independent_x = x;
+			point.independent_y = y;
+			
+			handle = point.get_right_handle ();
+			
+			x = handle.x;
+			y = handle.y;
+			
+			matrix.transform_point (ref x, ref y);
+			
+			handle.independent_x = x;
+			handle.independent_y = y;
+
+			handle = point.get_left_handle ();
+			
+			x = handle.x;
+			y = handle.y;
+			
+			matrix.transform_point (ref x, ref y);
+			
+			handle.independent_x = x;
+			handle.independent_y = y;
+
+		}
+		
+		update_region_boundaries ();
+	}
+
 	/** Test if @param path is a valid outline for this object. */	
 	public bool test_is_outline (Path path) {
 		assert (false);
