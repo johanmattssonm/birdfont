@@ -215,9 +215,9 @@ public class Color {
 
 	public string to_rgb_hex () {
 		string s = "#";
-		s += Font.to_hex_code ((unichar) Math.rint (r  * 254));
-		s += Font.to_hex_code ((unichar) Math.rint (g  * 254));
-		s += Font.to_hex_code ((unichar) Math.rint (b  * 254));
+		s += Font.to_hex_code ((unichar) Math.rint (r * 255));
+		s += Font.to_hex_code ((unichar) Math.rint (g * 255));
+		s += Font.to_hex_code ((unichar) Math.rint (b * 255));
 		return s;
 	}
 }
