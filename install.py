@@ -97,7 +97,7 @@ installed = open ('build/installed', 'w')
 installed.write ('build/installed\n')
 
 # install it:
-install ('resources/icons.bf', '/share/birdfont', 644)
+install ('resources/icons.birdfont', '/share/birdfont', 644)
 install ('resources/bright.theme', '/share/birdfont', 644)
 install ('resources/dark.theme', '/share/birdfont', 644)
 install ('resources/high_contrast.theme', '/share/birdfont', 644)
