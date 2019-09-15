@@ -260,11 +260,6 @@ os.put_string (
 		body {
 			text-rendering: optimizeLegibility;
 			font-feature-settings: "kern";
-			-moz-font-feature-settings: "kern=1";
-			-ms-font-feature-settings: "kern";
-			-webkit-font-feature-settings: "kern";
-			-o-font-feature-settings: "kern";
-			
 			margin: 0 0 0 0;
 		}
 
@@ -392,32 +387,20 @@ os.put_string (
 		}
 
 		span.swashes {
-			-moz-font-feature-settings: "swsh";
-			-ms-font-feature-settings: "swsh";
-			-webkit-font-feature-settings: "swsh";
 			font-feature-settings: "swsh";	
 		}
 		
 		span.alternates {	
-			-moz-font-feature-settings: "salt" 1;
-			-ms-font-feature-settings: "salt" 1;
-			-webkit-font-feature-settings: "salt" 1;
 			font-feature-settings: "salt" 1;
 		}
 		
 		span.smallcaps {
 			font-variant-caps: small-caps;
-			-moz-font-feature-settings: "smcp";
-			-ms-font-feature-settings: "smcp";
-			-webkit-font-feature-settings: "smcp";
 			font-feature-settings: "smcp";
 		}
 
 		span.capstosmallcaps {
 			font-variant-caps: all-small-caps;
-			-moz-font-feature-settings: "c2sc", "smcp";
-			-ms-font-feature-settings: "c2sc", "smcp";
-			-webkit-font-feature-settings: "c2sc", "smcp";
 			font-feature-settings: "c2sc", "smcp";
 		}
 		
