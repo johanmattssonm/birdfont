@@ -403,32 +403,7 @@ os.put_string (
 			font-variant-caps: all-small-caps;
 			font-feature-settings: "c2sc", "smcp";
 		}
-		
-		div.firefox_message {
-			background-color: #00A000;
-			font-size: 10pt;
-			padding: 10px 10px 10px 33px;
-			margin: 0 0 0 0;
-			width: 100%;
-			font-family: sans-serif;
-		}
 	</style>
-
-	<script>
-		window.onload = function() {
-			if (navigator.userAgent.indexOf("Firefox") > -1 && window.location.protocol == "file:") {
-				var parent = document.createElement("div");
-				var firefoxMessageBox = document.createElement("div");
-				firefoxMessageBox.classList.add("firefox_message");
-				var message = document.createTextNode("Firefox will not let you load fonts on your "
-					+ "local machine. Ways around it include uploading your files to a server "
-					+ "or usning Chrome.");				
-				firefoxMessageBox.appendChild(message);
-				parent.appendChild(firefoxMessageBox);
-				document.body.innerHTML = parent.innerHTML + document.body.innerHTML;
-			}
-		}
-	</script>
 """);
 	
 	os.put_string (
