@@ -17,7 +17,7 @@ using Math;
 
 namespace BirdFont {
 
-public abstract class SettingsDisplay : FontDisplay {
+internal abstract class SettingsDisplay : FontDisplay {
 	
 	double scroll = 0;
 	double content_height = 1;
@@ -29,7 +29,7 @@ public abstract class SettingsDisplay : FontDisplay {
 	SettingsItem new_key_bindings = new SettingsItem.head_line ("");
 	public static bool update_key_bindings = false;
 	
-	public SettingsDisplay () {
+	protected SettingsDisplay () {
 		allocation = new WidgetAllocation ();
 		tools = new Gee.ArrayList<SettingsItem> ();
 		content_height = 200;

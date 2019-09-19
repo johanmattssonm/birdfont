@@ -17,7 +17,7 @@ using Math;
 
 namespace BirdFont {
 
-public class SettingsTab : SettingsDisplay {
+internal class SettingsTab : SettingsDisplay {
 
 	string restart_message = "You need to restart the program in order to apply this setting.";	
 	

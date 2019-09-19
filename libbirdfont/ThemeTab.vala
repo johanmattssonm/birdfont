@@ -17,7 +17,7 @@ using Math;
 
 namespace BirdFont {
 
-public class ThemeTab : SettingsDisplay {
+internal class ThemeTab : SettingsDisplay {
 	static ThemeTab singleton;
 	ColorTool color_tool;
 	

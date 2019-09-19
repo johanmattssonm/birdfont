@@ -679,7 +679,7 @@ public class Theme : GLib.Object {
 		colors.set (name, new Color (r, g, b, a));
 	}
 	
-	public static void add_new_theme (SettingsDisplay d) {
+	internal static void add_new_theme (SettingsDisplay d) {
 		TextListener listener;
 
 		listener = new TextListener (t_("New theme"), "", t_("Set"));
