@@ -140,31 +140,23 @@ public class CircleTool : Tool {
 
 		return path;
 	}
-	
+
 	public static Path create_ellipse (double x, double y,
-		double rx, double ry, PointType pt) {	
+		double rx, double ry, PointType point_type) {	
 		
-		double px, py;
-		Path path = new Path ();
-		double steps = (pt == PointType.QUADRATIC) ? PI / 8 : PI / 4;  
+		Path path = create_circle (x, y, 1, point_type);
+	
+		SvgTransforms transforms = new SvgTransforms ();
+		transforms.resize (rx, ry, x, y);
 		
-		for (double angle = 0; angle < 2 * PI; angle += steps) {
-			px = rx * cos (angle) + x;
-			py = ry * sin (angle) + y;
-			path.add (px, py);
+		transforms.collapse_transforms ();
+		Matrix m = transforms.get_matrix ();
+		path.transform (m);
+
+		foreach (EditPoint ep in path.points) {
+			ep.set_tie_handle (true);
 		}
 		
-		path.init_point_type (pt);
-		path.close ();
-		path.recalculate_linear_handles ();
-
-		for (int i = 0; i < 3; i++) {
-			foreach (EditPoint ep in path.points) {
-				ep.set_tie_handle (true);
-				ep.process_tied_handle ();
-			}
-		}
-
 		return path;
 	}
 	
