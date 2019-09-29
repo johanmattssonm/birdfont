@@ -145,7 +145,11 @@ public class CircleTool : Tool {
 		double rx, double ry, PointType point_type) {	
 		
 		Path path = create_circle (x, y, 1, point_type);
-	
+
+		foreach (EditPoint ep in path.points) {
+			ep.set_tie_handle (false);
+		}
+			
 		SvgTransforms transforms = new SvgTransforms ();
 		transforms.resize (rx, ry, x, y);
 		
