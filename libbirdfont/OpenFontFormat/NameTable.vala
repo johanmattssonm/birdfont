@@ -16,23 +16,23 @@ namespace BirdFont {
 
 public class NameTable : OtfTable {
 
-	public static const uint16 COPYRIGHT_NOTICE = 0;
-	public static const uint16 FONT_NAME = 1;
-	public static const uint16 SUBFAMILY_NAME = 2;
-	public static const uint16 UNIQUE_IDENTIFIER = 3;
-	public static const uint16 FULL_FONT_NAME = 4; // name + subfamily
-	public static const uint16 VERSION = 5;
-	public static const uint16 POSTSCRIPT_NAME = 6;
-	public static const uint16 TRADE_MARK = 7;
-	public static const uint16 MANUFACTURER = 8;
-	public static const uint16 DESIGNER = 9;
-	public static const uint16 DESCRIPTION = 10;
-	public static const uint16 VENDOR_URL = 11;
-	public static const uint16 DESIGNER_URL = 12;
-	public static const uint16 LICENSE = 13;
-	public static const uint16 LICENSE_URL = 14;
-	public static const uint16 PREFERED_FAMILY = 16;
-	public static const uint16 PREFERED_SUB_FAMILY = 17;
+	public const uint16 COPYRIGHT_NOTICE = 0;
+	public const uint16 FONT_NAME = 1;
+	public const uint16 SUBFAMILY_NAME = 2;
+	public const uint16 UNIQUE_IDENTIFIER = 3;
+	public const uint16 FULL_FONT_NAME = 4; // name + subfamily
+	public const uint16 VERSION = 5;
+	public const uint16 POSTSCRIPT_NAME = 6;
+	public const uint16 TRADE_MARK = 7;
+	public const uint16 MANUFACTURER = 8;
+	public const uint16 DESIGNER = 9;
+	public const uint16 DESCRIPTION = 10;
+	public const uint16 VENDOR_URL = 11;
+	public const uint16 DESIGNER_URL = 12;
+	public const uint16 LICENSE = 13;
+	public const uint16 LICENSE_URL = 14;
+	public const uint16 PREFERED_FAMILY = 16;
+	public const uint16 PREFERED_SUB_FAMILY = 17;
 
 	
 	Gee.ArrayList<uint16> identifiers;

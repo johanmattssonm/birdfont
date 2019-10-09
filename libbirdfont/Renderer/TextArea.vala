@@ -52,7 +52,7 @@ public class TextArea : Widget {
 	public signal void enter (string text);
 	
 	Gee.ArrayList<Paragraph> paragraphs = new Gee.ArrayList<Paragraph>  ();
-	private static const int DONE = -2; 
+	private const int DONE = -2; 
 	
 	int last_paragraph = 0;
 	string text;

@@ -17,19 +17,19 @@ namespace BirdFont {
 /** Type2, PostScript outlines */
 public class CffTable : OtfTable {
 
-	static const uint8 HSTEM = 1;
-	static const uint8 VSTEM = 3;
-	static const uint8 VMOVETO = 4;
-	static const uint8 HLINETO = 6;
-	static const uint8 VLINETO = 7;
-	static const uint8 ENDCHAR = 14;
-	static const uint8 HMOVETO = 22;
-	static const uint8 RMOVETO = 21;
+	const uint8 HSTEM = 1;
+	const uint8 VSTEM = 3;
+	const uint8 VMOVETO = 4;
+	const uint8 HLINETO = 6;
+	const uint8 VLINETO = 7;
+	const uint8 ENDCHAR = 14;
+	const uint8 HMOVETO = 22;
+	const uint8 RMOVETO = 21;
 	
-	static const uint8 CHARSET = 15;
-	static const uint8 ENCODING = 16;
+	const uint8 CHARSET = 15;
+	const uint8 ENCODING = 16;
 
-	static const uint8 VERSION = 0;
+	const uint8 VERSION = 0;
 
 	public int version;
 

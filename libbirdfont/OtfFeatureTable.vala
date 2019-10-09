@@ -20,11 +20,11 @@ namespace BirdFont {
 public class OtfFeatureTable : Table {
 	Gee.ArrayList<Row> rows = new Gee.ArrayList<Row> ();
 	
-	static const int NONE = 0;
-	static const int OTF_FEATURE = 1;
-	static const int SOURCE_GLYPH = 2; // the glyph to replace
-	static const int REPLACEMENT_GLYPH = 3;
-	static const int ALTERNATE_ENTRY = 4;
+	const int NONE = 0;
+	const int OTF_FEATURE = 1;
+	const int SOURCE_GLYPH = 2; // the glyph to replace
+	const int REPLACEMENT_GLYPH = 3;
+	const int ALTERNATE_ENTRY = 4;
 	
 	GlyphCollection? glyph_collection = null;
 	GlyphCollection? replacement_glyph = null;

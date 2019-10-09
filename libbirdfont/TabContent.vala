@@ -26,7 +26,7 @@ public class TabContent : GLib.Object {
 	static TextListener text_callback;
 	static ImageSurface? pause_surface = null;
 
-	static const int TEXT_INPUT_HEIGHT = 51;
+	const int TEXT_INPUT_HEIGHT = 51;
 
 	static double last_press_time = 0;
 

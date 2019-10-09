@@ -38,26 +38,26 @@ public class EditPoint : GLib.Object {
 	public unowned EditPoint? prev = null;
 	public unowned EditPoint? next = null;
 
-	public static const uint NONE = 0;
-	public static const uint ACTIVE = 1;
-	public static const uint SELECTED = 1 << 1;
-	public static const uint DELETED_POINT = 1 << 2;
-	public static const uint TIE = 1 << 3;
-	public static const uint REFLECTIVE = 1 << 4;
+	public const uint NONE = 0;
+	public const uint ACTIVE = 1;
+	public const uint SELECTED = 1 << 1;
+	public const uint DELETED_POINT = 1 << 2;
+	public const uint TIE = 1 << 3;
+	public const uint REFLECTIVE = 1 << 4;
 	
-	public static const uint INTERSECTION = 1 << 5;
-	public static const uint NEW_CORNER = 1 << 6;
-	public static const uint STROKE_OFFSET = 1 << 7;
-	public static const uint COUNTER_TO_OUTLINE = 1 << 8;
-	public static const uint COPIED = 1 << 9;
-	public static const uint REMOVE_PART = 1 << 10;
-	public static const uint OVERLAY = 1 << 11;
-	public static const uint CURVE = 1 << 12;
-	public static const uint CURVE_KEEP = 1 << 13;
-	public static const uint SEGMENT_END = 1 << 14;
-	public static const uint SPLIT_POINT = 1 << 15;
-	public static const uint SELF_INTERSECTION = 1 << 16;
-	public static const uint COPIED_SELF_INTERSECTION = 1 << 17;
+	public const uint INTERSECTION = 1 << 5;
+	public const uint NEW_CORNER = 1 << 6;
+	public const uint STROKE_OFFSET = 1 << 7;
+	public const uint COUNTER_TO_OUTLINE = 1 << 8;
+	public const uint COPIED = 1 << 9;
+	public const uint REMOVE_PART = 1 << 10;
+	public const uint OVERLAY = 1 << 11;
+	public const uint CURVE = 1 << 12;
+	public const uint CURVE_KEEP = 1 << 13;
+	public const uint SEGMENT_END = 1 << 14;
+	public const uint SPLIT_POINT = 1 << 15;
+	public const uint SELF_INTERSECTION = 1 << 16;
+	public const uint COPIED_SELF_INTERSECTION = 1 << 17;
 	
 	public uint flags = NONE;
 	

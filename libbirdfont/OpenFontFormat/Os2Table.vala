@@ -18,16 +18,16 @@ namespace BirdFont {
 
 public class Os2Table : OtfTable {
 	
-	public static const uint16 ITALIC = 1;
-	public static const uint16 UNDERSCORE = 1 << 1;
-	public static const uint16 NEGATIVE  = 1 << 2;
-	public static const uint16 OUTLINED  = 1 << 3;
-	public static const uint16 STRIKEOUT  = 1 << 4;
-	public static const uint16 BOLD  = 1 << 5;
-	public static const uint16 REGULAR  = 1 << 6;
-	public static const uint16 TYPO_METRICS  = 1 << 7;
-	public static const uint16 WWS  = 1 << 8;
-	public static const uint16 OBLIQUE = 1 << 9;
+	public const uint16 ITALIC = 1;
+	public const uint16 UNDERSCORE = 1 << 1;
+	public const uint16 NEGATIVE  = 1 << 2;
+	public const uint16 OUTLINED  = 1 << 3;
+	public const uint16 STRIKEOUT  = 1 << 4;
+	public const uint16 BOLD  = 1 << 5;
+	public const uint16 REGULAR  = 1 << 6;
+	public const uint16 TYPO_METRICS  = 1 << 7;
+	public const uint16 WWS  = 1 << 8;
+	public const uint16 OBLIQUE = 1 << 9;
 	
 	GlyfTable glyf_table;
 	HmtxTable hmtx_table;

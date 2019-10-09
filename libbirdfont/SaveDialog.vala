@@ -28,7 +28,7 @@ public class SaveDialog : Dialog {
 	double width = 0;
 	double height;
 	
-	static const double question_font_size = 23;
+	const double question_font_size = 23;
 	
 	public SaveDialog (SaveDialogListener callbacks) {
 		listener = callbacks;

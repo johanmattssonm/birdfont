@@ -19,7 +19,7 @@ namespace BirdFont {
 
 public class Expander : GLib.Object {
 
-	private static const double HEADLINE_MARGIN = 4;
+	private const double HEADLINE_MARGIN = 4;
 		
 	public double x = 7;
 	public double y = 5;

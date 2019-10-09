@@ -18,8 +18,8 @@ namespace BirdFont {
 
 /** Guide */
 public class Line : GLib.Object {
-	public static const bool VERTICAL = true;
-	public static const bool HORIZONTAL = false;
+	public const bool VERTICAL = true;
+	public const bool HORIZONTAL = false;
 	
 	public bool dashed { get; set; }
 	

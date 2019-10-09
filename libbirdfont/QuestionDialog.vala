@@ -20,9 +20,9 @@ public class QuestionDialog : Dialog {
 	TextArea question;
 	public Gee.ArrayList<Button> buttons;
 	
-	static const double font_size = 20;
-	static const double margin = 20;
-	static const double margin_small = 5;
+	const double font_size = 20;
+	const double margin = 20;
+	const double margin_small = 5;
 	
 	double width = 300;
 	double height = 0;

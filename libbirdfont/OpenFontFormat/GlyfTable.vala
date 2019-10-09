@@ -16,15 +16,15 @@ namespace BirdFont {
 
 public class GlyfTable : OtfTable {
 	// Flags for composite glyph
-	static const uint16 BOTH_ARE_WORDS = 1 << 0;
-	static const uint16 BOTH_ARE_XY_VALUES = 1 << 1;
-	static const uint16 ROUND_TO_GRID = 1 << 2;
-	static const uint16 SCALE = 1 << 3;
-	static const uint16 RESERVED = 1 << 4;
-	static const uint16 MORE_COMPONENTS = 1 << 5;
-	static const uint16 SCALE_X_Y = 1 << 6;
-	static const uint16 SCALE_WITH_ROTATTION = 1 << 7;
-	static const uint16 INSTRUCTIONS = 1 << 8;
+	const uint16 BOTH_ARE_WORDS = 1 << 0;
+	const uint16 BOTH_ARE_XY_VALUES = 1 << 1;
+	const uint16 ROUND_TO_GRID = 1 << 2;
+	const uint16 SCALE = 1 << 3;
+	const uint16 RESERVED = 1 << 4;
+	const uint16 MORE_COMPONENTS = 1 << 5;
+	const uint16 SCALE_X_Y = 1 << 6;
+	const uint16 SCALE_WITH_ROTATTION = 1 << 7;
+	const uint16 INSTRUCTIONS = 1 << 8;
 
 	public int16 xmin = int16.MAX;
 	public int16 ymin = int16.MAX;

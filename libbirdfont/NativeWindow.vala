@@ -16,8 +16,8 @@ namespace BirdFont {
 
 public interface NativeWindow : GLib.Object {
 	
-	public static const int HIDDEN = 0;
-	public static const int VISIBLE = 1;
+	public const int HIDDEN = 0;
+	public const int VISIBLE = 1;
 
 	public abstract void file_chooser (string title, FileChooser file_chooser_callback, uint flags);
 	

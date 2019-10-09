@@ -73,11 +73,11 @@ bool is_modifier_key (uint i) {
 }
 
 /** Modifier flags */
-public static const uint NONE  = 0;
-public static const uint CTRL  = 1 << 0;
-public static const uint ALT   = 1 << 1;
-public static const uint SHIFT = 1 << 2;
-public static const uint LOGO  = 1 << 3;
+public const uint NONE  = 0;
+public const uint CTRL  = 1 << 0;
+public const uint ALT   = 1 << 1;
+public const uint SHIFT = 1 << 2;
+public const uint LOGO  = 1 << 3;
 
 public class KeyBindings {
 	

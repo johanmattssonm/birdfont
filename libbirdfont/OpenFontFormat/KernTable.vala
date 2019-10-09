@@ -16,11 +16,11 @@ namespace BirdFont {
 
 public class KernTable : OtfTable {
 	
-	public static const uint16 HORIZONTAL = 1;
-	public static const uint16 MINIMUM = 1 << 1;
-	public static const uint16 CROSS_STREAM = 1 << 2;
-	public static const uint16 OVERRIDE = 1 << 3;
-	public static const uint16 FORMAT = 1 << 8;
+	public const uint16 HORIZONTAL = 1;
+	public const uint16 MINIMUM = 1 << 1;
+	public const uint16 CROSS_STREAM = 1 << 2;
+	public const uint16 OVERRIDE = 1 << 3;
+	public const uint16 FORMAT = 1 << 8;
 	
 	GlyfTable glyf_table;
 	

@@ -39,9 +39,9 @@ public class FileDialogTab : Table {
 	bool select_folder = false;
 
 #if LINUX
-	public static const string path_separator = "/";
+	public const string path_separator = "/";
 #else
-	public static const string path_separator = "\\";
+	public const string path_separator = "\\";
 #endif
 
 	public FileDialogTab (string title, FileChooser action, bool folder) {

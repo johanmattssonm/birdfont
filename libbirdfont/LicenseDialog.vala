@@ -24,8 +24,8 @@ public class LicenseDialog : Dialog {
 	double width = 0;
 	double height;
 	
-	static const double font_size = 20;
-	static const double margin = 20;
+	const double font_size = 20;
+	const double margin = 20;
 	
 	public LicenseDialog () {
 		agreement = new TextArea (font_size);

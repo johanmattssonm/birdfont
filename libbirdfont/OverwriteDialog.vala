@@ -28,7 +28,7 @@ public class OverwriteDialog : Dialog {
 	double width = 0;
 	double height;
 	
-	static const double question_font_size = 23;
+	const double question_font_size = 23;
 	
 	public OverwriteDialog (OverWriteDialogListener callbacks) {
 		double font_size = question_font_size * MainWindow.units;

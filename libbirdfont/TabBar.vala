@@ -23,12 +23,12 @@ public class TabBar : GLib.Object {
 	
 	public Gee.ArrayList<Tab> tabs;
 
-	static const int NO_TAB = -1;
-	static const int NEXT_TAB = -2;
-	static const int PREVIOUS_TAB = -3;
-	static const int PROGRESS_WHEEL = -3;
-	static const int SHOW_MENU = -4;
-	static const int STOP_BUTTON = -5;
+	const int NO_TAB = -1;
+	const int NEXT_TAB = -2;
+	const int PREVIOUS_TAB = -3;
+	const int PROGRESS_WHEEL = -3;
+	const int SHOW_MENU = -4;
+	const int STOP_BUTTON = -5;
 
 	int first_tab = 0;
 	int selected = 0;

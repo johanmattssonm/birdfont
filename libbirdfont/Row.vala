@@ -25,7 +25,7 @@ public class Row : GLib.Object {
 	
 	GLib.Object? row_data = null;
 	
-	public static const int MAX_COLUMNS = 5;
+	public const int MAX_COLUMNS = 5;
 	
 	public bool is_headline = false;
 	
