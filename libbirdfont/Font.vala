@@ -599,9 +599,10 @@ public class Font : GLib.Object {
 			return;
 		}
 		
-		gc = glyph_name.get (glyph_collection.get_name ());
+		string name = glyph_collection.get_name ();
+		gc = glyph_name.get (name);
 		if (unlikely (gc != null)) {
-			warning ("glyph has already been added");
+			warning ("glyph has already been added: " + name);
 			return;
 		}
 	
