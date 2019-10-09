@@ -91,19 +91,10 @@ public class BirdFont {
 	public static Font current_font;
 	public static GlyphCollection current_glyph_collection;
 
-	public static Drawing? drawing = null;
-
 	public static string? settings_subdirectory = null;
 	public static string? sandbox_directory = null;
 
 	public BirdFont () {
-		set_defaul_drawing_callbacks ();
-	}
-
-	void set_defaul_drawing_callbacks () {
-		if (drawing == null) {
-			drawing = new Drawing ();
-		}
 	}
 
 	/**
@@ -543,10 +534,6 @@ public static File get_child (File folder, string file_name) {
 	printd (@"File in Directory: $f Name: $n\n");
 
 	return File.new_for_path (f + n);
-}
-
-public static void set_drawing_callbacks (Drawing callbacks) {
-	BirdFont.drawing = callbacks;
 }
 
 }
