@@ -28,6 +28,18 @@ public static string get_version () {
 	return VERSION;
 }
 
+public static string get_os () {
+#if MAC
+	return "mac";
+#else
+	if (BirdFont.win32) {
+		return "windows";
+	} else {
+		return "linux";
+	}
+#endif
+}
+
 public static void set_logging (bool log) {
 	BirdFont.logging = log;
 }

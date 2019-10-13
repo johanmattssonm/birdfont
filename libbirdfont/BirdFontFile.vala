@@ -261,10 +261,14 @@ class BirdFontFile : GLib.Object {
 	}
 	
 	public void write_root_tag (DataOutputStream os) throws GLib.Error {
+		string program_version = get_version ();
+		string operating_system = get_os ();
+
 		os.put_string ("""<?xml version="1.0" encoding="utf-8" standalone="yes"?>""");
 		os.put_string ("\n");
 		os.put_string ("<font>\n");
 		os.put_string (@"<format>$FORMAT_MAJOR.$FORMAT_MINOR</format>\n");
+		os.put_string (@"<program version=\"$program_version\" os=\"$operating_system\" />\n");
 	}
 	
 	public void write_closing_root_tag (DataOutputStream os) throws GLib.Error {
