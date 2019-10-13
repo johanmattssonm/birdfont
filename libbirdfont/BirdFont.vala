@@ -35,7 +35,7 @@ public static string get_os () {
 	if (BirdFont.win32) {
 		return "windows";
 	} else {
-		return "linux";
+		return "free";
 	}
 #endif
 }
