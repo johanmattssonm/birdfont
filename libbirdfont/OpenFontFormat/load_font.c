@@ -111,7 +111,7 @@ double half_way (double prev, double current) {
 /** Remove hidden points.
  * @return length after removal
  */
-double remove_hidden_points (FT_Vector* points, char* flags, guint length, guint capacity) {
+int remove_hidden_points (FT_Vector* points, char* flags, guint length, guint capacity) {
 	int k;
 	int l;
 	
