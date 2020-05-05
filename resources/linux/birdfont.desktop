@@ -10,5 +10,5 @@ Terminal=false
 Type=Application
 GenericName=Font Editor
 Categories=Graphics;VectorGraphics;
-Keywords=Font
-Keywords[ja]=フォント
+Keywords=Font;
+Keywords[ja]=フォント;
