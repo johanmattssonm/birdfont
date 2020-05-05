@@ -3,6 +3,8 @@ compiler: gcc
 sudo: require
 dist: xenial
 
+if: tag IS present
+
 before_install:
   - sudo apt-get update -qq
 
