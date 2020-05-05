@@ -12,101 +12,19 @@ install:
 script:
   - ./configure --prefix=/usr
   - ./build.py
-  - sudo ./install.py
-  # FIXME: The following should all be done by the install.py script when invoked with INSTALL_ROOT=appdir
-  # see https://github.com/probonopd/linuxdeployqt#using-linuxdeployqt-with-travis-ci
-  - mkdir -p appdir/usr/bin
-  - mkdir -p appdir/usr/lib/x86_64-linux-gnu
-  - mkdir -p appdir/usr/man/man1
-  - mkdir -p appdir/usr/share/applications
-  - mkdir -p appdir/usr/share/birdfont
-  - mkdir -p appdir/usr/share/icons/hicolor/128x128/apps
-  - mkdir -p appdir/usr/share/icons/hicolor/256x256/apps
-  - mkdir -p appdir/usr/share/icons/hicolor/48x48/apps
-  - mkdir -p appdir/usr/share/locale/cs/LC_MESSAGES
-  - mkdir -p appdir/usr/share/locale/de/LC_MESSAGES
-  - mkdir -p appdir/usr/share/locale/el/LC_MESSAGES
-  - mkdir -p appdir/usr/share/locale/es/LC_MESSAGES
-  - mkdir -p appdir/usr/share/locale/fi/LC_MESSAGES
-  - mkdir -p appdir/usr/share/locale/fr/LC_MESSAGES
-  - mkdir -p appdir/usr/share/locale/he/LC_MESSAGES
-  - mkdir -p appdir/usr/share/locale/id/LC_MESSAGES
-  - mkdir -p appdir/usr/share/locale/it/LC_MESSAGES
-  - mkdir -p appdir/usr/share/locale/nb/LC_MESSAGES
-  - mkdir -p appdir/usr/share/locale/nl/LC_MESSAGES
-  - mkdir -p appdir/usr/share/locale/oc/LC_MESSAGES
-  - mkdir -p appdir/usr/share/locale/pl/LC_MESSAGES
-  - mkdir -p appdir/usr/share/locale/pt_BR/LC_MESSAGES
-  - mkdir -p appdir/usr/share/locale/pt/LC_MESSAGES
-  - mkdir -p appdir/usr/share/locale/ru/LC_MESSAGES
-  - mkdir -p appdir/usr/share/locale/sk/LC_MESSAGES
-  - mkdir -p appdir/usr/share/locale/sr/LC_MESSAGES
-  - mkdir -p appdir/usr/share/locale/sv/LC_MESSAGES
-  - mkdir -p appdir/usr/share/locale/tr/LC_MESSAGES
-  - mkdir -p appdir/usr/share/locale/uk/LC_MESSAGES
-  - mkdir -p appdir/usr/share/metainfo
-  - mkdir -p appdir/usr/share/mime/packages
-  - cp /usr/share/birdfont/icons.birdfont appdir/usr/share/birdfont/icons.birdfont
-  - cp /usr/share/birdfont/bright.theme appdir/usr/share/birdfont/bright.theme
-  - cp /usr/share/birdfont/dark.theme appdir/usr/share/birdfont/dark.theme
-  - cp /usr/share/birdfont/high_contrast.theme appdir/usr/share/birdfont/high_contrast.theme
-  - cp /usr/share/birdfont/key_bindings.xml appdir/usr/share/birdfont/key_bindings.xml
-  - cp /usr/share/birdfont/birdfont_window_icon.png appdir/usr/share/birdfont/birdfont_window_icon.png
-  - cp /usr/share/applications/birdfont.desktop appdir/usr/share/applications/birdfont.desktop
-  - cp /usr/share/birdfont/ucd.sqlite appdir/usr/share/birdfont/ucd.sqlite
-  - cp /usr/share/birdfont/codepages.sqlite appdir/usr/share/birdfont/codepages.sqlite
-  - cp /usr/share/birdfont/Roboto-Regular.ttf appdir/usr/share/birdfont/Roboto-Regular.ttf
-  - cp /usr/share/icons/hicolor/256x256/apps/birdfont.png appdir/usr/share/icons/hicolor/256x256/apps/birdfont.png
-  - cp /usr/share/icons/hicolor/128x128/apps/birdfont.png appdir/usr/share/icons/hicolor/128x128/apps/birdfont.png
-  - cp /usr/share/icons/hicolor/48x48/apps/birdfont.png appdir/usr/share/icons/hicolor/48x48/apps/birdfont.png
-  - cp /usr/share/metainfo/birdfont.appdata.xml appdir/usr/share/metainfo/birdfont.appdata.xml
-  - cp /usr/bin/birdfont appdir/usr/bin/birdfont
-  - cp /usr/bin/birdfont-autotrace appdir/usr/bin/birdfont-autotrace
-  - cp /usr/bin/birdfont-export appdir/usr/bin/birdfont-export
-  - cp /usr/bin/birdfont-import appdir/usr/bin/birdfont-import
-  - cp /usr/lib/x86_64-linux-gnu/libbirdfont.so.36.0 appdir/usr/lib/x86_64-linux-gnu/libbirdfont.so.36.0
-  - cp /usr/man/man1/birdfont.1.gz appdir/usr/man/man1/birdfont.1.gz
-  - cp /usr/man/man1/birdfont-autotrace.1.gz appdir/usr/man/man1/birdfont-autotrace.1.gz
-  - cp /usr/man/man1/birdfont-export.1.gz appdir/usr/man/man1/birdfont-export.1.gz
-  - cp /usr/man/man1/birdfont-import.1.gz appdir/usr/man/man1/birdfont-import.1.gz
-  - cp /usr/share/locale/sr/LC_MESSAGES/birdfont.mo appdir/usr/share/locale/sr/LC_MESSAGES/birdfont.mo
-  - cp /usr/share/locale/tr/LC_MESSAGES/birdfont.mo appdir/usr/share/locale/tr/LC_MESSAGES/birdfont.mo
-  - cp /usr/share/locale/it/LC_MESSAGES/birdfont.mo appdir/usr/share/locale/it/LC_MESSAGES/birdfont.mo
-  - cp /usr/share/locale/he/LC_MESSAGES/birdfont.mo appdir/usr/share/locale/he/LC_MESSAGES/birdfont.mo
-  - cp /usr/share/locale/es/LC_MESSAGES/birdfont.mo appdir/usr/share/locale/es/LC_MESSAGES/birdfont.mo
-  - cp /usr/share/locale/oc/LC_MESSAGES/birdfont.mo appdir/usr/share/locale/oc/LC_MESSAGES/birdfont.mo
-  - cp /usr/share/locale/pt/LC_MESSAGES/birdfont.mo appdir/usr/share/locale/pt/LC_MESSAGES/birdfont.mo
-  - cp /usr/share/locale/fi/LC_MESSAGES/birdfont.mo appdir/usr/share/locale/fi/LC_MESSAGES/birdfont.mo
-  - cp /usr/share/locale/uk/LC_MESSAGES/birdfont.mo appdir/usr/share/locale/uk/LC_MESSAGES/birdfont.mo
-  - cp /usr/share/locale/de/LC_MESSAGES/birdfont.mo appdir/usr/share/locale/de/LC_MESSAGES/birdfont.mo
-  - cp /usr/share/locale/el/LC_MESSAGES/birdfont.mo appdir/usr/share/locale/el/LC_MESSAGES/birdfont.mo
-  - cp /usr/share/locale/nb/LC_MESSAGES/birdfont.mo appdir/usr/share/locale/nb/LC_MESSAGES/birdfont.mo
-  - cp /usr/share/locale/id/LC_MESSAGES/birdfont.mo appdir/usr/share/locale/id/LC_MESSAGES/birdfont.mo
-  - cp /usr/share/locale/sv/LC_MESSAGES/birdfont.mo appdir/usr/share/locale/sv/LC_MESSAGES/birdfont.mo
-  - cp /usr/share/locale/ru/LC_MESSAGES/birdfont.mo appdir/usr/share/locale/ru/LC_MESSAGES/birdfont.mo
-  - cp /usr/share/locale/nl/LC_MESSAGES/birdfont.mo appdir/usr/share/locale/nl/LC_MESSAGES/birdfont.mo
-  - cp /usr/share/locale/sk/LC_MESSAGES/birdfont.mo appdir/usr/share/locale/sk/LC_MESSAGES/birdfont.mo
-  - cp /usr/share/locale/pl/LC_MESSAGES/birdfont.mo appdir/usr/share/locale/pl/LC_MESSAGES/birdfont.mo
-  - cp /usr/share/locale/cs/LC_MESSAGES/birdfont.mo appdir/usr/share/locale/cs/LC_MESSAGES/birdfont.mo
-  - cp /usr/share/locale/pt_BR/LC_MESSAGES/birdfont.mo appdir/usr/share/locale/pt_BR/LC_MESSAGES/birdfont.mo
-  - cp /usr/share/locale/fr/LC_MESSAGES/birdfont.mo appdir/usr/share/locale/fr/LC_MESSAGES/birdfont.mo
-  - cp /usr/share/mime/packages/birdfont.xml appdir/usr/share/mime/packages/birdfont.xml
-  # FIXME: Workaround for https://github.com/johanmattssonm/birdfont/issues/97
-  - git clone https://github.com/project-portable/libunionpreload.git
-  - ( cd libunionpreload ; make )
-  - cp libunionpreload/libunionpreload.so appdir/
-  - |2
-    cat >> appdir/AppRun <<\EOF
-    #!/usr/bin/env sh
-    export HERE="$(dirname "$(readlink -f "${0}")")"
-    export UNION_PRELOAD="${HERE}"
-    export LD_PRELOAD="${HERE}/libunionpreload.so"
-    exec "${HERE}/usr/bin/birdfont" "$@"
-    EOF
-    chmod +x appdir/AppRun
+  - ./install.py -d appdir
   - wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
   - chmod a+x linuxdeployqt-continuous-x86_64.AppImage
-  - ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/*.desktop -appimage
+  - ./linuxdeployqt-continuous-x86_64.AppImage --appimage-extract 'usr/bin/patchelf'
+  - squashfs-root/usr/bin/patchelf --set-rpath '$ORIGIN' appdir/usr/lib/x86_64-linux-gnu/libbirdfont.so.*.*
+  - ( cd appdir/usr/lib/ ; ln -s x86_64-linux-gnu/lib* . )
+  - find appdir/
+  - export LD_LIBRARY_PATH=./appdir/usr/lib:./appdir/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
+  - |2
+    ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/*.desktop -appimage \
+    -executable=appdir/usr/bin/birdfont-autotrace \
+    -executable=appdir/usr/bin/birdfont-export \
+    -executable=appdir/usr/bin/birdfont-import
   
 after_success:
   - wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh

@@ -36,63 +36,83 @@ public class SearchPaths {
 		string bundle_path = (BirdFont.bundle_path != null) ? (!) BirdFont.bundle_path : "";
 
 		resources = (is_null (resources_folder)) ? "" : resources_folder; 
+
+		string? current_program = GLib.FileUtils.read_link ("/proc/self/exe");		
+
+		if (current_program != null)	{
+			string program = (!) current_program;
+			int separator = program.last_index_of ("/");
+			
+			if (separator > -1) {
+				string folder = program.substring (0, separator);
+				
+				f = get_file (folder + "/../" + d + "/", name);
+				if (f.query_exists ()) return f;	
+
+				f = get_file (folder + "/../", name);
+				if (f.query_exists ()) return f;
+
+				f = get_file (folder + "/../share/birdfont/", name);
+				if (f.query_exists ()) return f;	
+			}
+		}
 		
 		f = get_file (resources + "/" + d + "/", name);
-		if (likely (f.query_exists ())) return f;
+		if (f.query_exists ()) return f;
 
 		f = get_file (resources + "/", name);
-		if (likely (f.query_exists ())) return f;
+		if (f.query_exists ()) return f;
 
 		f = get_file ("resources/", name);
-		if (likely (f.query_exists ())) return f;
+		if (f.query_exists ()) return f;
 				
 		f = get_file (resources + "/", name + "/");
-		if (likely (f.query_exists ())) return f;
+		if (f.query_exists ()) return f;
 
 		f = get_file (BirdFont.exec_path + "/" + d + "/", name);
-		if (likely (f.query_exists ())) return f;
+		if (f.query_exists ()) return f;
 		
 		f = get_file (BirdFont.exec_path + "/", name + "/");
-		if (likely (f.query_exists ())) return f;
+		if (f.query_exists ()) return f;
 
 		f = get_file (BirdFont.exec_path + "\\" + d + "\\", name);
-		if (likely (f.query_exists ())) return f;
+		if (f.query_exists ()) return f;
 		
 		f = get_file (BirdFont.exec_path + "\\", name + "\\");
-		if (likely (f.query_exists ())) return f;
+		if (f.query_exists ()) return f;
 		
 		f = get_file (bundle_path + "/Contents/Resources/birdfont_resources/", d + "/" + name);
-		if (likely (f.query_exists ())) return f;
+		if (f.query_exists ()) return f;
 		
 		f = get_file (bundle_path + "/Contents/Resources/birdfont_resources/", name + "/");
-		if (likely (f.query_exists ())) return f;
+		if (f.query_exists ()) return f;
 		
 		f = get_file ("./" + d + "/", name);
-		if (likely (f.query_exists ())) return f;		
+		if (f.query_exists ()) return f;		
 
 		f = get_file ("../" + d + "/", name);
-		if (likely (f.query_exists ())) return f;
+		if (f.query_exists ()) return f;
 		
 		f = get_file (".\\" + d + "\\", name);
-		if (likely (f.query_exists ())) return f;
+		if (f.query_exists ()) return f;
 
 		f = get_file ("", name);
-		if (likely (f.query_exists ())) return f;
+		if (f.query_exists ()) return f;
 
 		f = get_file (d + "\\", name);
-		if (likely (f.query_exists ())) return f;
+		if (f.query_exists ()) return f;
 
 		f = get_file (@"$PREFIX/share/birdfont/" + d + "/", name);
-		if (likely (f.query_exists ())) return f;
+		if (f.query_exists ()) return f;
 
 		f = get_file (@"/usr/local/share/birdfont/" + d + "/", name);
-		if (likely (f.query_exists ())) return f;
+		if (f.query_exists ()) return f;
 
 		f = get_file (@"resources/linux/", name);
-		if (likely (f.query_exists ())) return f;
+		if (f.query_exists ()) return f;
 
 		f = get_file (@"/usr/share/birdfont/" + d + "/", name);
-		if (likely (f.query_exists ())) return f;
+		if (f.query_exists ()) return f;
 
 		return f;		
 	}
