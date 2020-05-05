@@ -126,6 +126,7 @@ def is_debian():
   try:
   	version = platform.version()
   	print("OS Version: " + version)
+  	
   	if version.find("Ubuntu") > -1:
   		return True
 
