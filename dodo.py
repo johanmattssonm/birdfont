@@ -103,6 +103,7 @@ def make_birdfont(target_binary, deps):
 		$({pkg-config} --libs {gee}) \
 		$({pkg-config} --libs gio-2.0) \
 		$({pkg-config} --libs cairo) \
+		$({pkg-config} --libs cairo-gobject) \
 		$({pkg-config} --libs glib-2.0) \
 		$({pkg-config} --libs gdk-pixbuf-2.0) \
 		$({pkg-config} --libs webkit2gtk-4.0) \
@@ -160,6 +161,7 @@ def make_birdfont_export(target_binary, deps):
 		$({pkg-config} --libs {gee}) \
 		$({pkg-config} --libs gio-2.0) \
 		$({pkg-config} --libs cairo) \
+		$({pkg-config} --libs cairo-gobject) \
 		$({pkg-config} --libs glib-2.0) \
 		$({pkg-config} --libs xmlbird) \
 		-L./build -L./build/bin -l birdgems \
@@ -202,6 +204,7 @@ def make_birdfont_import(target_binary, deps):
 		$({pkg-config} --cflags {gee}) \
 		$({pkg-config} --cflags gio-2.0) \
 		$({pkg-config} --cflags cairo) \
+		$({pkg-config} --libs cairo-gobject) \
 		$({pkg-config} --cflags glib-2.0) \
 		$({pkg-config} --cflags xmlbird) \
         -o OBJECT_FILE""".format(**config.SETTINGS)
@@ -214,6 +217,7 @@ def make_birdfont_import(target_binary, deps):
 		$({pkg-config} --libs {gee}) \
 		$({pkg-config} --libs gio-2.0) \
 		$({pkg-config} --libs cairo) \
+		$({pkg-config} --libs cairo-gobject) \
 		$({pkg-config} --libs glib-2.0) \
 		$({pkg-config} --libs xmlbird) \
 		-L./build -L./build/bin -l birdgems \
@@ -269,6 +273,7 @@ def make_birdfont_autotrace(target_binary, deps):
 		$({pkg-config} --libs {gee}) \
 		$({pkg-config} --libs gio-2.0) \
 		$({pkg-config} --libs cairo) \
+		$({pkg-config} --libs cairo-gobject) \
 		$({pkg-config} --libs glib-2.0) \
 		$({pkg-config} --libs xmlbird) \
 		-L./build -L./build/bin -l birdgems \
@@ -335,6 +340,7 @@ def make_libbirdfont(target_binary, deps):
             $({pkg-config} --libs gio-2.0) \
             $({pkg-config} --libs fontconfig) \
             $({pkg-config} --libs cairo) \
+            $({pkg-config} --libs cairo-gobject) \
             $({pkg-config} --libs glib-2.0) \
             $({pkg-config} --libs xmlbird) \
             -L./build -L./build/bin -l birdgems \
@@ -469,6 +475,7 @@ def make_birdfont_test(target_binary, deps):
 		$({pkg-config} --libs {gee}) \
 		$({pkg-config} --libs gio-2.0) \
 		$({pkg-config} --libs cairo) \
+		$({pkg-config} --libs cairo-gobject) \
 		$({pkg-config} --libs glib-2.0) \
 		$({pkg-config} --libs xmlbird) \
 		-L./build -L./build/bin -l birdgems \
