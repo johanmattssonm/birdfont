@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component>
 	<id>org.birdfont.birdfont</id>
-	<metadata_license>GPL-3.0+</metadata_license>
+	<launchable type="desktop-id">birdfont.desktop</launchable>
+	<metadata_license>CC0-1.0</metadata_license>
 	<project_license>GPL-3.0+</project_license>
 	<name>birdfont</name>
 	<summary>Font editor</summary>
@@ -29,4 +30,5 @@
 		<binary>birdfont</binary>
 	</provides>
 	<update_contact>johan.mattsson.m@gmail.com</update_contact>
+	<developer_name>Johan Mattsson</developer_name>
 </component>
