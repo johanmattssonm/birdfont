@@ -122,6 +122,8 @@ public class VersionList : GLib.Object {
 			int i = get_current_version_index ();
 			set_selected_item (get_action_index (i));
 		}
+		
+		select_last_glyph ();
 	}
 
 	private int get_current_version_index () {
@@ -401,6 +403,18 @@ public class VersionList : GLib.Object {
 		}
 		
 		return false;
+	}
+
+	void select_last_glyph () {
+		MenuAction? ma = null;
+		
+		foreach (MenuAction m in actions) {
+			ma = m;
+		}
+		
+		if (ma != null) {
+			set_selected_item ((!) ma);
+		}
 	}
 	
 	public bool menu_icon_action (double px, double py) {		
