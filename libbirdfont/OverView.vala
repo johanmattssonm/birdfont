@@ -1361,6 +1361,22 @@ public class OverView : FontDisplay {
 		
 		for (int j = 0; j < visible_items.size; j++) {
 			i = visible_items.get (j);
+			if (i.click_menu (button, x, y)) {
+				GlyphCanvas.redraw ();
+				return;
+			}
+		}
+
+		for (int j = 0; j < visible_items.size; j++) {
+			i = visible_items.get (j);
+			if (i.click_info (button, x, y)) {
+				GlyphCanvas.redraw ();
+				return;
+			}
+		}
+				
+		for (int j = 0; j < visible_items.size; j++) {
+			i = visible_items.get (j);
 			
 			if (i.click (button, x, y)) {
 				selected = index;

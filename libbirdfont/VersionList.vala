@@ -387,6 +387,7 @@ public class VersionList : GLib.Object {
 							ma = actions.get (index + 1);
 							index++;
 						}
+
 					}
 					return false;
 				} else {

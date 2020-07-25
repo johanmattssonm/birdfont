@@ -235,10 +235,9 @@ public class OverViewItem : GLib.Object {
 		return height + margin;
 	}
 	
-	public bool click (uint button, double px, double py) {
+	public bool click_menu (uint button, double px, double py) {
 		bool a;
 		GlyphCollection g;
-		bool s = (x <= px <= x + width) && (y <= py <= y + height);
 
 		if (has_icons () && glyphs != null) {
 			g = (!) glyphs;
@@ -246,17 +245,32 @@ public class OverViewItem : GLib.Object {
 			a = version_menu.menu_item_action (px, py); // select one item on the menu
 			
 			if (a) {
-				return s;
+				MainWindow.get_overview ().reset_cache ();
+				MainWindow.get_overview ().update_item_list ();
+
+				GlyphCanvas.redraw ();
+				return true;
 			}
 			
 			version_menu.menu_icon_action (px, py); // click in the open menu
 		}
 		
+		return false;
+	}
+	
+	public bool click_info (uint button, double px, double py) {
 		info.set_position (x + width - 17, y + height - 22.5);
+		
 		if (has_icons () && info.is_over_icon (px, py)) {
 			MainWindow.get_overview ().set_character_info (info);
+			return true;
 		}
-				
+		
+		return false;
+	}
+	
+	public bool click (uint button, double px, double py) {
+		bool s = (x <= px <= x + width) && (y <= py <= y + height);		
 		return s;
 	}
 
