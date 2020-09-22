@@ -57,7 +57,7 @@ Configure the project with ./configure --nonnull
 
 Windows and Mac binaries can be downloaded from
 https://birdfont.org Many Linux distributions have packages of
-Birdfont in their repositories. There is a BSD package in OpenBSD and FreeBSD.
+Birdfont in their repositories. There are BSD packages in OpenBSD and FreeBSD.
 
 [birdfont]: https://birdfont.org/images/birdfont_logo2.png "Birdfont logo"
 [xmlbird]: https://birdfont.org/xmlbird.php "XML Bird – XML Parser for programs written in VALA"
