@@ -1206,6 +1206,7 @@ public class Font : GLib.Object {
 
 	public static string to_hex_code (unichar ch) {
 		StringBuilder s = new StringBuilder ();
+		bool has_ef = false;
 		
 		uint8 a = (uint8)(ch & 0x00000F);
 		uint8 b = (uint8)((ch & 0x0000F0) >> 4 * 1);
@@ -1217,9 +1218,10 @@ public class Font : GLib.Object {
 		if (e != 0 || f != 0) {
 			s.append (oct_to_hex (f));
 			s.append (oct_to_hex (e));
+			has_ef = true;
 		}
 		
-		if (c != 0 || d != 0) {
+		if (c != 0 || d != 0 || has_ef) {
 			s.append (oct_to_hex (d));
 			s.append (oct_to_hex (c));
 		}
