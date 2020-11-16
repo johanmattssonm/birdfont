@@ -24,6 +24,8 @@
 #include FT_TRUETYPE_TABLES_H
 #include FT_SFNT_NAMES_H
 
+#include "birdfont.h"
+
 /** Error codes. */
 #define OK 0
 
