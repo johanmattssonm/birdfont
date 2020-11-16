@@ -55,7 +55,7 @@ namespace BirdFont {
 public class FallbackFont : GLib.Object {
 	Gee.ArrayList<File> font_directories;
 	
-	FontFace* default_font = null;
+	LoadFont.FreeTypeFontFace* default_font = null;
 	public static FcConfig* font_config = null;
 	static bool font_config_started = false;
 	
@@ -104,7 +104,7 @@ public class FallbackFont : GLib.Object {
 	
 	~FallbackFont () {
 		if (default_font != null) {
-			close_font (default_font);
+			LoadFont.close_font (default_font);
 		}
 	}
 
@@ -190,7 +190,7 @@ public class FallbackFont : GLib.Object {
 		BirdFontFile bf_parser;
 		Font bf_font;
 		StringBuilder? glyph_data;
-		FontFace* font;
+		LoadFont.FreeTypeFontFace* font;
 
 		bf_font = new Font ();
 		font_file = null;
@@ -215,9 +215,9 @@ public class FallbackFont : GLib.Object {
 		if (glyph_data == null) {
 			font_file = find_font (font_config, (!) c.to_string ());
 			if (font_file != null) {
-				font = open_font ((!) font_file);
+				font = LoadFont.open_font ((!) font_file);
 				glyph_data = get_glyph_in_font (font, c);
-				close_font (font);
+				LoadFont.close_font (font);
 			}
 		}
 		
@@ -229,12 +229,12 @@ public class FallbackFont : GLib.Object {
 		return bf_font;		
 	}
 
-	public StringBuilder? get_glyph_in_font (FontFace* font, unichar c) {
+	internal StringBuilder? get_glyph_in_font (LoadFont.FreeTypeFontFace* font, unichar c) {
 		StringBuilder? glyph_data = null;
 		GlyphCollection gc;
 
 		gc = new GlyphCollection (c, (!)c.to_string ());		
-		glyph_data = load_glyph (font, (uint) c);
+		glyph_data = LoadFont.load_glyph (font, (uint) c);
 
 		return glyph_data;
 	}
@@ -317,7 +317,7 @@ public class FallbackFont : GLib.Object {
 		string? fn = get_default_font_file ();
 		
 		if (fn != null) {
-			default_font = open_font ((!) fn);
+			default_font = LoadFont.open_font ((!) fn);
 		}
 	}
 	

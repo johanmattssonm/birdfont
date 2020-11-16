@@ -202,7 +202,7 @@ class TestCases {
 			warning ("File does not exist.");
 		}
 		
-		data = load_freetype_font ((!) f.get_path (), out error);
+		data = LoadFont.load_freetype_font ((!) f.get_path (), out error);
 		if (error != 0) {
 			warning ("Failed to load font.");
 			return;

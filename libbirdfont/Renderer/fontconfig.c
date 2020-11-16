@@ -13,7 +13,7 @@
 */
 
 #include <stdio.h>
-#include <glib.h>
+#include <glib.h>a
 #include <fontconfig/fontconfig.h>
 
 gchar* find_font_with_property (FcConfig* fontconfig, const gchar* characters, const gchar* property) {

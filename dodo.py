@@ -35,8 +35,7 @@ DOIT_CONFIG = {
         'birdfont', 
         'birdfont-autotrace',
         'birdfont-export',
-        'birdfont-import',
-        'birdfont-test'
+        'birdfont-import'
         ],
     }
 
@@ -189,6 +188,7 @@ def make_birdfont_import(target_binary, deps):
         {valacflags[birdfont-import]} \
 		birdfont-import/*.vala \
 		--vapidir=./ \
+		 loadfont.vapi \
 		--pkg {gee} \
 		--pkg gio-2.0  \
 		--pkg cairo \
@@ -292,29 +292,30 @@ def make_birdfont_autotrace(target_binary, deps):
 def task_birdfont_autotrace():
     yield make_birdfont_autotrace('birdfont-autotrace', ['libbirdgems.so', 'libbirdfont.so'])
     
-def make_libbirdfont(target_binary, deps):
-    valac_command = """{valac} \
+def make_libbirdfont(target_binary, deps):	
+    valac_command = config.VALAC + """\
         -C \
         --vapidir=./ \
         --basedir build/libbirdfont/ \
-        {non_null} \
-        {valacflags[libbirdfont]} \
+        """ + config.NON_NULL + """ \
+        """ + config.VALACFLAGS.get("libbirdfont", "") + """ \
         --enable-experimental \
         --library libbirdfont \
         -H build/libbirdfont/birdfont.h \
         libbirdfont/*.vala \
         libbirdfont/OpenFontFormat/*.vala \
         libbirdfont/Renderer/*.vala \
+        loadfont.vapi \
         --pkg posix \
-        --pkg {gee} \
+        --pkg """ + config.GEE + """ \
         --pkg gio-2.0 \
         --pkg cairo \
         --pkg xmlbird \
         --pkg libbirdgems \
         --pkg sqlite3 \
         --pkg gdk-pixbuf-2.0 \
-        """.format(**config.SETTINGS)
-
+        """
+        
     cc_command = """{cc} {cflags[libbirdfont]} \
             -c C_SOURCE \
             -fPIC \
@@ -438,58 +439,3 @@ def task_build ():
     return  {
         'actions': ['echo "Build"'],
         }
-
-def make_birdfont_test(target_binary, deps):
-    valac_command = """{valac} \
-        -C \
-        --vapidir=./ \
-        --basedir build/birdfont-test/ \
-        {non_null} \
-        {valacflags[birdfont-test]} \
-        --enable-experimental \
-        birdfont-test/*.vala \
-		--vapidir=./ \
-		--pkg {gee} \
-		--pkg gio-2.0  \
-		--pkg cairo \
-		--pkg xmlbird \
-		--pkg libbirdfont \
-        """.format(**config.SETTINGS)
-
-    cc_command = """{cc} {cflags[birdfont-test]} \
-        -c C_SOURCE \
-		-D 'GETTEXT_PACKAGE="birdfont"' \
-        -I./build/libbirdfont \
-		$({pkg-config} --cflags sqlite3) \
-		$({pkg-config} --cflags {gee}) \
-		$({pkg-config} --cflags gio-2.0) \
-		$({pkg-config} --cflags cairo) \
-		$({pkg-config} --cflags glib-2.0) \
-		$({pkg-config} --cflags xmlbird) \
-        -o OBJECT_FILE""".format(**config.SETTINGS)
-
-    linker_command = """{cc} {ldflags[birdfont-test]} \
-        build/birdfont-test/*.o \
-		-L./build/bin -lbirdfont \
-		$({pkg-config} --libs sqlite3) \
-		$({pkg-config} --libs {gee}) \
-		$({pkg-config} --libs gio-2.0) \
-		$({pkg-config} --libs cairo) \
-		$({pkg-config} --libs cairo-gobject) \
-		$({pkg-config} --libs glib-2.0) \
-		$({pkg-config} --libs xmlbird) \
-		-L./build -L./build/bin -l birdgems \
-        -o build/bin/""".format(**config.SETTINGS) + target_binary
-
-    test = Builder('birdfont-test',
-                   valac_command, 
-                   cc_command,
-                   linker_command,
-                   target_binary,
-                   None,
-                   deps)
-			
-    yield test.build()
-
-def task_birdfont_test():
-    yield make_birdfont_test('birdfont-test', ['libbirdgems.so', 'libbirdfont.so'])

@@ -1040,7 +1040,7 @@ public class Font : GLib.Object {
 		bool parsed;
 		BirdFontFile bf_font = new BirdFontFile (this);
 		
-		data = load_freetype_font (path, out error);
+		data = LoadFont.load_freetype_font (path, out error);
 
 		if (error != 0) {
 			warning ("Failed to load freetype font.");
