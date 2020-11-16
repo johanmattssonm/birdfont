@@ -551,14 +551,6 @@ GString* get_bf_contour_data (guint unicode, FT_Vector* points, char* flags, int
 		g_string_append (bf, contour->str);
 		g_string_free (contour, TRUE);
 	}
-
-	if (length > 0) {
-		last_to_first = (last_x == new_points[0].x && last_y == new_points[0].y); 
-		
-		if (cnc_open && !last_to_first) {
-			g_string_append (bf, " O");
-		}
-	}
 	
 	free (new_points);
 	free (new_flags);
