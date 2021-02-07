@@ -8,7 +8,6 @@ export SVG, EOT and TTF fonts.
     Author: Johan Mattsson and others see AUTHORS for full attribution.
     License: GNU GPL v3
     Webpage: https://birdfont.org
-    Bugtracker: https://birdfont.org/bugtracker/my_view_page.php
 
 ## Building from Source
 
