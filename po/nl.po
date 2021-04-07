@@ -4,18 +4,18 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-14 17:09+0200\n"
-"PO-Revision-Date: 2016-10-09 08:16+0000\n"
-"Last-Translator: Anonymous Pootle User\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"PO-Revision-Date: 2021-04-07 19:56+0200\n"
+"Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
+"Language-Team: \n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Pootle 2.5.1-rc1\n"
+"X-Generator: Poedit 2.4.2\n"
 "X-POOTLE-MTIME: 1476001011.000000\n"
 
 # Please, fix the capitalization errors
@@ -258,7 +258,7 @@ msgstr "Licentie"
 
 #: libbirdfont/DescriptionDisplay.vala:195
 msgid "License URL"
-msgstr "Licentie-URL"
+msgstr "Licentie-url"
 
 #: libbirdfont/DescriptionDisplay.vala:207
 msgid "Trademark"
@@ -274,11 +274,11 @@ msgstr "Ontwerper"
 
 #: libbirdfont/DescriptionDisplay.vala:241
 msgid "Vendor URL"
-msgstr "Leverancier-URL"
+msgstr "Leveranciersurl"
 
 #: libbirdfont/DescriptionDisplay.vala:252
 msgid "Designer URL"
-msgstr "Ontwerper-URL"
+msgstr "Ontwerper-url"
 
 #: libbirdfont/DrawingTools.vala:112
 msgid "Background Tools"
@@ -318,11 +318,11 @@ msgstr "Zoomen"
 
 #: libbirdfont/DrawingTools.vala:130
 msgid "Guidelines & Grid"
-msgstr "Richtlijnen & raster"
+msgstr "Richtlijnen en rooster"
 
 #: libbirdfont/DrawingTools.vala:135
 msgid "Grid Size"
-msgstr "Rastergrootte"
+msgstr "Roostergrootte"
 
 #: libbirdfont/DrawingTools.vala:194
 msgid "Move canvas"
@@ -330,11 +330,11 @@ msgstr "Papier verplaatsen"
 
 #: libbirdfont/DrawingTools.vala:195
 msgid "Ctrl + Shift + Click"
-msgstr ""
+msgstr "Ctrl + Shift + klikken"
 
 #: libbirdfont/DrawingTools.vala:196
 msgid "Space + Click"
-msgstr ""
+msgstr "Spatiebalk + klikken"
 
 #: libbirdfont/DrawingTools.vala:204
 msgid "Delete"
@@ -390,7 +390,7 @@ msgstr "Hoogte"
 
 #: libbirdfont/DrawingTools.vala:475
 msgid "Tie curve handles for the selected edit point"
-msgstr "Gebogen grepen voor het geselecteerde bewerkingspunt binden"
+msgstr "Gebogen grepen van het geselecteerde bewerkingspunt binden"
 
 #: libbirdfont/DrawingTools.vala:526
 msgid "Symmetrical handles"
@@ -426,7 +426,7 @@ msgstr "Pad horizontaal spiegelen"
 
 #: libbirdfont/DrawingTools.vala:629
 msgid "Set size for background image"
-msgstr "Grootte voor achtergrondafbeelding instellen"
+msgstr "Grootte van achtergrondafbeelding instellen"
 
 #: libbirdfont/DrawingTools.vala:667
 msgid "Show/hide background image"
@@ -506,7 +506,7 @@ msgstr "Hulplijnen bij boven- en ondermarge tonen"
 
 #: libbirdfont/DrawingTools.vala:1044
 msgid "Lock guides and grid"
-msgstr "Hulplijnen en raster vergrendelen"
+msgstr "Hulplijnen en rooster vergrendelen"
 
 #: libbirdfont/DrawingTools.vala:1086
 msgid "Zoom Out More"
@@ -534,7 +534,7 @@ msgstr "Volgende weergave"
 
 #: libbirdfont/DrawingTools.vala:1535
 msgid "Set size for grid"
-msgstr "Grootte voor raster instellen"
+msgstr "Grootte van rooster instellen"
 
 #: libbirdfont/ExportSettings.vala:41 libbirdfont/ExportSettings.vala:185
 #: libbirdfont/Menu.vala:309
@@ -746,8 +746,7 @@ msgstr "De huidige afspatiëringsklasse is onjuist gevormd."
 
 #: libbirdfont/KerningDisplay.vala:110
 msgid "Add single characters separated by space and ranges on the form A-Z."
-msgstr ""
-"Voeg enkele tekens toe, gescheiden door spaties en bereik in de vorm A-Z."
+msgstr "Voeg enkele tekens toe, gescheiden door spaties en bereik in de vorm A-Z."
 
 #: libbirdfont/KerningDisplay.vala:111
 msgid "Type “space” to kern the space character and “divis” to kern -."
@@ -818,7 +817,7 @@ msgstr "Teken invoegen op Unicode-waarde"
 
 #: libbirdfont/KerningTools.vala:130
 msgid "Right to left"
-msgstr ""
+msgstr "Rechts naar links"
 
 #: libbirdfont/KerningTools.vala:139
 msgid "Open a text file with kerning strings first."
@@ -830,7 +829,7 @@ msgstr "Vorige afspatiëringsstring"
 
 #: libbirdfont/KerningTools.vala:151
 msgid "You have reached the beginning of the list."
-msgstr "U hebt het begin van de lijst bereikt."
+msgstr "Het begin van de lijst is bereikt."
 
 #: libbirdfont/KerningTools.vala:160
 msgid "Next kerning string"
@@ -838,7 +837,7 @@ msgstr "Volgende afspatiëringsstring"
 
 #: libbirdfont/KerningTools.vala:170
 msgid "You have reached the end of the list."
-msgstr "U hebt het einde van de lijst bereikt."
+msgstr "Het einde van de lijst is bereikt."
 
 #: libbirdfont/KerningTools.vala:179
 msgid "Substitutions"
@@ -927,7 +926,7 @@ msgstr "Dit lettertype is met een nieuwere versie van Birdfont gemaakt."
 
 #: libbirdfont/LoadCallback.vala:30
 msgid "You need to upgrade your version of Birdfont."
-msgstr "U dient uw versie van Birdfont te upgraden."
+msgstr "U dient uw versie van Birdfont bij te werken."
 
 #: libbirdfont/LoadCallback.vala:34
 msgid "This font was made with an old version of Birdfont."
@@ -935,7 +934,7 @@ msgstr "Dit lettertype is met een oude versie van Birdfont gemaakt."
 
 #: libbirdfont/LoadCallback.vala:35
 msgid "You need an older version of Birdfont to open it."
-msgstr "U hebt een oudere versie van Birdfont nodig om het te openen."
+msgstr "U heeft een oudere versie van Birdfont nodig om het te openen."
 
 #: libbirdfont/MainWindow.vala:238
 msgid "Glyph sequence"
@@ -951,7 +950,7 @@ msgstr "Nieuw"
 
 #: libbirdfont/Menu.vala:57 libbirdfont/RecentFiles.vala:85
 msgid "Recent Files"
-msgstr "Recente bestanden"
+msgstr "Onlangs geopend"
 
 #: libbirdfont/Menu.vala:71
 msgid "Save As"
@@ -1068,7 +1067,7 @@ msgstr "Lettertypen exporteren"
 
 #: libbirdfont/Menu.vala:281
 msgid "Export Glyph as SVG"
-msgstr "Symbool exporteren als SVG"
+msgstr "Symbool exporteren als svg"
 
 #: libbirdfont/Menu.vala:288
 msgid "Import SVG file"
@@ -1092,11 +1091,11 @@ msgstr "Tabblad"
 
 #: libbirdfont/Menu.vala:330
 msgid "Next Tab"
-msgstr "Volgende tabblad"
+msgstr "Volgend tabblad"
 
 #: libbirdfont/Menu.vala:337
 msgid "Previous Tab"
-msgstr "Vorige tabblad"
+msgstr "Vorig tabblad"
 
 #: libbirdfont/Menu.vala:344
 msgid "Close Tab"
@@ -1183,14 +1182,12 @@ msgid "Missing metadata in font:"
 msgstr "Ontbrekende metagegevens in lettertype:"
 
 #: libbirdfont/MenuTab.vala:128
-msgid ""
-"You need to choose a different name for the TTF file with Mac adjustmets."
-msgstr ""
-"U dient een andere naam te kiezen voor het TTF-bestand met Mac-aanpassingen."
+msgid "You need to choose a different name for the TTF file with Mac adjustmets."
+msgstr "U dient een andere naam te kiezen voor het ttf-bestand met Mac-aanpassingen."
 
 #: libbirdfont/MenuTab.vala:146
 msgid "You need to save your font before exporting it."
-msgstr "U dient uw lettertype op te slaan voor het exporteren."
+msgstr "Sla het lettertype op om het te exporteren."
 
 #: libbirdfont/MenuTab.vala:189
 msgid "Menu"
@@ -1198,7 +1195,7 @@ msgstr "Menu"
 
 #: libbirdfont/MenuTab.vala:216
 msgid "Can't create TTF font."
-msgstr ""
+msgstr "Het ttf-bestand kan niet worden aangemaakt."
 
 #: libbirdfont/MenuTab.vala:702
 msgid "Add ligature"
@@ -1226,7 +1223,7 @@ msgstr "Label"
 
 #: libbirdfont/OtfFeatureTable.vala:212
 msgid "Select a glyph to create an alternate for."
-msgstr ""
+msgstr "Kies het symbool waarvoor de variant moet worden gemaakt."
 
 #: libbirdfont/OtfFeatureTable.vala:218
 msgid "Glyph name"
@@ -1279,7 +1276,7 @@ msgstr "Annuleren"
 
 #: libbirdfont/OverWriteDialogListener.vala:33
 msgid "Yes, don't ask again."
-msgstr "Ja, niet meer vragen."
+msgstr "Ja, en niet meer vragen."
 
 #: libbirdfont/OverviewTools.vala:46 libbirdfont/OverviewTools.vala:117
 #: libbirdfont/OverviewTools.vala:153
@@ -1308,11 +1305,11 @@ msgstr "Grootte wijzigen"
 
 #: libbirdfont/OverviewTools.vala:168
 msgid "Create alternate"
-msgstr "Alternatief maken"
+msgstr "Variant maken"
 
 #: libbirdfont/OverviewTools.vala:172
 msgid "Set curve orientation"
-msgstr "Curveoriëntatie instellen"
+msgstr "Curve-oriëntatie instellen"
 
 #: libbirdfont/OverviewTools.vala:194
 msgid "Master Size"
@@ -1400,7 +1397,7 @@ msgstr "Vul open paden."
 
 #: libbirdfont/SettingsTab.vala:107
 msgid "Use TTF units."
-msgstr "Gebruik TTF-eenheden."
+msgstr "Gebruik ttf-eenheden."
 
 #: libbirdfont/SettingsTab.vala:110
 msgid "Number of points added by the freehand tool"
@@ -1411,13 +1408,12 @@ msgid "Path simplification threshold"
 msgstr "Padvereenvoudigingsdrempel"
 
 #: libbirdfont/SettingsTab.vala:163
-#, fuzzy
 msgid "Translate"
-msgstr "niet vertalen"
+msgstr "Vertalen"
 
 #: libbirdfont/SettingsTab.vala:170
 msgid "Color theme"
-msgstr "Kleurthema"
+msgstr "Kleurenschema"
 
 #: libbirdfont/SettingsTab.vala:172
 msgid "Key Bindings"
@@ -1749,11 +1745,11 @@ msgstr "Uw lettertypen zijn geëxporteerd."
 
 #: birdfont-autotrace/AutoTrace.vala:69
 msgid "brightness cutoff, from 0.001 to 2, the default value is 1"
-msgstr "helderheidsgrens, van 0,001 tot 2, de standaardwaarde is 1"
+msgstr "helderheidsgrens, van 0,001 tot 2 - de standaardwaarde is 1"
 
 #: birdfont-autotrace/AutoTrace.vala:70
 msgid "details, from 0.001 to 9.999, the default value is 1"
-msgstr "details, van 0,001 tot 9,999, de standaardwaarde is 1"
+msgstr "details, van 0,001 tot 9,999 - de standaardwaarde is 1"
 
 #: birdfont-autotrace/AutoTrace.vala:72
 msgid "use quadratic control points"
@@ -1761,7 +1757,7 @@ msgstr "kwadratische controlepunten gebruiken"
 
 #: birdfont-autotrace/AutoTrace.vala:73
 msgid "simplification, from 0.001 to 1, the default value is 0.5"
-msgstr "vereenvoudiging, van 0,001 tot 1, de standaardwaarde is 0,5"
+msgstr "vereenvoudiging, van 0,001 tot 1 - de standaardwaarde is 0,5"
 
 #: birdfont-autotrace/AutoTrace.vala:92
 msgid "File does not exist."
@@ -1773,7 +1769,7 @@ msgstr "Onbekende bestandsindeling."
 
 #: birdfont-autotrace/AutoTrace.vala:114
 msgid "Writing"
-msgstr "Schrijven"
+msgstr "Bezig met wegschrijven"
 
 #~ msgid "color"
 #~ msgstr "kleur"
@@ -1835,11 +1831,8 @@ msgstr "Schrijven"
 #~ msgid "The file is write protected."
 #~ msgstr "Het bestand is tegen schrijven beveiligd."
 
-#~ msgid ""
-#~ "Right click to edit the class and left click to kern glyphs in the class."
-#~ msgstr ""
-#~ "Klik met rechts om de klasse te bewerken en klik met links om symbolen in "
-#~ "de klasse af te spatiëren."
+#~ msgid "Right click to edit the class and left click to kern glyphs in the class."
+#~ msgstr "Klik met rechts om de klasse te bewerken en klik met links om symbolen in de klasse af te spatiëren."
 
 #~ msgid "Stroke color"
 #~ msgstr "Streekkleur"
@@ -1892,11 +1885,8 @@ msgstr "Schrijven"
 #~ msgid "Set precision"
 #~ msgstr "Precisie instellen"
 
-#~ msgid ""
-#~ "Show all control point handles or only handles for the selected points."
-#~ msgstr ""
-#~ "Alle controlepuntgrepen tonen, of alleen grepen voor de geselecteerde "
-#~ "punten."
+#~ msgid "Show all control point handles or only handles for the selected points."
+#~ msgstr "Alle controlepuntgrepen tonen, of alleen grepen voor de geselecteerde punten."
 
 #~ msgid "Set fill color for open paths."
 #~ msgstr "Stel de vulkleur in voor open paden."
@@ -2115,14 +2105,10 @@ msgstr "Schrijven"
 #~ msgstr "Geselecteerde symbool verwijderen"
 
 #~ msgid "Right click or use left command key and click to add new points"
-#~ msgstr ""
-#~ "Klik met rechts of gebruik de linker command-toets en klik om nieuwe "
-#~ "punten toe te voegen"
+#~ msgstr "Klik met rechts of gebruik de linker command-toets en klik om nieuwe punten toe te voegen"
 
 #~ msgid "Right click to add new points, left click to move points"
-#~ msgstr ""
-#~ "Klik met rechts om nieuwe punten toe te voegen, klik met links om punten "
-#~ "te verplaatsen"
+#~ msgstr "Klik met rechts om nieuwe punten toe te voegen, klik met links om punten te verplaatsen"
 
 #~ msgid "and double click to add new point on path."
 #~ msgstr "en dubbelklik om nieuwe punten op het pad te plaatsen."
@@ -2218,9 +2204,7 @@ msgstr "Schrijven"
 #~ msgstr "Toon hulplijnen aan boven- en ondermarge"
 
 #~ msgid "Right click to add new point, left click to move points"
-#~ msgstr ""
-#~ "Rechts klik om een nieuw punt toe te voegen, links klik om punten te "
-#~ "verplaatsen"
+#~ msgstr "Rechts klik om een nieuw punt toe te voegen, links klik om punten te verplaatsen"
 
 #~ msgid "and double click to add new point on path"
 #~ msgstr "en dubbel klik om een nieuw punt op een pad toe te voegen"
