@@ -382,9 +382,7 @@ GString* get_bf_contour_data (guint unicode, FT_Vector* points, char* flags, int
 	double units = get_units (units_per_em);
 	guint prev_is_curve;
 	int points_length;
-	gboolean cnc_open = FALSE;
 	
-
 	if (length == 0) {
 		return bf;
 	}
