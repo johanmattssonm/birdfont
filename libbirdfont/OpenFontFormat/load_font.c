@@ -17,7 +17,7 @@
 #include FT_OPENTYPE_VALIDATE_H
 #include FT_TRUETYPE_TABLES_H
 #include FT_SFNT_NAMES_H
-#include "birdfont.h"
+#include <birdfont.h>
 
 /** Error codes. */
 #define OK 0
