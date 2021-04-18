@@ -37,12 +37,6 @@ Configure, build and install with python:
     ./build.py
     sudo ./install.py
 
-Configure, build and install with doit:
-
-    ./configure
-    doit3
-    sudo ./install.py
-
 The default prefix is /usr/local on Fedora should BirdFont be compiled with
 /usr as prefix.
 
