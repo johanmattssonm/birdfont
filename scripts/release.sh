@@ -37,7 +37,7 @@ if [ $? -ne 0 ] ; then
 	exit 1
 fi
 
-echo "Creating a release fo version $version"
+echo "Creating a release for version $version"
 
 if [ $# -ne 0 -a $# -ne 2 ] ; then
 	echo "Usage: $0 branch version"

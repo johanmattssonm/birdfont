@@ -1013,6 +1013,7 @@ public class SvgParser {
 		data = data.replace ("\t", " ");
 		data = data.replace ("\r\n", " ");
 		data = data.replace ("\n", " ");
+		data = data.replace ("+", " ");
 		
 		// use only a single space as separator
 		while (data.index_of ("  ") > -1) {
