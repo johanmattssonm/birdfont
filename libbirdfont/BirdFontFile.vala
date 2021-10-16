@@ -465,8 +465,10 @@ class BirdFontFile : GLib.Object {
 		
 		// FIXME: name etc.
 		os.put_string (@"\t\t<layer name= \"$(layer.name)\" visible=\"$(layer.visible)\">\n");
-		
-		foreach (Path p in layer.get_all_paths ().paths) {
+
+		PathList all_path = layer.get_all_paths ();
+			
+		foreach (Path p in all_paths.paths) {
 			data = get_point_data (p);
 			if (data != "") {
 				os.put_string (@"\t\t\t<path ");
