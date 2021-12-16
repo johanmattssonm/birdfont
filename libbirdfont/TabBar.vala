@@ -593,7 +593,13 @@ public class TabBar : GLib.Object {
 			tab_width += 36;
 		}
 		
-		tab = new Tab (display_item, tab_width, always_open);		
+		tab = new Tab (display_item, tab_width, always_open);
+	
+		if (position >= tabs.size) {
+			warning (@"Tab index out of bounds, position: $position tabs: $(tabs.size)");
+			position = 0;
+		}
+				
 		tabs.insert (position, tab);
 		
 		if (gc != null) {
