@@ -595,7 +595,7 @@ public class TabBar : GLib.Object {
 		
 		tab = new Tab (display_item, tab_width, always_open);
 	
-		if (position >= tabs.size) {
+		if (position > tabs.size) {
 			warning (@"Tab index out of bounds, position: $position tabs: $(tabs.size)");
 			position = 0;
 		}
