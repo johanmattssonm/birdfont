@@ -1,5 +1,5 @@
 /*
-	Copyright (C) 2013 2014 2015 2016 2017 Johan Mattsson
+	Copyright (C) 2013 2014 2015 2016 2017 2022 Johan Mattsson
 
 	This library is free software; you can redistribute it and/or modify 
 	it under the terms of the GNU Lesser General Public License as 
@@ -223,9 +223,9 @@ class BirdFontFile : GLib.Object {
 				os.put_string (@"sha1=\"$(b.get_sha1 ())\" ");
 				os.put_string (@"x=\"$(b.img_x)\" ");
 				os.put_string (@"y=\"$(b.img_y)\" ");
-				os.put_string (@"scale_x=\"$(b.img_scale_x)\" ");
-				os.put_string (@"scale_y=\"$(b.img_scale_y)\" ");
-				os.put_string (@"rotation=\"$(b.img_rotation)\" ");
+				os.put_string (@"scale_x=\"$(round (b.img_scale_x))\" ");
+				os.put_string (@"scale_y=\"$(round (b.img_scale_y))\" ");
+				os.put_string (@"rotation=\"$(round (b.img_rotation))\" ");
 				os.put_string (">\n");
 				
 				foreach (BackgroundSelection selection in b.selections) {
@@ -589,97 +589,83 @@ class BirdFontFile : GLib.Object {
 			add_quadratic_start (e, data);
 		}
 	}
-
-	private static string round (double d) {
-		char[] b = new char [22];
-		unowned string s = d.format (b, "%.10f");
-		string n = s.dup ();
-
-		n = n.replace (",", ".");
-
-		if (n == "-0.0000000000") {
-			n = "0.0000000000";
-		}
-		
-		return n;
-	}
 		
 	private static void add_quadratic_start (EditPoint p, StringBuilder data) {
-		string x, y;
+		double x, y;
 		
-		x = round (p.x);
-		y = round (p.y);
+		x = p.x;
+		y = p.y;
 		
-		data.append (@"S $(x),$(y)");
+		data.append (@"S $(round (x)),$(round (y))");
 	}
 
 	private static void add_cubic_start (EditPoint p, StringBuilder data) {
-		string x, y;
+		double x, y;
 		
-		x = round (p.x);
-		y = round (p.y);
+		x = p.x;
+		y = p.y;
 		
-		data.append (@"B $(x),$(y)");
+		data.append (@"B $(round (x)),$(round (y))");
 	}
 
 	private static void add_line_to (EditPoint p, StringBuilder data) {
-		string x, y;
+		double x, y;
 		
-		x = round (p.x);
-		y = round (p.y);
+		x = p.x;
+		y = p.y;
 		
-		data.append (@"L $(x),$(y)");
+		data.append (@"L $(round (x)),$(round (y))");
 	}
 
 	private static void add_cubic_line_to (EditPoint p, StringBuilder data) {
-		string x, y;
+		double x, y;
 		
-		x = round (p.x);
-		y = round (p.y);
+		x = p.x;
+		y = p.y;
 		
-		data.append (@"M $(x),$(y)");
+		data.append (@"M $(round (x)),$(round (y))");
 	}
 
 	private static void add_quadratic (EditPoint start, EditPoint end, StringBuilder data) {
 		EditPointHandle h = start.get_right_handle ();
-		string x0, y0, x1, y1;
+		double x0, y0, x1, y1;
 		
-		x0 = round (h.x);
-		y0 = round (h.y);
-		x1 = round (end.x);
-		y1 = round (end.y);
+		x0 = h.x;
+		y0 = h.y;
+		x1 = end.x;
+		y1 = end.y;
 	
-		data.append (@"Q $(x0),$(y0) $(x1),$(y1)");
+		data.append (@"Q $(round (x0)),$(round (y0)) $(round (x1)),$(round (y1))");
 	}
 
 	private static void add_double (EditPoint start, EditPoint end, StringBuilder data) {
 		EditPointHandle h1 = start.get_right_handle ();
 		EditPointHandle h2 = end.get_left_handle ();
-		string x0, y0, x1, y1, x2, y2;
+		double x0, y0, x1, y1, x2, y2;
 
-		x0 = round (h1.x);
-		y0 = round (h1.y);
-		x1 = round (h2.x);
-		y1 = round (h2.y);
-		x2 = round (end.x);
-		y2 = round (end.y);
+		x0 = h1.x;
+		y0 = h1.y;
+		x1 = h2.x;
+		y1 = h2.y;
+		x2 = end.x;
+		y2 = end.y;
 
-		data.append (@"D $(x0),$(y0) $(x1),$(y1) $(x2),$(y2)");
+		data.append (@"D $(round (x0)),$(round (y0)) $(round (x1)),$(round (y1)) $(round (x2)),$(round (y2))");
 	}
 
 	private static void add_cubic (EditPoint start, EditPoint end, StringBuilder data) {
 		EditPointHandle h1 = start.get_right_handle ();
 		EditPointHandle h2 = end.get_left_handle ();
-		string x0, y0, x1, y1, x2, y2;
+		double x0, y0, x1, y1, x2, y2;
 
-		x0 = round (h1.x);
-		y0 = round (h1.y);
-		x1 = round (h2.x);
-		y1 = round (h2.y);
-		x2 = round (end.x);
-		y2 = round (end.y);
+		x0 = h1.x;
+		y0 = h1.y;
+		x1 = h2.x;
+		y1 = h2.y;
+		x2 = end.x;
+		y2 = end.y;
 
-		data.append (@"C $(x0),$(y0) $(x1),$(y1) $(x2),$(y2)");
+		data.append (@"C $(round (x0)),$(round (y0)) $(round (x1)),$(round (y1)) $(round (x2)),$(round (y2))");
 	}
 
 	private static void add_next_point (EditPoint start, EditPoint end, StringBuilder data) {
@@ -1901,6 +1887,40 @@ class BirdFontFile : GLib.Object {
 		
 		ligatures = font.get_ligatures ();
 		ligatures.add_ligature (sequence, ligature);
+	}
+
+	public static string round (double p, int decimals = 5) {
+		string v = "";
+		char[] c = new char [501];
+		
+		v = p.format (c, @"%.$(decimals)f");
+		v = v.replace (",", ".");
+		
+		if (v.index_of ("e") != -1) {	
+			v = "0.0";
+		}
+
+		if (v.index_of ("-") == 0 && double.parse (v) == -0) {
+			v = "0";
+		}
+
+		return remove_last_zeros (v);
+	}
+	
+	public static string remove_last_zeros (string value) {	
+		string v = value;
+		
+		if (v.index_of (".") != -1) {
+			while (v.has_suffix ("0")) {
+				v = v.substring (0, v.length - "0".length);
+			}
+			
+			if (v.has_suffix (".")) {
+				v = v.substring (0, v.length - ".".length);
+			}
+		}
+		
+		return v;
 	}
 	
 	public static string decode (string s) {
