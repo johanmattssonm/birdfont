@@ -1,3 +1,9 @@
+birdfont (2.30.0) stable;
+
+  * Smaller .birdfont files
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Tue Feb  8 03:03:27 CET 2022
+
 birdfont (2.27.0) stable;
 
   * Automatic backups every time a font is saved.
