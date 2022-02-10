@@ -24,12 +24,14 @@ class BirdFontFile : GLib.Object {
 	Font font;
 	
 	public const int FORMAT_MAJOR = 2;
-	public const int FORMAT_MINOR = 2;
+	public const int FORMAT_MINOR = 3;
 	
 	public const int MIN_FORMAT_MAJOR = 0;
 	public const int MIN_FORMAT_MINOR = 0;
 
 	public bool has_svg_glyphs = false;	
+
+	Gee.ArrayList<string> written_images = new Gee.ArrayList<string> ();
 		
 	public BirdFontFile (Font f) {
 		font = f;
@@ -252,6 +254,16 @@ class BirdFontFile : GLib.Object {
 	}
 	
 	public void write_image (DataOutputStream os, string sha1, string data) throws GLib.Error {
+		if (written_images.contains (sha1)) {
+			warning ("Font file already contains " + sha1);
+			return;
+		}
+
+		if (sha1 == "" || data == "") {
+			warning ("No data in background image.");
+			return;
+		}
+		
 		os.put_string (@"<background-image sha1=\"");
 		os.put_string (sha1);
 		os.put_string ("\" ");

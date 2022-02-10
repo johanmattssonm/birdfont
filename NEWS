@@ -1,6 +1,7 @@
 birdfont (2.30.0) stable;
 
   * Smaller .birdfont files
+  * Make sure only one copy of a background image is stored in the font file.
 
  -- Johan Mattsson <johan.mattsson.m@gmail.com>  Tue Feb  8 03:03:27 CET 2022
 
