@@ -1507,7 +1507,7 @@ public class OverView : FontDisplay {
 			MainWindow.set_scrollbar_position (pos);
 			
 			if (at_bottom () && first_visible == 0) {
-				MainWindow.hide_scrollbar (); 
+				MainWindow.hide_scrollbar ();
 			} else {
 				MainWindow.show_scrollbar ();
 			}

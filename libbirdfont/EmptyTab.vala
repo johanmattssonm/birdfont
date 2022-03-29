@@ -34,6 +34,11 @@ public class EmptyTab : FontDisplay {
 		return label;
 	}
 
+	public override void selected_canvas () {
+		MainWindow.hide_scrollbar ();
+		GlyphCanvas.redraw ();
+	}
+	
 	public override void draw (WidgetAllocation allocation, Context cr) {
 		cr.save ();
 		Theme.color (cr, "Default Background");
