@@ -1422,15 +1422,15 @@ public class OverView : FontDisplay {
 	private bool at_bottom () {
 		Font f;
 		double t = rows * items_per_row + first_visible;
-		
+
 		if (all_available) {
 			f = BirdFont.get_current_font ();
-			return t >= f.length ();
+			return t >= f.length () + 2 * items_per_row;
 		}
 		
-		return t >= glyph_range.length ();
+		return t >= glyph_range.length () + 2 * items_per_row;
 	}
-
+	
 	public void set_current_glyph_range (GlyphRange range) {
 		GlyphRange? current = glyph_range;
 		string c;
@@ -1471,7 +1471,7 @@ public class OverView : FontDisplay {
 		this.unref ();
 	}
 
-	public override void update_scrollbar () {
+	public double update_scrollbar () {
 		Font f;
 		double nrows = 0;
 		double pos = 0;
@@ -1484,23 +1484,36 @@ public class OverView : FontDisplay {
 		} else {
 			if (all_available) {
 				f = BirdFont.get_current_font ();
-				nrows = Math.floor ((f.length ()) / rows);
+				nrows = Math.ceil ((f.length ()) / (double) rows);
 				size = f.length ();
 			} else {
-				nrows = Math.floor ((glyph_range.length ()) / rows);
+				nrows = Math.ceil ((glyph_range.length ()) / (double) rows);
 				size = glyph_range.length ();
 			}
 			
 			if (nrows <= 0) {
 				nrows = 1;
 			}
-			
-			visible_rows = allocation.height / OverViewItem.height;
+
+			visible_rows = allocation.height / (OverViewItem.height + OverViewItem.margin);
 			scroll_size = visible_rows / nrows;
 			MainWindow.set_scrollbar_size (scroll_size);
-			pos = first_visible / (nrows * items_per_row - visible_rows * items_per_row);
+			pos = first_visible / (size - visible_rows * items_per_row);
+			
+			if (pos > 1) {
+				pos = 1;
+			}
+								
 			MainWindow.set_scrollbar_position (pos);
+			
+			if (at_bottom () && first_visible == 0) {
+				MainWindow.hide_scrollbar (); 
+			} else {
+				MainWindow.show_scrollbar ();
+			}
 		}
+		
+		return pos;
 	}
 
 	/** Display one entry from the Unicode Character Database. */
