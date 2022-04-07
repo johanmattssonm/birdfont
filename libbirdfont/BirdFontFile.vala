@@ -914,7 +914,7 @@ class BirdFontFile : GLib.Object {
 		}
 		
 		font.format_major = int.parse (v[0]);
-		font.format_major = int.parse (v[1]);
+		font.format_minor = int.parse (v[1]);
 	}
 	
 	public void parse_images (Tag tag) {
