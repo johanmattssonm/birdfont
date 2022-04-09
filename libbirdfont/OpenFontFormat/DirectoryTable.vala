@@ -19,6 +19,7 @@ public class DirectoryTable : OtfTable {
 	
 	public CmapTable cmap_table;
 	public CvtTable  cvt_table;
+	public FkTable fk_table;	
 	public GaspTable gasp_table;
 	public GdefTable gdef_table;
 	public GlyfTable glyf_table;
@@ -57,6 +58,7 @@ public class DirectoryTable : OtfTable {
 		name_table = new NameTable ();
 		os_2_table = new Os2Table (glyf_table, hmtx_table, hhea_table); 
 		post_table = new PostTable (glyf_table);
+		fk_table = new FkTable (glyf_table, kern_table);
 		
 		id = "Directory table";
 		
@@ -96,6 +98,8 @@ public class DirectoryTable : OtfTable {
 		if (tables.size == 0) {
 			tables.add (offset_table);
 			tables.add (this);
+
+			tables.add (fk_table);
 			
 			tables.add (gpos_table);
 			tables.add (gsub_table);
@@ -154,8 +158,13 @@ public class DirectoryTable : OtfTable {
 			length = dis.read_ulong ();
 			
 			printd (@"$(tag.str) \toffset: $offset \tlength: $length \tchecksum: $checksum.\n");
-			
-			if (tag.str == "cvt") {
+
+			if (tag.str == "FK  ") {
+				fk_table.id = tag.str;
+				fk_table.checksum = checksum;
+				fk_table.offset = offset;
+				fk_table.length = length;
+			} else if (tag.str == "cvt") {
 				cvt_table.id = tag.str;
 				cvt_table.checksum = checksum;
 				cvt_table.offset = offset;
@@ -262,8 +271,20 @@ public class DirectoryTable : OtfTable {
 		if (kern_table.has_data ()) {
 			cvt_table.parse (dis);
 		}
+		
+		if (fk_table.has_data ()) {
+			fk_table.parse (dis);
+		}
 	}
-	
+
+	public void parse_fk_table (FontData dis) throws Error {
+		if (fk_table.has_data ()) {
+			fk_table.parse (dis);
+		} else {
+			warning ("Fk table is empty.");
+		}
+	}
+		
 	public void parse_kern_table (FontData dis) throws Error {
 		if (kern_table.has_data ()) {
 			kern_table.parse (dis);
@@ -352,7 +373,12 @@ public class DirectoryTable : OtfTable {
 				warning ("kern_table has invalid checksum");
 				valid = false;
 			}
-			
+
+			if (fk_table.has_data () && !fk_table.validate (dis)) {
+				warning ("fk_table has invalid checksum");
+				valid = false;
+			}
+						
 			if (!gpos_table.validate (dis)) {
 				warning (@"gpos_table has invalid checksum");
 				

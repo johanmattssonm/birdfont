@@ -109,7 +109,11 @@ public class OpenFontFormatReader : Object {
 	public void parse_head_table () throws Error {
 		directory_table.parse_head_table (font_data);
 	}
-			
+
+	public void parse_fk_table () throws Error {
+		directory_table.parse_fk_table (font_data);
+	}
+	
 	public void set_limits () {
 		Font f = OpenFontFormatWriter.font;
 		
@@ -144,6 +148,7 @@ public class OpenFontFormatReader : Object {
 			reader.parse_kern_table ();
 			reader.parse_cmap_table ();
 			reader.parse_head_table ();
+			reader.parse_fk_table ();
 			
 			kern_table = reader.directory_table.kern_table;
 			cmap_table = reader.directory_table.cmap_table;
@@ -152,33 +157,48 @@ public class OpenFontFormatReader : Object {
 			npairs = kern_table.kerning.size;
 			
 			units_per_em = HeadTable.units_per_em;
-			
+
 			foreach (Kern k in kern_table.kerning) {
 				left = cmap_table.get_char (k.left);
 				right = cmap_table.get_char (k.right);
 				kerning = 100 * (k.kerning / units_per_em);
 				
-				if (left <= 0x1F || right <= 0x1F) {
-					warning ("Ignoring kerning of control character.");
-				} else {
-					if (@"$kerning" != "0") {
-						bf_kerning.append ("<kerning left=\"");
-						bf_kerning.append (BirdFontFile.serialize_unichar (left));
-						bf_kerning.append ("\" ");
-						bf_kerning.append ("right=\"");
-						bf_kerning.append (BirdFontFile.serialize_unichar (right));
-						bf_kerning.append ("\" ");
-						bf_kerning.append ("hadjustment=\"");
-						bf_kerning.append (@"$kerning".replace (",", "."));
-						bf_kerning.append ("\" />\n");
-					}
-				}
+				add_kerning (bf_kerning, left, right, kerning);
 			}
+
+			foreach (FkKern k in kern_table.fk_kerning) {
+				left = cmap_table.get_char (k.left);
+				right = cmap_table.get_char (k.right);
+				kerning = 100 * (k.kerning / units_per_em);
+				
+				add_kerning (bf_kerning, left, right, kerning);
+			}
+			
+			printd (@"FK kerning pairs: $(kern_table.fk_kerning.size)\n");
 		} catch (GLib.Error e) {
 			warning (@"Failed to parse font. $(e.message)");
 		}
 		
 		return bf_kerning.str;				
 	}
+
+	static void add_kerning (StringBuilder bf_kerning, unichar left, unichar right, double kerning) {
+		if (left <= 0x1F || right <= 0x1F) {
+			warning ("Ignoring kerning of control character.");
+		} else {
+			if (@"$kerning" != "0") {
+				bf_kerning.append ("<kerning left=\"");
+				bf_kerning.append (BirdFontFile.encode ((!) left.to_string ()));
+				bf_kerning.append ("\" ");
+				bf_kerning.append ("right=\"");
+				bf_kerning.append (BirdFontFile.encode ((!) right.to_string ()));
+				bf_kerning.append ("\" ");
+				bf_kerning.append ("hadjustment=\"");
+				bf_kerning.append (@"$kerning".replace (",", "."));
+				bf_kerning.append ("\" />\n");
+			}
+		}
+	}
 }
+
 }

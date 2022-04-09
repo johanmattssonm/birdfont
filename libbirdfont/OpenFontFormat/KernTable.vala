@@ -27,7 +27,9 @@ public class KernTable : OtfTable {
 	KernList pairs;
 	
 	// Only used for loading pairs
-	public Gee.ArrayList<Kern> kerning = new Gee.ArrayList<Kern> (); // TODO: replace with the KernList
+	public Gee.ArrayList<Kern> kerning = new Gee.ArrayList<Kern> ();
+	public Gee.ArrayList<FkKern> fk_kerning = new Gee.ArrayList<FkKern> (); // Also only used for loading pairs
+		
 	public uint kerning_pairs = 0;
 	
 	public KernTable (GlyfTable gt) {

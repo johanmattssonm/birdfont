@@ -195,6 +195,15 @@ public class FontData : Object {
 		return f;
 	}
 
+	public int32 read_int32 () {
+		int32 f;
+		f = read () << 8 * 3;
+		f += read () << 8 * 2;
+		f += read () << 8 * 1;
+		f += read () << 8 * 0;
+		return f;
+	}
+	
 	public uint64 read_uint64 () {
 		uint64 f;
 		f = (uint64) read () << 8 * 7;
@@ -278,7 +287,18 @@ public class FontData : Object {
 	public void add_ulong (uint32 d) throws Error {
 		add_u32 (d);
 	}
+
+	public void add_long (int32 d) throws Error {
+		add_32 (d);
+	}
+
+	public void add_32 (int32 i) throws GLib.Error {
+		uint32 s = (uint16) (i >> 16);
 		
+		add_u16 ((uint16) s);
+		add_u16 ((uint16) (i - (s << 16)));
+	}
+				
 	public void add_byte (uint8 b) throws Error {
 		add (b);
 	}
