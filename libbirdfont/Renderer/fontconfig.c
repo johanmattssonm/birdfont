@@ -111,7 +111,7 @@ gchar* find_font_file (FcConfig* font_config, const gchar* font_name) {
 	}
 	
 	path = NULL;
-	name = font_name;
+	name = (FcChar8*) font_name;
 
 	search_pattern = FcPatternCreate ();
 	FcPatternAddString (search_pattern, FC_FAMILY, name);

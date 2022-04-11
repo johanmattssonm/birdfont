@@ -389,7 +389,7 @@ public class Text : Widget {
 
 		// double x = margin_left * ratio;
 		double x = 0;
-		double py = cc_y;
+		//double py = cc_y;
 
 		double w = get_sidebearing_extent () * screen_scale + x + margin_left + 1;
 		

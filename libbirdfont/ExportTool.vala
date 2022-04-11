@@ -459,7 +459,11 @@ os.put_string (
 		}
 		
 		string html_data;
-		FileUtils.get_contents ((!) template.get_path (), out html_data);
+		try {
+			FileUtils.get_contents ((!) template.get_path (), out html_data);
+		} catch (FileError e) {
+			warning (e.message);
+		}
 		
 		string name;
 #if MAC 
@@ -631,7 +635,7 @@ os.put_string (
 			critical (@"$(e.message)");
 		}
 	}
-	
+	/*
 	static bool can_write (File folder) {
 		File test = get_child (folder, "text.tmp");
 		bool writable = false;
@@ -648,6 +652,7 @@ os.put_string (
 		
 		return writable;
 	}
+	*/
 }
 
 }
