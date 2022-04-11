@@ -415,7 +415,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		background_task = t;
 		
 		try {
-			bg = Thread.create<void*> (this.background_thread, true);
+			bg = new Thread<void*>.try ("bg", this.background_thread);
 		} catch (GLib.Error e) {
 			warning (e.message);
 		}
@@ -425,7 +425,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		unowned Thread<void*> bg;
 		
 		try {
-			bg = Thread.create<void*> (t.perform_task, true);
+			bg = new Thread<void*>.try ("bg", t.perform_task);
 		} catch (GLib.Error e) {
 			warning (e.message);
 		}
@@ -444,7 +444,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		MenuTab.start_background_thread ();
 		
 		try {
-			export_thread = Thread.create<void*> (this.export_thread, true);
+			export_thread = new Thread<void*>.try ("export_thread", this.export_thread);
 		} catch (GLib.Error e) {
 			warning (e.message);
 		}
@@ -475,7 +475,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		MenuTab.start_background_thread ();
 		
 		try {
-			thread = Thread.create<void*> (this.loading_thread, true);
+			thread = new Thread<void*>.try ("thread", this.loading_thread);
 		} catch (GLib.Error e) {
 			warning (e.message);
 		}
@@ -495,7 +495,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		MenuTab.start_background_thread ();
 		
 		try {
-			thread = Thread.create<void*> (this.saving_thread, true);
+			thread = new Thread<void*>.try ("thread", this.saving_thread);
 		} catch (GLib.Error e) {
 			warning (e.message);
 		}
@@ -514,7 +514,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		MenuTab.start_background_thread ();
 		
 		try {
-			thread = Thread.create<void*> (this.background_image_thread, true);
+			thread = new Thread<void*>.try ("thread", this.background_image_thread);
 		} catch (GLib.Error e) {
 			warning (e.message);
 		}
