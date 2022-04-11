@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<font>
+<format>3.22</format>
+<program version="4.27.2" os="*nix" />
+
+<postscript_name>FK-example</postscript_name>
+<name>FK-example</name>
+<subfamily>Regular</subfamily>
+<bold>false</bold>
+<italic>false</italic>
+<full_name>FK-example</full_name>
+<unique_identifier>FK-example</unique_identifier>
+<version>Version 1.0</version>
+<description></description>
+<copyright>SIL Open Font License</copyright>
+<license>SIL Open Font License</license>
+<license_url>http://scripts.sil.org/OFL</license_url>
+<weight>400</weight>
+<units_per_em>1024</units_per_em>
+<trademark></trademark>
+<manufacturer></manufacturer>
+<designer></designer>
+<vendor_url></vendor_url>
+<vendor_id>Bird</vendor_id>
+<designer_url></designer_url>
+<underline_position>-10</underline_position>
+<underline_thickness>3.5</underline_thickness>
+<open_engraving>false</open_engraving>
+<same_way_back_engraving>false</same_way_back_engraving>
+<external_backgrunds>false</external_backgrunds>
+
+<horizontal>
+	<top_limit>78</top_limit>
+	<top_position>72</top_position>
+	<x-height>56</x-height>
+	<base_line>0</base_line>
+	<bottom_position>-20</bottom_position>
+	<bottom_limit>-21</bottom_limit>
+	<line_gap>10</line_gap>
+</horizontal>
+
+<grid width="1"/>
+<grid width="2"/>
+<grid width="4"/>
+
+<background scale="1" />
+
+<base_filename>FK-example</base_filename>
+<base_filename_mac>FK-example Mac</base_filename_mac>
+<export_ttf_font>true</export_ttf_font>
+<export_otf_font>true</export_otf_font>
+<export_eot_font>false</export_eot_font>
+<export_svg_font>false</export_svg_font>
+<export_colr_table>false</export_colr_table>
+<export_svg_table>false</export_svg_table>
+<optimize_otf_for_size>false</optimize_otf_for_size>
+<optimize_otf_for_details>true</optimize_otf_for_details>
+
+<default_foreground_color></default_foreground_color>
+
+<svg_units_per_em>100</svg_units_per_em>
+<svg_decimals>5</svg_decimals>
+
+<collection unicode="U+20" svg="false" colr="false" auto_generate="false" meta_name="">
+	<selected id="0"/>
+	<glyph id="0" left="0" right="27">
+	</glyph>
+</collection>
+
+<collection name=".notdef" svg="false" colr="false" auto_generate="false" meta_name="">
+	<selected id="0"/>
+	<glyph id="0" left="-20" right="33">
+		<layer name="Layer" visible="true">
+			<path data="S -15,10 L 15,10 L 15,62 M -15,62 M -15,10" />
+			<path data="S -20,67 L 20,67 L 20,5 M -20,5 M -20,67" />
+		</layer>
+	</glyph>
+</collection>
+
+<collection unicode="U+41" svg="false" colr="false" auto_generate="false" meta_name="">
+	<selected id="0"/>
+	<glyph id="0" left="-28" right="26">
+		<layer name="Layer" visible="true">
+			<path data="S -28,0 L -2,72 L 26,0 L -28,0" />
+		</layer>
+	</glyph>
+</collection>
+
+<collection unicode="U+56" svg="false" colr="false" auto_generate="false" meta_name="">
+	<selected id="1"/>
+	<glyph id="1" left="-28" right="26">
+		<layer name="Layer" visible="true">
+			<path data="S 26,72 L -2,0 L -28,72 L 26,72" />
+		</layer>
+	</glyph>
+</collection>
+
+<kerning left="A" right="V" hadjustment="-15" />
+<kerning left="V" right="A" hadjustment="-13" />
+</font>

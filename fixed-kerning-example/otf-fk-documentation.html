@@ -1,0 +1,181 @@
+<html>
+<head>
+<title>Fixed Point Kerning Table in OpenType fonts</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;400&display=swap" rel="stylesheet">
+
+<style media="screen">
+    .empty {
+      height: 1em;
+   }
+   
+   td {
+      font-family: 'Roboto Mono', monospace;
+      padding-right: 1em;
+      font-size: 1em;
+   }
+   
+   td.right {
+      text-align: right;
+   }
+   
+   body{
+      font-family: 'Roboto', sans-serif;
+   }
+   
+   pre {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 1em;
+   }
+
+   section.main {
+      width: 40em;
+   }
+
+   section.data {
+      width: 60em;
+   }
+
+   h1 {
+      font-size: 2em;
+      font-family: 'Roboto', sans-serif;
+      font-weight: 500;
+      margin-bottom: 10px;
+   }
+
+   h2 {
+      font-size: 1.6em;
+      font-family: 'Roboto', sans-serif;
+      font-weight: 500;
+      margin-bottom: 10px;
+   }
+
+   pre {
+      margin-top: 0px;
+   }
+</style>
+</head>
+<body>
+<section class="main">
+
+<h1>Fixed Point Kerning Table (FK, Version 1.0)</h1>
+The FK table is a simple and efficient solution that makes it possible to store
+kerning information with a high accuracy in OpenType fonts.
+
+<h2>Names</h2>
+The table name for horizontal kerning is "FK" and the table name for vertical 
+kerning is "FKV". The name should be padded up to four bytes with space in the
+TTF and OTF lists of tables (just like the CFF table). Name: FK space space
+
+<h2>Table</h2>
+<pre>
+uint16 version_upper = 1;
+uint16 version_lower = 0;
+uint32 num_kerning_pair_entries;
+KerningEntry[]
+
+KerningEntry
+uint32 first_glyph_index
+uint32 second_glyph_index
+fixed16_16 kerning
+</pre>
+
+<p>Padding up to four bytes will not be needed because the table already is aligned.</p>
+
+<p>The type fixed16_16 is a fixed point value (16.16) that uses 32 bits, similar to the 255 type in the CFF table.</p>
+
+<p>All kerning entries needs to be sorted on the first and second glyph ID (GID).</p>
+</section>
+
+<section class="data">
+
+<h2>Example data</h2>
+<pre>
+<table>
+<tr>
+   <td>Type</td>
+   <td>Hex</td>
+   <td>Decimal</td>
+   <td>Description</td>
+</tr>
+
+<tr>
+   <td>USHORT</td>
+   <td>0x0001</td>
+   <td class="right">1</td>
+   <td>Major verison</td>
+</tr>
+
+<tr>
+   <td>USHORT</td>
+   <td>0x0000</td>
+   <td class="right">0</td>
+   <td>Minor version</td>
+</tr>
+
+<tr>
+   <td>ULONG</td>
+   <td>0x00000002</td>
+   <td class="right">2</td>
+   <td>Number of kerning pairs</td>
+</tr>
+
+<tr class="empty">
+    <td colspan="4"></td>
+</tr>
+
+<tr>
+   <td>ULONG</td>
+   <td>0x00000007</td>
+   <td class="right">7</td>
+   <td>First GID of the pair (left in LTR languages)</td>
+</tr>
+
+<tr>
+   <td>ULONG</td>
+   <td>0x00000008</td>
+   <td class="right">8</td>
+   <td>Second GID of the pair (right in LTR languages)</td>
+</tr>
+
+<tr>
+   <td>Fixed</td>
+   <td>0xffffcccc</td>
+   <td class="right">-0.2</td>
+   <td>Kerning for this pair</td>
+</tr>
+
+<tr class="empty">
+    <td colspan="4"></td>
+</tr>
+
+<tr>
+   <td>ULONG</td>
+   <td>0x0000000A</td>
+   <td class="right">10</td>
+   <td>First GID of the second  pair (left in LTR languages)</td>
+</tr>
+
+<tr>
+   <td>ULONG</td>
+   <td>0x0000000F</td>
+   <td class="right">15</td>
+   <td>Second GID of second the pair (right in LTR languages)</td>
+</tr>
+
+<tr>
+   <td>Fixed</td>
+   <td>0xffffe666</td>
+   <td class="right">-0.1</td>
+   <td>Kerning for this pair</td>
+</tr>
+</table>
+</pre>
+
+</section>
+</body>
+</html>
