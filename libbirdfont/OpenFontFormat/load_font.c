@@ -131,7 +131,7 @@ void create_contour (guint unicode, FT_Vector* points, char* flags, int* length,
 	int j;
 	guint prev_is_curve;
 	guint first_is_curve = FALSE;
-	guint first_normal_off_curve = FALSE;
+	//guint first_normal_off_curve = FALSE;
 	double x = 0;
 	double y = 0;
 	FT_Vector* p;
@@ -172,7 +172,7 @@ void create_contour (guint unicode, FT_Vector* points, char* flags, int* length,
 	
 	// first point is of curve but it is not part of a double curve
 	if (len > 2 && is_quadratic (flags[0]) && !is_quadratic (flags[1])) { 
-		first_normal_off_curve = TRUE;
+		//first_normal_off_curve = TRUE;
 	}
 	
 	while (i < len) {
@@ -380,19 +380,19 @@ GString* get_bf_contour_data (guint unicode, FT_Vector* points, char* flags, int
 	gchar coordinate_buffer[80];
 	gchar* coordinate = (gchar*) &coordinate_buffer;
 	double units = get_units (units_per_em);
-	guint prev_is_curve;
-	int points_length;
+	//guint prev_is_curve;
+	//int points_length;
 	
 	if (length == 0) {
 		return bf;
 	}
 	
-	points_length = length;
+	//points_length = length;
 
-	gboolean last_to_first = FALSE;
+	//gboolean last_to_first = FALSE;
 	
-	int last_x = 0;
-	int last_y = 0;
+	//int last_x = 0;
+	//int last_y = 0;
 	
 	create_contour (unicode, points, flags, &length, &new_points, &new_flags, err);
 	
@@ -454,8 +454,8 @@ GString* get_bf_contour_data (guint unicode, FT_Vector* points, char* flags, int
 			g_ascii_formatd (coordinate, 80, "%f", y2);
 			g_string_append (contour, coordinate);
 			
-			last_x = new_points[i+2].x;
-			last_y = new_points[i+2].y;
+			//last_x = new_points[i+2].x;
+			//last_y = new_points[i+2].y;
 			
 			i += 3;
 		} else if (is_double_curve (new_flags[i])) {
@@ -491,8 +491,8 @@ GString* get_bf_contour_data (guint unicode, FT_Vector* points, char* flags, int
 			g_ascii_formatd (coordinate, 80, "%f", y2);
 			g_string_append (contour, coordinate);
 
-			last_x = new_points[i+2].x;
-			last_y = new_points[i+2].y;
+			//last_x = new_points[i+2].x;
+			//last_y = new_points[i+2].y;
 			
 			i += 3;
 		} else if (is_quadratic (new_flags[i])) {
@@ -518,8 +518,8 @@ GString* get_bf_contour_data (guint unicode, FT_Vector* points, char* flags, int
 			g_ascii_formatd (coordinate, 80, "%f", y1);
 			g_string_append (contour, coordinate);
 			
-			last_x = new_points[i + 1].x;
-			last_y = new_points[i + 1].y;
+			//last_x = new_points[i + 1].x;
+			//last_y = new_points[i + 1].y;
 			
 			i += 2;
 		} else if (is_line (new_flags[i])) {
@@ -537,8 +537,8 @@ GString* get_bf_contour_data (guint unicode, FT_Vector* points, char* flags, int
 			
 			i += 1;
 			
-			last_x = new_points[i].x;
-			last_y = new_points[i].y;
+			//last_x = new_points[i].x;
+			//last_y = new_points[i].y;
 		} else {
 			contour = g_string_new ("");
 			g_warning ("Can't parse outline.\n");
@@ -560,7 +560,7 @@ GString* get_bf_contour_data (guint unicode, FT_Vector* points, char* flags, int
 GString* get_bf_path (guint unicode, FT_Face face, double units_per_em, int* err) {
 	GString* bf = g_string_new ("");
 	GString* contour;
-	FT_Error error;
+	//FT_Error error;
 	int i;
 	int start;
 	int end;
@@ -593,7 +593,7 @@ FreeTypeFontFace* open_font (const gchar* file) {
 		return NULL;
 	}
 
-	gchar* short_path = file;
+	gchar* short_path = (gchar *)file;
 
 	error = FT_New_Face (library, short_path, 0, &face);
 	
@@ -807,7 +807,7 @@ void append_description (GString* str, FT_SfntName* name_table_data) {
 	GError* error = NULL;	
 	
 	if (name_table_data->encoding_id == 0) { // mac roman
-		utf8_str = g_convert (name_table_data->string, name_table_data->string_len, "utf-8", "macintosh", &read, &written, &error);
+		utf8_str = g_convert ((const gchar *)name_table_data->string, name_table_data->string_len, "utf-8", "macintosh", &read, &written, &error);
 
 		if (error == NULL) {
 			g_string_append (str, g_markup_escape_text (utf8_str, -1));
@@ -817,7 +817,7 @@ void append_description (GString* str, FT_SfntName* name_table_data) {
 			g_error_free (error);
 		}
 	} else if (name_table_data->encoding_id == 1) { // windows unicode
-		utf8_str = g_convert (name_table_data->string, name_table_data->string_len, "utf-8", "ucs-2be", &read, &written, &error);
+		utf8_str = g_convert ((const gchar *)name_table_data->string, name_table_data->string_len, "utf-8", "ucs-2be", &read, &written, &error);
 
 		if (error == NULL) {
 			g_string_append (str, g_markup_escape_text (utf8_str, -1));
@@ -867,10 +867,10 @@ int getIndexForNameId (FT_Face face, int id) {
  * @param err error code
  * @return xml representation of a bf font
  */
-GString* get_bf_font (FT_Face face, char* file, int* err) {
+GString* get_bf_font (FT_Face face, const char* file, int* err) {
 	GString* bf = g_string_new ("");
 	GString* bf_data;
-	gchar* kerning;
+	//gchar* kerning;
 	GString* glyph;
 	FT_Error error;
 	FT_Long i;
@@ -1052,7 +1052,8 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 		g_string_append_printf (bf, "<collection unicode=\"U+20\">\n");
 		g_string_append_printf (bf, "\t<glyph left=\"%f\" right=\"%f\" selected=\"true\">\n", 0.0, face->glyph->metrics.horiAdvance * units);
 		
-		bf_data = get_bf_path (charcode, face, units_per_em, err);
+		//bf_data = get_bf_path (charcode, face, units_per_em, err);
+		bf_data = get_bf_path (' ', face, units_per_em, err);
 		g_string_append (bf, bf_data->str);	
 					
 		g_string_append (bf, "\t</glyph>\n");
@@ -1101,7 +1102,7 @@ GString* get_bf_font (FT_Face face, char* file, int* err) {
 			}
 			
 			if (!has_unicode_value) {
-				g_warning ("Ignoring glyph without a Unicode value, %d.  (condition: %d)", 
+				g_warning ("Ignoring glyph without a Unicode value, %ld.  (condition: %d)",
 					i, has_unicode_value);
 				break;
 			}
@@ -1158,8 +1159,8 @@ GString* load_freetype_font (const gchar* file, gint* err) {
 	FT_Library library;
 	FT_Face face;
 	int error;
-	FT_Glyph glyph;
-	FT_UInt glyph_index;
+	//FT_Glyph glyph;
+	//FT_UInt glyph_index;
 
 	error = FT_Init_FreeType (&library);
 	if (error != OK) {
@@ -1186,7 +1187,7 @@ GString* load_freetype_font (const gchar* file, gint* err) {
 	// not tested the new code.
 	
 	gchar* short_path = calloc ((2048 + 1), sizeof(gchar));
-	short_path = file;
+	short_path = (gchar *)file;
 
 	error = FT_New_Face (library, short_path, 0, &face);
 	if (error) {
@@ -1244,13 +1245,13 @@ gboolean get_freetype_font_is_regular (const char* file) {
 	FT_Library library = NULL;
 	FT_Face face = NULL;
 	int error;
-	FreeTypeFontFace* font;
+	FreeTypeFontFace* font = NULL;
 	
 	error = FT_Init_FreeType (&library);
 	
 	if (error != OK) {
 		g_warning ("Freetype init error %d.\n", error);
-		return NULL;
+		return FALSE;
 	}
 
 	gchar* short_path = calloc ((2048 + 1), sizeof(gchar));
@@ -1267,7 +1268,7 @@ gboolean get_freetype_font_is_regular (const char* file) {
 		g_warning ("Can't open file %s",  file);
 		g_warning ("Short path: %s",  short_path);
 		
-		return NULL;
+		return FALSE;
 	}
 	
 	if (font == NULL || font->face == NULL || font->library == NULL) {
@@ -1280,7 +1281,7 @@ gboolean get_freetype_font_is_regular (const char* file) {
 }
 
 gulong* get_all_unicode_points_in_font (const gchar* file) {
-	FT_ULong* charcodes = NULL;
+	//FT_ULong* charcodes = NULL;
 	FT_Library library;
 	FT_Face face;
 
@@ -1322,7 +1323,7 @@ gulong* get_all_unicode_points_in_font (const gchar* file) {
 	}
 	
 	gboolean error_in_result = FALSE;
-	gint gindex = 0;
+	FT_UInt gindex = 0;
 	FT_ULong charcode;
 	gint num_glyphs = 0;
 	

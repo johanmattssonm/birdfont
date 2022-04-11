@@ -37,8 +37,13 @@ public class SearchPaths {
 
 		resources = (is_null (resources_folder)) ? "" : resources_folder; 
 
-		string? current_program = GLib.FileUtils.read_link ("/proc/self/exe");		
-
+		string? current_program;
+		try {
+			current_program = GLib.FileUtils.read_link ("/proc/self/exe");
+		} catch (Error e) {
+			warning (e.message);
+			current_program = null;
+		}
 		if (current_program != null)	{
 			string program = (!) current_program;
 			int separator = program.last_index_of ("/");

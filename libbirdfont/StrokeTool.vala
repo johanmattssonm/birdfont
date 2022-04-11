@@ -1451,7 +1451,7 @@ public class StrokeTool : GLib.Object {
 
 		return intersections;
 	}
-	
+	/*
 	bool split_corner (PathList pl) {
 		EditPoint p1, p2;
 		EditPoint a1, a2;
@@ -1513,7 +1513,8 @@ public class StrokeTool : GLib.Object {
 
 		return false;
 	}
-
+    */
+   /*
 	bool split_segment (Path p, EditPoint first, EditPoint next, EditPoint p1, EditPoint p2, out PathList result) {
 		double ix, iy;
 		bool intersection;
@@ -1534,7 +1535,7 @@ public class StrokeTool : GLib.Object {
 		
 		return intersection;	
 	}
-			
+	*/
 	PathList get_parts_self (Path path, PathList? paths = null) {
 		PathList pl;
 		PathList r;
@@ -1899,6 +1900,7 @@ public class StrokeTool : GLib.Object {
 	}
 	
 	// indside becomes outside in some paths
+	/*
 	void remove_points_in_stroke (PathList pl) {
 		PathList r;
 		
@@ -1910,7 +1912,8 @@ public class StrokeTool : GLib.Object {
 			}
 		}
 	}
-
+    */
+   /*
 	bool remove_points_in_stroke_for_path (Path p, PathList pl, out PathList result) {
 		EditPoint start_ep;
 		EditPoint start_next;
@@ -1950,7 +1953,8 @@ public class StrokeTool : GLib.Object {
 		
 		return false;
 	}
-
+    */
+   /*
 	bool merge_segments (PathList pl,
 		Path path1, EditPoint start1, EditPoint stop1,
 		EditPoint start2, EditPoint stop2,
@@ -2022,7 +2026,7 @@ public class StrokeTool : GLib.Object {
 		
 		return false;
 	}
-
+    */
 	void reset_intersections (Path p) {
 		foreach (EditPoint ep in p.points) {
 			ep.flags &= ~EditPoint.INTERSECTION;
@@ -2032,7 +2036,7 @@ public class StrokeTool : GLib.Object {
 		}
 		p.remove_points_on_points ();
 	}
-
+    /*
 	bool add_merge_intersection_point (Path path1, Path path2, EditPoint first, EditPoint next) {
 		double ix, iy;
 		bool intersection;
@@ -2058,7 +2062,7 @@ public class StrokeTool : GLib.Object {
 		
 		return intersection;
 	}
-	
+	*/
 	bool is_inside_of_path (PointSelection ps, PathList pl, out Path outline) {
 		outline = new Path ();
 		foreach (Path p in pl.paths) {

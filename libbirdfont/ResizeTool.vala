@@ -479,7 +479,7 @@ public class ResizeTool : Tool {
 		
 		objects_resized (selection_box_width, selection_box_height);
 	}
-
+    /*
 	void get_selection_min (out double x, out double y) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		x = double.MAX;
@@ -494,7 +494,7 @@ public class ResizeTool : Tool {
 			}
 		}
 	}
-
+    */
 	bool can_resize (double x, double y) {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		double h, w;

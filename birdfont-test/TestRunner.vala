@@ -221,7 +221,7 @@ public class TestRunner : NativeWindow, GLib.Object  {
 		MenuTab.start_background_thread ();
 		
 		try {
-			bg = Thread.create<void*> (t.perform_task, true);
+			bg = new Thread<void*>.try ("bg", t.perform_task);
 		} catch (GLib.Error e) {
 			warning (e.message);
 		}
@@ -231,7 +231,7 @@ public class TestRunner : NativeWindow, GLib.Object  {
 		unowned Thread<void*> bg;
 		
 		try {
-			bg = Thread.create<void*> (t.perform_task, true);
+			bg = new Thread<void*>.try ("bg", t.perform_task);
 		} catch (GLib.Error e) {
 			warning (e.message);
 		}
