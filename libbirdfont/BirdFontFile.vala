@@ -29,7 +29,7 @@ class BirdFontFile : GLib.Object {
 	public const int MIN_FORMAT_MAJOR = 0;
 	public const int MIN_FORMAT_MINOR = 0;
 
-	public bool has_svg_glyphs = false;	
+	//public bool has_svg_glyphs = false;
 
 	Gee.ArrayList<string> written_images = new Gee.ArrayList<string> ();
 		

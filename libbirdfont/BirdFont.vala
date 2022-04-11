@@ -294,7 +294,7 @@ public class BirdFont {
 #endif
 	}
 
-	public static void load_font_from_command_line () {
+	public  void load_font_from_command_line () {
 		string file = args.get_file ();
 		if (file != "") {
 			RecentFiles.load_font (file);

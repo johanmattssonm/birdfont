@@ -81,12 +81,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 				uri = Preview.get_uri ();
 				html = Preview.get_html_with_absolute_paths ();
 										
-				try {	
-					html_canvas.load_html (html, uri);
-				} catch (Error e) {
-					warning (e.message);
-					warning ("Failed to load html into canvas.");
-				}
+				html_canvas.load_html (html, uri);
 				
 				// show the webview when loading has finished 
 				html_box.set_visible (true); 
@@ -331,16 +326,16 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		} else {
 			if ((flags & FileChooser.DIRECTORY) > 0) { 
 				if ((flags & FileChooser.LOAD) > 0) {
-					fn = show_file_chooser (title, FileChooserAction.SELECT_FOLDER, Stock.OPEN);
+					fn = show_file_chooser (title, FileChooserAction.SELECT_FOLDER, t_("Open"));
 				} else if ((flags & FileChooser.SAVE) > 0) {
-					fn = show_file_chooser (title, FileChooserAction.SELECT_FOLDER, Stock.SAVE);
+					fn = show_file_chooser (title, FileChooserAction.SELECT_FOLDER, t_("Save"));
 				} else {
 					warning ("Open or save is not set.");
 				}
 			} else if ((flags & FileChooser.LOAD) > 0) {
-				fn = show_file_chooser (title, FileChooserAction.OPEN, Stock.OPEN);
+				fn = show_file_chooser (title, FileChooserAction.OPEN, t_("Open"));
 			} else if ((flags & FileChooser.SAVE) > 0) {
-				fn = show_file_chooser (title, FileChooserAction.SAVE, Stock.SAVE);
+				fn = show_file_chooser (title, FileChooserAction.SAVE, t_("Save"));
 			} else {
 				warning ("Unknown type");
 			}
@@ -351,7 +346,7 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	
 	public string? show_file_chooser (string title, FileChooserAction action, string label) {
 		string? fn = null;
-		FileChooserDialog file_chooser = new FileChooserDialog (title, this, action, Stock.CANCEL, ResponseType.CANCEL, label, ResponseType.ACCEPT);
+		FileChooserDialog file_chooser = new FileChooserDialog (title, this, action, t_("Cancel"), ResponseType.CANCEL, label, ResponseType.ACCEPT);
 		Font font = BirdFont.get_current_font ();
 		int i;
 		string last_folder;
@@ -460,7 +455,11 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 		idle.set_callback (() => {
 			Notify.Notification export_notification;
 			export_notification = new Notify.Notification ("BirdFont", t_("Your fonts have been exported."), null);
-			export_notification.show ();
+			try {
+				export_notification.show ();
+			} catch (GLib.Error e) {
+				warning (e.message);
+			}
 			return false;
 		});
 		idle.attach (null);
@@ -576,9 +575,9 @@ class TabbarCanvas : DrawingArea {
 
 		draw.connect ((t, e)=> {
 			Gtk.Allocation alloc;
-			Context cr;						
+			Context cr = e;
 									
-			cr = cairo_create ((!) get_window ());
+			//cr = cairo_create ((!) get_window ());
 			get_allocation (out alloc);
 						
 			tabbar.draw (cr, alloc.width, alloc.height);
@@ -642,7 +641,8 @@ class ToolboxCanvas : DrawingArea {
 			Gtk.Allocation allocation;
 			get_allocation (out allocation);
 			
-			Context cw = cairo_create((!) get_window());
+			Context cw = e;
+			//cw = cairo_create((!) get_window());
 			Toolbox.allocation_width = allocation.width;
 			Toolbox.allocation_height = allocation.height;
 			tb.draw (allocation.width, allocation.height, cw);
@@ -705,7 +705,8 @@ public class GlyphCanvasArea : DrawingArea  {
 			alloc.x = allocation.x;
 			alloc.y = allocation.y;
 			
-			Context cw = cairo_create ((!) get_window());
+			Context cw = e;
+			//cw = cairo_create ((!) get_window());
 			
 			Surface s = new Surface.similar (cw.get_target (), Cairo.Content.COLOR_ALPHA, alloc.width, alloc.height);
 			Context c = new Context (s); 
