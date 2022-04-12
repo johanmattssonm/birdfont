@@ -24,7 +24,7 @@ public class FontSettings : GLib.Object {
 
 	public FontSettings () {
 		settings = new Gee.HashMap<string, string> ();
-		font_name = "";
+		font_name = "new.bf";
 	}
 	
 	public string get_setting (string key) {
