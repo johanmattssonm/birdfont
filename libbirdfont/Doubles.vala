@@ -155,15 +155,36 @@ public class Doubles : GLib.Object {
 	public string get_string (int i) {
 		return round (get_double (i));
 	}
-
-	public static string round (double p) {
-		string v = p.to_string ();
+	
+	public static string round (double p, int decimals = 5) {
+		string v = "";
 		char[] c = new char [501];
 		
-		v = p.format (c, "%3.5f");
+		v = p.format (c, @"%.$(decimals)f");
+		v = v.replace (",", ".");
 		
 		if (v.index_of ("e") != -1) {	
-			return "0.0";
+			v = "0.0";
+		}
+
+		if (v.index_of ("-") == 0 && double.parse (v) == -0) {
+			v = "0";
+		}
+
+		return remove_last_zeros (v);
+	}
+	
+	public static string remove_last_zeros (string value) {	
+		string v = value;
+		
+		if (v.index_of (".") != -1) {
+			while (v.has_suffix ("0")) {
+				v = v.substring (0, v.length - "0".length);
+			}
+			
+			if (v.has_suffix (".")) {
+				v = v.substring (0, v.length - ".".length);
+			}
 		}
 		
 		return v;
