@@ -24,6 +24,7 @@ public class DescriptionDisplay : TableLayout {
 	CheckBox bold;
 	CheckBox italic;
 	TextArea weight;
+	TextArea italic_angle;
 	TextArea full_name;
 	TextArea unique_id;
 	TextArea version;
@@ -50,6 +51,7 @@ public class DescriptionDisplay : TableLayout {
 		name = new LineTextArea (label_size);
 		style = new LineTextArea (label_size);
 		weight = new LineTextArea (label_size);
+		italic_angle = new LineTextArea (label_size);
 		full_name = new LineTextArea (label_size);
 		unique_id = new LineTextArea (label_size);
 		version = new LineTextArea (label_size);
@@ -125,6 +127,21 @@ public class DescriptionDisplay : TableLayout {
 		});
 		widgets.add (weight);
 		focus_ring.add (weight);
+
+		/*
+		Italic angle in counter-clockwise degrees from the vertical. Zero
+		for upright text, negative for text that leans to the right (forward).
+		*/
+
+		widgets.add (new Text (t_("Italic angle, use negative values for text that leans to the right."), label_size, label_margin));
+		italic_angle.margin_bottom = margin;
+		italic_angle.set_text (Doubles.round (font.italic_angle));
+		italic_angle.text_changed.connect ((t) => {
+			font.set_italic_angle (t);
+			font.touch ();
+		});
+		widgets.add (italic_angle);
+		focus_ring.add (italic_angle);
 		
 		widgets.add (new Text (t_("Full Name (Name and Style)"), label_size, label_margin));
 		full_name.margin_bottom = margin;

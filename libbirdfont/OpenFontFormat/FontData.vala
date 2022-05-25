@@ -629,7 +629,18 @@ public class FontData : Object {
 			add (fd.read ());
 		}
 	}
-	
+
+	public static int32 to_fixed (double d) {
+		int32 val = (int32) Math.floor (d);
+		int32 mant = (int32) Math.floor (0x10000 * (d - val));
+		val = (val << 16) | mant;
+		return val;
+	}
+
+	public static double from_fixed (int32 val) {
+		return val / 65536.0;
+	}
+ 	
 	public void dump () {
 		for (uint32 i = 0; i < length_with_padding (); i++) {
 			stdout.printf ("%x " , table_data[i]);

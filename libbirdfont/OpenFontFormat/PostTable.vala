@@ -1078,7 +1078,20 @@ public class PostTable : OtfTable {
 		StringBuilder name;
 		
 		fd.add_fixed (0x00020000); // Version
-		fd.add_fixed (0x00000000); // italicAngle
+
+ 		Font font = OpenFontFormatWriter.get_current_font ();
+ 		
+		if (!font.italic) {
+			if (font.italic_angle != 0) {
+				printd ("Italic angle set to $(font.italic_angle) but the italic checkbox is not ticked.");
+			}
+			
+			fd.add_fixed (0x00000000); // italicAngle
+		} else {
+			int angle = FontData.to_fixed (font.italic_angle);
+			fd.add_32 (angle);
+		}
+
 		
 		fd.add_short (-2); // underlinePosition
 		fd.add_short (1); // underlineThickness

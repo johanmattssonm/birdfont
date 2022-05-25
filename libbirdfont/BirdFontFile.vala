@@ -24,7 +24,7 @@ class BirdFontFile : GLib.Object {
 	Font font;
 	
 	public const int FORMAT_MAJOR = 2;
-	public const int FORMAT_MINOR = 3;
+	public const int FORMAT_MINOR = 4;
 	
 	public const int MIN_FORMAT_MAJOR = 0;
 	public const int MIN_FORMAT_MINOR = 0;
@@ -390,6 +390,7 @@ class BirdFontFile : GLib.Object {
 		os.put_string (@"<license>$(Markup.escape_text (font.license))</license>\n");
 		os.put_string (@"<license_url>$(Markup.escape_text (font.license_url))</license_url>\n");
 		os.put_string (@"<weight>$(font.weight)</weight>\n");
+		os.put_string (@"<italic_angle>$(round(font.italic_angle))</italic_angle>\n");
 		os.put_string (@"<units_per_em>$(font.units_per_em)</units_per_em>\n");
 		os.put_string (@"<trademark>$(Markup.escape_text (font.trademark))</trademark>\n");
 		os.put_string (@"<manufacturer>$(Markup.escape_text (font.manufacturer))</manufacturer>\n");
@@ -850,6 +851,10 @@ class BirdFontFile : GLib.Object {
 			
 			if (t.get_name () == "weight") {
 				font.weight = int.parse (t.get_content ());
+			}
+
+			if (t.get_name () == "italic_angle") {
+				font.italic_angle = double.parse (t.get_content ());
 			}
 
 			if (t.get_name () == "units_per_em") {

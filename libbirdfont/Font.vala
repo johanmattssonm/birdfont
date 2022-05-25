@@ -87,6 +87,7 @@ public class Font : GLib.Object {
 	public bool bold = false;
 	public bool italic = false;
 	public int weight = 400;
+	public double italic_angle = 0;
 
 	public bool initialised = true;
 
@@ -294,6 +295,10 @@ public class Font : GLib.Object {
 		}
 	}
 
+	public void set_italic_angle (string a) {
+		italic_angle = double.parse (a);
+	}
+	
 	public string get_weight () {
 		return @"$weight";
 	}
