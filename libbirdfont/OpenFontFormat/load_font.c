@@ -1175,17 +1175,6 @@ GString* load_freetype_font (const gchar* file, gint* err) {
 		return bf;
 	}
 	
-	// What on earth is happening when I return strings from vala land to the c domain?
-	// The result is that the application craches and the data seems to be corrupted
-	// but why, WHY?
-	//
-	// I can't answer this question. Simply passing a buffer and letting the vala method
-	// fill it with data works. Minimal test code doesn't crash. There is a dog burried
-	// somewhere here.
-	//
-	// Upadte: it was probably a problem with the header file, it has been fixed. I have
-	// not tested the new code.
-	
 	gchar* short_path = calloc ((2048 + 1), sizeof(gchar));
 	short_path = (gchar *)file;
 
