@@ -170,7 +170,7 @@ void create_contour (guint unicode, FT_Vector* points, char* flags, int* length,
 		i++;		
 	} 
 	
-	// first point is of curve but it is not part of a double curve
+	// first point is off curve but it is not part of a double curve
 	if (len > 2 && is_quadratic (flags[0]) && !is_quadratic (flags[1])) { 
 		//first_normal_off_curve = TRUE;
 	}
