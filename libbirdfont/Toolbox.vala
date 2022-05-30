@@ -516,16 +516,19 @@ public class Toolbox : GLib.Object  {
 		
 		draw_tool_tip (cr);
 	}
-	
+
 	private void draw_tool_tip (Context cr) {
 		TextArea t;
 		
 		if (tool_tip != null && tool_tip != "") {
 			t = new TextArea (17 * get_scale ());
+   
 			t.allocation = new WidgetAllocation.for_area (0, 0, allocation_width, allocation_height);
 			t.set_editable (false);
 			t.set_text ((!) tool_tip);
+			
 			t.width = allocation_width - 20 * get_scale ();
+			
 			t.min_height = 17 * get_scale ();
 			t.height = 17 * get_scale ();
 

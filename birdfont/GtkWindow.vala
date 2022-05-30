@@ -610,10 +610,16 @@ class ToolboxCanvas : DrawingArea {
 			get_allocation (out allocation);
 			Toolbox.allocation_width = allocation.width;
 			Toolbox.allocation_height = allocation.height;
+			
 			Toolbox.redraw_tool_box ();
 		});
 		
 		tb.redraw.connect ((x, y, w, h) => {
+			if (h < 0) {
+				warning (@"Toolbox height is less than zero: $(h)");
+				return;
+			}
+			
 			queue_draw_area (x, y, w, h);
 		});
 		
@@ -632,7 +638,6 @@ class ToolboxCanvas : DrawingArea {
 		});
 
 		motion_notify_event.connect ((sen, e)=> {
-			// FIXME: e.y is two pixels off in GTK under Gnome
 			tb.move (e.x, e.y);
 			return true;
 		});
@@ -641,11 +646,11 @@ class ToolboxCanvas : DrawingArea {
 			Gtk.Allocation allocation;
 			get_allocation (out allocation);
 			
-			Context cw = e;
-			//cw = cairo_create((!) get_window());
+			Context cw = cairo_create((!) get_window());
 			Toolbox.allocation_width = allocation.width;
 			Toolbox.allocation_height = allocation.height;
-			tb.draw (allocation.width, allocation.height, cw);
+			
+			tb.draw (Toolbox.allocation_width, Toolbox.allocation_height, cw);
 			
 			return true;
 		});
@@ -661,7 +666,8 @@ class ToolboxCanvas : DrawingArea {
 		
 		add_events (EventMask.BUTTON_PRESS_MASK | EventMask.BUTTON_RELEASE_MASK | EventMask.POINTER_MOTION_MASK | EventMask.LEAVE_NOTIFY_MASK | EventMask.SCROLL_MASK);
 
-		set_size_request (212, 100);
+		int width = 212;
+		set_size_request (width, 100);
 
 		leave_notify_event.connect ((t, e)=> {
 			tb.reset_active_tool ();
