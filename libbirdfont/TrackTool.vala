@@ -148,6 +148,8 @@ public class TrackTool : Tool {
 				
 				g = MainWindow.get_current_glyph ();
 				
+				return_if_fail (!is_null (g.active_paths));				
+				
 				if (g.active_paths.size > 0) { // set type for last point
 					p = g.active_paths.get (g.active_paths.size - 1);
 					
@@ -235,6 +237,10 @@ public class TrackTool : Tool {
 	void set_tie () {
 		Glyph glyph = MainWindow.get_current_glyph ();
 		var paths = glyph.get_visible_paths ();
+		
+		return_if_fail (!is_null (paths));
+		return_if_fail (paths.size > 0);
+		
 		Path p = paths.get (paths.size - 1);
 		
 		foreach (EditPoint ep in p.points) {
