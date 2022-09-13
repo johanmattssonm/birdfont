@@ -1,3 +1,9 @@
+birdfont (2.32.1) stable;
+
+  * Bug fixes
+
+ -- Johan Mattsson <johan.mattsson.m@gmail.com>  Tue Sep 13 22:14:31 CEST 2022
+
 birdfont (2.32.0) stable;
 
   * Store italic angle in font metadata
