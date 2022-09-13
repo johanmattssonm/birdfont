@@ -148,10 +148,12 @@ public class TrackTool : Tool {
 				
 				g = MainWindow.get_current_glyph ();
 				
-				return_if_fail (!is_null (g.active_paths));				
+				return_if_fail (!is_null (g.active_paths));
 				
 				if (g.active_paths.size > 0) { // set type for last point
 					p = g.active_paths.get (g.active_paths.size - 1);
+
+					return_if_fail (!is_null (p.points));
 					
 					if (p.points.size > 1) {
 						previous = p.points.get (p.points.size - 1);
@@ -168,11 +170,17 @@ public class TrackTool : Tool {
 					return_if_fail (drawing);
 					add_endpoint_and_merge (x, y);
 				}
-							
-				foreach (Path path in g.layers.get_all_paths ().paths) {
-					convert_hidden_points (path);
-					path.update_region_boundaries ();
-				}
+				
+				var paths_in_layer = g.layers.get_all_paths (); 
+
+				if (is_null (paths_in_layer) || is_null (paths_in_layer)) {
+					warning ("No layers in glyph.");		
+				} else {
+					foreach (Path path in paths_in_layer.paths) {
+						convert_hidden_points (path);
+						path.update_region_boundaries ();
+					}				
+				}	
 				
 				g.clear_active_paths ();
 				
