@@ -500,7 +500,7 @@ public class SvgParser {
 		
 		bezier_points = new BezierPoints[1];
 		bezier_points[0] = new BezierPoints ();
-		bezier_points[0].type == 'L';
+		bezier_points[0].type = 'L';
 		bezier_points[0].x0 = x;
 		bezier_points[0].y0 = y;
 
@@ -568,7 +568,7 @@ public class SvgParser {
 		
 		bezier_points = new BezierPoints[1];
 		bezier_points[0] = new BezierPoints ();
-		bezier_points[0].type == 'L';
+		bezier_points[0].type = 'L';
 		bezier_points[0].x0 = x;
 		bezier_points[0].y0 = y;
 
@@ -634,12 +634,12 @@ public class SvgParser {
 
 		bezier_points = new BezierPoints[2];
 		bezier_points[0] = new BezierPoints ();
-		bezier_points[0].type == 'L';
+		bezier_points[0].type = 'L';
 		bezier_points[0].x0 = x1;
 		bezier_points[0].y0 = y1;
 
 		bezier_points[1] = new BezierPoints ();
-		bezier_points[1].type == 'L';
+		bezier_points[1].type = 'L';
 		bezier_points[1].x0 = x2;
 		bezier_points[1].y0 = y2;
 		
@@ -715,22 +715,22 @@ public class SvgParser {
 
 		bezier_points = new BezierPoints[4];
 		bezier_points[0] = new BezierPoints ();
-		bezier_points[0].type == 'L';
+		bezier_points[0].type = 'L';
 		bezier_points[0].x0 = x;
 		bezier_points[0].y0 = y;
 
 		bezier_points[1] = new BezierPoints ();
-		bezier_points[1].type == 'L';
+		bezier_points[1].type =='L';
 		bezier_points[1].x0 = x2;
 		bezier_points[1].y0 = y;
 
 		bezier_points[2] = new BezierPoints ();
-		bezier_points[2].type == 'L';
+		bezier_points[2].type = 'L';
 		bezier_points[2].x0 = x2;
 		bezier_points[2].y0 = y2;
 
 		bezier_points[3] = new BezierPoints ();
-		bezier_points[3].type == 'L';
+		bezier_points[3].type = 'L';
 		bezier_points[3].x0 = x;
 		bezier_points[3].y0 = y2;
 		
@@ -2089,7 +2089,7 @@ public class SvgParser {
 			}
 
 			bezier_points[bi] = new BezierPoints ();
-			bezier_points[bi].type == 'L';
+			bezier_points[bi].type = 'L';
 			bezier_points[bi].x0 = parse_double (c[i]);
 			bezier_points[bi].y0 = -parse_double (c[i + 1]);
 			bi++;
