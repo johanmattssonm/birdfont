@@ -20,7 +20,7 @@ public extern bool draw_overview_glyph (Context context, string font_file, doubl
 
 namespace BirdFont {
 	
-public class OverViewItem : GLib.Object {
+public class OverviewItem : GLib.Object {
 	public unichar character = '\0';
 	public GlyphCollection? glyphs;
 	public double x;
@@ -48,7 +48,7 @@ public class OverViewItem : GLib.Object {
 	public static Surface? label_background_no_menu = null;
 	public static Surface? selected_label_background_no_menu = null;
 		
-	public OverViewItem () {	
+	public OverviewItem () {	
 	}
 
 	public void set_character (unichar character) {
@@ -65,7 +65,7 @@ public class OverViewItem : GLib.Object {
 			});
 			
 			version_menu.signal_delete_item.connect ((glyph_index) => {
-				OverView v = MainWindow.get_overview ();
+				Overview v = MainWindow.get_overview ();
 				version_menu = new VersionList ((!) glyphs);
 				v.update_item_list ();
 				GlyphCanvas.redraw ();

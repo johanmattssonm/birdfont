@@ -15,7 +15,7 @@
 namespace BirdFont {
 
 /** A tab for picking characters in the font. */
-public class GlyphSelection : OverView {
+public class GlyphSelection : Overview {
 
 	public signal void selected_glyph (GlyphCollection gc);
 

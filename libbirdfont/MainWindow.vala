@@ -21,7 +21,7 @@ public class MainWindow : GLib.Object {
 	public static MainWindow singleton;
 	public static MenuTab menu_tab;
 	public static RecentFiles file_tab;
-	public static OverView overview;	
+	public static Overview overview;	
 	public static TabBar tabs;
 	public static NativeWindow native_window;
 	public static KerningDisplay kerning_display;
@@ -47,7 +47,7 @@ public class MainWindow : GLib.Object {
 		tools = new Toolbox (glyph_canvas, tabs);
 		menu_tab = new MenuTab ();
 		file_tab = new RecentFiles ();
-		overview = new OverView();
+		overview = new Overview();
 		kerning_display = new KerningDisplay ();
 		character_database = new CharDatabase ();
 		ligature_display = new LigatureList ();
@@ -334,10 +334,10 @@ public class MainWindow : GLib.Object {
 		tools = tb;
 	}
 
-	public static OverView get_overview () {
+	public static Overview get_overview () {
 		foreach (Tab t in tabs.tabs) {
-			if (t.get_display () is OverView) {
-				return (OverView) t.get_display ();
+			if (t.get_display () is Overview) {
+				return (Overview) t.get_display ();
 			}
 		}
 		

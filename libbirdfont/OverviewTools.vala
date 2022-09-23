@@ -62,7 +62,7 @@ public class OverviewTools : ToolCollection  {
 		all_glyphs = new LabelTool (t_("All Glyphs"));
 		all_glyphs.has_counter = true;
 		all_glyphs.select_action.connect ((self) => {
-			OverView overview = get_overview ();
+			Overview overview = get_overview ();
 			overview.display_all_available_glyphs ();
 			update_overview_characterset (overview);
 			FontDisplay.dirty_scrollbar = true;
@@ -72,7 +72,7 @@ public class OverviewTools : ToolCollection  {
 		default_glyphs = new LabelTool (t_("Default"));
 		default_glyphs.has_counter = true;
 		default_glyphs.select_action.connect ((self) => {
-			OverView overview = get_overview ();
+			Overview overview = get_overview ();
 			GlyphRange gr = new GlyphRange ();
 			DefaultCharacterSet.use_default_range (gr);
 			overview.set_current_glyph_range (gr);
@@ -84,7 +84,7 @@ public class OverviewTools : ToolCollection  {
 		unicode = new LabelTool (t_("Unicode"));
 		unicode.has_counter = true;
 		unicode.select_action.connect ((self) => {
-			OverView overview = get_overview ();
+			Overview overview = get_overview ();
 			GlyphRange gr = new GlyphRange ();
 			DefaultCharacterSet.use_full_unicode_range (gr);
 			overview.set_current_glyph_range (gr);
@@ -248,12 +248,12 @@ public class OverviewTools : ToolCollection  {
 	}
 
 	void fix_curve_orientation () {
-		OverView o;
+		Overview o;
 		Glyph g;
-		OverView.OverViewUndoItem ui;
+		Overview.OverviewUndoItem ui;
 		
 		o = get_overview ();
-		ui = new OverView.OverViewUndoItem ();
+		ui = new Overview.OverviewUndoItem ();
 		
 		Font f = BirdFont.get_current_font ();
 		ui.alternate_sets = f.alternates.copy ();
@@ -273,12 +273,12 @@ public class OverviewTools : ToolCollection  {
 	
 	public void search_for_glyph (Tool tool) {
 		tool.set_selected (false);
-		OverView.search ();
+		Overview.search ();
 	}
 	
 	public void add_new_alternate (Tool tool) {
-		OverView o = MainWindow.get_overview ();
-		OverViewItem oi = o.selected_item;
+		Overview o = MainWindow.get_overview ();
+		OverviewItem oi = o.selected_item;
 		GlyphCollection? gc;
 		
 		tool.set_selected (false);
@@ -293,12 +293,12 @@ public class OverviewTools : ToolCollection  {
 	}
 	
 	public void process_transform (Transform transform) {
-		OverView o;
+		Overview o;
 		Glyph g;
-		OverView.OverViewUndoItem ui;
+		Overview.OverviewUndoItem ui;
 		
 		o = get_overview ();
-		ui = new OverView.OverViewUndoItem ();
+		ui = new Overview.OverviewUndoItem ();
 		
 		Font f = BirdFont.get_current_font ();
 		ui.alternate_sets = f.alternates.copy ();
@@ -324,7 +324,7 @@ public class OverviewTools : ToolCollection  {
 			}
 		}
 		
-		foreach (OverViewItem item in o.visible_items) {
+		foreach (OverviewItem item in o.visible_items) {
 			item.clear_cache ();
 			item.draw_glyph_from_font ();
 		}
@@ -335,26 +335,26 @@ public class OverviewTools : ToolCollection  {
 		GlyphCanvas.redraw ();
 	}
 	
-	public OverView get_overview () {
+	public Overview get_overview () {
 		FontDisplay fd = MainWindow.get_current_display ();
 		
-		if (fd is OverView || fd is GlyphSelection) {
-			return (OverView) fd;
+		if (fd is Overview || fd is GlyphSelection) {
+			return (Overview) fd;
 		}
 		
 		warning ("Current tab is not overview.");
 		
-		return new OverView ();
+		return new Overview ();
 	}
 	
 	public static void show_all_available_characters () {
 		all_glyphs.select_action (all_glyphs);
 	}
 	
-	public static void update_overview_characterset (OverView? tab = null) {
+	public static void update_overview_characterset (Overview? tab = null) {
 		GlyphRange gr;
 		uint size;
-		OverView overview;
+		Overview overview;
 
 		// All characters
 		size = BirdFont.get_current_font ().length ();

@@ -154,7 +154,7 @@ public class Menu : AbstractMenu {
 
 		MenuItem search = add_menu_item (t_("Search"), "search");
 		search.action.connect (() => {
-			OverView.search ();
+			Overview.search ();
 			show_menu = false;
 		});
 		edit_menu.items.add (search);

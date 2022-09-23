@@ -212,7 +212,7 @@ public class MenuTab : FontDisplay {
 		if (BirdFont.get_current_font ().is_empty ()) {
 			show_default_characters ();
 		} else {
-			MainWindow.get_tab_bar ().add_unique_tab (new OverView ());
+			MainWindow.get_tab_bar ().add_unique_tab (new Overview ());
 			MainWindow.get_tab_bar ().select_tab_name ("Overview");
 		}
 	}
@@ -554,7 +554,7 @@ public class MenuTab : FontDisplay {
 		
 		Glyph.background_glyph = MainWindow.get_current_glyph ();
 		
-		if (MainWindow.get_current_display () is OverView) {
+		if (MainWindow.get_current_display () is Overview) {
 			Glyph.background_glyph = MainWindow.get_overview ().get_current_glyph ();
 		}
 	}
@@ -724,7 +724,7 @@ public class MenuTab : FontDisplay {
 			GlyphCollection? fg;
 			Glyph glyph;
 			GlyphCollection glyph_collection;
-			OverView o = MainWindow.get_overview ();
+			Overview o = MainWindow.get_overview ();
 
 			fg = font.get_glyph_collection_by_name (ligature_name);
 
@@ -749,8 +749,8 @@ public class MenuTab : FontDisplay {
 	}
 	
 	public static void show_default_characters () {
-		MainWindow.get_tab_bar ().add_unique_tab (new OverView ());
-		OverView o = MainWindow.get_overview ();
+		MainWindow.get_tab_bar ().add_unique_tab (new Overview ());
+		Overview o = MainWindow.get_overview ();
 		GlyphRange gr = new GlyphRange ();
 
 		if (!BirdFont.get_current_font ().initialised) {
@@ -764,7 +764,7 @@ public class MenuTab : FontDisplay {
 	}
 	
 	public static void show_all_available_characters () {
-		MainWindow.get_tab_bar ().add_unique_tab (new OverView ());
+		MainWindow.get_tab_bar ().add_unique_tab (new Overview ());
 		
 		if (!BirdFont.get_current_font ().initialised) {
 			MenuTab.new_file ();

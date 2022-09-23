@@ -185,8 +185,8 @@ public class ExportTool : GLib.Object {
 			
 			if (fd is GlyphTab || fd is Glyph) {
 				glyph = MainWindow.get_current_glyph ();
-			} else if (fd is OverView) {
-				OverView overview = MainWindow.get_overview ();
+			} else if (fd is Overview) {
+				Overview overview = MainWindow.get_overview ();
 				Glyph? g = overview.get_selected_glyph ();
 				
 				if (g == null) {

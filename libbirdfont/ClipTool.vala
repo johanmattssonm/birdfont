@@ -39,7 +39,7 @@ public class ClipTool : Tool {
 			data = svg_data + bf_data;
 			MainWindow.native_window.set_clipboard (data);
 			MainWindow.native_window.set_inkscape_clipboard (data);
-		} else if (fd is OverView) {
+		} else if (fd is Overview) {
 			copy_overview_glyphs ();
 		} else if (fd is DescriptionDisplay) {
 			DescriptionDisplay description_tab = (DescriptionDisplay) fd;
@@ -74,7 +74,7 @@ public class ClipTool : Tool {
 		string svg_data = "";
 		string bf_data = "";
 		string data;
-		OverView o = MainWindow.get_overview ();
+		Overview o = MainWindow.get_overview ();
 		
 		if (o.selected_items.size > 0) {
 			svg_data = ExportTool.export_to_inkscape_clipboard (
@@ -114,7 +114,7 @@ public class ClipTool : Tool {
 			paste_letters_to_spacing_tab ();
 		} else if (fd is KerningDisplay) {
 			paste_letters_to_kerning_tab ();
-		} else if (fd is OverView) {
+		} else if (fd is Overview) {
 			paste_to_overview ();
 		} else if (fd is DescriptionDisplay) {
 			DescriptionDisplay description_tab = (DescriptionDisplay) fd;
@@ -190,7 +190,7 @@ public class ClipTool : Tool {
 		Path new_path;
 		Glyph glyph;
 		GlyphCollection glyph_collection;
-		OverView o;
+		Overview o;
 		
 		if (overview) {
 			o = MainWindow.get_overview ();
@@ -380,7 +380,7 @@ public class ClipTool : Tool {
 		unichar c;
 		Glyph destination;
 		GlyphCollection glyph_collection = new GlyphCollection ('\0', "");
-		OverView o;
+		Overview o;
 		Path path = new Path ();
 		
 		foreach (string p in items) {

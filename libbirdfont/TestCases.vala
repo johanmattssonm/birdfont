@@ -677,7 +677,7 @@ class TestCases {
 	}
 
 	public static void test_overview () {
-		OverView o = MainWindow.get_overview ();
+		Overview o = MainWindow.get_overview ();
 
 		warn_if_fail (o.selected_char_is_visible ());
 	
@@ -1202,7 +1202,7 @@ class TestCases {
 	}
 
 	public static void test_open_next_glyph () {
-		OverView o = MainWindow.get_overview ();
+		Overview o = MainWindow.get_overview ();
 		
 		MainWindow.get_tab_bar ().select_overview ();
 		Toolbox.select_tool_by_name ("utf_8");

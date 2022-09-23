@@ -46,7 +46,7 @@ public class LanguageSelectionTab : Table {
 
 	void select_language (int row) {
 		string iso_code;
-		OverView overview;
+		Overview overview;
 		GlyphRange gr;
 		TabBar tb = MainWindow.get_tab_bar ();
 		

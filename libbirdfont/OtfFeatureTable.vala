@@ -224,7 +224,7 @@ public class OtfFeatureTable : Table {
 		listener.signal_submit.connect (() => {
 			GlyphCollection alt;
 			Font font;
-			OverView overview = MainWindow.get_overview ();
+			Overview overview = MainWindow.get_overview ();
 			
 			font = BirdFont.get_current_font ();
 

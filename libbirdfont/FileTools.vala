@@ -85,10 +85,10 @@ public class FileTools : ToolCollection  {
 					tc.clear_cache ();
 				}
 
-				OverViewItem.label_background = null;
-				OverViewItem.selected_label_background = null;
-				OverViewItem.label_background_no_menu = null;
-				OverViewItem.selected_label_background_no_menu = null;
+				OverviewItem.label_background = null;
+				OverviewItem.selected_label_background = null;
+				OverviewItem.label_background_no_menu = null;
+				OverviewItem.selected_label_background_no_menu = null;
 				
 				foreach (Tool t in themes.tool) {					
 					t.set_selected (false);

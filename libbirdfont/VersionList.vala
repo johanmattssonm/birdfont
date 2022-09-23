@@ -84,7 +84,7 @@ public class VersionList : GLib.Object {
 	private void delete_item (int index) {
 		int current_version;
 		Font font = BirdFont.get_current_font ();
-		OverView over_view = MainWindow.get_overview ();
+		Overview over_view = MainWindow.get_overview ();
 		
 		font.touch ();
 		

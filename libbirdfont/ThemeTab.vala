@@ -139,10 +139,10 @@ internal class ThemeTab : SettingsDisplay {
 		tb = MainWindow.get_tab_bar ();
 		tb.redraw (0, 0, tb.width, tb.height);
 			
-		OverViewItem.label_background = null;
-		OverViewItem.selected_label_background = null;
-		OverViewItem.label_background_no_menu = null;
-		OverViewItem.selected_label_background_no_menu = null;		
+		OverviewItem.label_background = null;
+		OverviewItem.selected_label_background = null;
+		OverviewItem.label_background_no_menu = null;
+		OverviewItem.selected_label_background_no_menu = null;		
 	}
 	
 	public static string get_label_from_file_name (string theme) {

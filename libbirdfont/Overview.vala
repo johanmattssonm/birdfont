@@ -17,10 +17,10 @@ using Cairo;
 namespace BirdFont {
 
 /** A display with all glyphs present in this font. */
-public class OverView : FontDisplay {
+public class Overview : FontDisplay {
 	public WidgetAllocation allocation = new WidgetAllocation ();
 	
-	public OverViewItem selected_item = new OverViewItem ();
+	public OverviewItem selected_item = new OverviewItem ();
 
 	public Gee.ArrayList<GlyphCollection> copied_glyphs = new Gee.ArrayList<GlyphCollection> ();
 	public Gee.ArrayList<GlyphCollection> selected_items = new Gee.ArrayList<GlyphCollection> ();	
@@ -50,11 +50,11 @@ public class OverView : FontDisplay {
 	
 	string search_query = "";
 	
-	public Gee.ArrayList<OverViewItem> visible_items = new Gee.ArrayList<OverViewItem> ();
+	public Gee.ArrayList<OverviewItem> visible_items = new Gee.ArrayList<OverviewItem> ();
 	
 	/** List of undo commands. */
-	public Gee.ArrayList<OverViewUndoItem> undo_items = new Gee.ArrayList<OverViewUndoItem> ();
-	public Gee.ArrayList<OverViewUndoItem> redo_items = new Gee.ArrayList<OverViewUndoItem> ();
+	public Gee.ArrayList<OverviewUndoItem> undo_items = new Gee.ArrayList<OverviewUndoItem> ();
+	public Gee.ArrayList<OverviewUndoItem> redo_items = new Gee.ArrayList<OverviewUndoItem> ();
 	
 	/** Show all characters that has been drawn. */
 	public bool all_available {
@@ -78,7 +78,7 @@ public class OverView : FontDisplay {
 
 	private bool update_scheduled = true;
 
-	public OverView (GlyphRange? range = null,
+	public Overview (GlyphRange? range = null,
 		bool open_selected = true, bool default_character_set = true) {
 			
 		GlyphRange gr;
@@ -141,7 +141,7 @@ public class OverView : FontDisplay {
 	}
 
 	public void reset_cache () {
-		foreach (OverViewItem i in visible_items) {
+		foreach (OverviewItem i in visible_items) {
 			i.clear_cache ();
 		}
 	}
@@ -167,7 +167,7 @@ public class OverView : FontDisplay {
 			selected_items.add ((!) glyphs);
 		}
 		
-		foreach (OverViewItem item in visible_items) {
+		foreach (OverviewItem item in visible_items) {
 			item.selected = item.glyphs != null;
 		}
 		
@@ -261,16 +261,16 @@ public class OverView : FontDisplay {
 	}
 	
 	public static void search () {
-		OverView ow = MainWindow.get_overview ();
+		Overview ow = MainWindow.get_overview ();
 		TextListener listener = new TextListener (t_("Search"), ow.search_query, t_("Filter"));
 		
 		listener.signal_text_input.connect ((text) => {
-			OverView o = MainWindow.get_overview ();
+			Overview o = MainWindow.get_overview ();
 			o.search_query = text;
 		});
 		
 		listener.signal_submit.connect (() => {
-			OverView o = MainWindow.get_overview ();
+			Overview o = MainWindow.get_overview ();
 			string q = o.search_query;
 			
 			if (q == "*") {
@@ -297,7 +297,7 @@ public class OverView : FontDisplay {
 	}
 	
 	public Glyph? get_current_glyph () {
-		OverViewItem oi = selected_item;
+		OverviewItem oi = selected_item;
 		if (oi.glyphs != null) {
 			return ((!) oi.glyphs).get_current ();
 		}
@@ -313,7 +313,7 @@ public class OverView : FontDisplay {
 		z.store_current_view ();
 		glyphs.get_current ().default_zoom ();
 		z.store_current_view ();
-		OverViewItem.reset_label ();
+		OverviewItem.reset_label ();
 	}
 	
 	public double get_height () {
@@ -331,7 +331,7 @@ public class OverView : FontDisplay {
 			l = glyph_range.length ();
 		}
 				
-		return 2.0 * OverViewItem.height * (l / rows);
+		return 2.0 * OverviewItem.height * (l / rows);
 	}
 
 	public bool selected_char_is_visible () {
@@ -381,25 +381,25 @@ public class OverView : FontDisplay {
 			view_offset_y += pixel_delta;
 			
 			while (view_offset_y > 0) {
-				view_offset_y -= OverViewItem.height;
+				view_offset_y -= OverviewItem.height;
 				move_up ();
 			}						
 		} else {
 			if (at_bottom ()) {
-				if (view_offset_y > -2 * OverViewItem.height && !all_characters_in_view ()) {
+				if (view_offset_y > -2 * OverviewItem.height && !all_characters_in_view ()) {
 					view_offset_y += pixel_delta;
 				}
 			} else {
 				view_offset_y += pixel_delta;
-				while (view_offset_y < -OverViewItem.height) {
-					view_offset_y += OverViewItem.height;
+				while (view_offset_y < -OverviewItem.height) {
+					view_offset_y += OverviewItem.height;
 					move_down ();
 				}
 			}
 		}
 				
-		if (view_offset_y < -2 * OverViewItem.height) {
-			view_offset_y = -2 * OverViewItem.height;
+		if (view_offset_y < -2 * OverviewItem.height) {
+			view_offset_y = -2 * OverviewItem.height;
 		}
 		
 		update_item_list ();
@@ -413,14 +413,14 @@ public class OverView : FontDisplay {
 		KeyBindings.set_require_modifier (true);
 		update_scrollbar ();
 		update_zoom_bar ();
-		OverViewItem.glyph_scale = 1;
+		OverviewItem.glyph_scale = 1;
 		update_item_list ();
 		selected_item = get_selected_item ();
 		GlyphCanvas.redraw ();
 	}
 	
 	public void update_zoom_bar () {
-		double z = OverViewItem.width / OverViewItem.DEFAULT_WIDTH - 0.5;
+		double z = OverviewItem.width / OverviewItem.DEFAULT_WIDTH - 0.5;
 		Toolbox.overview_tools.zoom_bar.set_zoom (z);
 		Toolbox.redraw_tool_box ();
 		update_item_list ();
@@ -428,12 +428,12 @@ public class OverView : FontDisplay {
 	
 	public void set_zoom (double zoom) {
 		double z = zoom + 0.5;
-		OverViewItem.glyph_scale = 1;
-		OverViewItem.width = OverViewItem.DEFAULT_WIDTH * z;
-		OverViewItem.height = OverViewItem.DEFAULT_HEIGHT * z;
-		OverViewItem.margin = OverViewItem.DEFAULT_MARGIN * z;
+		OverviewItem.glyph_scale = 1;
+		OverviewItem.width = OverviewItem.DEFAULT_WIDTH * z;
+		OverviewItem.height = OverviewItem.DEFAULT_HEIGHT * z;
+		OverviewItem.margin = OverviewItem.DEFAULT_MARGIN * z;
 		update_item_list ();
-		OverViewItem.reset_label ();
+		OverviewItem.reset_label ();
 		Preferences.set ("overview_zoom", @"$zoom");
 
 		Font font = BirdFont.get_current_font ();
@@ -448,49 +448,49 @@ public class OverView : FontDisplay {
 	}
 	
 	public override void zoom_min () {
-		OverViewItem.width = OverViewItem.DEFAULT_WIDTH * 0.5;
-		OverViewItem.height = OverViewItem.DEFAULT_HEIGHT * 0.5;
-		OverViewItem.margin = OverViewItem.DEFAULT_MARGIN * 0.5;
+		OverviewItem.width = OverviewItem.DEFAULT_WIDTH * 0.5;
+		OverviewItem.height = OverviewItem.DEFAULT_HEIGHT * 0.5;
+		OverviewItem.margin = OverviewItem.DEFAULT_MARGIN * 0.5;
 		update_item_list ();
-		OverViewItem.reset_label ();
+		OverviewItem.reset_label ();
 		GlyphCanvas.redraw ();
 		update_zoom_bar ();
 	}
 	
 	public override void reset_zoom () {
-		OverViewItem.width = OverViewItem.DEFAULT_WIDTH;
-		OverViewItem.height = OverViewItem.DEFAULT_HEIGHT;
-		OverViewItem.margin = OverViewItem.DEFAULT_MARGIN;
+		OverviewItem.width = OverviewItem.DEFAULT_WIDTH;
+		OverviewItem.height = OverviewItem.DEFAULT_HEIGHT;
+		OverviewItem.margin = OverviewItem.DEFAULT_MARGIN;
 		update_item_list ();
-		OverViewItem.reset_label ();
+		OverviewItem.reset_label ();
 		GlyphCanvas.redraw ();
 		update_zoom_bar ();
 	}
 
 	public override void zoom_max () {
-		OverViewItem.width = allocation.width;
-		OverViewItem.height = allocation.height;
+		OverviewItem.width = allocation.width;
+		OverviewItem.height = allocation.height;
 		update_item_list ();
-		OverViewItem.reset_label ();
+		OverviewItem.reset_label ();
 		GlyphCanvas.redraw ();
 	}
 	
 	public override void zoom_in () {
-		OverViewItem.width *= 1.1;
-		OverViewItem.height *= 1.1;
-		OverViewItem.margin *= 1.1;
+		OverviewItem.width *= 1.1;
+		OverviewItem.height *= 1.1;
+		OverviewItem.margin *= 1.1;
 		update_item_list ();
-		OverViewItem.reset_label ();
+		OverviewItem.reset_label ();
 		GlyphCanvas.redraw ();
 		update_zoom_bar ();
 	}
 	
 	public override void zoom_out () {
-		OverViewItem.width *= 0.9;
-		OverViewItem.height *= 0.9;
-		OverViewItem.margin *= 0.9;
+		OverviewItem.width *= 0.9;
+		OverviewItem.height *= 0.9;
+		OverviewItem.margin *= 0.9;
 		update_item_list ();
-		OverViewItem.reset_label ();
+		OverviewItem.reset_label ();
 		GlyphCanvas.redraw ();
 		update_zoom_bar ();
 	}
@@ -524,16 +524,16 @@ public class OverView : FontDisplay {
 		GlyphCanvas.redraw ();
 	}
 	
-	OverViewItem get_selected_item () {
+	OverviewItem get_selected_item () {
 		if (visible_items.size == 0) {
-			return new OverViewItem ();
+			return new OverviewItem ();
 		}
 		
 		if (!(0 <= selected < visible_items.size)) { 
 			return selected_item;
 		}
 
-		OverViewItem item = visible_items.get (selected);
+		OverviewItem item = visible_items.get (selected);
 		item.selected = true;
 		return item;
 	}
@@ -541,11 +541,11 @@ public class OverView : FontDisplay {
 	int get_items_per_row () {
 		int i = 1;
 		double tab_with = allocation.width - 30; // 30 px for the scroll bar
-		OverViewItem.margin = OverViewItem.width * 0.1;
-		double l = OverViewItem.margin + OverViewItem.full_width ();
+		OverviewItem.margin = OverviewItem.width * 0.1;
+		double l = OverviewItem.margin + OverviewItem.full_width ();
 		
 		while (l <= tab_with) {
-			l += OverViewItem.full_width ();
+			l += OverviewItem.full_width ();
 			i++;
 		}
 		
@@ -561,7 +561,7 @@ public class OverView : FontDisplay {
 		Font f = BirdFont.get_current_font ();
 		GlyphCollection? glyphs = null;
 		uint32 index;
-		OverViewItem item;
+		OverviewItem item;
 		double x, y;
 		unichar character;
 		Glyph glyph;
@@ -572,14 +572,14 @@ public class OverView : FontDisplay {
 		tab_with = allocation.width - 30; // scrollbar
 		
 		items_per_row = get_items_per_row ();
-		rows = (int) (allocation.height /  OverViewItem.full_height ()) + 2;
+		rows = (int) (allocation.height /  OverviewItem.full_height ()) + 2;
 		
 		item_list_length = items_per_row * rows;
 		visible_items.clear ();
 		
 		index = (uint32) first_visible;
-		x = OverViewItem.margin;
-		y = OverViewItem.margin;
+		x = OverviewItem.margin;
+		y = OverviewItem.margin;
 		
 		if (all_available) {
 			uint font_length = f.length ();
@@ -592,7 +592,7 @@ public class OverView : FontDisplay {
 				character_string = glyph.name;
 				character = glyph.unichar_code;
 				
-				item = new OverViewItem ();
+				item = new OverviewItem ();
 				item.set_character (character);
 				item.set_glyphs (glyphs);
 				item.x = x;
@@ -610,7 +610,7 @@ public class OverView : FontDisplay {
 			}
 			
 			for (int i = 0; i < item_list_length && index < glyph_range_size; i++) {			
-				item = new OverViewItem ();
+				item = new OverviewItem ();
 				visible_items.add (item);
 			}
 			
@@ -631,13 +631,13 @@ public class OverView : FontDisplay {
 			}
 		}
 		
-		x = OverViewItem.margin;
-		y = OverViewItem.margin;
+		x = OverviewItem.margin;
+		y = OverviewItem.margin;
 		
 		visible_size = visible_items.size;
 		int selected_index;
 		bool selected_item;
-		double full_width = OverViewItem.full_width ();
+		double full_width = OverviewItem.full_width ();
 		
 		for (int i = 0; i < visible_size; i++) {
 			item = visible_items.get (i);
@@ -664,8 +664,8 @@ public class OverView : FontDisplay {
 			x += full_width;
 			
 			if (x + full_width >= tab_with) {
-				x = OverViewItem.margin;
-				y += OverViewItem.full_height ();
+				x = OverviewItem.margin;
+				y += OverviewItem.full_height ();
 			}
 		}
 		
@@ -690,7 +690,7 @@ public class OverView : FontDisplay {
 		cr.fill ();
 		cr.restore ();
 		
-		foreach (OverViewItem i in visible_items) {
+		foreach (OverviewItem i in visible_items) {
 			i.draw (allocation, cr);
 		}
 		
@@ -717,11 +717,11 @@ public class OverView : FontDisplay {
 	
 	public void scroll_rows (int row_adjustment) {
 		for (int i = 0; i < row_adjustment; i++) {
-			scroll (-OverViewItem.height);
+			scroll (-OverviewItem.height);
 		}
 		
 		for (int i = 0; i > row_adjustment; i--) {
-			scroll (OverViewItem.height);
+			scroll (OverviewItem.height);
 		}
 	}
 	
@@ -788,14 +788,14 @@ public class OverView : FontDisplay {
 		view_offset_y += pixel_adjustment;
 		
 		if (view_offset_y >= 0) {
-			while (view_offset_y > OverViewItem.height) {			
-				view_offset_y -= OverViewItem.height;
+			while (view_offset_y > OverviewItem.height) {			
+				view_offset_y -= OverviewItem.height;
 				first_visible -= items_per_row;
 			}
 
 			first_visible -= items_per_row;
-			view_offset_y -= OverViewItem.height;
-		} else if (view_offset_y < -OverViewItem.height) {
+			view_offset_y -= OverviewItem.height;
+		} else if (view_offset_y < -OverviewItem.height) {
 			view_offset_y = 0;
 			first_visible += items_per_row;
 		}
@@ -1050,7 +1050,7 @@ public class OverView : FontDisplay {
 	
 	public void delete_selected_glyph () {
 		Font font = BirdFont.get_current_font ();
-		OverViewUndoItem undo_item = new OverViewUndoItem ();
+		OverviewUndoItem undo_item = new OverviewUndoItem ();
 		
 		undo_item.alternate_sets = font.alternates.copy ();
 		
@@ -1071,7 +1071,7 @@ public class OverView : FontDisplay {
 	
 	public override void undo () {
 		Font font = BirdFont.get_current_font ();
-		OverViewUndoItem previous_collection;
+		OverviewUndoItem previous_collection;
 		
 		if (undo_items.size == 0) {
 			return;
@@ -1109,7 +1109,7 @@ public class OverView : FontDisplay {
 	
 	public override void redo () {
 		Font font = BirdFont.get_current_font ();
-		OverViewUndoItem previous_collection;
+		OverviewUndoItem previous_collection;
 
 		if (redo_items.size == 0) {
 			return;
@@ -1139,9 +1139,9 @@ public class OverView : FontDisplay {
 		GlyphCanvas.redraw ();
 	}	
 	
-	public OverViewUndoItem get_current_state (OverViewUndoItem previous_collection) {
+	public OverviewUndoItem get_current_state (OverviewUndoItem previous_collection) {
 		GlyphCollection? gc;
-		OverViewUndoItem ui = new OverViewUndoItem ();
+		OverviewUndoItem ui = new OverviewUndoItem ();
 		Font font = BirdFont.get_current_font ();
 		
 		ui.alternate_sets = font.alternates.copy ();
@@ -1160,14 +1160,14 @@ public class OverView : FontDisplay {
 	}
 	
 	public void store_undo_state (GlyphCollection gc) {
-		OverViewUndoItem i = new OverViewUndoItem ();
+		OverviewUndoItem i = new OverviewUndoItem ();
 		Font f = BirdFont.get_current_font ();
 		i.alternate_sets = f.alternates.copy ();
 		i.glyphs.add (gc);
 		store_undo_items (i);
 	}
 
-	public void store_undo_items (OverViewUndoItem i) {
+	public void store_undo_items (OverviewUndoItem i) {
 		undo_items.add (i);
 		redo_items.clear ();
 	}
@@ -1175,13 +1175,13 @@ public class OverView : FontDisplay {
 	bool select_visible_glyph (string name) {
 		int i = 0;
 		
-		foreach (OverViewItem o in visible_items) {
+		foreach (OverviewItem o in visible_items) {
 			if (o.get_name () == name) {
 				selected = i;
 				selected_item = get_selected_item ();
 
-				if (selected_item.y > allocation.height - OverViewItem.height) {
-					view_offset_y -= (selected_item.y + OverViewItem.height) - allocation.height;
+				if (selected_item.y > allocation.height - OverviewItem.height) {
+					view_offset_y -= (selected_item.y + OverviewItem.height) - allocation.height;
 				}
 
 				if (selected_item.y < 0) {
@@ -1291,7 +1291,7 @@ public class OverView : FontDisplay {
 		
 		return_if_fail (!is_null (this));
 		
-		foreach (OverViewItem i in visible_items) {
+		foreach (OverviewItem i in visible_items) {
 			if (i.double_click (button, ex, ey)) {
 				open_overview_item (i);
 			}
@@ -1300,7 +1300,7 @@ public class OverView : FontDisplay {
 		GlyphCanvas.redraw ();
 	}
 
-	public void open_overview_item (OverViewItem i) {
+	public void open_overview_item (OverviewItem i) {
 		return_if_fail (!is_null (i));
 		
 		if (i.glyphs != null) {
@@ -1326,7 +1326,7 @@ public class OverView : FontDisplay {
 		
 		gc = selected_items.get (0);
 		
-		foreach (OverViewItem i in visible_items) {
+		foreach (OverviewItem i in visible_items) {
 			if (i.glyphs != null && gc == ((!) i.glyphs)) {
 				break;
 			}
@@ -1338,13 +1338,13 @@ public class OverView : FontDisplay {
 	}
 
 	public void hide_menu () {
-		foreach (OverViewItem i in visible_items) {
+		foreach (OverviewItem i in visible_items) {
 			i.hide_menu ();
 		}	
 	}
 
 	public override void button_press (uint button, double x, double y) {
-		OverViewItem i;
+		OverviewItem i;
 		int index = 0;
 		int selected_index = -1;
 		bool update = false;
@@ -1495,7 +1495,7 @@ public class OverView : FontDisplay {
 				nrows = 1;
 			}
 
-			visible_rows = allocation.height / (OverViewItem.height + OverViewItem.margin);
+			visible_rows = allocation.height / (OverviewItem.height + OverviewItem.margin);
 			scroll_size = visible_rows / nrows;
 			MainWindow.set_scrollbar_size (scroll_size);
 			pos = first_visible / (size - visible_rows * items_per_row);
@@ -1659,7 +1659,7 @@ public class OverView : FontDisplay {
 		string character_string;
 		Gee.ArrayList<GlyphCollection> glyps;
 		Font f;
-		OverViewUndoItem undo_item;
+		OverviewUndoItem undo_item;
 		
 		f = BirdFont.get_current_font ();
 		gc = new GlyphCollection ('\0', "");
@@ -1718,7 +1718,7 @@ public class OverView : FontDisplay {
 			index++;
 		}
 
-		undo_item = new OverViewUndoItem ();
+		undo_item = new OverviewUndoItem ();
 		undo_item.alternate_sets = f.alternates.copy ();
 		foreach (GlyphCollection g in glyps) {
 			undo_item.glyphs.add (g.copy ());
@@ -1761,7 +1761,7 @@ public class OverView : FontDisplay {
 		return true;
 	}
 	
-	public class OverViewUndoItem {
+	public class OverviewUndoItem {
 		public AlternateSets alternate_sets = new AlternateSets ();
 		public Gee.ArrayList<GlyphCollection> glyphs = new Gee.ArrayList<GlyphCollection> ();
 	}
