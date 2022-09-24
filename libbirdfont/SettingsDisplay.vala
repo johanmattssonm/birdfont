@@ -53,7 +53,7 @@ internal abstract class SettingsDisplay : FontDisplay {
 		cr.restore ();
 		
 		foreach (SettingsItem s in tools) {
-			if (-20 * MainWindow.units <= s.y <= allocation.height + 20 * MainWindow.units) {
+			if (-20 <= s.y <= allocation.height + 20) {
 				s.draw (allocation, cr);
 			}
 		}
@@ -65,20 +65,20 @@ internal abstract class SettingsDisplay : FontDisplay {
 		foreach (SettingsItem s in tools) {
 			
 			if (!first && s.headline) {
-				y += 30 * MainWindow.units;
+				y += 30;
 			}
 			
 			s.y = y;
 			
 			if (s.button != null) {
 				((!) s.button).y = y;
-				((!) s.button).x = 20 * MainWindow.units;
+				((!) s.button).x = 20;
 			}
 			
 			if (s.headline) {
-				y += 50 * MainWindow.units;
+				y += 50;
 			} else {
-				y += 40 * MainWindow.units;
+				y += 40;
 			}
 			
 			first = false;
@@ -181,7 +181,7 @@ internal abstract class SettingsDisplay : FontDisplay {
 				((!) s.button).panel_release_action (((!) s.button), button, x, y);
 			}
 			
-			if (s.key_bindings && s.y <= y < s.y + 40 * MainWindow.units && button == 1) {
+			if (s.key_bindings && s.y <= y < s.y + 40 && button == 1) {
 				set_key_bindings (s);
 			}
 		}
@@ -254,7 +254,7 @@ internal abstract class SettingsDisplay : FontDisplay {
 			}		
 		}
 		
-		scroll -= dy * MainWindow.units;
+		scroll -= dy;
 
 		if (scroll + allocation.height >=  content_height) {
 			scroll = content_height - allocation.height;

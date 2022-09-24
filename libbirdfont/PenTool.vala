@@ -212,7 +212,7 @@ public class PenTool : Tool {
 			selection_box_last_x = x;
 			selection_box_last_y = y;
 
-			if (Path.distance (begin_action_x, x, begin_action_y, y) > 10 * MainWindow.units) {
+			if (Path.distance (begin_action_x, x, begin_action_y, y) > 10) {
 				point_selection_image = false;
 			}
 
@@ -311,7 +311,7 @@ public class PenTool : Tool {
 	public static bool can_join (EditPoint ep) {
 		double mx, my;
 		get_tie_position (ep, out mx, out my);
-		return (mx > -10 * MainWindow.units && my > -10 * MainWindow.units);
+		return (mx > -10 && my > -10);
 	}
 
 	public static void select_points_in_box () {
@@ -1532,7 +1532,7 @@ public class PenTool : Tool {
 
 		distance = sqrt (fabs (pow (px - x, 2)) + fabs (pow (py - y, 2)));
 		
-		return (distance < 7 * MainWindow.units);
+		return (distance < 7);
 	}
 
 	/** Show the user that curves will be merged on release. */

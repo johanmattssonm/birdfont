@@ -298,8 +298,8 @@ public class ResizeTool : Tool {
 		hx = cos (rotation) * get_rotated_handle_length ();
 		hy = sin (rotation) * get_rotated_handle_length ();
 
-		inx = x - size * MainWindow.units <= cx + hx - 2.5 <= x + size * MainWindow.units;
-		iny = y - size * MainWindow.units <= cy + hy - 2.5 <= y + size * MainWindow.units;
+		inx = x - size <= cx + hx - 2.5 <= x + size;
+		iny = y - size <= cy + hy - 2.5 <= y + size;
 		
 		return inx && iny;
 	}
@@ -519,13 +519,13 @@ public class ResizeTool : Tool {
 	bool is_over_resize_handle (Path p, double x, double y) {
 		double handle_x, handle_y;
 		get_resize_handle_position (out handle_x, out handle_y);
-		return Path.distance (handle_x, x, handle_y, y) < 12 * MainWindow.units;
+		return Path.distance (handle_x, x, handle_y, y) < 12;
 	}
 
 	bool is_over_horizontal_resize_handle (Path p, double x, double y) {
 		double handle_x, handle_y;
 		get_horizontal_reseize_handle_position (out handle_x, out handle_y);
-		return Path.distance (handle_x, x, handle_y, y) < 12 * MainWindow.units;		
+		return Path.distance (handle_x, x, handle_y, y) < 12;		
 	}
 
 	public void skew (double skew) {

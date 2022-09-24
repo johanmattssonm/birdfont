@@ -31,7 +31,7 @@ public class OverwriteDialog : Dialog {
 	const double question_font_size = 23;
 	
 	public OverwriteDialog (OverWriteDialogListener callbacks) {
-		double font_size = question_font_size * MainWindow.units;
+		double font_size = question_font_size;
 		
 		listener = callbacks;
 		
@@ -55,7 +55,7 @@ public class OverwriteDialog : Dialog {
 			callbacks.overwrite_dont_ask_again ();
 		});
 		
-		height = 90 * MainWindow.units;
+		height = 90;
 	}
 
 	public override void layout () {
@@ -64,33 +64,33 @@ public class OverwriteDialog : Dialog {
 		double center;
 		double qh;
 			
-		cx = 20 * MainWindow.units;
+		cx = 20;
 		overwrite_button.widget_x = cx;
 
-		cx += 10 * MainWindow.units + overwrite_button.get_width ();
+		cx += 10 + overwrite_button.get_width ();
 		cancel_button.widget_x = cx;
 
-		cx += 10 * MainWindow.units + cancel_button.get_width ();
+		cx += 10 + cancel_button.get_width ();
 		dont_ask_again_button.widget_x = cx;
 
-		width = cx + 20 * MainWindow.units + dont_ask_again_button.get_width ();
+		width = cx + 20 + dont_ask_again_button.get_width ();
 		
 		center = (allocation.width - width) / 2.0;
 		
 		question.widget_x = overwrite_button.widget_x + center;
-		question.widget_y = cy + 15 * MainWindow.units;
+		question.widget_y = cy + 15;
 		Theme.text_color (question, "Text Tool Box");
 		
-		qh = (question_font_size + 1) * MainWindow.units;
+		qh = (question_font_size + 1);
 		
 		overwrite_button.widget_x += center;
-		overwrite_button.widget_y = cy + qh + 25 * MainWindow.units;
+		overwrite_button.widget_y = cy + qh + 25;
 		
 		cancel_button.widget_x += center;
-		cancel_button.widget_y = cy + qh + 25 * MainWindow.units;
+		cancel_button.widget_y = cy + qh + 25;
 		
 		dont_ask_again_button.widget_x += center;
-		dont_ask_again_button.widget_y = cy + qh + 25 * MainWindow.units;
+		dont_ask_again_button.widget_y = cy + qh + 25;
 	}
 
 	public override void draw (Context cr) {	
@@ -109,14 +109,14 @@ public class OverwriteDialog : Dialog {
 		
 		cr.save ();
 		Theme.color (cr, "Dialog Background");
-		draw_rounded_rectangle (cr, cx, cy, width, height, 10 * MainWindow.units);
+		draw_rounded_rectangle (cr, cx, cy, width, height, 10);
 		cr.fill ();
 		cr.restore ();
 		
 		cr.save ();
 		Theme.color (cr, "Button Border 4");
 		cr.set_line_width (1);
-		draw_rounded_rectangle (cr, cx, cy, width, height, 10 * MainWindow.units);
+		draw_rounded_rectangle (cr, cx, cy, width, height, 10);
 		cr.stroke ();
 		cr.restore ();
 

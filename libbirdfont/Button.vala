@@ -26,9 +26,9 @@ public class Button : Widget {
 
 	public Button (string label, double margin_bottom = 0) {
 		this.margin_bottom = margin_bottom;
-		font_size =  17 * MainWindow.units;
+		font_size =  17;
 		this.label = new Text (label, font_size);
-		padding = 15 * MainWindow.units;
+		padding = 15;
 	}
 
 	public override void draw (Context cr) {	
@@ -47,7 +47,7 @@ public class Button : Widget {
 
 		cr.save ();
 		Theme.text_color (label, "Button Foreground");
-		label.draw_at_top (cr, widget_x + padding, widget_y + (2 * padding - font_size - 3 * MainWindow.units) / 2.0);
+		label.draw_at_top (cr, widget_x + padding, widget_y + (2 * padding - font_size - 3) / 2.0);
 		cr.restore ();
 	}
 

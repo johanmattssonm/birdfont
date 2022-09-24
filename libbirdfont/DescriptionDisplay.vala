@@ -41,9 +41,9 @@ public class DescriptionDisplay : TableLayout {
 	private static bool disable_copyright = false;
 	
 	public DescriptionDisplay () {
-		double margin = 12 * MainWindow.units;
-		double label_size = 20 * MainWindow.units;
-		double label_margin = 4 * MainWindow.units;
+		double margin = 12;
+		double label_size = 20;
+		double label_margin = 4;
 		Headline headline;
 		Font font = BirdFont.get_current_font ();
 		
@@ -66,7 +66,7 @@ public class DescriptionDisplay : TableLayout {
 		designer_url = new LineTextArea (label_size);
 	
 		headline = new Headline (t_("Name and Description"));
-		headline.margin_bottom = 20 * MainWindow.units;
+		headline.margin_bottom = 20;
 		widgets.add (headline);
 
 		widgets.add (new Text (t_("PostScript Name"), label_size, label_margin));

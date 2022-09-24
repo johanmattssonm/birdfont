@@ -19,9 +19,9 @@ namespace BirdFont {
 /** Kerning context. */
 public class SpacingTab : KerningDisplay {
 
-	double box_size = 122 * MainWindow.units;
-	double height = 44 * MainWindow.units;
-	double character_height = 20 * MainWindow.units;
+	double box_size = 122;
+	double height = 44;
+	double character_height = 20;
 	
 	WidgetAllocation allocation;
 	
@@ -114,7 +114,7 @@ public class SpacingTab : KerningDisplay {
 			cap = new Text ((!) c.to_string (), 17);
 			Theme.text_color (cap, "Table Border");
 			cap.widget_x = middle - cap.get_extent () / 2.0;
-			cap.widget_y = allocation.height - height + character_height - 4 * MainWindow.units;
+			cap.widget_y = allocation.height - height + character_height - 4;
 			cap.draw_at_baseline (cr, cap.widget_x, cap.widget_y);			
 			
 			l = g.get_left_side_bearing ();
@@ -126,7 +126,7 @@ public class SpacingTab : KerningDisplay {
 			left = new Text (truncate (l, 5), 17);
 			Theme.text_color (left, "Foreground 1");
 			left.widget_x = middle - box_size / 2.0 + (box_size / 2.0 - left.get_extent ()) / 2.0;
-			left.widget_y = allocation.height - 7 * MainWindow.units;
+			left.widget_y = allocation.height - 7;
 			left.draw_at_baseline (cr, left.widget_x, left.widget_y);
 
 			r = g.get_right_side_bearing ();
@@ -138,7 +138,7 @@ public class SpacingTab : KerningDisplay {
 			right = new Text (truncate (r, 5), 17);
 			Theme.text_color (right, "Table Border");
 			right.widget_x = end - (box_size / 2.0 - right.get_extent ()) / 2.0 - right.get_extent ();
-			right.widget_y = allocation.height - 7 * MainWindow.units;
+			right.widget_y = allocation.height - 7;
 			right.draw_at_baseline (cr, right.widget_x, right.widget_y);					
 		}
 	}

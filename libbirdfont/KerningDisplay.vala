@@ -301,7 +301,7 @@ public class KerningDisplay : FontDisplay {
 				cr.stroke ();
 				cr.restore ();
 				
-				y += (50 / KerningTools.font_size) * MainWindow.units;
+				y += (50 / KerningTools.font_size);
 			}
 						
 			y += row_height + 20;
@@ -329,7 +329,7 @@ public class KerningDisplay : FontDisplay {
 
 	private void display_kerning_value (double k) {
 		string kerning = round (k);
-		kerning_label = new Text (@"$(kerning)", 17 * MainWindow.units);
+		kerning_label = new Text (@"$(kerning)", 17);
 	}
 	
 	private void set_active_handle_index (int h) {

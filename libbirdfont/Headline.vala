@@ -29,19 +29,19 @@ class Headline : Widget {
 	public override void draw (Context cr) {
 		cr.save ();
 		Theme.color (cr, "Headline Background");
-		cr.rectangle (0, widget_y, allocation.width, 40 * MainWindow.units);
+		cr.rectangle (0, widget_y, allocation.width, 40);
 		cr.fill ();
 		cr.restore ();
 			
 		cr.save ();
 		label.set_source_rgba (1, 1, 1, 1);
-		label.set_font_size (20 * MainWindow.units);
-		label.draw_at_baseline (cr, 21 * MainWindow.units, widget_y + 25 * MainWindow.units);
+		label.set_font_size (20);
+		label.draw_at_baseline (cr, 21, widget_y + 25);
 		cr.restore ();
 	}
 	
 	public override double get_height () {
-		return 40 * MainWindow.units;
+		return 40;
 	}
 	
 	public override double get_width () {

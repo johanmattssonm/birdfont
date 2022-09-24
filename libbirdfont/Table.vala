@@ -82,10 +82,10 @@ public abstract class Table : FontDisplay {
 			
 			for (int i = 0; i < row.columns; i++) {
 				width = (int) row.get_column (i).get_sidebearing_extent ();
-				width +=  (int) (10 * MainWindow.units);
+				width +=  (int) (10);
 				
-				if (width < 100 * MainWindow.units) {
-					width = (int) (100 * MainWindow.units);
+				if (width < 100) {
+					width = (int) (100);
 				}
 				
 				if (width > column_width.get (i)) {
@@ -106,8 +106,8 @@ public abstract class Table : FontDisplay {
 		cr.save ();
 		Theme.color (cr, "Text Foreground");
 		t = row.get_column (0);
-		t.widget_x = 40 * MainWindow.units;
-		t.widget_y = y + 45 * MainWindow.units;
+		t.widget_x = 40;
+		t.widget_y = y + 45;
 		t.draw (cr);		
 		cr.restore ();
 		
@@ -127,7 +127,7 @@ public abstract class Table : FontDisplay {
 			Theme.color (cr, "Table Background 1");
 		}
 		
-		cr.rectangle (0, y, allocation.width, 25 * MainWindow.units);
+		cr.rectangle (0, y, allocation.width, 25);
 		cr.fill ();
 		cr.restore ();
 
@@ -135,23 +135,23 @@ public abstract class Table : FontDisplay {
 			cr.save ();
 			Theme.color (cr, "Foreground 1");
 			cr.set_line_width (1);
-			cr.move_to (10 * MainWindow.units, y + 15 * MainWindow.units);
-			cr.line_to (15 * MainWindow.units, y + 10 * MainWindow.units);
-			cr.move_to (10 * MainWindow.units, y + 10 * MainWindow.units);
-			cr.line_to (15 * MainWindow.units, y + 15 * MainWindow.units);		
+			cr.move_to (10, y + 15);
+			cr.line_to (15, y + 10);
+			cr.move_to (10, y + 10);
+			cr.line_to (15, y + 15);		
 			cr.stroke ();
 			cr.restore ();
 		}
 		
 		return_if_fail (row.columns <= column_width.size);
 		
-		x = 40 * MainWindow.units;
+		x = 40;
 		for (int i = 0; i < row.columns; i++) {
 			cr.save ();
 			Theme.color (cr, "Foreground 1");
 			t = row.get_column (i);
 			t.widget_x = x;
-			t.widget_y = y + 3 * MainWindow.units;
+			t.widget_y = y + 3;
 			t.draw (cr);
 			
 			x += column_width.get (i); 
@@ -211,7 +211,7 @@ public abstract class Table : FontDisplay {
 	}
 	
 	public override void scroll_wheel (double x, double y, double pixeldelta, double dy) {
-		scroll -= dy * MainWindow.units;
+		scroll -= dy;
 
 		if (scroll > page_height - allocation.height) {
 			scroll = page_height - allocation.height;

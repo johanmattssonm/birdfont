@@ -91,20 +91,20 @@ public class SettingsItem : GLib.Object {
 		if (headline) {
 			cr.save ();
 			Theme.color (cr, "Headline Background");
-			cr.rectangle (0, y, allocation.width, 40 * MainWindow.units);
+			cr.rectangle (0, y, allocation.width, 40);
 			cr.fill ();
 			cr.restore ();
 				
 			cr.save ();
 			Theme.text_color (label, "Foreground Inverted");
-			label.set_font_size (20 * MainWindow.units);
-			label.draw_at_baseline (cr, 21 * MainWindow.units, y + 25 * MainWindow.units);
+			label.set_font_size (20);
+			label.draw_at_baseline (cr, 21, y + 25);
 			cr.restore ();
 		} else {
 			if (active) {
 				cr.save ();
 				Theme.color (cr, "Menu Background");
-				cr.rectangle (0, y - 5 * MainWindow.units, allocation.width, 40 * MainWindow.units);
+				cr.rectangle (0, y - 5, allocation.width, 40);
 				cr.fill ();
 				cr.restore ();
 			}
@@ -119,8 +119,8 @@ public class SettingsItem : GLib.Object {
 			
 			cr.save ();
 			Theme.text_color (label, "Text Tool Box");
-			label.set_font_size (17 * MainWindow.units);
-			label.draw_at_baseline (cr, label_x, y + 20 * MainWindow.units);
+			label.set_font_size (17);
+			label.draw_at_baseline (cr, label_x, y + 20);
 			cr.restore ();
 			
 			if (key_bindings) {
@@ -134,9 +134,9 @@ public class SettingsItem : GLib.Object {
 					Theme.text_color (key_binding_text, "Text Tool Box");
 				}
 				
-				key_binding_text.set_font_size (17 * MainWindow.units);
-				label_x += label.get_extent () + 20 * MainWindow.units;
-				key_binding_text.draw_at_baseline (cr, label_x, y + 20 * MainWindow.units);
+				key_binding_text.set_font_size (17);
+				label_x += label.get_extent () + 20;
+				key_binding_text.draw_at_baseline (cr, label_x, y + 20);
 				cr.restore ();
 			}	
 		}

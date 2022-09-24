@@ -417,7 +417,7 @@ public class TabContent : GLib.Object {
 		text_callback = tl;
 
 		text_input_label = new Text (tl.label);
-		text_input = new LineTextArea (20 * MainWindow.units);
+		text_input = new LineTextArea (20);
 		text_input_button = new Button (tl.button_label);
 
 		text_input.carret_is_visible = true;

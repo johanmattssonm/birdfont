@@ -221,8 +221,8 @@ public class Line : GLib.Object {
 		}
 		
 		if (is_vertical ()) { // over line handle (y)
-			if (y > g.allocation.height - 10 * MainWindow.units
-				||  y < 10 * MainWindow.units) {
+			if (y > g.allocation.height - 10
+				||  y < 10) {
 					
 				p = pos;
 				c = Glyph.path_coordinate_x (x);
@@ -236,8 +236,8 @@ public class Line : GLib.Object {
 			set_active (a);
 			
 		} else { // over line handle (x)
-			if (x > g.allocation.width - 10 * MainWindow.units
-				|| x < 10 * MainWindow.units) {
+			if (x > g.allocation.width - 10
+				|| x < 10) {
 					
 				p = pos;
 				c = Glyph.path_coordinate_y (y);
@@ -414,17 +414,17 @@ public class Line : GLib.Object {
 		
 		// Label
 		if (get_active ()) { 
-			line_label = new Text (translated_label, 19 * MainWindow.units);
+			line_label = new Text (translated_label, 19);
 
 			if (is_vertical ()) {
-				line_label.widget_x = p + 8 * MainWindow.units;
-				line_label.widget_y = allocation.height - 55 * MainWindow.units;
+				line_label.widget_x = p + 8;
+				line_label.widget_y = allocation.height - 55;
 			} else {
 				line_label.widget_x = g.allocation.width 
-					- 10 * MainWindow.units 
+					- 10 
 					- line_label.get_extent ();
 					
-				line_label.widget_y = p + 10 * MainWindow.units;
+				line_label.widget_y = p + 10;
 			}
 			
 			if (active) {

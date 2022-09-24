@@ -97,14 +97,14 @@ public class QuestionDialog : Dialog {
 		
 		cr.save ();
 		Theme.color (cr, "Dialog Background");
-		draw_rounded_rectangle (cr, cx, cy, width, height, 10 * MainWindow.units);
+		draw_rounded_rectangle (cr, cx, cy, width, height, 10);
 		cr.fill ();
 		cr.restore ();
 		
 		cr.save ();
 		Theme.color (cr, "Button Border 4");
 		cr.set_line_width (1);
-		draw_rounded_rectangle (cr, cx, cy, width, height, 10 * MainWindow.units);
+		draw_rounded_rectangle (cr, cx, cy, width, height, 10);
 		cr.stroke ();
 		cr.restore ();
 

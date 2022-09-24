@@ -32,16 +32,16 @@ public class ExportSettings : TableLayout {
 	public ExportSettings () {
 		Headline headline;
 		Font font;
-		double margin = 12 * MainWindow.units;
-		double label_size = 20 * MainWindow.units;
-		double label_margin = 4 * MainWindow.units;
+		double margin = 12;
+		double label_size = 20;
+		double label_margin = 4;
 		string fn, folder;
 		
 		font = BirdFont.get_current_font ();		
 		font.settings.set_setting ("has_export_settings", "true");
 		
 		headline = new Headline (t_("Export Settings"));
-		headline.margin_bottom = 20 * MainWindow.units;
+		headline.margin_bottom = 20;
 		widgets.add (headline);
 		
 		widgets.add (new Text (t_("File Name"), label_size, label_margin));
@@ -94,7 +94,7 @@ public class ExportSettings : TableLayout {
 
 		folder = ExportTool.get_export_folder ();
 		Text folder_row = new Text (t_("Folder") + ": "  + folder, label_size, label_margin);
-		folder_row.margin_bottom = 20 * MainWindow.units;
+		folder_row.margin_bottom = 20;
 		widgets.add (folder_row);
 		
 		widgets.add (new Text (t_("Formats"), label_size, label_margin));
@@ -147,7 +147,7 @@ public class ExportSettings : TableLayout {
 		widgets.add (svg);
 		focus_ring.add (svg);
 
-		svg.margin_bottom = 20 * MainWindow.units;
+		svg.margin_bottom = 20;
 
 		widgets.add (new Text (t_("Color Tables"), label_size, label_margin));
 
@@ -173,7 +173,7 @@ public class ExportSettings : TableLayout {
 		widgets.add (colr_table);
 		focus_ring.add (colr_table);
 	
-		colr_table.margin_bottom = 20 * MainWindow.units;
+		colr_table.margin_bottom = 20;
 
 		name_tab = new Button (t_("Name and Description"), margin);
 		name_tab.action.connect ((c) => {

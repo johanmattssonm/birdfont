@@ -665,14 +665,14 @@ public class BackgroundImage : GLib.Object {
 
 		d = Path.distance (x, nx, y, ny);
 		
-		return d < 15 * MainWindow.units;
+		return d < 15;
 	}
 
 	bool is_over_resize (double nx, double ny) {
 		double x, y, size;
 		bool inx, iny;
 	
-		size = 12 * MainWindow.units;
+		size = 12;
 
 		x = img_middle_x - (img_scale_x * get_img ().get_width () / 2);
 		y = img_middle_y - (img_scale_y * get_img ().get_height () / 2);

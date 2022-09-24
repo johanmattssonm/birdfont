@@ -33,7 +33,7 @@ public class SaveDialog : Dialog {
 	public SaveDialog (SaveDialogListener callbacks) {
 		listener = callbacks;
 		
-		save_question = new Text (t_("Save changes?"), question_font_size * MainWindow.units);
+		save_question = new Text (t_("Save changes?"), question_font_size);
 		
 		save_button = new Button (t_("Save"));
 		save_button.action.connect (() => {
@@ -53,7 +53,7 @@ public class SaveDialog : Dialog {
 			callbacks.signal_cancel ();
 		});
 		
-		height = 90 * MainWindow.units;
+		height = 90;
 	}
 
 	public override void layout () {
@@ -62,33 +62,33 @@ public class SaveDialog : Dialog {
 		double center;
 		double qh;
 		
-		cx = 20 * MainWindow.units;
+		cx = 20;
 		save_button.widget_x = cx;
 
-		cx += 10 * MainWindow.units + save_button.get_width ();
+		cx += 10 + save_button.get_width ();
 		discard_button.widget_x = cx;
 
-		cx += 10 * MainWindow.units + discard_button.get_width ();
+		cx += 10 + discard_button.get_width ();
 		cancel_button.widget_x = cx;
 
-		width = cx + 20 * MainWindow.units + cancel_button.get_width ();;
+		width = cx + 20 + cancel_button.get_width ();;
 		
 		center = (allocation.width - width) / 2.0;
 		
 		save_question.widget_x = save_button.widget_x + center;
-		save_question.widget_y = cy + 15 * MainWindow.units;
+		save_question.widget_y = cy + 15;
 		Theme.text_color (save_question, "Text Tool Box");
 		
-		qh = (question_font_size + 1) * MainWindow.units;
+		qh = (question_font_size + 1);
 		
 		save_button.widget_x += center;
-		save_button.widget_y = cy + qh + 25 * MainWindow.units;
+		save_button.widget_y = cy + qh + 25;
 		
 		discard_button.widget_x += center;
-		discard_button.widget_y = cy + qh + 25 * MainWindow.units;
+		discard_button.widget_y = cy + qh + 25;
 		
 		cancel_button.widget_x += center;
-		cancel_button.widget_y = cy + qh + 25 * MainWindow.units;
+		cancel_button.widget_y = cy + qh + 25;
 	}
 
 	public override void draw (Context cr) {	
@@ -107,14 +107,14 @@ public class SaveDialog : Dialog {
 		
 		cr.save ();
 		Theme.color (cr, "Dialog Background");
-		draw_rounded_rectangle (cr, cx, cy, width, height, 10 * MainWindow.units);
+		draw_rounded_rectangle (cr, cx, cy, width, height, 10);
 		cr.fill ();
 		cr.restore ();
 		
 		cr.save ();
 		Theme.color (cr, "Button Border 4");
 		cr.set_line_width (1);
-		draw_rounded_rectangle (cr, cx, cy, width, height, 10 * MainWindow.units);
+		draw_rounded_rectangle (cr, cx, cy, width, height, 10);
 		cr.stroke ();
 		cr.restore ();
 

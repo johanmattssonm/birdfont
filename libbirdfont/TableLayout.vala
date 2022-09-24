@@ -66,7 +66,7 @@ public class TableLayout : FontDisplay {
 		double y = -scroll;
 		
 		foreach (Widget w in widgets) {
-			w.widget_x = 17 * MainWindow.units;
+			w.widget_x = 17;
 			w.widget_y = y;
 			w.allocation = allocation;
 			
@@ -223,7 +223,7 @@ public class TableLayout : FontDisplay {
 	}
 	
 	public override void scroll_wheel (double x, double y, double pixeldelta, double dy) {
-		scroll -= dy * MainWindow.units;
+		scroll -= dy;
 		
 		if (scroll + allocation.height >=  content_height) {
 			scroll = content_height - allocation.height;

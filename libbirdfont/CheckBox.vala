@@ -21,10 +21,10 @@ public class CheckBox : Widget {
 	
 	public bool checked = false;
 	public signal void updated (bool checked);
-	public double padding = 3.333 * MainWindow.units;
+	public double padding = 3.333;
 	
-	public double w = 12 * MainWindow.units;
-	public double h = 12 * MainWindow.units;
+	public double w = 12;
+	public double h = 12;
 	
 	bool has_focus = false;
 	

@@ -50,8 +50,8 @@ public class AbstractMenu : GLib.Object {
 	SubMenu current_menu;
 	WidgetAllocation allocation = new WidgetAllocation ();
 
-	double width = 250 * MainWindow.units;
-	double height = 25 * MainWindow.units;
+	double width = 250;
+	double height = 25;
 	
 	public Gee.HashMap<string, MenuItem> menu_items = new Gee.HashMap<string, MenuItem> ();
 	public Gee.ArrayList<MenuItem> sorted_menu_items = new Gee.ArrayList<MenuItem> ();
@@ -269,7 +269,7 @@ public class AbstractMenu : GLib.Object {
 	
 	public double layout_width () {
 		Text key_binding = new Text ();
-		double font_size = 17 * MainWindow.units;;
+		double font_size = 17;;
 		double w;
 		
 		width = 0;
@@ -281,7 +281,7 @@ public class AbstractMenu : GLib.Object {
 			
 			w = item.label.get_extent ();
 			w += key_binding.get_extent ();
-			w += 3 * height * MainWindow.units;
+			w += 3 * height;
 			
 			if (w > width) {
 				width = w;
@@ -306,7 +306,7 @@ public class AbstractMenu : GLib.Object {
 		
 		x = allocation.width - width;
 		y = 0;
-		font_size = 17 * MainWindow.units;
+		font_size = 17;
 		this.allocation = allocation;
 		
 		foreach (MenuItem item in current_menu.items) {
@@ -317,15 +317,15 @@ public class AbstractMenu : GLib.Object {
 			cr.restore ();
 			
 			cr.save ();
-			label_x = allocation.width - width + 0.7 * height * MainWindow.units;
-			label_y = y + font_size - 1 * MainWindow.units;
+			label_x = allocation.width - width + 0.7 * height;
+			label_y = y + font_size - 1;
 			Theme.text_color (item.label, "Menu Foreground");
 			item.label.draw_at_baseline (cr, label_x, label_y);
 			
 			key_binding.set_text (item.get_key_bindings ());
 			key_binding.set_font_size (font_size);
 			binding_extent = key_binding.get_extent ();
-			label_x = x + width - binding_extent - 0.6 * height * MainWindow.units;
+			label_x = x + width - binding_extent - 0.6 * height;
 			key_binding.set_font_size (font_size);
 			Theme.text_color (key_binding, "Menu Foreground");
 			key_binding.draw_at_baseline (cr, label_x, label_y);

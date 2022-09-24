@@ -24,14 +24,14 @@ public class MessageDialog : Dialog {
 	
 	public MessageDialog (string message) {
 		Color c = Theme.get_color ("Text Tool Box");
-		this.message = new TextArea (20 * MainWindow.units, c);
+		this.message = new TextArea (20, c);
 		this.message.set_text (message);
 		this.message.draw_border = false;
 		this.message.editable = false;
 		this.message.carret_is_visible = false;
-		this.message.min_width = 300 * MainWindow.units;
+		this.message.min_width = 300;
 		this.message.width = this.message.min_width;
-		this.message.min_height = 20 * MainWindow.units;
+		this.message.min_height = 20;
 		this.message.height = this.message.min_height;
 
 		ok_button = new Button (t_("Close"));
@@ -50,11 +50,11 @@ public class MessageDialog : Dialog {
 		message.layout ();
 
 		width = message.get_width ();
-		width += 10 * MainWindow.units;
+		width += 10;
 		
 		height = message.get_height ();
 		height += ok_button.get_height ();
-		height += 5 * MainWindow.units;
+		height += 5;
  
 		cx = (allocation.width - width) / 2.0;
 		cy = (allocation.height - height) / 2.0;
@@ -67,25 +67,25 @@ public class MessageDialog : Dialog {
 		
 		cr.save ();
 		Theme.color (cr, "Dialog Background");
-		draw_rounded_rectangle (cr, cx, cy, width, height, 10 * MainWindow.units);
+		draw_rounded_rectangle (cr, cx, cy, width, height, 10);
 		cr.fill ();
 		cr.restore ();
 		
 		cr.save ();
 		Theme.color (cr, "Foreground 1");
 		cr.set_line_width (1);
-		draw_rounded_rectangle (cr, cx, cy, width, height, 10 * MainWindow.units);
+		draw_rounded_rectangle (cr, cx, cy, width, height, 10);
 		cr.stroke ();
 		cr.restore ();
 
-		cy += 5 * MainWindow.units;
-		message.widget_x = cx + 10 * MainWindow.units;
+		cy += 5;
+		message.widget_x = cx + 10;
 		message.widget_y = cy;
 		message.allocation = allocation;
 		message.layout ();
 		message.draw (cr);
 	
-		ok_button.widget_x = cx + 10 * MainWindow.units;
+		ok_button.widget_x = cx + 10;
 		ok_button.widget_y = cy + message.get_height ();
 		ok_button.draw (cr);
 	}
