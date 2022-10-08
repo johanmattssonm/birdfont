@@ -672,8 +672,6 @@ class BirdFontFile : GLib.Object {
 		ep.get_left_handle ().type = PointType.LINE_QUADRATIC;
 		ep.type = PointType.LINE_QUADRATIC;
 		path.recalculate_linear_handles_for_point (ep);
-		
-		path.print_all_points ();
 	}
 
 	private static void add_quadratic (EditPoint start, EditPoint end, StringBuilder data) {

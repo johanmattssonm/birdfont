@@ -266,6 +266,9 @@ public class Font : GLib.Object {
 	}
 		
 	public bool newer_format () {
+		print (@"Loaded file format: $format_major.$format_minor\n");	
+		print (@"Parser version    : $(BirdFontFile.FORMAT_MAJOR).$(BirdFontFile.FORMAT_MINOR)\n");
+
 		if (format_major > BirdFontFile.FORMAT_MAJOR) {
 			return true;
 		}
