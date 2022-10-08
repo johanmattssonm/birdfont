@@ -23,7 +23,7 @@ class BirdFontFile : GLib.Object {
 	
 	Font font;
 	
-	public const int FORMAT_MAJOR = 2;
+	public const int FORMAT_MAJOR = 3;
 	public const int FORMAT_MINOR = 4;
 	
 	public const int MIN_FORMAT_MAJOR = 0;
@@ -518,9 +518,11 @@ class BirdFontFile : GLib.Object {
 	 * cartesian coordinate system with origo in the middle.
 	 * 
 	 * Instructions:
-	 * S - Start point for a quadratic path
+	 * R - Start point for a quadratic path
+	 * S - Start point for a double quadratic path
 	 * B - Start point for a cubic path
-	 * L - Line with quadratic control points
+	 * K - Line with quadratic control points
+	 * L - Line with double quadratic control points
 	 * M - Line with cubic control points
 	 * Q - Quadratic Bézier path
 	 * D - Two quadratic off curve points
@@ -596,14 +598,27 @@ class BirdFontFile : GLib.Object {
 	}
 	
 	private static void add_start_point (EditPoint e, StringBuilder data) {
-		if (e.type == PointType.CUBIC || e.type == PointType.LINE_CUBIC) {
-			add_cubic_start (e, data);
-		} else {
+ 		if (e.type == PointType.CUBIC || e.type == PointType.LINE_CUBIC) {
+ 			add_cubic_start (e, data);
+		} else if (e.type == PointType.DOUBLE_CURVE || e.type == PointType.LINE_DOUBLE_CURVE) {
+			add_double_start (e, data);
+		} else if (e.type == PointType.QUADRATIC || e.type == PointType.LINE_QUADRATIC) {
 			add_quadratic_start (e, data);
-		}
+		} else {
+			warning (@"Unexpected start point type: $(e.type)");
+ 		}
+	}
+
+	private static void add_quadratic_start (EditPoint p, StringBuilder data) {
+		string x, y;
+		
+		x = round (p.x);
+		y = round (p.y);
+		
+		data.append (@"R $(x),$(y)");
 	}
 		
-	private static void add_quadratic_start (EditPoint p, StringBuilder data) {
+	private static void add_double_start (EditPoint p, StringBuilder data) {
 		double x, y;
 		
 		x = p.x;
@@ -619,6 +634,15 @@ class BirdFontFile : GLib.Object {
 		y = p.y;
 		
 		data.append (@"B $(round (x)),$(round (y))");
+	}
+
+	private static void add_quadratic_line_to (EditPoint p, StringBuilder data) {
+		string x, y;
+		
+		x = round (p.x);
+		y = round (p.y);
+		
+		data.append (@"K $(x),$(y)");
 	}
 
 	private static void add_line_to (EditPoint p, StringBuilder data) {
@@ -637,6 +661,19 @@ class BirdFontFile : GLib.Object {
 		y = p.y;
 		
 		data.append (@"M $(round (x)),$(round (y))");
+	}
+
+	private static void quadratic_line (Path path, string px, string py) {
+		EditPoint ep;
+		
+		path.add (parse_double (px), parse_double (py));
+		ep = path.get_last_point ();
+		ep.get_right_handle ().type = PointType.LINE_QUADRATIC;
+		ep.get_left_handle ().type = PointType.LINE_QUADRATIC;
+		ep.type = PointType.LINE_QUADRATIC;
+		path.recalculate_linear_handles_for_point (ep);
+		
+		path.print_all_points ();
 	}
 
 	private static void add_quadratic (EditPoint start, EditPoint end, StringBuilder data) {
@@ -683,7 +720,7 @@ class BirdFontFile : GLib.Object {
 
 	private static void add_next_point (EditPoint start, EditPoint end, StringBuilder data) {
 		if (start.right_handle.type == PointType.LINE_QUADRATIC && end.left_handle.type == PointType.LINE_QUADRATIC) {
-			add_line_to (end, data);
+			add_quadratic_line_to (end, data);
 		} else if (start.right_handle.type == PointType.LINE_DOUBLE_CURVE && end.left_handle.type == PointType.LINE_DOUBLE_CURVE) {
 			add_line_to (end, data);
 		} else if (start.right_handle.type == PointType.LINE_CUBIC && end.left_handle.type == PointType.LINE_CUBIC) {
@@ -1677,13 +1714,19 @@ class BirdFontFile : GLib.Object {
 		
 		return_if_fail (d.length > 1);
 		
-		if (!(d[0] == "S" || d[0] == "B")) {
+		if (!(d[0] == "R" || d[0] == "S" || d[0] == "B")) {
 			warning ("No start point.");
 			return;
 		}
 		
 		instruction = d[i++];
-		
+
+		if (instruction == "R") {
+			p = d[i++].split (",");
+			return_if_fail (p.length == 2);
+			quadratic_line (path, p[0], p[1]);
+		}
+	
 		if (instruction == "S") {
 			p = d[i++].split (",");
 			return_if_fail (p.length == 2);
@@ -1703,8 +1746,13 @@ class BirdFontFile : GLib.Object {
 				warning (@"No instruction at index $i.");
 				return;
 			}
-			
-			if (instruction == "L") {
+
+			if (instruction == "K") {
+				return_if_fail (i < d.length);
+				p = d[i++].split (",");
+				return_if_fail (p.length == 2);
+				quadratic_line (path, p[0], p[1]);
+			} else if (instruction == "L") {
 				return_if_fail (i < d.length);
 				p = d[i++].split (",");
 				return_if_fail (p.length == 2);
