@@ -23,8 +23,8 @@ class BirdFontFile : GLib.Object {
 	
 	Font font;
 	
-	public const int FORMAT_MAJOR = 3;
-	public const int FORMAT_MINOR = 4;
+	public const int FORMAT_MAJOR = 2;
+	public const int FORMAT_MINOR = 5;
 	
 	public const int MIN_FORMAT_MAJOR = 0;
 	public const int MIN_FORMAT_MINOR = 0;
