@@ -1657,13 +1657,13 @@ public class Overview : FontDisplay {
 		int skip = 0;
 		int s;
 		string character_string;
-		Gee.ArrayList<GlyphCollection> glyps;
+		Gee.ArrayList<GlyphCollection> glyphs;
 		Font f;
 		OverviewUndoItem undo_item;
 		
 		f = BirdFont.get_current_font ();
 		gc = new GlyphCollection ('\0', "");
-		glyps = new Gee.ArrayList<GlyphCollection> ();
+		glyphs = new Gee.ArrayList<GlyphCollection> ();
 		
 		copied_glyphs.sort ((a, b) => {
 			return (int) ((GlyphCollection) a).get_unicode_character () 
@@ -1714,19 +1714,19 @@ public class Overview : FontDisplay {
 				}
 			}
 			
-			glyps.add (gc);
+			glyphs.add (gc);
 			index++;
 		}
 
 		undo_item = new OverviewUndoItem ();
 		undo_item.alternate_sets = f.alternates.copy ();
-		foreach (GlyphCollection g in glyps) {
+		foreach (GlyphCollection g in glyphs) {
 			undo_item.glyphs.add (g.copy ());
 		}
 		store_undo_items (undo_item);
 
-		if (glyps.size != copied_glyphs.size) {
-			warning ("glyps.size != copied_glyphs.size");
+		if (glyphs.size != copied_glyphs.size) {
+			warning ("glyphs.size != copied_glyphs.size");
 			return;
 		}
 
@@ -1736,7 +1736,7 @@ public class Overview : FontDisplay {
 		}
 		
 		i = 0;
-		foreach (GlyphCollection g in glyps) {
+		foreach (GlyphCollection g in glyphs) {
 			glyph = copied_glyphs.get (i).get_current ().copy ();
 			glyph.version_id = (glyph.version_id == -1 || g.length () == 0) ? 1 : g.get_last_id () + 1;
 			glyph.unichar_code = g.get_unicode_character ();
