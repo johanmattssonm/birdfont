@@ -417,7 +417,7 @@ os.put_string (
 	</div>
 
 	<div>
-		<h2 class="big">Hamburgerfonstiv</h2>
+		<h2 class="big">Hamburgefonstiv</h2>
 		<p class="big">""" + name + """</p>
 	</div>
 
