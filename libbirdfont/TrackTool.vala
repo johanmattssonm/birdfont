@@ -150,12 +150,12 @@ public class TrackTool : Tool {
 				
 				return_if_fail (!is_null (g.active_paths));
 				
-				if (g.active_paths.size > 0) { // set type for last point
+				if (!is_null (g.active_paths) && g.active_paths.size > 0) { // set type for last point
 					p = g.active_paths.get (g.active_paths.size - 1);
 
 					return_if_fail (!is_null (p.points));
 					
-					if (p.points.size > 1) {
+					if (!is_null (p.points) && p.points.size > 1) {
 						previous = p.points.get (p.points.size - 1);
 						previous.type = PointType.CUBIC;
 						previous.set_tie_handle (false);
