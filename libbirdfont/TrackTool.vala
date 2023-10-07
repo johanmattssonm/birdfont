@@ -123,6 +123,11 @@ public class TrackTool : Tool {
 				last_update = get_current_time ();
 				start_update_timer ();
 				drawing = true;
+
+				if (is_null(glyph.active_paths)) {
+					warning("No active paths in free hand tool.");
+					return;				
+				}
 				
 				foreach (Path path in glyph.active_paths) {
 					path.create_full_stroke (); // cache merged stroke parts
