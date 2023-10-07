@@ -221,7 +221,7 @@ public class PenTool : Tool {
 		
 		key_press_action.connect ((self, keyval) => {
 			reset_stroke ();
-			
+
 			if (keyval == Key.DEL || keyval == Key.BACK_SPACE) {
 				if (KeyBindings.has_shift ()) {
 					delete_selected_points ();
