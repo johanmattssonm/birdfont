@@ -51,6 +51,11 @@ Windows and Mac binaries can be downloaded from
 https://birdfont.org Many Linux distributions have packages of
 Birdfont in their repositories. There are BSD packages in OpenBSD and FreeBSD.
 
+## Logo
+The logo was created by Marko Jovanovac. You can find it here:
+resources/birdfont-logo.svg
+
 [birdfont]: https://birdfont.org/images/birdfont_logo2.png "Birdfont logo"
 [xmlbird]: https://birdfont.org/xmlbird.php "XML Bird – XML Parser for programs written in VALA"
 
+#
