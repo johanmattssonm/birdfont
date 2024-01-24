@@ -1608,12 +1608,6 @@ public class SvgParser {
 			warning ("No points in path.");
 			return path_list;	
 		}
-
-		int new_length = 0;
-		BezierPoints[] new_bezier_points = squash_leading_m (bezier_points, bi, out new_length);
-
-		bezier_points = new_bezier_points;
-		bi = new_length;
 		
 		move_and_resize (bezier_points, bi, svg_glyph, units, glyph);
 		
@@ -1627,28 +1621,6 @@ public class SvgParser {
 		return path_list;
 	}
 
-	// remove multiple m or M instructions at the start of a curve
-	static BezierPoints[] squash_leading_m (BezierPoints[] bezier_points, int old_length, out int new_length) {
-		BezierPoints[] filtered = new BezierPoints[bezier_points.length]; 
-		
-		for (int i = 0; i < filtered.length; i++) {
-			filtered[i] = new BezierPoints ();
-		}
-		
-		int last_index = 0;
-		for (int i = 0; i < old_length - 1; i++) {
-			if (bezier_points[i].type == 'M' && bezier_points[i + 1].type == 'M') {
-				continue;
-			}
-			
-			filtered[last_index++] = bezier_points[i];
-		}
-		
-		new_length = last_index;
-		
-		return filtered;
-	}
-	
 	void move_and_resize (BezierPoints[] b, int num_b, bool svg_glyph, double units, Glyph glyph) {
 		Font font = BirdFont.get_current_font ();
 		
