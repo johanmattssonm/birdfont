@@ -531,20 +531,19 @@ public class GtkWindow : Gtk.Window, NativeWindow {
 	
 	public void set_cursor (int visible) {
 	}
-	
+
 	public double get_screen_scale () {
-		string? scale = Environment.get_variable ("GDK_SCALE");
-		double factor;
-		
-		if (scale == null) {
-			return 1;
-		}
-		
-		if (double.try_parse ((!) scale, out factor)) {
-			return factor;
-		}
-		
-		return 1;
+		var screen = Gdk.Screen.get_default();
+		return_val_if_fail (screen != null, 1);
+
+		var current_screen = (!) screen;
+		var resolution = current_screen.get_resolution();
+		var reference_resolution = 96.0;  // reference resolution
+		double fractional_scale = resolution / reference_resolution;
+
+		int scale_factor = this.get_scale_factor(); // probably 1 or 2 for 100% or 200%
+
+		return scale_factor * fractional_scale;
 	}
 }
 
