@@ -1141,12 +1141,17 @@ public class Glyph : FontDisplay {
 
 		var subgroups = get_current_layer ().subgroups;
 		
-		if (is_null(subgroups)) {
+		if (is_null (subgroups)) {
 			warning ("Expecting a sub group.");
 			return null;
 		}
 
 		foreach (Layer layer in subgroups) {
+			if (is_null (layer.paths) || is_null (layer.paths.paths)) {
+				warning ("No paths in get_path_at");
+				continue;
+			}
+			
 			foreach (Path pt in layer.paths.paths) {
 				if (pt.is_over (x, y)) {
 					found = true;
@@ -1158,7 +1163,7 @@ public class Glyph : FontDisplay {
 		if (!found) {
 			var current_layer_paths = get_paths_in_current_layer ();
 		
-			if (is_null(current_layer_paths)) {
+			if (is_null (current_layer_paths)) {
 				warning ("Expecting current_layer_paths.");
 				return null;		
 			}
