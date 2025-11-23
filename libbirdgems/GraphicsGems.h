@@ -148,23 +148,23 @@ if (!(x)) fprintf(stderr," Assert failed: x\n");
 typedef int boolean;			/* boolean data type */
 typedef boolean flag;			/* flag data type */
 
-extern double V2SquaredLength(), V2Length();
-extern double V2Dot(), V2DistanceBetween2Points(); 
-extern Vector2 *V2Negate(), *V2Normalize(), *V2Scale(), *V2Add(), *V2Sub();
-extern Vector2 *V2Lerp(), *V2Combine(), *V2Mul(), *V2MakePerpendicular();
-extern Vector2 *V2New(), *V2Duplicate();
-extern Point2 *V2MulPointByMatrix();
-extern Matrix3 *V2MatMul();
+extern double V2SquaredLength(Vector2 *a), V2Length(Vector2 *a);
+extern double V2Dot(Vector2 *a, Vector2 *b), V2DistanceBetween2Points(Point2 *a, Point2 *b);
+extern Vector2 *V2Negate(Vector2 *v), *V2Normalize(Vector2 *v), *V2Scale(Vector2 *v, double newlen), *V2Add(Vector2 *a, Vector2 *b, Vector2 *c), *V2Sub(Vector2 *a, Vector2 *b, Vector2 *c);
+extern Vector2 *V2Lerp(Vector2 *lo, Vector2 *hi, double alpha, Vector2 *result), *V2Combine(Vector2 *a, Vector2 *b, Vector2 *result, double ascl, double bscl), *V2Mul(Vector2 *a, Vector2 *b, Vector2 *result), *V2MakePerpendicular(Vector2 *a, Vector2 *ap);
+extern Vector2 *V2New(double x, double y), *V2Duplicate(Vector2 *a);
+extern Point2 *V2MulPointByMatrix(Point2 *p, Matrix3 *m);
+extern Matrix3 *V2MatMul(Matrix3 *a, Matrix3 *b, Matrix3 *c);
 
-extern double V3SquaredLength(), V3Length();
-extern double V3Dot(), V3DistanceBetween2Points();
-extern Vector3 *V3Normalize(), *V3Scale(), *V3Add(), *V3Sub();
-extern Vector3 *V3Lerp(), *V3Combine(), *V3Mul(), *V3Cross();
-extern Vector3 *V3New(), *V3Duplicate();
-extern Point3 *V3MulPointByMatrix();
-extern Matrix4 *V3MatMul();
+extern double V3SquaredLength(Vector3 *a), V3Length(Vector3 *a);
+extern double V3Dot(Vector3 *a, Vector3 *b), V3DistanceBetween2Points(Point3 *a, Point3 *b);
+extern Vector3 *V3Normalize(Vector3 *v), *V3Scale(Vector3 *v, double newlen), *V3Add(Vector3 *a, Vector3 *b, Vector3 *c), *V3Sub(Vector3 *a, Vector3 *b, Vector3 *c);
+extern Vector3 *V3Lerp(Vector3 *lo, Vector3 *hi, double alpha, Vector3 *result), *V3Combine(Vector3 *a, Vector3 *b, Vector3 *result, double ascl, double bscl), *V3Mul(Vector3 *a, Vector3 *b, Vector3 *result), *V3Cross(Vector3 *a, Vector3 *b, Vector3 *c);
+extern Vector3 *V3New(double x, double y, double z), *V3Duplicate(Vector3 *a);
+extern Point3 *V3MulPointByMatrix(Point3 *p, Matrix4 *m);
+extern Matrix4 *V3MatMul(Matrix4 *a, Matrix4 *b, Matrix4 *c);
 
-extern double RegulaFalsi(), NewtonRaphson(), findroot();
+extern double RegulaFalsi(double (*f)(double), double left, double right), NewtonRaphson(double (*f)(double), double (*df)(double), double x), findroot(double left, double right, double tolerance, double (*f)(double), double (*df)(double));
 
 #endif
 
