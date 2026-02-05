@@ -1,0 +1,1770 @@
+# Georgian translation for birdfont.
+# Copyright (C) 2026 birdfont authors.
+# This file is distributed under the same license as the birdfont package.
+# Ekaterine Papava <papava.e@gtu.ge>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: birdfont\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-06-14 17:09+0200\n"
+"PO-Revision-Date: 2026-02-05 14:59+0100\n"
+"Last-Translator: Ekaterine Papava <papava.e@gtu.ge>\n"
+"Language-Team: Georgian <(nothing)>\n"
+"Language: ka\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.8\n"
+
+#: libbirdfont/Argument.vala:277
+msgid "Usage"
+msgstr "გამოყენება"
+
+#: libbirdfont/Argument.vala:279 libbirdfont/ExportUtils.vala:19
+#: birdfont-autotrace/AutoTrace.vala:68
+msgid "FILE"
+msgstr "FILE"
+
+#: libbirdfont/Argument.vala:279 libbirdfont/ExportUtils.vala:19
+#: birdfont-autotrace/AutoTrace.vala:68
+msgid "OPTION"
+msgstr "ვარიანტი"
+
+#: libbirdfont/Argument.vala:281
+msgid "enable Android customizations"
+msgstr "Android_ის მორგებების ჩართვა"
+
+#: libbirdfont/Argument.vala:282
+msgid "show coordinate in glyph view"
+msgstr "კოორდინატების ჩვენება გლიფის ხედში"
+
+#: libbirdfont/Argument.vala:283
+msgid "exit if a test case fails"
+msgstr "გასვლა, თუ შემოწმების შემთხვევა ჩავარდება"
+
+#: libbirdfont/Argument.vala:284
+msgid "treat warnings as fatal"
+msgstr "გაფრთხილებების ფატალურად აღქმა"
+
+#: libbirdfont/Argument.vala:285
+msgid "show this message"
+msgstr "ამ შეტყობინების ჩვენება"
+
+#: libbirdfont/Argument.vala:286
+msgid "write a log file"
+msgstr "ჟურნალის ფაილის ჩაწერა"
+
+#: libbirdfont/Argument.vala:287
+msgid "enable Machintosh customizations"
+msgstr "Macintosh-ის მორგებების ჩართვა"
+
+#: libbirdfont/Argument.vala:288
+msgid "enable Windows customizations"
+msgstr "Windows-ის მორგებების ჩართვა"
+
+#: libbirdfont/Argument.vala:289
+msgid "don't translate"
+msgstr "არ თარგმნო"
+
+#: libbirdfont/Argument.vala:290
+msgid "sleep between each command in test suite"
+msgstr "შემოწმების ნაკრებში ძილი თითოეულ ბრძანებებს შორის"
+
+#: libbirdfont/Argument.vala:291
+msgid "run test case"
+msgstr "შემოწმების შემთხვევის გაშვება"
+
+#: libbirdfont/BackgroundSelectionTool.vala:23
+msgid "Select background"
+msgstr "აირჩიეთ ფონი"
+
+#: libbirdfont/BackgroundTab.vala:47 libbirdfont/BackgroundTools.vala:26
+msgid "Background Image"
+msgstr "ფონის სურათი"
+
+#: libbirdfont/BackgroundTool.vala:163
+msgid "Move, resize and rotate background image"
+msgstr "გადაიტანეთ, შეუცვალეთ ზომა და შეაბრუნეთ ფონის სურათი"
+
+#: libbirdfont/BackgroundTool.vala:166 libbirdfont/BezierTool.vala:103
+#: libbirdfont/PointTool.vala:88
+msgid "on axis"
+msgstr "ღერძზე"
+
+#: libbirdfont/BackgroundTool.vala:294
+msgid "Select background image"
+msgstr "აირჩიეთ ფონის გამოსახულება"
+
+#: libbirdfont/BackgroundTools.vala:27
+msgid "Images"
+msgstr "გამოსახულებები"
+
+#: libbirdfont/BackgroundTools.vala:34 libbirdfont/FileDialogTab.vala:94
+#: libbirdfont/RecentFiles.vala:110
+msgid "Files"
+msgstr "ფაილები"
+
+#: libbirdfont/BackgroundTools.vala:38
+msgid "Parts"
+msgstr "ნაწილები"
+
+#: libbirdfont/BackgroundTools.vala:53 libbirdfont/Glyph.vala:2362
+#: libbirdfont/LigatureList.vala:106 libbirdfont/OtfFeatureTable.vala:218
+msgid "Add"
+msgstr "დამატება"
+
+#: libbirdfont/BackgroundTools.vala:122
+msgid "Select Glyph"
+msgstr "აირჩიეთ გლიფი"
+
+#: libbirdfont/BackgroundTools.vala:232 libbirdfont/LoadCallback.vala:100
+#: libbirdfont/Menu.vala:50
+msgid "Open"
+msgstr "გახსნა"
+
+#: libbirdfont/BezierTool.vala:91
+msgid "Create Beziér curves"
+msgstr "ბეზიეს მრუდების შექმნა"
+
+#: libbirdfont/BezierTool.vala:95
+msgid "line"
+msgstr "ხაზი"
+
+#: libbirdfont/BezierTool.vala:99
+msgid "corner"
+msgstr "კუთხე"
+
+#: libbirdfont/CircleTool.vala:36
+msgid "Circle"
+msgstr "წრე"
+
+#: libbirdfont/CutBackgroundTool.vala:38
+msgid "Crop background image"
+msgstr "ფონის სურათის ამოჭრა"
+
+#: libbirdfont/DefaultCharactersSet.vala:25
+msgid "Default Language"
+msgstr "ნაგულისხმევი ენა"
+
+#: libbirdfont/DefaultCharactersSet.vala:26
+msgid "Private Use Area"
+msgstr "პირადი გამოყენების ადგილი"
+
+#: libbirdfont/DefaultCharactersSet.vala:28
+msgid "Chinese"
+msgstr "ჩინური"
+
+#: libbirdfont/DefaultCharactersSet.vala:29
+msgid "English"
+msgstr "ინგლისური"
+
+#: libbirdfont/DefaultCharactersSet.vala:30
+msgid "Greek"
+msgstr "ბერძნული"
+
+#: libbirdfont/DefaultCharactersSet.vala:31
+msgid "Japanese"
+msgstr "იაპონური"
+
+#: libbirdfont/DefaultCharactersSet.vala:32
+msgid "Javanese"
+msgstr "იავური"
+
+#: libbirdfont/DefaultCharactersSet.vala:33
+msgid "Latin"
+msgstr "ლათინური"
+
+#: libbirdfont/DefaultCharactersSet.vala:34
+msgid "Russian"
+msgstr "რუსული"
+
+#: libbirdfont/DefaultCharactersSet.vala:35
+msgid "Swedish"
+msgstr "შვედური"
+
+#: libbirdfont/DefaultCharactersSet.vala:36
+msgid "Thai"
+msgstr "ტაილანდური"
+
+#. / All lower case letters in alphabetic order separated by space. Letters with diacritical marks should be included.
+#: libbirdfont/DefaultCharactersSet.vala:118 libbirdfont/ExportTool.vala:440
+msgid "a b c d e f g h i j k l m n o p q r s t u v w x y z"
+msgstr "a b c d e f g h i j k l m n o p q r s t u v w x y z"
+
+#. / All upper case letters in alphabetic order separated by space. Letters with diacritical marks should be included.
+#: libbirdfont/DefaultCharactersSet.vala:121 libbirdfont/ExportTool.vala:441
+msgid "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
+msgstr "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
+
+#: libbirdfont/DescriptionDisplay.vala:66
+#: libbirdfont/DescriptionDisplay.vala:277 libbirdfont/ExportSettings.vala:133
+#: libbirdfont/Menu.vala:489 libbirdfont/TableLayout.vala:203
+msgid "Name and Description"
+msgstr "სახელი და აღწერა"
+
+#: libbirdfont/DescriptionDisplay.vala:70 libbirdfont/MenuTab.vala:98
+msgid "PostScript Name"
+msgstr "PostScript-ის სახელი"
+
+#: libbirdfont/DescriptionDisplay.vala:80 libbirdfont/MenuTab.vala:103
+#: libbirdfont/MenuTab.vala:702
+msgid "Name"
+msgstr "სახელი"
+
+#: libbirdfont/DescriptionDisplay.vala:90 libbirdfont/MenuTab.vala:108
+msgid "Style"
+msgstr "სტილი"
+
+#: libbirdfont/DescriptionDisplay.vala:100
+msgid "Bold"
+msgstr "სქელი"
+
+#: libbirdfont/DescriptionDisplay.vala:109
+msgid "Italic"
+msgstr "კურსივი"
+
+#: libbirdfont/DescriptionDisplay.vala:119
+msgid "Weight"
+msgstr "წონა"
+
+#: libbirdfont/DescriptionDisplay.vala:129 libbirdfont/MenuTab.vala:113
+msgid "Full Name (Name and Style)"
+msgstr "სრული სახელი (სახელი და სტილი)"
+
+#: libbirdfont/DescriptionDisplay.vala:140 libbirdfont/MenuTab.vala:118
+msgid "Unique Identifier"
+msgstr "უნიკალური იდენტიფიკატორი"
+
+#: libbirdfont/DescriptionDisplay.vala:150 libbirdfont/ImportUtils.vala:156
+#: libbirdfont/Menu.vala:496 libbirdfont/Menu.vala:498
+#: libbirdfont/VersionList.vala:268
+msgid "Version"
+msgstr "ვერსია"
+
+#: libbirdfont/DescriptionDisplay.vala:160
+msgid "Description"
+msgstr "აღწერა"
+
+#: libbirdfont/DescriptionDisplay.vala:171
+msgid "Copyright"
+msgstr "საავტორო უფლებები"
+
+#: libbirdfont/DescriptionDisplay.vala:183
+msgid "License"
+msgstr "ლიცენზია"
+
+#: libbirdfont/DescriptionDisplay.vala:195
+msgid "License URL"
+msgstr "ლიცენზიის ბმული"
+
+#: libbirdfont/DescriptionDisplay.vala:207
+msgid "Trademark"
+msgstr "სავაჭრო ნიშანი"
+
+#: libbirdfont/DescriptionDisplay.vala:219
+msgid "Manufacturer"
+msgstr "მწარმოებელი"
+
+#: libbirdfont/DescriptionDisplay.vala:230
+msgid "Designer"
+msgstr "დიზაინერი"
+
+#: libbirdfont/DescriptionDisplay.vala:241
+msgid "Vendor URL"
+msgstr "მომწოდებლის URL"
+
+#: libbirdfont/DescriptionDisplay.vala:252
+msgid "Designer URL"
+msgstr "დიზაინერის URL"
+
+#: libbirdfont/DrawingTools.vala:112
+msgid "Background Tools"
+msgstr "ფონის ხელსაწყოები"
+
+#: libbirdfont/DrawingTools.vala:113
+msgid "Control Points"
+msgstr "საკონტროლო წერტილები"
+
+#: libbirdfont/DrawingTools.vala:114
+msgid "Object Tools"
+msgstr "ობიექტის ხელსაწყოები"
+
+#: libbirdfont/DrawingTools.vala:123
+msgid "Drawing Tools"
+msgstr "ხატვის ხელსაწყოები"
+
+#: libbirdfont/DrawingTools.vala:124
+msgid "Control Point"
+msgstr "კონტროლის წერტილი"
+
+#: libbirdfont/DrawingTools.vala:126 libbirdfont/Menu.vala:247
+msgid "Layers"
+msgstr "ფენები"
+
+#: libbirdfont/DrawingTools.vala:127
+msgid "Stroke"
+msgstr "გამოძრავება"
+
+#: libbirdfont/DrawingTools.vala:128
+msgid "Geometrical Shapes"
+msgstr "გეომეტრიული ფიგურები"
+
+#: libbirdfont/DrawingTools.vala:129 libbirdfont/OverviewTools.vala:45
+msgid "Zoom"
+msgstr "მასშტაბი"
+
+#: libbirdfont/DrawingTools.vala:130
+msgid "Guidelines & Grid"
+msgstr "მიმმართველები და ბადე"
+
+#: libbirdfont/DrawingTools.vala:135
+msgid "Grid Size"
+msgstr "ბადის ზომა"
+
+#: libbirdfont/DrawingTools.vala:194
+msgid "Move canvas"
+msgstr "ტილოს გადატანა"
+
+#: libbirdfont/DrawingTools.vala:195
+msgid "Ctrl + Shift + Click"
+msgstr "Ctrl + Shift + Click"
+
+#: libbirdfont/DrawingTools.vala:196
+msgid "Space + Click"
+msgstr "ჰარე + წკაპი"
+
+#: libbirdfont/DrawingTools.vala:204
+msgid "Delete"
+msgstr "წაშლა"
+
+#: libbirdfont/DrawingTools.vala:211
+msgid "Select all points or paths"
+msgstr "ყველა წერტილის ან ბილიკის მონიშვნა"
+
+#: libbirdfont/DrawingTools.vala:227 libbirdfont/Menu.vala:99
+msgid "Undo"
+msgstr "გაუქმება"
+
+#: libbirdfont/DrawingTools.vala:234
+msgid "Insert new points on path"
+msgstr "ახალი წერტილების ჩასმა ბილიკზე"
+
+#: libbirdfont/DrawingTools.vala:243
+msgid "Create quadratic Bézier curves"
+msgstr "კვადრატული ბეზიეს მრუდების შექმნა"
+
+#: libbirdfont/DrawingTools.vala:252
+msgid "Create cubic Bézier curves"
+msgstr "კუბური ბეზიეს მრუდების შექმნა"
+
+#: libbirdfont/DrawingTools.vala:261
+msgid "Quadratic path with two line handles"
+msgstr "კვადრატული ბილიკი ორი ხაზის დამმუშავებლით"
+
+#: libbirdfont/DrawingTools.vala:270
+msgid "Convert selected points"
+msgstr "მონიშნული წერტილების გადაყვანა"
+
+#: libbirdfont/DrawingTools.vala:281
+msgid "X coordinate"
+msgstr "X კოორდინატი"
+
+#: libbirdfont/DrawingTools.vala:325
+msgid "Y coordinate"
+msgstr "Y კოორდინატი"
+
+#: libbirdfont/DrawingTools.vala:368
+msgid "Rotation"
+msgstr "შემობრუნება"
+
+#: libbirdfont/DrawingTools.vala:407
+msgid "Width"
+msgstr "სიგანე"
+
+#: libbirdfont/DrawingTools.vala:432
+msgid "Height"
+msgstr "სიმაღლე"
+
+#: libbirdfont/DrawingTools.vala:475
+msgid "Tie curve handles for the selected edit point"
+msgstr "მრუდის დამმუშავებლების შეკრება მონიშნული ჩასწორების წერტილისთვის"
+
+#: libbirdfont/DrawingTools.vala:526
+msgid "Symmetrical handles"
+msgstr "სიმეტრიული დამმუშავებლები"
+
+#: libbirdfont/DrawingTools.vala:556
+msgid "Convert segment to line."
+msgstr "სეგმენტის გადაყვანა ხაზში."
+
+#: libbirdfont/DrawingTools.vala:564
+msgid "Create counter from outline"
+msgstr "მრიცხველის შექმნა კონტურიდან"
+
+#: libbirdfont/DrawingTools.vala:567
+msgid "Scale object to font top/baseline"
+msgstr "ობიექტის მასშტაბი ფონტის ზედამდე/საბაზისო ხაზამდე"
+
+#: libbirdfont/DrawingTools.vala:576
+msgid "Close path"
+msgstr "ბილიკის დახურვა"
+
+#: libbirdfont/DrawingTools.vala:598
+msgid "Move to path to the bottom of the layer"
+msgstr "ბილიკის გადატანა ფენის ბოლოში"
+
+#: libbirdfont/DrawingTools.vala:612
+msgid "Flip path vertically"
+msgstr "ბილიკის გადაბრუნება ვერტიკალურად"
+
+#: libbirdfont/DrawingTools.vala:620
+msgid "Flip path horizontally"
+msgstr "ბილიკის გადაბრუნება ჰორიზონტალურად"
+
+#: libbirdfont/DrawingTools.vala:629
+msgid "Set size for background image"
+msgstr "ზომის დაყენება ფონის სურათისთვის"
+
+#: libbirdfont/DrawingTools.vala:667
+msgid "Show/hide background image"
+msgstr "ფონის სურათის ჩვენება/დამალვა"
+
+#: libbirdfont/DrawingTools.vala:678
+msgid "Insert a new background image"
+msgstr "ახალი ფონის სურათის ჩასმა"
+
+#: libbirdfont/DrawingTools.vala:692 libbirdfont/ThemeTab.vala:156
+msgid "High contrast"
+msgstr "მაღალი კონტრასტი"
+
+#: libbirdfont/DrawingTools.vala:706
+msgid "Set background threshold"
+msgstr "ფონის ზღვრის დაყენება"
+
+#: libbirdfont/DrawingTools.vala:725
+msgid "Amount of autotrace details"
+msgstr "ავტოტრეისის დეტალების რაოდენობა"
+
+#: libbirdfont/DrawingTools.vala:744
+msgid "Autotrace simplification"
+msgstr "ავტოტრეისის გამარტივება"
+
+#: libbirdfont/DrawingTools.vala:754
+msgid "Autotrace background image"
+msgstr "ფონის სურათის ავტოტრეისი"
+
+#: libbirdfont/DrawingTools.vala:762
+msgid "Delete background image"
+msgstr "ფონის სურათის წაშლა"
+
+#: libbirdfont/DrawingTools.vala:769
+msgid "Add layer"
+msgstr "ფენის დამატება"
+
+#: libbirdfont/DrawingTools.vala:779
+msgid "Show layers"
+msgstr "ფენების ჩვენება"
+
+#: libbirdfont/DrawingTools.vala:789
+msgid "Apply stroke"
+msgstr "დაშტრიხვის გადატარება"
+
+#: libbirdfont/DrawingTools.vala:823 libbirdfont/SettingsTab.vala:36
+msgid "Stroke width"
+msgstr "კონტურის სისქე"
+
+#: libbirdfont/DrawingTools.vala:865
+msgid "Create outline form stroke"
+msgstr "კონტურის შექმნა დაშტრიხვიდან"
+
+#: libbirdfont/DrawingTools.vala:874
+msgid "Butt line cap"
+msgstr "ხაზის ტორსული ბოლო"
+
+#: libbirdfont/DrawingTools.vala:898
+msgid "Round line cap"
+msgstr "ხაზის მრგვალი ბოლო"
+
+#: libbirdfont/DrawingTools.vala:923
+msgid "Square line cap"
+msgstr "ხაზის კვადრატული ბოლო"
+
+#: libbirdfont/DrawingTools.vala:992
+msgid "Show guidelines"
+msgstr "მიმმართველების ჩვენება"
+
+#: libbirdfont/DrawingTools.vala:1004
+msgid "Show more guidelines"
+msgstr "მეტი მიმმართველის ჩვენება"
+
+#: libbirdfont/DrawingTools.vala:1020
+msgid "Show guidelines at top and bottom margin"
+msgstr "მიმმართველების ჩვენება ზედა და ქვედა საზღვრებზე"
+
+#: libbirdfont/DrawingTools.vala:1044
+msgid "Lock guides and grid"
+msgstr "მიმმართველებისა და ბადის დაბლოკვა"
+
+#: libbirdfont/DrawingTools.vala:1086
+msgid "Zoom Out More"
+msgstr "უფრო მეტად დაპატარავება"
+
+#: libbirdfont/DrawingTools.vala:1096
+msgid "Show full glyph"
+msgstr "სრული გლიფის ჩვენება"
+
+#: libbirdfont/DrawingTools.vala:1104
+msgid "Fit in view"
+msgstr "ხედში ჩატევა"
+
+#: libbirdfont/DrawingTools.vala:1112
+msgid "Zoom in on background image"
+msgstr "ფონის სურათის გადიდება"
+
+#: libbirdfont/DrawingTools.vala:1123
+msgid "Previous view"
+msgstr "წინა ხედი"
+
+#: libbirdfont/DrawingTools.vala:1130
+msgid "Next view"
+msgstr "შემდეგი ხედი"
+
+#: libbirdfont/DrawingTools.vala:1535
+msgid "Set size for grid"
+msgstr "ზომების დაყენება ბადისთვის"
+
+#: libbirdfont/ExportSettings.vala:41 libbirdfont/ExportSettings.vala:185
+#: libbirdfont/Menu.vala:309
+msgid "Export Settings"
+msgstr "პარამეტრების გატანა"
+
+#: libbirdfont/ExportSettings.vala:45 libbirdfont/ExportSettings.vala:60
+msgid "File Name"
+msgstr "ფაილის სახელი"
+
+#: libbirdfont/ExportSettings.vala:75
+msgid "Units Per Em"
+msgstr "ერთეული თითოეული ემისთვის"
+
+#: libbirdfont/ExportSettings.vala:94 libbirdfont/RecentFiles.vala:77
+msgid "Folder"
+msgstr "საქაღალდე"
+
+#: libbirdfont/ExportSettings.vala:98
+msgid "Formats"
+msgstr "ფორმატები"
+
+#: libbirdfont/ExportSettings.vala:139 libbirdfont/ExportTool.vala:40
+msgid "Export"
+msgstr "გატანა"
+
+#: libbirdfont/ExportTool.vala:233 libbirdfont/Menu.vala:64
+#: libbirdfont/MenuTab.vala:359 libbirdfont/SaveCallback.vala:68
+#: libbirdfont/SaveDialog.vala:38 libbirdfont/SaveDialogListener.vala:29
+msgid "Save"
+msgstr "შენახვა"
+
+#: libbirdfont/ExportTool.vala:439
+msgid "Alphabet"
+msgstr "ანბანი"
+
+#: libbirdfont/ExportUtils.vala:17 libbirdfont/ImportUtils.vala:17
+#: birdfont-autotrace/AutoTrace.vala:66
+msgid "Usage:"
+msgstr "გამოყენება:"
+
+#: libbirdfont/ExportUtils.vala:20 birdfont-autotrace/AutoTrace.vala:71
+msgid "print this message"
+msgstr "ამ შეტყობინების გამოტანა"
+
+#: libbirdfont/ExportUtils.vala:21
+msgid "write files to this directory"
+msgstr "ფაილების ჩაწერა ამ საქაღალდეში"
+
+#: libbirdfont/ExportUtils.vala:22
+msgid "write svg file"
+msgstr "svg ფაილის ჩაწერა"
+
+#: libbirdfont/ExportUtils.vala:23
+msgid "write ttf and eot file"
+msgstr "ttf და eot ფაილების ჩაწერა"
+
+#: libbirdfont/ExportUtils.vala:130
+msgid "Can't find output directory"
+msgstr "გამოტანის საქაღალდის აღმოჩენა შეუძლებელია"
+
+#: libbirdfont/FileDialogTab.vala:79
+msgid "Select a Folder"
+msgstr "აირჩიეთ საქაღალდე"
+
+#: libbirdfont/FileDialogTab.vala:83
+msgid "Folders"
+msgstr "საქაღალდეები"
+
+#: libbirdfont/FileTools.vala:31
+msgid "New font"
+msgstr "ახალი ფონტი"
+
+#: libbirdfont/FileTools.vala:37
+msgid "Open font"
+msgstr "ფონტის გახსნა"
+
+#: libbirdfont/FileTools.vala:43
+msgid "Save font"
+msgstr "ფონტის შენახვა"
+
+#: libbirdfont/FileTools.vala:49 libbirdfont/Menu.vala:482
+#: libbirdfont/SettingsDisplay.vala:225 libbirdfont/SettingsTab.vala:33
+#: libbirdfont/SettingsTab.vala:180
+msgid "Settings"
+msgstr "მორგება"
+
+#: libbirdfont/FileTools.vala:55 libbirdfont/ThemeTab.vala:42
+#: libbirdfont/ThemeTab.vala:167
+msgid "Themes"
+msgstr "თემები"
+
+#: libbirdfont/Glyph.vala:518
+msgid "top margin"
+msgstr "ზედა ზღვარი"
+
+#: libbirdfont/Glyph.vala:525
+msgid "top"
+msgstr "მწვერვალი"
+
+#: libbirdfont/Glyph.vala:532
+msgid "x-height"
+msgstr "x-სიმაღლე"
+
+#: libbirdfont/Glyph.vala:541
+msgid "baseline"
+msgstr "baseline"
+
+#: libbirdfont/Glyph.vala:548
+msgid "bottom"
+msgstr "ბოლოში"
+
+#: libbirdfont/Glyph.vala:554
+msgid "bottom margin"
+msgstr "ქვედა ზღვარი"
+
+#: libbirdfont/Glyph.vala:560
+msgid "left"
+msgstr "დარჩა"
+
+#: libbirdfont/Glyph.vala:569
+msgid "right"
+msgstr "მარჯვენა"
+
+#: libbirdfont/Glyph.vala:2362
+msgid "Guide"
+msgstr "გიდი"
+
+#: libbirdfont/GridTool.vala:38
+msgid "Show grid"
+msgstr "ბადის ჩვენება"
+
+#: libbirdfont/GuideTab.vala:46 libbirdfont/GuideTab.vala:57
+msgid "Guides"
+msgstr "მიმმართველები"
+
+#: libbirdfont/HiddenTools.vala:33
+msgid "Zoom in"
+msgstr "გადიდება"
+
+#: libbirdfont/HiddenTools.vala:40
+msgid "Zoom out"
+msgstr "დაპატარავება"
+
+#: libbirdfont/HiddenTools.vala:47
+msgid "Convert the last segment to a straight line"
+msgstr "ბოლო სეგმენტის გადაყვანა სწორ ხაზში"
+
+#: libbirdfont/HiddenTools.vala:55
+msgid "Convert the last control point to a corner node"
+msgstr "ბოლო საკონტროლო წერტილის გადაყვანა კუთხის კვანძში"
+
+#: libbirdfont/HiddenTools.vala:63
+msgid "Move handle along axis"
+msgstr "დამმუშავებლის გადაადგილება ღერძის გასწვრივ"
+
+#: libbirdfont/ImportUtils.vala:19
+msgid "BF-FILE"
+msgstr "BF-FILE"
+
+#: libbirdfont/ImportUtils.vala:19
+msgid "SVG-FILES ..."
+msgstr "SVG-FILES ..."
+
+#: libbirdfont/ImportUtils.vala:54 libbirdfont/ImportUtils.vala:62
+msgid "does not exist."
+msgstr "არ არსებობს."
+
+#: libbirdfont/ImportUtils.vala:63
+msgid "A new font will be created."
+msgstr "შეიქმნება ახალი ფონტი."
+
+#: libbirdfont/ImportUtils.vala:85
+msgid "Failed to import"
+msgstr "შემოტანის შეცდომა"
+
+#: libbirdfont/ImportUtils.vala:86
+msgid "Aborting"
+msgstr "შეწყვეტა"
+
+#: libbirdfont/ImportUtils.vala:119
+msgid "is not the name of a glyph or a Unicode value."
+msgstr "არ წარმოადგენს გლიფის სახელს, ან უნიკოდის მნიშვნელობას."
+
+#: libbirdfont/ImportUtils.vala:120
+msgid "Unicode values must start with U+."
+msgstr "უნიკოდის მნიშვნელობები U+-ით უნდა იწყებოდეს."
+
+#: libbirdfont/ImportUtils.vala:146
+msgid "Adding"
+msgstr "დამატება"
+
+#: libbirdfont/ImportUtils.vala:150
+msgid "to"
+msgstr "სადამდე"
+
+#: libbirdfont/ImportUtils.vala:152 libbirdfont/OtfFeatureTable.vala:135
+#: libbirdfont/OverviewTools.vala:48
+msgid "Glyph"
+msgstr "გლიფი"
+
+#: libbirdfont/KerningDisplay.vala:101 libbirdfont/KerningDisplay.vala:931
+msgid "Kerning"
+msgstr "კერნინგი"
+
+#: libbirdfont/KerningDisplay.vala:109
+msgid "The current kerning class is malformed."
+msgstr "მიმდინარე კერნინგის კლასი არასწორადაა ჩამოყალიბებული."
+
+#: libbirdfont/KerningDisplay.vala:110
+msgid "Add single characters separated by space and ranges on the form A-Z."
+msgstr "დაამატეთ 1 სიმბოლოები, რომლებიც ჰარეთია გამოყოფილი და იცვლება შუალედში A-Z."
+
+#: libbirdfont/KerningDisplay.vala:111
+msgid "Type “space” to kern the space character and “divis” to kern -."
+msgstr "აკრიფეთ \"space\" ჰარეს სიმბოლოს კერნინგისთვის და \"divis\" '-'-ის კერნინგისთვის."
+
+#: libbirdfont/KerningDisplay.vala:713 libbirdfont/OverviewTools.vala:84
+msgid "Unicode"
+msgstr "უნიკოდი"
+
+#: libbirdfont/KerningDisplay.vala:713
+msgid "Insert"
+msgstr "ჩასმა"
+
+#: libbirdfont/KerningDisplay.vala:931 libbirdfont/MainWindow.vala:238
+#: libbirdfont/MessageDialog.vala:37 libbirdfont/SpinButton.vala:208
+msgid "Close"
+msgstr "დახურვა"
+
+#: libbirdfont/KerningList.vala:54 libbirdfont/KerningList.vala:111
+msgid "Kerning Pairs"
+msgstr "კერნინგის წყვილები"
+
+#: libbirdfont/KerningList.vala:57
+msgid "No kerning pairs created."
+msgstr "კერნინგის წყვილები არ შექმნილა."
+
+#: libbirdfont/KerningRange.vala:113 libbirdfont/KerningTools.vala:90
+msgid "Kerning class"
+msgstr "კერნინგის კლასი"
+
+#: libbirdfont/KerningRange.vala:113 libbirdfont/LayerLabel.vala:144
+#: libbirdfont/Ligatures.vala:110 libbirdfont/Ligatures.vala:133
+#: libbirdfont/Ligatures.vala:156 libbirdfont/Ligatures.vala:188
+#: libbirdfont/SpacingClass.vala:50 libbirdfont/SpacingTab.vala:232
+#: libbirdfont/SpacingTab.vala:277 libbirdfont/SpinButton.vala:208
+#: libbirdfont/Theme.vala:685
+msgid "Set"
+msgstr "დაყენებულია"
+
+#: libbirdfont/KerningStrings.vala:65
+msgid "Load kerning strings"
+msgstr "კერნინგის სტრიქონების ჩატვირთვა"
+
+#: libbirdfont/KerningTools.vala:56
+msgid "Kerning Tools"
+msgstr "კერნინგის ხელსაწყოები"
+
+#: libbirdfont/KerningTools.vala:68 libbirdfont/SpacingTools.vala:31
+msgid "Font Size"
+msgstr "ფონტის ზომა"
+
+#: libbirdfont/KerningTools.vala:87
+msgid "Create new kerning class."
+msgstr "ახალი კერნინგის კლასის შექმნა."
+
+#: libbirdfont/KerningTools.vala:99
+msgid "Use text input to enter kerning values."
+msgstr "შეიყვანეთ ტექსტის შეყვანა კერნინგის მნიშვნელობების შესაყვანად."
+
+#: libbirdfont/KerningTools.vala:107 libbirdfont/SpacingClassTools.vala:30
+#: libbirdfont/SpacingTools.vala:52
+msgid "Insert glyph from overview"
+msgstr "გლიფის ჩასმა მიმოხილვიდან"
+
+#: libbirdfont/KerningTools.vala:122 libbirdfont/SpacingTools.vala:67
+msgid "Insert character by unicode value"
+msgstr "სიმბოლოს ჩასმა უნიკოდის მნიშნველობით"
+
+#: libbirdfont/KerningTools.vala:130
+msgid "Right to left"
+msgstr "მარჯვნიდან მარცხნივ"
+
+#: libbirdfont/KerningTools.vala:139
+msgid "Open a text file with kerning strings first."
+msgstr "ჯერ გახსენით ტექსტური ფაილი კერნინგის სტრიქონებით."
+
+#: libbirdfont/KerningTools.vala:141
+msgid "Previous kerning string"
+msgstr "წინა კერნინგის სტრიქონი"
+
+#: libbirdfont/KerningTools.vala:151
+msgid "You have reached the beginning of the list."
+msgstr "მიაღწიეთ სიის დასაწყისს."
+
+#: libbirdfont/KerningTools.vala:160
+msgid "Next kerning string"
+msgstr "შემდეგი კერნინგის სტრიქონი"
+
+#: libbirdfont/KerningTools.vala:170
+msgid "You have reached the end of the list."
+msgstr "მიაღწიეთ სიის დასასრულს."
+
+#: libbirdfont/KerningTools.vala:179
+msgid "Substitutions"
+msgstr "შენაცვლებები"
+
+#: libbirdfont/LanguageSelectionTab.vala:28 libbirdfont/OverviewTools.vala:44
+msgid "Character Sets"
+msgstr "სიმბოლოების სეტები"
+
+#: libbirdfont/LanguageSelectionTab.vala:68
+msgid "Character Set"
+msgstr "სიმბოლოების ნაკრები"
+
+#: libbirdfont/LayerLabel.vala:144
+msgid "Layer"
+msgstr "შრე"
+
+#: libbirdfont/LigatureList.vala:53
+msgid "character sequence"
+msgstr "სიმბოლოების მიმდევრობა"
+
+#: libbirdfont/LigatureList.vala:53
+msgid "ligature"
+msgstr "ლიგატურა"
+
+#: libbirdfont/LigatureList.vala:56
+msgid "substitution"
+msgstr "ჩანაცვლება"
+
+#: libbirdfont/LigatureList.vala:56
+msgid "beginning"
+msgstr "დასაწყისი"
+
+#: libbirdfont/LigatureList.vala:56
+msgid "middle"
+msgstr "შუა"
+
+#: libbirdfont/LigatureList.vala:56
+msgid "end"
+msgstr "დასასრული"
+
+#: libbirdfont/LigatureList.vala:109
+msgid "New Ligature"
+msgstr "ახალი ლიგატურა"
+
+#: libbirdfont/LigatureList.vala:109
+msgid "New Contextual Substitution"
+msgstr "ახალი კონტექსტური ჩანაცვლება"
+
+#: libbirdfont/LigatureList.vala:115
+msgid "Contextual Substitutions"
+msgstr "კონტექსტური ჩანაცვლებები"
+
+#: libbirdfont/LigatureList.vala:126 libbirdfont/LigatureList.vala:140
+#: libbirdfont/Menu.vala:437
+msgid "Ligatures"
+msgstr "ლიგატურები"
+
+#: libbirdfont/Ligatures.vala:110
+msgid "Beginning"
+msgstr "დასაწყისი"
+
+#: libbirdfont/Ligatures.vala:133
+msgid "Middle"
+msgstr "შუა"
+
+#: libbirdfont/Ligatures.vala:156
+msgid "End"
+msgstr "დასასრული"
+
+#: libbirdfont/Ligatures.vala:188
+msgid "Ligature"
+msgstr "ლიგატურა"
+
+#: libbirdfont/Line.vala:157
+msgid "Position"
+msgstr "პოზიცია"
+
+#: libbirdfont/Line.vala:157
+msgid "Move"
+msgstr "გადატანა"
+
+#: libbirdfont/LoadCallback.vala:29
+msgid "This font was made with a newer version of Birdfont."
+msgstr "ეს ფონტი Birdfont-ის უფრო ახალი ვერსიით შეიქმნა."
+
+#: libbirdfont/LoadCallback.vala:30
+msgid "You need to upgrade your version of Birdfont."
+msgstr "ჯერ Birdfont-ის თქვენი ვერსია უნდა განაახლოთ."
+
+#: libbirdfont/LoadCallback.vala:34
+msgid "This font was made with an old version of Birdfont."
+msgstr "ეს ფონტი Birdfont-ის უფრო ძველი ვერსიით შეიქმნა."
+
+#: libbirdfont/LoadCallback.vala:35
+msgid "You need an older version of Birdfont to open it."
+msgstr "მის გასახსნელად Birdfont-ის ძველი ვერსია გჭირდებათ."
+
+#: libbirdfont/MainWindow.vala:238
+msgid "Glyph sequence"
+msgstr "გლიფების მიმდევრობა"
+
+#: libbirdfont/Menu.vala:37
+msgid "File"
+msgstr "ფაილი"
+
+#: libbirdfont/Menu.vala:43
+msgid "New"
+msgstr "ახალი"
+
+#: libbirdfont/Menu.vala:57 libbirdfont/RecentFiles.vala:85
+msgid "Recent Files"
+msgstr "უახლესი ფაილები"
+
+#: libbirdfont/Menu.vala:71
+msgid "Save As"
+msgstr "შენახვა, როგორც"
+
+#: libbirdfont/Menu.vala:78
+msgid "Select Character Set"
+msgstr "აირჩიეთ სიმბოლოთა ნაკრები"
+
+#: libbirdfont/Menu.vala:85
+msgid "Quit"
+msgstr "გასვლა"
+
+#: libbirdfont/Menu.vala:93
+msgid "Edit"
+msgstr "ჩასწორება"
+
+#: libbirdfont/Menu.vala:106
+msgid "Redo"
+msgstr "გამეორება"
+
+#: libbirdfont/Menu.vala:113
+msgid "Copy"
+msgstr "კოპირება"
+
+#: libbirdfont/Menu.vala:120
+msgid "Paste"
+msgstr "ჩასმა"
+
+#: libbirdfont/Menu.vala:127
+msgid "Paste In Place"
+msgstr "ადგილზე ჩასმა"
+
+#: libbirdfont/Menu.vala:134
+msgid "Select All Paths"
+msgstr "ყველა ბილიკის მონიშვნა"
+
+#: libbirdfont/Menu.vala:141
+msgid "Select All Glyphs"
+msgstr "ყველა გლიფის მონიშვნა"
+
+#: libbirdfont/Menu.vala:148
+msgid "Move To Baseline"
+msgstr "გადატანა საბაზისო ხაზში"
+
+#: libbirdfont/Menu.vala:155 libbirdfont/OverView.vala:260
+#: libbirdfont/OverView.vala:279 libbirdfont/OverviewTools.vala:188
+msgid "Search"
+msgstr "ძებნა"
+
+#: libbirdfont/Menu.vala:162
+msgid "Simplify Path"
+msgstr "ბილიკის გამარტივება"
+
+#: libbirdfont/Menu.vala:169
+msgid "Merge Paths"
+msgstr "ბილიკების შერწყმა"
+
+#: libbirdfont/Menu.vala:176
+msgid "Close Path"
+msgstr "ბილიკის დახურვა"
+
+#: libbirdfont/Menu.vala:183
+msgid "Glyph Sequence"
+msgstr "გლიფების მიმდევრობა"
+
+#: libbirdfont/Menu.vala:190
+msgid "Set Background Glyph"
+msgstr "ფონის გლიფის დაყენება"
+
+#: libbirdfont/Menu.vala:197
+msgid "Remove Background Glyph"
+msgstr "ფონის გლიფის წაშლა"
+
+#: libbirdfont/Menu.vala:204
+msgid "Create Guide"
+msgstr "მიმმართველის შექმნა"
+
+#: libbirdfont/Menu.vala:211
+msgid "List Guides"
+msgstr "მიმმართველების სია"
+
+#: libbirdfont/Menu.vala:218
+msgid "Select Point Above"
+msgstr "ზედა წერტილის მონიშვნა"
+
+#: libbirdfont/Menu.vala:225
+msgid "Select Next Point"
+msgstr "შემდეგი წერტილის მონიშვნა"
+
+#: libbirdfont/Menu.vala:232
+msgid "Select Previous Point"
+msgstr "წინა წერტილის მონიშვნა"
+
+#: libbirdfont/Menu.vala:239
+msgid "Select Point Below"
+msgstr "ქვედა წერტილის მონიშვნა"
+
+#: libbirdfont/Menu.vala:253
+msgid "Move Layer Up"
+msgstr "ფენის აწევა"
+
+#: libbirdfont/Menu.vala:260
+msgid "Move Layer Down"
+msgstr "ფენის დაწევა"
+
+#: libbirdfont/Menu.vala:268
+msgid "Import and Export"
+msgstr "შემოტანა და გატანა"
+
+#: libbirdfont/Menu.vala:274
+msgid "Export Fonts"
+msgstr "ფონტების გატანა"
+
+#: libbirdfont/Menu.vala:281
+msgid "Export Glyph as SVG"
+msgstr "გლიფის გატანა SVG-ში"
+
+#: libbirdfont/Menu.vala:288
+msgid "Import SVG file"
+msgstr "SVG ფაილის შემოტანა"
+
+#: libbirdfont/Menu.vala:295
+msgid "Import SVG folder"
+msgstr "SVG საქაღალდის შემოტანა"
+
+#: libbirdfont/Menu.vala:302
+msgid "Import Background Image"
+msgstr "ფონის სურათის შემოტანა"
+
+#: libbirdfont/Menu.vala:316 libbirdfont/Preview.vala:27
+msgid "Preview"
+msgstr "მინიატურა"
+
+#: libbirdfont/Menu.vala:324
+msgid "Tab"
+msgstr "ჩანართი"
+
+#: libbirdfont/Menu.vala:330
+msgid "Next Tab"
+msgstr "შემდეგი ჩანართი"
+
+#: libbirdfont/Menu.vala:337
+msgid "Previous Tab"
+msgstr "წინა ჩანართი"
+
+#: libbirdfont/Menu.vala:344
+msgid "Close Tab"
+msgstr "ჩანართის დახურვა"
+
+#: libbirdfont/Menu.vala:351
+msgid "Close All Tabs"
+msgstr "ყველა ჩანართის დახურვა"
+
+#: libbirdfont/Menu.vala:359
+msgid "Spacing and Kerning"
+msgstr "დაშორება და კერნინგი"
+
+#: libbirdfont/Menu.vala:365
+msgid "Show Spacing Tab"
+msgstr "დაშორების ჩანართის ჩვენება"
+
+#: libbirdfont/Menu.vala:372
+msgid "Show Kerning Tab"
+msgstr "კერნინგის ჩანართის ჩვენება"
+
+#: libbirdfont/Menu.vala:379
+msgid "List Kerning Pairs"
+msgstr "კერნინგის წყვილების სია"
+
+#: libbirdfont/Menu.vala:386 libbirdfont/SpacingClassTab.vala:97
+msgid "Spacing Classes"
+msgstr "დაშორების კლასები"
+
+#: libbirdfont/Menu.vala:393
+msgid "Select Next Kerning Pair"
+msgstr "შემდეგი კერნინგის წყვილის მონიშვნა"
+
+#: libbirdfont/Menu.vala:407
+msgid "Select Previous Kerning Pair"
+msgstr "წინა კერნინგის წყვილის მონიშვნა"
+
+#: libbirdfont/Menu.vala:421
+msgid "Load Kerning Strings"
+msgstr "კერნინგის სტრიქონების ჩატვირთვა"
+
+#: libbirdfont/Menu.vala:428
+msgid "Reload Kerning Strings"
+msgstr "კერნინგის სტრიქონების თავიდან ჩატვირთვა"
+
+#: libbirdfont/Menu.vala:443
+msgid "Show Ligatures"
+msgstr "ლიგატურების ჩვენება"
+
+#: libbirdfont/Menu.vala:450
+msgid "Add Ligature"
+msgstr "ლიგატურის დამატება"
+
+#: libbirdfont/Menu.vala:459
+msgid "Git"
+msgstr "Git"
+
+#: libbirdfont/Menu.vala:465
+msgid "Save As .bfp"
+msgstr "შენახვა .bfp-ის სახით"
+
+#: libbirdfont/Menu.vala:474 libbirdfont/OverView.vala:495
+msgid "Overview"
+msgstr "მიმოხილვა"
+
+#: libbirdfont/MenuItem.vala:82
+msgid "UP"
+msgstr "გაშვებული"
+
+#: libbirdfont/MenuItem.vala:85
+msgid "DOWN"
+msgstr "დაბლა"
+
+#: libbirdfont/MenuItem.vala:88
+msgid "LEFT"
+msgstr "LEFT"
+
+#: libbirdfont/MenuItem.vala:91
+msgid "RIGHT"
+msgstr "RIGHT"
+
+#: libbirdfont/MenuTab.vala:95
+msgid "Missing metadata in font:"
+msgstr "ნაკლული მეტამონაცემები ფონტში:"
+
+#: libbirdfont/MenuTab.vala:128
+msgid "You need to choose a different name for the TTF file with Mac adjustmets."
+msgstr "უნდა აირჩიოთ სხვა სახელი TTF ფაილისთვის Mac-ზე მოსარგებად."
+
+#: libbirdfont/MenuTab.vala:146
+msgid "You need to save your font before exporting it."
+msgstr "გატანამდე თქვენი ფონტი უნდა შეინახოთ."
+
+#: libbirdfont/MenuTab.vala:189
+msgid "Menu"
+msgstr "მენიუ"
+
+#: libbirdfont/MenuTab.vala:216
+msgid "Can't create TTF font."
+msgstr "TTF ფონტის შექმნა შეუძლებელია."
+
+#: libbirdfont/MenuTab.vala:702
+msgid "Add ligature"
+msgstr "ლიგატურის დამატება"
+
+#: libbirdfont/MoveTool.vala:41
+msgid "Move paths"
+msgstr "ბილიკების გადატანა"
+
+#: libbirdfont/OtfFeatureTable.vala:124 libbirdfont/OtfFeatureTable.vala:197
+msgid "Glyph Substitutions"
+msgstr "გლიფების ჩანაცვლებები"
+
+#: libbirdfont/OtfFeatureTable.vala:130 libbirdfont/OtfFeatureTable.vala:138
+msgid "New glyph"
+msgstr "ახალი გლიფი"
+
+#: libbirdfont/OtfFeatureTable.vala:145
+msgid "Replacement"
+msgstr "შემცვლელი"
+
+#: libbirdfont/OtfFeatureTable.vala:150
+msgid "Tag"
+msgstr "ჭდე"
+
+#: libbirdfont/OtfFeatureTable.vala:212
+msgid "Select a glyph to create an alternate for."
+msgstr "აირჩიეთ გლიფი, რომლისთვისაც ალტერნატივა უნდა შეიქმნას."
+
+#: libbirdfont/OtfFeatureTable.vala:218
+msgid "Glyph name"
+msgstr "გლიფის სახელი"
+
+#: libbirdfont/OtfFeatureTable.vala:232
+msgid "All glyphs must have unique names."
+msgstr "ყველა გლიფის სახელი უნიკალური უნდა იყოს."
+
+#: libbirdfont/OtfLabel.vala:47
+msgid "Stylistic Alternate"
+msgstr "სტილისტური ალტერნატივა"
+
+#: libbirdfont/OtfLabel.vala:49
+msgid "Small Caps"
+msgstr "პატარა ზომის დიდი ასოები"
+
+#: libbirdfont/OtfLabel.vala:51
+msgid "Capitals to Small Caps"
+msgstr "დიდი ასოების გადაყვანა ზომით პატარა დიდ ასოებში"
+
+#: libbirdfont/OtfLabel.vala:53
+msgid "Swashes"
+msgstr ""
+
+#: libbirdfont/OverView.vala:260 libbirdfont/OverView.vala:279
+msgid "Filter"
+msgstr "ფილტრი"
+
+#: libbirdfont/OverView.vala:699
+msgid "No glyphs in this view."
+msgstr "ამ ხედში გლიფები არაა."
+
+#: libbirdfont/OverView.vala:1562
+msgid "See also:"
+msgstr "ასევე იხილეთ:"
+
+#: libbirdfont/OverWriteDialogListener.vala:30
+msgid "Overwrite TTF file?"
+msgstr "გადავაწერო TTF ფაილს?"
+
+#: libbirdfont/OverWriteDialogListener.vala:31
+msgid "Overwrite"
+msgstr "თავზე გადაწერა"
+
+#: libbirdfont/OverWriteDialogListener.vala:32
+#: libbirdfont/OverwriteBfFile.vala:34 libbirdfont/SaveDialog.vala:50
+msgid "Cancel"
+msgstr "გაუქმება"
+
+#: libbirdfont/OverWriteDialogListener.vala:33
+msgid "Yes, don't ask again."
+msgstr "დიახ, აღარ მკითხო."
+
+#: libbirdfont/OverviewTools.vala:46 libbirdfont/OverviewTools.vala:117
+#: libbirdfont/OverviewTools.vala:153
+msgid "Transform"
+msgstr "ტრასფორმირება"
+
+#: libbirdfont/OverviewTools.vala:49
+msgid "Multi-Master"
+msgstr "მრავალოსტატიანი"
+
+#: libbirdfont/OverviewTools.vala:62
+msgid "All Glyphs"
+msgstr "ყველა გლიფი"
+
+#: libbirdfont/OverviewTools.vala:72
+msgid "Default"
+msgstr "ნაგულისხმევი"
+
+#: libbirdfont/OverviewTools.vala:99
+msgid "Skew"
+msgstr "გადახრა"
+
+#: libbirdfont/OverviewTools.vala:132
+msgid "Resize"
+msgstr "ზომის შეცვლა"
+
+#: libbirdfont/OverviewTools.vala:168
+msgid "Create alternate"
+msgstr "ალტერნატივის შექმნა"
+
+#: libbirdfont/OverviewTools.vala:172
+msgid "Set curve orientation"
+msgstr "მრუდის ორიენტაციის დაყენება"
+
+#: libbirdfont/OverviewTools.vala:194
+msgid "Master Size"
+msgstr "ძირითადის ზომა"
+
+#: libbirdfont/OverviewTools.vala:209
+msgid "Create new master font"
+msgstr "ახალი ძირითადი ფონტის შექმნა"
+
+#: libbirdfont/OverwriteBfFile.vala:25
+msgid "This file already exists. Do you want to replace it?"
+msgstr "ეს ფაილი უკვე არსებობს. გნებავთ მისი ჩანაცვლება?"
+
+#: libbirdfont/OverwriteBfFile.vala:27
+msgid "Replace"
+msgstr "ჩანაცვლება"
+
+#: libbirdfont/PenTool.vala:82
+msgid "Add new points"
+msgstr "ახალი წერტილების დამატება"
+
+#: libbirdfont/PointTool.vala:84
+msgid "Move control points"
+msgstr "საკონტროლო წერტილების გადატანა"
+
+#: libbirdfont/PreviewTools.vala:27
+msgid "Reload webview"
+msgstr "ვებხედის თავიდან ჩატვირთვა"
+
+#: libbirdfont/PreviewTools.vala:33
+msgid "Export fonts"
+msgstr "ფონტების გატანა"
+
+#: libbirdfont/PreviewTools.vala:39
+msgid "Generate html document"
+msgstr "html დოკუმენტის გენერაცია"
+
+#: libbirdfont/RecentFiles.vala:66
+msgid "No fonts created yet"
+msgstr "ჯერ ფონტები არ შექმნილა"
+
+#: libbirdfont/RecentFiles.vala:69
+msgid "Create a New Font"
+msgstr "ახალი ფონტის შექმნა"
+
+#: libbirdfont/RecentFiles.vala:80
+msgid "Glyphs"
+msgstr "გლიფები"
+
+#: libbirdfont/RecentFiles.vala:96
+msgid "Backups"
+msgstr "მარქაფები"
+
+#: libbirdfont/RectangleTool.vala:30
+msgid "Rectangle"
+msgstr "მართკუთხედი"
+
+#: libbirdfont/ResizeTool.vala:49
+msgid "Resize and rotate paths"
+msgstr "ბილიკების ზომის შეცვლა და ბრუნვა"
+
+#: libbirdfont/SaveDialog.vala:36
+msgid "Save changes?"
+msgstr "შევინახო ცვლილებები?"
+
+#: libbirdfont/SaveDialog.vala:44 libbirdfont/SaveDialogListener.vala:30
+msgid "Discard"
+msgstr "მოცილება"
+
+#: libbirdfont/SaveDialogListener.vala:28
+msgid "Save?"
+msgstr "შევინახო?"
+
+#: libbirdfont/SettingsTab.vala:82
+msgid "Precision for pen tool"
+msgstr "სიზუსტე კალმის ხელსაწყოსთვის"
+
+#: libbirdfont/SettingsTab.vala:90
+msgid "Show or hide control point handles"
+msgstr "საკონტროლო წერტილის დამმუშავებლების ჩვენება, ან დამალვა"
+
+#: libbirdfont/SettingsTab.vala:100
+msgid "Fill open paths."
+msgstr "ღია ბილიკების შევსება."
+
+#: libbirdfont/SettingsTab.vala:107
+msgid "Use TTF units."
+msgstr "TTF-ის ერთეულების გამოყენება."
+
+#: libbirdfont/SettingsTab.vala:110
+msgid "Number of points added by the freehand tool"
+msgstr "თავისუფალი მონიშვნის ხელსაწყოს მიერ დამატებული წერტილების რაოდენობა"
+
+#: libbirdfont/SettingsTab.vala:132
+msgid "Path simplification threshold"
+msgstr "ბილიკის გამარტივების ზღვარი"
+
+#: libbirdfont/SettingsTab.vala:163
+msgid "Translate"
+msgstr "თარგმნა"
+
+#: libbirdfont/SettingsTab.vala:170
+msgid "Color theme"
+msgstr "ფერის თემა"
+
+#: libbirdfont/SettingsTab.vala:172
+msgid "Key Bindings"
+msgstr "კლავიატურის ბმები"
+
+#: libbirdfont/SpacingClass.vala:50
+msgid "Character"
+msgstr "სიმბოლო"
+
+#: libbirdfont/SpacingClassTab.vala:86
+msgid "New spacing class"
+msgstr "ახალი გამოტოვების კლასი"
+
+#: libbirdfont/SpacingTab.vala:36
+msgid "Spacing"
+msgstr "გამოტოვება"
+
+#: libbirdfont/SpacingTab.vala:232
+msgid "Left"
+msgstr "მარცხენა"
+
+#: libbirdfont/SpacingTab.vala:277
+msgid "Right"
+msgstr "მარჯვენა"
+
+#: libbirdfont/SvgParser.vala:51 libbirdfont/SvgParser.vala:95
+msgid "Import"
+msgstr "შემოტანა"
+
+#: libbirdfont/Theme.vala:419
+msgid "Canvas Background"
+msgstr "ტილოს ფონი"
+
+#: libbirdfont/Theme.vala:420
+msgid "Filled Stroke"
+msgstr "შევსებული შტრიხი"
+
+#: libbirdfont/Theme.vala:421
+msgid "Stroke Color"
+msgstr "გამოძრავების ფერი"
+
+#: libbirdfont/Theme.vala:422
+msgid "Handle Color"
+msgstr "დამმუშავებლის ფერი"
+
+#: libbirdfont/Theme.vala:423
+msgid "Fill Color"
+msgstr "შემვსები ფერი"
+
+#: libbirdfont/Theme.vala:424
+msgid "Selected Objects"
+msgstr "მონიშნული ობიექტები"
+
+#: libbirdfont/Theme.vala:426
+msgid "Background 1"
+msgstr "ფონი 1"
+
+#: libbirdfont/Theme.vala:427
+msgid "Dialog Background"
+msgstr "დიალოგის ფონი"
+
+#: libbirdfont/Theme.vala:428
+msgid "Menu Background"
+msgstr "მენიუს ფონი"
+
+#: libbirdfont/Theme.vala:429
+msgid "Default Background"
+msgstr "ნაგულისხმევი ფონი"
+
+#: libbirdfont/Theme.vala:431
+msgid "Checkbox Background"
+msgstr "თოლიას ფონი"
+
+#: libbirdfont/Theme.vala:433
+msgid "Foreground 1"
+msgstr "წინა პლანი 1"
+
+#: libbirdfont/Theme.vala:434
+msgid "Text Foreground"
+msgstr "ტექსტის ფონი"
+
+#: libbirdfont/Theme.vala:435
+msgid "Table Border"
+msgstr "ცხრილის საზღვარი"
+
+#: libbirdfont/Theme.vala:436
+msgid "Selection Border"
+msgstr "მონიშნულის საზღვრები"
+
+#: libbirdfont/Theme.vala:437
+msgid "Overview Glyph"
+msgstr "გლიფის მიმოხილვა"
+
+#: libbirdfont/Theme.vala:438
+msgid "Foreground Inverted"
+msgstr "წინა პლანი შებრუნებული"
+
+#: libbirdfont/Theme.vala:439
+msgid "Menu Foreground"
+msgstr "მენიუს წინა პლანი"
+
+#: libbirdfont/Theme.vala:440
+msgid "Selected Tab Foreground"
+msgstr "მონიშნული ჩანართის წინა პლანი"
+
+#: libbirdfont/Theme.vala:441
+msgid "Tab Separator"
+msgstr "ტაბულაციის გამყოფი"
+
+#: libbirdfont/Theme.vala:443
+msgid "Highlighted 1"
+msgstr "გამოკვეთილი 1"
+
+#: libbirdfont/Theme.vala:444
+msgid "Highlighted Guide"
+msgstr "გამოკვეთილი მიმმართველი"
+
+#: libbirdfont/Theme.vala:446
+msgid "Grid"
+msgstr "ბადე"
+
+#: libbirdfont/Theme.vala:448
+msgid "Guide 1"
+msgstr "მიმმართველი 1"
+
+#: libbirdfont/Theme.vala:449
+msgid "Guide 2"
+msgstr "მიმმართველი 2"
+
+#: libbirdfont/Theme.vala:450
+msgid "Guide 3"
+msgstr "მიმმართველი 3"
+
+#: libbirdfont/Theme.vala:452
+msgid "Button Border 1"
+msgstr "ღილაკის საზღვარი 1"
+
+#: libbirdfont/Theme.vala:453
+msgid "Button Background 1"
+msgstr "ღილაკის ფონი 1"
+
+#: libbirdfont/Theme.vala:454
+msgid "Button Border 2"
+msgstr "ღილაკის საზღვარი 2"
+
+#: libbirdfont/Theme.vala:455
+msgid "Button Background 2"
+msgstr "ღილაკის ფონი 2"
+
+#: libbirdfont/Theme.vala:456
+msgid "Button Border 3"
+msgstr "ღილაკის საზღვარი 3"
+
+#: libbirdfont/Theme.vala:457
+msgid "Button Background 3"
+msgstr "ღილაკის ფონი 3"
+
+#: libbirdfont/Theme.vala:458
+msgid "Button Border 4"
+msgstr "ღილაკის საზღვარი 4"
+
+#: libbirdfont/Theme.vala:459
+msgid "Button Background 4"
+msgstr "ღილაკის ფონი 4"
+
+#: libbirdfont/Theme.vala:461
+msgid "Button Foreground"
+msgstr "ღილაკის წინა პლანი"
+
+#: libbirdfont/Theme.vala:462
+msgid "Selected Button Foreground"
+msgstr "მონიშნული ღილაკის წინა პლანი"
+
+#: libbirdfont/Theme.vala:464
+msgid "Tool Foreground"
+msgstr "ხელსაწყოს წინა პლანი"
+
+#: libbirdfont/Theme.vala:465
+msgid "Selected Tool Foreground"
+msgstr "მონიშნული ხელსაწყოს წინა პლანი"
+
+#: libbirdfont/Theme.vala:467
+msgid "Text Area Background"
+msgstr "ტექსტური არეს ფონი"
+
+#: libbirdfont/Theme.vala:469
+msgid "Overview Item Border"
+msgstr "ელემენტის საზღვრის მიმოხილვა"
+
+#: libbirdfont/Theme.vala:471
+msgid "Selected Overview Item"
+msgstr "მონიშნული გადახედვის ელემენტი"
+
+#: libbirdfont/Theme.vala:472
+msgid "Overview Item 1"
+msgstr "ელემენტის მიმოხილვა 1"
+
+#: libbirdfont/Theme.vala:473
+msgid "Overview Item 2"
+msgstr "ელემენტის მიმოხილვა 2"
+
+#: libbirdfont/Theme.vala:475
+msgid "Overview Selected Foreground"
+msgstr "მონიშნული წინა პლანის მიმოხილვა"
+
+#: libbirdfont/Theme.vala:476
+msgid "Overview Foreground"
+msgstr "წინა პლანის მიმოხილვა"
+
+#: libbirdfont/Theme.vala:478
+msgid "Glyph Count Background 1"
+msgstr "გლიფების რაოდენობის ფონი 1"
+
+#: libbirdfont/Theme.vala:479
+msgid "Glyph Count Background 2"
+msgstr "გლიფების რაოდენობის ფონი 2"
+
+#: libbirdfont/Theme.vala:481
+msgid "Dialog Shadow"
+msgstr "დიალოგის ჩრდილი"
+
+#: libbirdfont/Theme.vala:483
+msgid "Selected Active Cubic Control Point"
+msgstr "მონიშნული აქტიური კუბური საკონტროლო წერტილი"
+
+#: libbirdfont/Theme.vala:484
+msgid "Selected Cubic Control Point"
+msgstr "მონიშნული კუბური საკონტროლო წერტილი"
+
+#: libbirdfont/Theme.vala:485
+msgid "Active Cubic Control Point"
+msgstr "აქტიური კუბური საკონტროლო წერტილი"
+
+#: libbirdfont/Theme.vala:486
+msgid "Cubic Control Point"
+msgstr "კუბური საკონტროლო წერტილი"
+
+#: libbirdfont/Theme.vala:488
+msgid "Selected Active Quadratic Control Point"
+msgstr "მონიშნული აქტიური კვადრატული საკონტროლო წერტილი"
+
+#: libbirdfont/Theme.vala:489
+msgid "Selected Quadratic Control Point"
+msgstr "მონიშნული კვადრატული საკონტროლო წერტილი"
+
+#: libbirdfont/Theme.vala:490
+msgid "Active Quadratic Control Point"
+msgstr "აქტიური კვადრატული საკონტროლო წერტილი"
+
+#: libbirdfont/Theme.vala:491
+msgid "Cubic Quadratic Point"
+msgstr "კუბური კვადრატული წერტილი"
+
+#: libbirdfont/Theme.vala:493
+msgid "Selected Control Point Handle"
+msgstr "მონიშნული საკონტროლო წერტილის დამმუშავებელი"
+
+#: libbirdfont/Theme.vala:494
+msgid "Active Handle"
+msgstr "აქტიური დამმუსავებელი"
+
+#: libbirdfont/Theme.vala:495
+msgid "Control Point Handle"
+msgstr "საკონტროლო წერტილის დამმუშავებელი"
+
+#: libbirdfont/Theme.vala:497
+msgid "Merge"
+msgstr "შერწყმა"
+
+#: libbirdfont/Theme.vala:498
+msgid "Spin Button"
+msgstr "მრიცხველის ღილაკი"
+
+#: libbirdfont/Theme.vala:499
+msgid "Active Spin Button"
+msgstr "აქტიური ბრუნვის ღილაკი"
+
+#: libbirdfont/Theme.vala:500
+msgid "Zoom Bar Border"
+msgstr "გადიდების პანელის საზღვარი"
+
+#: libbirdfont/Theme.vala:501
+msgid "Font Name"
+msgstr "ფონტის სახელი"
+
+#: libbirdfont/Theme.vala:685
+msgid "New theme"
+msgstr "ახალი თემა"
+
+#: libbirdfont/ThemeTab.vala:107
+msgid "Add new theme"
+msgstr "ახალი თემის დამატება"
+
+#: libbirdfont/ThemeTab.vala:109
+msgid "Colors"
+msgstr "ფერები"
+
+#: libbirdfont/ThemeTab.vala:152
+msgid "Dark"
+msgstr "მუქი"
+
+#: libbirdfont/ThemeTab.vala:154
+msgid "Bright"
+msgstr "კაშკაშა"
+
+#: libbirdfont/ThemeTab.vala:158
+msgid "Custom"
+msgstr "ხელით"
+
+#: libbirdfont/ThemeTools.vala:30
+msgid "Color"
+msgstr "ფერი"
+
+#: libbirdfont/ToolItem.vala:44
+msgid "Shift"
+msgstr "Shift"
+
+#: libbirdfont/TrackTool.vala:57
+msgid "Freehand drawing"
+msgstr "თავისუფალი ხატვა"
+
+#: libbirdfont/VersionList.vala:51
+msgid "New version"
+msgstr "ახალი ვერსია"
+
+#: birdfont/GtkWindow.vala:443
+msgid "Your fonts have been exported."
+msgstr "თქვენი ფონტები გატანილია."
+
+#: birdfont-autotrace/AutoTrace.vala:69
+msgid "brightness cutoff, from 0.001 to 2, the default value is 1"
+msgstr "სიკაშკაშის ამოჭრა. 0.00-დან 2-მდე. ნაგულისხმევი მნიშვნელობაა 1"
+
+#: birdfont-autotrace/AutoTrace.vala:70
+msgid "details, from 0.001 to 9.999, the default value is 1"
+msgstr "დეტალები. 0.001-დან 9.999-მდე. ნაგულისხმევი მნიშვნელობაა 1"
+
+#: birdfont-autotrace/AutoTrace.vala:72
+msgid "use quadratic control points"
+msgstr "კვადრატული საკონტროლო წერტილების გამოყენება"
+
+#: birdfont-autotrace/AutoTrace.vala:73
+msgid "simplification, from 0.001 to 1, the default value is 0.5"
+msgstr "გამარტივება. 0.001-დან 1-მდე. ნაგულისხმევი მნიშვნელობაა 0.5"
+
+#: birdfont-autotrace/AutoTrace.vala:92
+msgid "File does not exist."
+msgstr "ფაილი არ არსებობს."
+
+#: birdfont-autotrace/AutoTrace.vala:98
+msgid "Unknown file format."
+msgstr "უცნობი ფაილის ფორმატი."
+
+#: birdfont-autotrace/AutoTrace.vala:114
+msgid "Writing"
+msgstr "ჩაწერა"
