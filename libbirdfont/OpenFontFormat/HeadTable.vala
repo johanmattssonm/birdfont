@@ -169,6 +169,22 @@ public class HeadTable : OtfTable {
 		uint64 time = (uint64) Math.rint (GLib.get_real_time () / 1000000.0);
 		const uint64 time_diff = 60 * 60 * 24 * (365 * (1970 - 1904) + 17); // FIXME: add leap seconds
 
+		// Use SOURCE_DATE_EPOCH for reproducible builds if set
+		string? sde = Environment.get_variable ("SOURCE_DATE_EPOCH");
+		if (sde != null) {
+			bool valid = false;
+			uint64 epoch = 0;
+			try {
+				epoch = uint64.parse (sde);
+				valid = true;
+			} catch (GLib.Error e) {
+				valid = false;
+			}
+			if (valid) {
+				time = epoch;
+			}
+		}
+
 		font_data.add_fixed (version);
 		font_data.add_fixed (font_revision);
 		
